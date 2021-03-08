@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<meta charset="utf-8" />
+<meta name="language" content="english" />
+<meta http-equiv="content-type" content="text/html" />
+<meta name="generator" content="Hugo 0.80.0" />
+<meta name="description" content="Gastlit by a computer" />
+<meta name="author" content="Douglas Myers-Turnbull" />
+<title>Software tests in science | Gaslit by a computer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/css/index.css" />
+<link rel="canonical" href="/software-testing/" />
+<link rel="alternate" type="application/rss+xml" href="" title="Gaslit by a computer" />
+
+<header>
+  
+    <h1><a href="">Gaslit by a computer</a></h1>
+  
+  
+</header>
+
+<article>
+  <header>
+    <h1>Software tests in science</h1>
+    
+  </header>
+  <p>This article is meant as an introduction to software testing for scientists.
+It will be updated over time.</p>
+<h3 id="lets-get-this-out-of-the-way--you-must-write-tests">Let’s get this out of the way – you must write tests.</h3>
+<p>Tests are just as required in scientific software as in all other software.
+<em>If you’re already convinced, skip this section.</em></p>
+<p>“Researchers are spending more and more time writing computer software to model biological
+structures, simulate the early evolution of the Universe and analyse past climate data, among
+other topics.
+But <strong>programming experts have little faith that most scientists are up to the task.</strong>”
+― <a href="https://pubmed.ncbi.nlm.nih.gov/20944712/">Merali 2010 (doi:10.1038/467775a)</a> (bolding changed)</p>
+<p>Here’s what happens:
+<a href="https://science.sciencemag.org/content/314/5807/1856">5 retractions in one lab due to a bug</a>.
+Yet because code is often not released and few others would bother to try to reproduce published
+results, probably 90%+ of scientific software bugs remain uncaught.
+A lack of deceptive intent doesn’t lessen the damage, and not testing is reckless.
+<strong>Not testing your software is as egregious a fault in scientific integrity as p‐hacking.</strong></p>
+<p>On a software development team, you can’t push new code to a main branch without accompanying
+tests – which must pass.
+In fact, many good coders <a href="https://en.wikipedia.org/wiki/Test-driven_development">write tests first</a>,
+before any other code.</p>
+<p>Professional software developers are the world’s best coders, so the code they write presumably
+has the lowest per‐line error rate.
+Yet no decent programmer would trust themselves to write code that works without tests.<br>
+So why do scientists routinely write, use, and even publish on the basis of code without tests,
+<em>code that is almost certainly faulty</em>?
+Let’s not do that. You must write tests.</p>
+<p>If you’re still not convinced, <strong>let’s try a thought experiment.</strong>
+Count the number of times you’ve done this:</p>
+<ol>
+<li>You run your code. It <em>raises an error</em> or gives an unreasonable result.</li>
+<li>You trace through to find the error and <em>fix the bug</em>.</li>
+<li>Now your <em>code doesn’t error</em> and <em>gives a resasonable result.</em></li>
+</ol>
+<p>Each bug could <em>just as easily</em> have not caused an error.<br>
+<strong>This process does not make your code correct; it just selects for results that look reasonable.</strong></p>
+<h3 id="types-of-tests">Types of tests</h3>
+<p>Lots of types of tests: unit, validation, integration, property, load, stress,
+fuzz, regression. Let’s simplify the landscape.</p>
+<p>Some literature distinguishes between validation &amp; verification.
+These terms are confusing and have disputed meanings.
+Let’s forget about them. A more useful distinction is between
+<a href="https://en.wikipedia.org/wiki/Functional_testing">functional</a>
+and <a href="https://en.wikipedia.org/wiki/Non-functional_testing">non‐functional</a> tests.
+But let’s forget those too.</p>
+<p>Let’s instead use a distinction especially relevant to the way scientists often test software:
+<em>tests that can be used to show correctness in a general sense (<strong>Class GENERAL</strong>)</em>,
+and <em>tests that cannot (<strong>Class CHECK</strong>)</em>. This is my own language, but I think it’s useful.
+Here we are, the 5 <em>classes</em> of tests:</p>
+<table>
+<thead>
+<tr>
+<th>Class</th>
+<th>What is tested</th>
+<th>Example types of tests</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GENERAL</td>
+<td>correctness in the general case</td>
+<td>unit, integration, &amp; property †</td>
+</tr>
+<tr>
+<td>CHECK</td>
+<td>limited subsets of code behavior</td>
+<td>smoke, sanity, regression</td>
+</tr>
+<tr>
+<td>PATHO</td>
+<td>behavior under pathological conditions</td>
+<td>load, stress, fault injection</td>
+</tr>
+<tr>
+<td>SUPPOR</td>
+<td>general‐case correctness, supportive</td>
+<td>type checking, assertion, &amp; fuzzing ‡</td>
+</tr>
+<tr>
+<td>ACCEPT</td>
+<td>software quality or usefulness</td>
+<td>acceptance, internationalization</td>
+</tr>
+</tbody>
+</table>
+<p>† The first category (Class GENERAL) <em>can</em> be used to test general‐case correctness,
+but some might only test specific aspects of behavior.</p>
+<p>‡ See <a href="#-testing-under-duck-typing">testing under duck typing</a> for why type checking
+can constrain the input surface and enable complete test suites. This makes them crucial
+in testing general‐case correctness.</p>
+<p>There’s a more complete but perhaps exhausting picture at the end of this article.
+It doesn’t matter much where you draw the distinction between these types.
+Where does a unit test end and an integration test begin? It doesn’t matter as long
+as you distinguish between the extremes and have both.</p>
+<h3 id="layers-you-should-have">Layers you should have</h3>
+<p>The next few sections cover layers of testing from highest (3) to lowest (0).
+<strong>Your code should be covered with Layers 0 to 3</strong> at least.</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>What it is</th>
+<th>Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>0</td>
+<td>static analysis</td>
+<td>SUPPORT</td>
+</tr>
+<tr>
+<td>1</td>
+<td>unit and property tests</td>
+<td>GENERAL</td>
+</tr>
+<tr>
+<td>2</td>
+<td>integration tests</td>
+<td>GENERAL</td>
+</tr>
+<tr>
+<td>3</td>
+<td>real‐data, regression, &amp; sanity tests</td>
+<td>CHECK</td>
+</tr>
+<tr>
+<td>Pathological-state</td>
+<td>fuzzing, fault injection, load, &amp; stress</td>
+<td>PATHO</td>
+</tr>
+<tr>
+<td>Acceptance</td>
+<td>i18n, documentation, performance, &amp; usability</td>
+<td>ACCEPT</td>
+</tr>
+</tbody>
+</table>
+<p>&ndash;</p>
+<h3 id="layer-3-realdata-regression-and-sanity-tests-class-check">Layer 3: Real‐data, regression, and sanity tests (Class CHECK)</h3>
+<p>These are already common in scientific software.</p>
+<h4 id="sanity-checks">Sanity checks:</h4>
+<p><em>Scientists are excellent at sanity checking</em>.
+These test your code on simple cases (like a 1-by-1 matrix).
+These are a crucial layer of testing because they’re easy to write
+and can catch some errors that cause extremely wrong results.<br>
+More importantly, they don’t test correctness in more general cases, and they’re weak to
+results that are just <em>slightly</em> wrong.
+A publication with a slightly wrong result is a publication with a false result. Not ideal.</p>
+<h4 id="tests-on-real-data">Tests on real data:</h4>
+<p>These are crucial for catching results that are very wrong early.
+But real data is too complex to know the correct output, and these tests are incomplete.
+Include them as an important layer.</p>
+<h4 id="regression-tests">Regression tests:</h4>
+<p>Regression tests make sure your output doesn’t change as you change your code.
+You don’t necessarily know the correct answer for these.
+They’re incomplete, and it’s easy to believe output looks correct after you’ve seen it.
+(Instead, always write the expected output before seeing the actual output.)
+But they’re useful for catching obvious failures immediately.</p>
+<h4 id="image-comparisons">Image comparisons:</h4>
+<p>Your plotting code should mostly be tested without using an actual plotting backend.
+Doing this also lends to more modular code.
+However, checking the plotting output directly is valuable, perhaps once for each function.
+Often this can be a manual sanity check, comparing the images by eye.
+You can also add an image in a regression test, but you’ll need to modify it if you make a
+stylistic change. If you use a manual check, put it alongside the code for reference.</p>
+<h3 id="layer-2-integration-tests-general-class">Layer 2: Integration tests (GENERAL class)</h3>
+<p>Integration tests use multiple classes or functions and make sure that your high‐level
+code uses them correctly in concert.
+You should know the expected output beforehand, and the tests should run under automation.</p>
+<p>While they can’t reasonably test everything in most cases, they should check the <em>full output</em>
+for specific, known cases. Include tests on edge‐case inputs.</p>
+<h3 id="layer-1-unit-tests-and-property-tests-general-class">Layer 1: Unit tests and property tests (GENERAL class)</h3>
+<p>Unit tests check a single function or class.
+They should cover every aspect of the <strong>contract</strong> of a function or class.
+<strong>A good unit test doubly serves as documentation</strong> for how to use a class, and its exact behavior.</p>
+<p>The contract for a function or class covers:</p>
+<ol>
+<li>The input it accepts</li>
+<li>Its output</li>
+<li>Its side effects</li>
+<li>Errors it raises and under which conditions</li>
+</ol>
+<h4 id="1-input">1. Input:</h4>
+<p>First, the input is part of the contract. This includes the <strong>types and meanings of parameters</strong>,
+and <strong>invariants that must hold</strong> (ex a matrix is invertible, or the input lengths should match).
+In most modern understandings of software development, a <strong>function should balk on invalid input</strong>
+because the contract is not fulfilled, and as part of its own contract (to throw errors).</p>
+<h4 id="2-output">2. Output:</h4>
+<p>The output is part of the contract. This covers the type of output and the meanings with
+respect to the inputs. Edge cases are crucial in this. Good edge cases include empty arrays,
+null values, 0, negative numbers, infinite values, NaN, incorrect types, invalid paths,
+and strings containing control characters. Also test numbers likely to underflow (1E-300)
+and overflow (1E300).
+Your unit test documents this contract by including these edge cases.</p>
+<h4 id="1-side-effects">1. Side effects:</h4>
+<p>The side effects. This includes files written to or modified. Equally importantly,
+it includes any <strong>modification to the object’s state or the state of an input</strong>.<br>
+If your function is supposed to return a copy, check that it does not modify the original’s state.
+Using completely immutable objects can save some pain here and reduce difficult‐to‐find bugs,
+especially for concurrent code. It also has some formal advantages and works great with functional
+programming.</p>
+<h4 id="1-errors">1. Errors:</h4>
+<p>Behavior under failure. Your function should declare the errors (exceptions) it raises
+and the conditions under which they are raised. This is easy in JUnit, scalatest, and pytest.
+(For example, using <code>with pytest.raises(ValueError):</code>.)</p>
+<h4 id="mocking-when-needed">Mocking when needed</h4>
+<p><a href="https://stackoverflow.com/questions/2665812/what-is-mocking">Mocking</a> is a crucial part of
+writing unit tests.</p>
+<p>However, it is often better to focus on writing units (classes and functions)
+that are modular enough that you don’t even need to mock an object: Your function
+simply doesn’t use any others. Keep your classes separated from each other as possible.</p>
+<p>Focusing on ease of testing immediately – or even before writing code – can improve
+your code’s <strong>modularity and thereby clarity, maintainability, and testability</strong>.
+It can be harder in some situations, such as in database‐connected code.
+Try to keep your database separate from the code that doesn’t strictly need it.
+<a href="https://en.wikipedia.org/wiki/Loose_coupling">Don’t couple</a>
+and <a href="https://en.wikipedia.org/wiki/Law_of_Demeter">Don’t talk to strangers.</a></p>
+<h4 id="property-tests">Property tests:</h4>
+<p><strong>Property tests</strong> are uncommon but powerful tests.
+<a href="https://hackage.haskell.org/package/QuickCheck">QuickCheck</a> is the quintessential example,
+but there’s also <a href="https://www.scalacheck.org/">ScalaCheck</a> in Scala and
+<a href="https://hypothesis.readthedocs.io">Hypothesis</a> in Python.</p>
+<p>These use <em>strategies</em> to define what constitutes valid input and automatically generates
+conforming data. Predefined strategies for things like strings, numbers, and lists are
+provided. Obvious edge cases are always tested for these strategies, such as 0, empty lists,
+and control characters.</p>
+<p>Invariants are then tested on generated data. An especially useful case is if you have a function
+and its inverse. For example, a QR code reader <code>r</code> and a QR code writer <code>w</code>.
+Then <code>r(w(s))</code> and <code>w(r(s))</code> should hold for any string <code>s</code>.
+In Hypothesis, the first can be written as</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-python" data-lang="python"><span style="color:#f92672">from</span> hypothesis <span style="color:#f92672">import</span> given
+<span style="color:#f92672">from</span> hypothesis <span style="color:#f92672">import</span> strategies
+<span style="color:#a6e22e">@given</span>(strategies<span style="color:#f92672">.</span>text())
+<span style="color:#66d9ef">def</span> <span style="color:#a6e22e">test</span>(qr_text: str):
+	<span style="color:#66d9ef">assert</span> decode(encode(qr_text))
+</code></pre></div><p>Then if it fails for an empty string:</p>
+<pre><code>&gt; Falsifying example: test(qr_text='')
+</code></pre><p><strong>These can be very powerful tests</strong> that catch bugs that are otherwise difficult to detect.
+For example, I found a bug affecting only quad‐width Unicode characters
+(in code that never referenced character information.)</p>
+<h3 id="layer-0-type-checking-and-static-analysis-support-class">Layer 0: Type checking and static analysis (SUPPORT class)</h3>
+<p>Static analysis is a freebie.
+There are lots of tools you can easily add to your test infrastructure to detect potential bugs.</p>
+<p>IDEs like IntelliJ, <a href="https://www.jetbrains.com/pycharm/">PyCharm</a>, and CLion can catch simple bugs
+in Java, Scala, Python, and C/C++. These are all by JetBrains, and they’re similar.
+They have configurable <em>inspections</em> that can detect potential bugs and bad coding practices.
+They can make your coding experience much easier too with Git integration and refactoring tools.
+For example, you can rename a function and update all references to it. Or move a file.</p>
+<p>Tools in Python include <a href="https://pypi.org/project/mypy/">mypy</a>,
+<a href="https://pypi.org/project/flake8-bugbear/">BugBear</a>,
+<a href="https://github.com/pyupio/safety">Safety</a>, <a href="https://pypi.org/project/bandit/">Bandit</a>,
+and <a href="https://github.com/github/codeql-action">CodeQL</a>.
+PyCharm and mypy both perform type checks.
+These find cases where a function expects one type of input and you pass another type.
+You can use <a href="https://docs.python.org/3/library/typing.html">Python’s typing package</a> to declare
+types, which also improves documentation (Sphinx autodoc can include this when generating docs).</p>
+<p>These are also a pretty good idea to <strong>limit the testing surface</strong> you need. Below explains why.</p>
+<h4 id="-testing-under-duck-typing-testing-under-duck-typing"><a href="#-testing-under-duck-typing">#</a> Testing under duck typing</h4>
+<p>Type checking cannot be used directly to show correctness, but it can close off the expected
+input in a way that makes a complete test suite possible.
+In untyped languages (ex Python), you might write a function that expects a &ldquo;matrix&rdquo;.
+Then, you write a test suite for the function. Later, someone else uses your API
+but calls your function on a matrix defined in a different package, maybe with the &ldquo;*&rdquo; operator
+defined element‐wise instead of as matrix multiplication. Your code then returns a valid but
+incorrect result. Your user could not have anticipated this, you were correctly following Pythonic
+duck typing, and the output was wrong (and maybe ended up in a paper).
+This is a massive problem with that paradigm.</p>
+<h3 id="pathologicalstate-layer-patho-class">Pathological‐state layer (PATHO class)</h3>
+<p>These layers should be covered in cases where they are relevant.</p>
+<h4 id="timezone-and-locale">Timezone and locale</h4>
+<p>These matter less in some scientific software, but <strong>check your timezone computations</strong>.
+Not handling timezones correctly can introduce serious problems for users outside of your region.</p>
+<p>Unrelated to testing, make sure your code uses YY-mm-dd formats and only uses Unicode strings.
+Keep your code compatibile with other operating systems if it’s easy enough.
+Use <code>System.os.sep</code> in Java and <code>pathlib</code> in Python rather than assuming <code>/</code>.</p>
+<h4 id="fuzzing-and-fault-injection">Fuzzing and fault injection</h4>
+<p><a href="https://en.wikipedia.org/wiki/Fuzzing">Fuzzing</a> and
+<a href="https://en.wikipedia.org/wiki/Fault_injection">fault injection</a> are useful in many cases.
+An example fuzz test is passing an object with behavior that does not conform to the contract
+but is likely to pass the function’s assertion checks.
+An example fault injection is modifying bytes in memory during execution.</p>
+<h4 id="concurreny">Concurreny</h4>
+<p>Concurrent code should be tested under concurrent conditions.
+Use known testing patterns to probe for <a href="https://en.wikipedia.org/wiki/Deadlock">deadlocks</a>
+and <a href="https://en.wikipedia.org/wiki/Race_condition">race conditions</a>.</p>
+<h4 id="load-and-stress">Load and stress</h4>
+<p>Load and stress types are two types of performance tests.
+They’re quite different: Software should pass a load test can’t exactly <em>pass</em> a stress test.
+Typically, the load is increased until the system fails, and the test makes sure the system
+handles the failure well. For example, without losing data or catching fire.</p>
+<h3 id="acceptance-layer-accept-class">Acceptance layer (ACCEPT class)</h3>
+<p>This layer checks that the software you wrote actually satisifies the real‐world requirements.</p>
+<ul>
+<li>Is it easy to use?</li>
+<li>Is it documented?</li>
+<li>Is it fast enough?</li>
+<li>Does it work in the needed natural languages?</li>
+</ul>
+<h3 id="automation-and-devops">Automation and DevOps</h3>
+<p>Now for making testing easier.</p>
+<h4 id="test-runners">Test runners</h4>
+<p>Your tests should run on a single command.
+<a href="https://www.scalatest.org/">ScalaTest</a>, <a href="https://docs.pytest.org/en/stable/">Pytest</a>,
+and <a href="https://junit.org/junit5/">JUnit 5</a> are good choices.
+In Python, also consider something like <a href="https://tox.readthedocs.io/">tox</a>.</p>
+<h4 id="coverage-analysis">Coverage analysis</h4>
+<p>Coverage is a simple indicator of how much of your code is tested.</p>
+<p>Coverage analyzers test either static coverage by
+examining calls in the tests, or runtime coverage by analyzing the code branches that are
+actually executed by your tests. The Python package <a href="https://coverage.readthedocs.io">coverage</a>
+analyzes runtime coverage and can give a report of percent coverage and the specific execution
+branches (and lines of code) that were not covered.</p>
+<p>These do not assess what edge cases were tested or other important metrics.
+So a low coverage is alarming, but a high coverage is only part of the need.</p>
+<h4 id="mutation-testing">Mutation testing</h4>
+<p>In contrast to fuzzing, mutation testing randomly mutates your <em>code</em>.
+The idea is that if your tests still pass on the mutated code,
+the tests probably weren’t adequate. They work well with coverage analyzers.
+It’s pretty uncommon.</p>
+<h4 id="code-quality-analyzers">Code quality analyzers</h4>
+<p>These are tools that broadly estimate code quality.
+<a href="https://codeclimate.com/">Code Climate</a> is one example.
+These tools are useful but not very intelligent.
+<a href="https://dwheeler.com/sloccount/">sloccount</a> or <a href="https://pypi.org/project/pygount/">pygount</a>
+can be useful too. Good code is usually on the shorter side.</p>
+<h4 id="pythonspecific-devops">Python‐specific DevOps</h4>
+<p>More on this in another article.
+For now see <a href="#-the-python-build-landscape">the Python build landscape</a>
+and <a href="https://github.com/dmyersturnbull/tyrannosaurus">Tyrannosaurus</a>.</p>
+<h3 id="supplemental-table">Supplemental table</h3>
+<p>This is a collection of various types of tests.</p>
+<table>
+<thead>
+<tr>
+<th>test type</th>
+<th>when it passes</th>
+<th>correctness</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>load</td>
+<td>The system handles a large load</td>
+<td>no</td>
+</tr>
+<tr>
+<td>stress</td>
+<td>The system fails gracefully</td>
+<td>no</td>
+</tr>
+<tr>
+<td>unit</td>
+<td>A function or class behaves correctly, esp. for edge cases</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>integration</td>
+<td>Functions and classes behave correctly in concert</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>property</td>
+<td>Invariants hold for generated data</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>fuzzing</td>
+<td>Injecting faulty data causes a good failure mode</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>mutation</td>
+<td>Injecting errors in code causes the tests to fail</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>concurrency</td>
+<td>The system works in multi‐threaded environments</td>
+<td>yes and no</td>
+</tr>
+<tr>
+<td>smoke</td>
+<td>The software runs without failure on correct input.</td>
+<td>no</td>
+</tr>
+<tr>
+<td>sanity</td>
+<td>Results make sense, esp. by manual inspection</td>
+<td>no</td>
+</tr>
+<tr>
+<td>assertion</td>
+<td>Sanity checks that run as part of the software</td>
+<td>no</td>
+</tr>
+<tr>
+<td>type checking</td>
+<td>Static checking of types, as in compiled languages</td>
+<td>no ‡</td>
+</tr>
+<tr>
+<td>real‐world data</td>
+<td>Tests that a result makes sense using real data</td>
+<td>no</td>
+</tr>
+<tr>
+<td>regression</td>
+<td>Results stay constant as development continues</td>
+<td>no</td>
+</tr>
+<tr>
+<td>acceptance</td>
+<td>The software satisfies deliverable conditions.</td>
+<td>no</td>
+</tr>
+<tr>
+<td>localization</td>
+<td>Required languages are covered and behavior is correct.</td>
+<td>mostly no</td>
+</tr>
+<tr>
+<td>compatibility</td>
+<td>Behavior is correct under required operating systems, etc.</td>
+<td>mostly no</td>
+</tr>
+<tr>
+<td>time constraints</td>
+<td>Code runs sufficiently quickly.</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+
+</article>
+
+
+
+</html>

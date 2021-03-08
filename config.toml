@@ -1,0 +1,14 @@
+languageCode = "en-us"
+title = "Gaslit by a computer"
+theme = "contrast-hugo"
+publishDir = "docs"
+
+[params]
+  minimal = false
+  description = "Gastlit by a computer"
+  author = "Douglas Myers-Turnbull"
+  keywords = ["software", "cheminformatics", "data science"]
+  
+[permalinks]
+  posts = ":slug"
+  

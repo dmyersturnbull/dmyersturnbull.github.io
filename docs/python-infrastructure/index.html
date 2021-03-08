@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en-us">
+<meta charset="utf-8" />
+<meta name="language" content="english" />
+<meta http-equiv="content-type" content="text/html" />
+<meta name="generator" content="Hugo 0.80.0" />
+<meta name="description" content="Gastlit by a computer" />
+<meta name="author" content="Douglas Myers-Turnbull" />
+<title>The Python build landscape | Gaslit by a computer</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<link rel="stylesheet" href="/css/index.css" />
+<link rel="canonical" href="/python-infrastructure/" />
+<link rel="alternate" type="application/rss+xml" href="" title="Gaslit by a computer" />
+
+<header>
+  
+    <h1><a href="">Gaslit by a computer</a></h1>
+  
+  
+</header>
+
+<article>
+  <header>
+    <h1>The Python build landscape</h1>
+    
+  </header>
+  <p><strong>The landscape of Python build infrastructure is a mess.</strong>
+I made over 100 commits to get a sensible, elegant, and secure build.
+The result is a template project and tool called
+<a href="https://github.com/dmyersturnbull/tyrannosaurus">Tyrannosaurus</a>.</p>
+<h3 id="comparison-to-other-languages">Comparison to other languages</h3>
+<p>In 2014 and 2015, I was mostly writing in Java and Scala.
+In Java, there are two widely used build tools: Maven and Gradle.
+They’re compatible and use the same repository.
+To build your code, run <code>mvn package</code> or <code>gradle build</code>.
+To add a dependency, add to <code>build.gradle</code> or <code>pom.xml</code>.
+To test, run <code>mvn test</code> or <code>gradle test</code>.
+In Scala, there’s just SBT. To compile your code, run <code>sbt build</code>.
+To add a dependecy, add to <code>build.sbt</code>.
+To test, run <code>sbt test</code>.</p>
+<h3 id="the-state-of-python-build-tools">The state of Python build tools</h3>
+<p>But in Python, there’s setuptools, pip, virtualenv, pipenv, Poetry, and Conda.
+There are wheels and eggs.
+There are <code>setup.py</code>, <code>setup.cfg</code>, <code>pyproject.toml</code>, <code>requirements.txt</code>, <code>Piplock</code>,
+<code>meta.yaml</code>, <code>environment.yml</code>, and <code>poetry.lock</code> — any of which can list dependencies.
+<code>tox.ini</code> can contain its own dependencies.</p>
+<p>More importantly, the traditional tools have serious problems.
+To start, a <code>setup.py</code> can contain arbitrary code.
+This is a serious
+<a href="https://www.zdnet.com/article/twelve-malicious-python-libraries-found-and-removed-from-pypi/">security problem</a>
+and makes it impossible to get some metadata from a package before installing it.</p>
+<p>Suppose you’re writing a project to show a dependency tree.
+Well, you can’t.</p>
+<p>This is not how any reasonable modern build tool should operate.
+Moreover, Pip <a href="https://github.com/pypa/pip/issues/988">does not resolve dependencies</a> or identify
+conflicts. A <code>requirements.txt</code> is especially bad because it’s order‐dependent and might be run in
+parallel, making it stochastic.</p>
+<p>Conda can resolve dependencies correctly.
+Unfortunately, many packages are not on Anaconda or Conda-Forge, and some recipes are unmaintained
+and out‐of‐date.
+<a href="https://github.com/ContinuumIO/anaconda-issues/issues/11336">Anaconda can corrupt itself</a>.
+I just wrote a
+<a href="https://stackoverflow.com/questions/61624631/using-anaconda-is-a-messy-base-root-going-to-be-a-problem-in-the-long-term/61624747#61624747">StackOverflow answer</a>
+regarding this.</p>
+<h3 id="finally-a-nice-build">Finally a nice build</h3>
+<p>It took me an unacceptable number of hours and commits.
+I’d change, push, wait for CI failures, and repeat.
+To help others avoid that build hell, I set up a
+<a href="https://github.com/dmyersturnbull/tyrannosaurus">template repository</a>.</p>
+<p>It heavily uses <a href="https://python-poetry.org/">Poetry</a>, <a href="https://tox.readthedocs.io/en/latest/">Tox</a>,
+<a href="https://help.github.com/en/actions">GitHub actions</a>, and adds a package that syncs metadata
+(tyrannosaurus). It doesn’t contain a <code>setup.py</code> or <code>setup.cfg</code>.
+In fact, <code>pyproject.toml</code> is the only file that contains metadata to edit.
+When you run <code>tox</code> (or <code>tyrannosaurus sync</code>), metadata is copied from <code>pyproject.toml</code> to other
+files, such as <code>docs/requirements.txt</code>, <code>tox.ini</code>, <code>__init__.py</code>, <code>codemeta.json</code>, <code>meta.yaml</code>,
+<code>environment.yml</code>, <code>LICENSE.txt</code>. So if you add a contributor, keyword, or dependency, it will
+be reflected everywhere.</p>
+<p>When you push, it builds wheels, sdists, and a Docker image, and runs tests.
+It lints on commit using <a href="https://pre-commit.com/">pre-commit</a>.
+When you tag on GitHub, it publishes to PyPi and Docker Hub.
+Getting your package initially on <a href="https://conda-forge.org/">Conda-Forge</a> takes a
+<a href="https://tyrannosaurus.readthedocs.io/en/latest/usage.html#anaconda-recipes">few manual steps</a>.</p>
+<p>Run <code>pip install tyrannosaurus</code> and create a new project with <code>tyrannosaurus new</code>. Then
+<a href="https://tyrannosaurus.readthedocs.io/en/latest/guide.html#to-do-list-for-new-projects">check these steps</a>
+to finalize.</p>
+<p>See <a href="https://github.com/dmyersturnbull/tyrannosaurus">Tyrannosaurus here</a>.</p>
+
+</article>
+
+
+
+</html>
