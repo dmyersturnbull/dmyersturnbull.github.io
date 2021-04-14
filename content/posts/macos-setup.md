@@ -28,6 +28,10 @@ Install the text editors [Sublime](https://www.sublimetext.com/) (`brew cask ins
 and/or [Atom](https://atom.io/) (`brew install atom`).
 Make an account on [GitHub](https://github.com/) and request access to any orgs you need.
 
+And a couple of silly things:
+- Show hidden files: Run `defaults write com.apple.Finder AppleShowAllFiles true`.
+- Show filename extensions: Do this in Finder → Settings → Advanced.
+
 
 ### Shell profile
 
@@ -66,13 +70,37 @@ The public key encrypt messages, while the private one is needed to decrypt them
 must remain on your computer and be secure. For historical reasons, SSH and OpenSSL provide two
 independent mechanisms for, but they’re similar in this functionality.
 
+##### Generating the keys
+
+*Note:*
+You can follow
+[GitHub’s guide to create keys](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent),
+which is almost identical.
+
+
+To generate SSH keys, I recommend:
+```bash
+ssh-keygen -t ed25519 -a 100
+```
+
+Some servers might not support EdDSA yet.
+If needed, you can instead use:
+```bash
+ssh-keygen -t rsa -b 4096 -o -a 100 -T ~/.ssh/id_rsa
+```
+
+The output path (`-T`) should be the default, but you may want to name it with something that reflects the server it’s meant for.
+In either case, don’t bother to set a passcode: If someone has access 
+to your files you have bigger problems. (Instead, rely on encryption (FileVault) and
+a strong password.) Start the SSH agent: `eval $(ssh-agent -s)`.
+
+
+##### Add to GitHub
 
 Follow [GitHub’s SSH keys guide](
-https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent)
-to generate SSH keys and add them to GitHub. The path should be `~/.ssh/id_rsa`, unless you prefer
-keeping separate keys for GitHub. Don’t bother to add a passcode: If someone has access 
-to your files you have bigger problems. (Instead, rely on encryption (FileVault) and
-a strong password.) Make sure to run the `git config` commands.
+https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
+to add your keys to GitHub. The path will be `~/.ssh/id_ed25519` if you kept the default name.
+Make sure to run the `git config` commands.
 
 Create or edit `~/.ssh/config`:
 - Disable SSH agent forwarding, [which](
@@ -83,6 +111,7 @@ https://security.stackexchange.com/questions/101783/are-there-any-risks-associat
 Also disable X forwarding, which also has [security concerns](
 https://security.stackexchange.com/questions/14815/security-concerns-with-x11-forwarding).
 You’re unlikely to need either.
+Note that may also need [other SSH config options](https://linuxize.com/post/using-the-ssh-config-file/).
 
 Your config might look something like this:
 ```
@@ -94,18 +123,20 @@ ForwardX11 no
 ForwardX11Trusted no
 
 Host github
-	HostName github.com
-	IdentityFile ~/.ssh/tirith-github
-	User dmyersturnbull@gmail.com
-
+HostName github.com
+IdentityFile ~/.ssh/tirith-github
+User dmyersturnbull@gmail.com
 ```
+
+*Note:* On Windows and some versions of macOS, some options may not be supported.
+Just remove any options that are not, and consider keeping other options that were set in the default config.
 
 If you need to connect to another server, add this and run `ssh-copy-id` to transfer your key:
 ```
 Host lab
-	HostName my.server.x
-	User kelly
-    IdentityFile ~/.ssh/id_rsa
+HostName my.server.x
+User kelly
+IdentityFile ~/.ssh/id_rsa
 ```
 
 
@@ -132,11 +163,13 @@ This may not work through some company and university firewalls.
 macOS’s built-in Java is seriously out-of-date.
 You can install via Homebrew: `brew install --cask oracle-jdk`.
 You can alternatively download it from Oracle:
-[JDK 15](https://www.oracle.com/java/technologies/javase-jdk15-downloads.html).
+[JDK 16](https://www.oracle.com/java/technologies/javase-jdk16-downloads.html).
 Do *not* use OpenJDK: The performance is nowhere near as high.
 (You might only need the runtime platform, but the Development Kit isn’t large.)
 For Python, I recommend [Miniconda](). Take a look at
 [these steps](https://dmyersturnbull.github.io/#-simple-setup).
+Finally, check out [data science setup steps](https://dmyersturnbull.github.io/data-science-setup/)
+to set up a nice development environment for Python.
 
 
 

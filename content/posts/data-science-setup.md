@@ -67,6 +67,8 @@ chmod u+x Miniconda3-latest-Linux-x86_64.sh
 ./Miniconda3-latest-Linux-x86_64.sh -b
 ```
 
+**Note:** On macOS and Windows, just use the .pkg/.exe [Miniconda installers](https://docs.conda.io/en/latest/miniconda.html).
+
 Then, add this to `~/.condarc`:
 
 ```yml
