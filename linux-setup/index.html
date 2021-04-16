@@ -1,0 +1,140 @@
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=language content="english"><meta http-equiv=content-type content="text/html"><meta name=generator content="Hugo 0.82.0"><meta name=description content="Gastlit by a computer"><meta name=author content="Douglas Myers-Turnbull"><title>Linux setup | Gaslit by a computer</title><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/index.css><link rel=canonical href=/linux-setup/><link rel=alternate type=application/rss+xml href title="Gaslit by a computer"><header><h1><a href>Gaslit by a computer</a></h1></header><article><header><h1>Linux setup</h1></header><p>This documents best practice setup for shell profiles, security, SSH, and GPG
+that work in Linux, macOS, and the Windows subsystem.</p><p>Also see the <a href=https://dmyersturnbull.github.io/macos-setup/>macOS setup guide</a> or
+<a href=https://dmyersturnbull.github.io/windows-setup/>Windows setup guide</a>,
+which I recommend checking out first.</p><h3 id=install-oh-my-zshhttpsohmyzsh>Install <a href=https://ohmyz.sh/>Oh My Zsh</a></h3><p>You’ll thank me later. (You’ll need ZSH installed for this to work.)</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>chsh -s /usr/bin/env zsh
+zsh
+sh -c <span style=color:#e6db74>&#34;</span><span style=color:#66d9ef>$(</span>curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh<span style=color:#66d9ef>)</span><span style=color:#e6db74>&#34;</span>
+</code></pre></div><p>Switch to ZSH as your default shell: <code>chsh -s $(which zsh)</code> and
+Restart your terminal. You should now have a colorful shell, complete with a plugin for Git.</p><p>To keep the config for ZSH and Bash consistent, add a common config file:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>echo <span style=color:#e6db74>&#39;export PATH=/usr/local/git/bin:/usr/local/sbin:$PATH&#39;</span> &gt; ~/.commonrc
+echo <span style=color:#e6db74>&#39;source ~/.commonrc&#39;</span> &gt;&gt; ~/.zshrc
+echo <span style=color:#e6db74>&#39;source ~/.commonrc&#39;</span> &gt;&gt; ~/.bashrc
+</code></pre></div><p>From here on, only modify <code>.commonrc</code> so that both Bash and ZSH have the same environment.</p><h3 id=generate-ssh-keys>Generate SSH keys</h3><p><em>What you’ll be doing:</em> SSH keys provide asymmetric cryptography for securing your
+connections. In asymmetric cryptography, there are two keys: a public one and a private one.
+The public key encrypt messages, while the private one is needed to decrypt them. This means that
+– although you shouldn’t – you could send your public key out to everyone. But your private key
+must remain on your computer and be secure. For historical reasons, SSH and OpenSSL provide two
+independent mechanisms for, but they’re similar in this functionality.</p><p><em>Note:</em>
+You can follow
+<a href=https://docs.github.com/en/github/authenticating-to-github/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent>GitHub’s guide to create keys</a>,
+which is almost identical.</p><p>To generate SSH keys, I recommend:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>ssh-keygen -t ed25519 -a <span style=color:#ae81ff>100</span>
+</code></pre></div><p>Some servers might not support EdDSA yet.
+If needed, you can instead use:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>ssh-keygen -t rsa -b <span style=color:#ae81ff>4096</span> -o -a <span style=color:#ae81ff>100</span> -T ~/.ssh/id_rsa
+</code></pre></div><p>The output path (<code>-T</code>) should be the default, but you may want to name it with something that reflects the server it’s meant for.
+In either case, don’t bother to set a passcode: If someone has access
+to your files you have bigger problems. (Instead, rely on encryption (e.g. FileVault) and
+a strong password.) Start the SSH agent: <code>eval $(ssh-agent -s)</code>.</p><h3 id=configure-ssh-securely>Configure SSH securely</h3><p>Create or edit <code>~/.ssh/config</code>:</p><ul><li>Disable SSH agent forwarding, <a href=https://security.stackexchange.com/questions/101783/are-there-any-risks-associated-with-ssh-agent-forwarding>which</a>
+<a href=https://en.wikipedia.org/wiki/Ssh-agent#Security_issues>is</a>
+<a href=https://github.com/microsoft/vscode-remote-release/issues/1222>very</a>
+<a href=https://manpages.debian.org/buster/openssh-client/ssh.1.en.html#A>insecure</a>.
+Also disable X forwarding, which also has <a href=https://security.stackexchange.com/questions/14815/security-concerns-with-x11-forwarding>security concerns</a>.
+You’re unlikely to need either.</li></ul><p>Your config might look something like this:</p><pre><code># Disable SSH agent forwarding
+# https://heipei.io/2015/02/26/SSH-Agent-Forwarding-considered-harmful/
+ForwardAgent no
+ForwardX11 no
+# turn off X forwarding for better security
+ForwardX11Trusted no
+
+# Modify these as needed
+Host *
+ServerAliveInterval 60
+ServerAliveCountMax 1200
+	
+
+Host github
+HostName github.com
+IdentityFile ~/.ssh/id_ed25519
+User kelly@gmail.com
+</code></pre><p>If you need to connect to another server, add this and run <code>ssh-copy-id</code> to transfer your key:</p><pre><code>Host lab
+HostName my.server.x
+User kelly
+IdentityFile ~/.ssh/id_ed25519
+</code></pre><p>On macOS, <code>AddKeysToAgent yes</code> might be wanted.
+After saving the config, run:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>chmod <span style=color:#ae81ff>644</span> ~/.ssh/config
+</code></pre></div><h3 id=create-gpg-keys>Create GPG keys</h3><p>Install GPG: <code>brew install gnupg</code>. Then follow GitHub’s guides to
+<a href=https://docs.github.com/en/github/authenticating-to-github/generating-a-new-gpg-key>generate a GPG key</a>
+and <a href=https://docs.github.com/en/github/authenticating-to-github/adding-a-new-gpg-key-to-your-github-account>add the GPG key to your account</a>.
+Again, skip the passphrase.
+The general steps are: <code>gpg --full-generate-key</code> and copying the output of
+<code>gpg --list-secret-keys --keyid-format LONG</code> to GitHub.
+Among other things, this will allow you to
+<a href=https://docs.github.com/en/github/authenticating-to-github/signing-commits>sign your commits</a>: run
+<code>git config --global commit.gpgsign true</code>.</p><h3 id=configure-git>Configure Git</h3><p>First, configure your username and email:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>git config --global user.name <span style=color:#e6db74>&#34;your_username&#34;</span>
+git config --global user.email <span style=color:#e6db74>&#34;your_email@address.tld&#34;</span>
+</code></pre></div><p>Follow GitHub’s instructions to add <a href=https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account>SSH keys to GitHub</a>
+To clone with https, you may need to <a href=https://stackoverflow.com/questions/8329485/unable-to-find-remote-helper-for-https-during-git-clone>add the git https helper</a>.
+Run <code>sudo apt install libcurl4-openssl-dev</code> in Ubuntu
+or <code>dnf install curl-devel</code> in Fedora.</p><h3 id=generate-a-certificate>Generate a certificate</h3><p>If you need a certificate, set a static IP address and generate a certificate with
+<a href=https://certbot.eff.org/>certbot</a>. Choose “None of the above” for Software.
+Then follow the instructions exactly, including the “Automating renewal” section.
+This may not work through some company and university firewalls.</p><h3 id=final-software>Final software</h3><p>First, update Java.
+You can alternatively download it from Oracle:
+<a href=https://www.oracle.com/java/technologies/javase-jdk16-downloads.html>JDK 16</a>.
+Do <em>not</em> use OpenJDK: The performance is nowhere near as high.
+(You might only need the runtime platform, but the Development Kit isn’t large.)</p><p>For Python, I recommend <a href=https://docs.conda.io>Miniconda</a>. Take a look at
+<a href=https://dmyersturnbull.github.io/#-simple-setup>these steps</a>.</p><h3 id=supplement-aliases>Supplement: aliases</h3><p>Also see <a href=https://github.com/webpro/awesome-dotfiles>awesome-dotfiles</a>.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e># xdg-open occasionally assumed in scripts,</span>
+<span style=color:#75715e># so aliasing it to macOS&#39;s `open` is a good idea</span>
+<span style=color:#75715e># alias xdg-open=open</span>
+
+<span style=color:#75715e># These improve safety</span>
+<span style=color:#75715e># Accidentally running `chown -R xx . /` (on root) can brick your system</span>
+<span style=color:#75715e># The same goes for chmod and chgrp</span>
+alias chown<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;chown --preserve-root&#39;</span>
+alias chmod<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;chmod --preserve-root&#39;</span>
+alias chgrp<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;chgrp --preserve-root&#39;</span>
+
+<span style=color:#75715e># These are colorful/nice variants of commands</span>
+alias la<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;ls -l --almost-all --no-group --group-directories-first --escape --human-readable --time-style=long-iso&#39;</span>
+alias wgetc<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;wget -c&#39;</span>
+alias grep<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;grep --color=auto&#39;</span>
+alias egrep<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;egrep --color=auto&#39;</span>
+alias fgrep<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;fgrep --color=auto&#39;</span>
+
+<span style=color:#75715e># This will show open ports in a compact form</span>
+alias ports<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;netstat -tulanp&#39;</span>
+
+<span style=color:#75715e># And this will list open file handles</span>
+<span style=color:#75715e># It&#39;s really useful when a file handle is incorrectly lingering</span>
+<span style=color:#75715e># Also see `losf`</span>
+alias handles<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;ls -la /proc/$$/fd&#39;</span>
+
+<span style=color:#75715e># These are nice as navigation shorthands</span>
+alias cd..<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;cd ..&#39;</span>
+alias ..<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;cd ..&#39;</span>
+alias ...<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;cd ../../../&#39;</span>
+alias ....<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;cd ../../../../&#39;</span>
+alias .....<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;cd ../../../../&#39;</span>
+<span style=color:#66d9ef>function</span> cdd <span style=color:#f92672>{</span> mkdir <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>&amp;&amp;</span> cd <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>}</span> <span style=color:#75715e># make a dir and cd to it</span>
+<span style=color:#66d9ef>function</span> cdd. <span style=color:#f92672>{</span> mkdir <span style=color:#e6db74>&#34;../</span>$1<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>&amp;&amp;</span> cd <span style=color:#e6db74>&#34;../</span>$1<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>}</span>
+
+<span style=color:#75715e># This one&#39;s super useful on macOS:</span>
+<span style=color:#75715e># open finder with f or f /path/to/folder</span>
+<span style=color:#75715e>#function f { if (( $# &gt; 0 )); then open -a Finder &#34;$1&#34;;  else open -a Finder ./; fi }</span>
+
+<span style=color:#75715e># This one chowns recursively for you</span>
+grab<span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+	sudo chown -R <span style=color:#e6db74>${</span>USER<span style=color:#e6db74>}</span>:<span style=color:#e6db74>${</span>USER<span style=color:#e6db74>}</span> <span style=color:#e6db74>${</span>1<span style=color:#66d9ef>:-</span>.<span style=color:#e6db74>}</span>
+<span style=color:#f92672>}</span>
+
+
+<span style=color:#75715e># This one&#39;s modified from https://serverfault.com/questions/3743/what-useful-things-can-one-add-to-ones-bashrc</span>
+extract <span style=color:#f92672>()</span> <span style=color:#f92672>{</span>
+   <span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> -f <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> <span style=color:#f92672>]]</span> ; <span style=color:#66d9ef>then</span>
+       <span style=color:#66d9ef>case</span> <span style=color:#e6db74>&#34;</span>$1<span style=color:#e6db74>&#34;</span> in
+           *.tar.bz2<span style=color:#f92672>)</span>   tar xvjf $1    ;;
+           *.tar.gz<span style=color:#f92672>)</span>    tar xvzf $1    ;;
+           *.bz2<span style=color:#f92672>)</span>       bunzip2 $1     ;;
+           *.rar<span style=color:#f92672>)</span>       unrar x $1       ;;
+           *.gz<span style=color:#f92672>)</span>        gunzip $1      ;;
+           *.tar<span style=color:#f92672>)</span>       tar xvf $1     ;;
+           *.tbz2<span style=color:#f92672>)</span>      tar xvjf $1    ;;
+           *.tgz<span style=color:#f92672>)</span>       tar xvzf $1    ;;
+           *.zip<span style=color:#f92672>)</span>       unzip $1       ;;
+           *.Z<span style=color:#f92672>)</span>         uncompress $1  ;;
+           *.7z<span style=color:#f92672>)</span>        7z x $1        ;;
+           *<span style=color:#f92672>)</span>           echo <span style=color:#e6db74>&#34;don&#39;t know how to extract &#39;</span>$1<span style=color:#e6db74>&#39;...&#34;</span> ;;
+       <span style=color:#66d9ef>esac</span>
+   <span style=color:#66d9ef>else</span>
+       echo <span style=color:#e6db74>&#34;&#39;</span>$1<span style=color:#e6db74>&#39; is not a valid file!&#34;</span>
+   <span style=color:#66d9ef>fi</span>
+ <span style=color:#f92672>}</span>
+</code></pre></div></article></html>
