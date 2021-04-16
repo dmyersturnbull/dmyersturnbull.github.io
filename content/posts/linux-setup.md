@@ -92,6 +92,7 @@ ForwardX11 no
 # turn off X forwarding for better security
 ForwardX11Trusted no
 
+
 # Modify these as needed
 Host *
 ServerAliveInterval 60
@@ -121,12 +122,18 @@ chmod 644 ~/.ssh/config
 
 ### Create GPG keys
 
-Install GPG: `brew install gnupg`. Then follow GitHub’s guides to
-[generate a GPG key](https://docs.github.com/en/github/authenticating-to-github/generating-a-new-gpg-key)
-and [add the GPG key to your account](
-https://docs.github.com/en/github/authenticating-to-github/adding-a-new-gpg-key-to-your-github-account).
-Again, skip the passphrase.
-The general steps are: `gpg --full-generate-key` and copying the output of
+Install GPG: `apt install gnupg`, `dnf install gnupg`, `brew install gnupg`, or `choco install gpg4win`.
+Then:
+
+```
+gpg --full-generate-key -t ed25519
+```
+
+Again, skip the passphrase. Move your mouse or type some keys to help the pseudorandom number generator.
+
+ Then follow GitHub’s guide to [add the GPG key to your account](
+https://docs.github.com/en/github/authenticating-to-github/adding-a-new-gpg-key-to-your-github-account). 
+The steps are: copy the output of
 `gpg --list-secret-keys --keyid-format LONG` to GitHub.
 Among other things, this will allow you to
 [sign your commits](https://docs.github.com/en/github/authenticating-to-github/signing-commits): run
