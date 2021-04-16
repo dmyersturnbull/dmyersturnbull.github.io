@@ -49,6 +49,18 @@ Summary of video compression algorithms, including AVI, h.264, h.265, AV1, aVP9,
     </item>
     
     <item>
+      <title>Linux setup</title>
+      <link>/linux-setup/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/linux-setup/</guid>
+      <description>This documents best practice setup for shell profiles, security, SSH, and GPG that work in Linux, macOS, and the Windows subsystem.
+Also see the macOS setup guide or Windows setup guide, which I recommend checking out first.
+Install Oh My Zsh You’ll thank me later. (You’ll need ZSH installed for this to work.)
+chsh -s /usr/bin/env zsh zsh sh -c &amp;#34;$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;#34; Switch to ZSH as your default shell: chsh -s $(which zsh) and Restart your terminal.</description>
+    </item>
+    
+    <item>
       <title>Misc topics</title>
       <link>/misc-topics/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -63,12 +75,11 @@ Summary of video compression algorithms, including AVI, h.264, h.265, AV1, aVP9,
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/data-science-setup/</guid>
-      <description>This is a draft.
-Here are steps for a typical initial setup for data science in Python.
+      <description>Here are steps for a typical initial setup for data science in Python.
 I’ve given similar instructions so much that I figured I’d write this down.
-Install Oh My Zsh You’ll thank me later. (You’ll need ZSH installed for this to work.)
-chsh -s /usr/bin/env zsh zsh sh -c &amp;#34;$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)&amp;#34; Configure Git First, configure your username and email:
-git config --global user.name &amp;#34;your_username&amp;#34; git config --global user.</description>
+Note: These instructions should work on Linux, macOS, and Windows. I recommend following the Linux setup guide, macOS setup guide or Windows setup guide first.
+Install Miniconda Miniconda is a much better choice than Anaconda.
+You don’t want to use your root environment anyway, so don’t bother with all of those extra packages.</description>
     </item>
     
     <item>
@@ -98,10 +109,10 @@ Frozen data should be timestamped and never changed. Living data can be updated 
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
       
       <guid>/macos-setup/</guid>
-      <description>This is a draft.
-There are other guides for setting up macOS for development. I found this guide useful for graduate students who are relatively new to programming.
+      <description>There are other guides for setting up macOS for development. I found this guide useful for graduate students who are relatively new to programming.
 Here’s what you’ll do:
- Basic setup and installing tools Set up a good shell environment Fix security problems and add SSH and GPG keys Install final software  Initial setup The obvious: Upgrade macOS, enable FileVault, and remove unneeded Login Items.</description>
+ Basic setup and installing tools Set up a good shell environment Fix security problems and add SSH and GPG keys Install final software  Also see the Windows setup guide.
+Initial setup The obvious: Upgrade macOS, enable FileVault, and remove unneeded Login Items.</description>
     </item>
     
     <item>
@@ -111,10 +122,9 @@ Here’s what you’ll do:
       
       <guid>/windows-setup/</guid>
       <description>This is a draft.
-A companion to a similar guide for macOS. There are similar guides across the web; this one contains some workarounds for various issues.
+A companion to a similar guide for macOS. Note that this one is a bit different. There are similar-ish guides across the web, but this one contains workarounds for various issues.
 Contents:
- Setup for hardware Features &amp;amp; configuration Fixing power settings issues Installing Chocolatey and useful apps Final security steps  Setup for specific hardware This details setup for specific hardware that I have used on 6 PC/workstation builds.
- Download at the NVIDIA driver page.</description>
+ Setup for hardware Features &amp;amp; configuration Fixing power settings issues Installing Chocolatey and useful apps Final security steps  Setup for specific hardware This details setup for specific hardware that I have used on 6 PC/workstation builds.</description>
     </item>
     
     <item>

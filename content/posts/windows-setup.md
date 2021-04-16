@@ -10,7 +10,8 @@ This is a *draft*.
 
 
 A companion to a similar [guide for macOS](https://dmyersturnbull.github.io/#macos-setup).
-There are similar guides across the web; this one contains some workarounds for various issues.  
+Note that this one is a bit different.
+There are similar-ish guides across the web, but this one contains workarounds for various issues.  
 Contents:
 - Setup for hardware
 - Features & configuration
@@ -97,9 +98,8 @@ via that link. Do *not* use OpenJDK.
 
 ### Security, SSH, and GPG
 
-Take a look at the end of the [guide for macOS](https://dmyersturnbull.github.io/#-macos-setup),
+**Now follow the [guide for Linux](https://dmyersturnbull.github.io/#-linux-setup)**,
 which shows how to set up SSH and GPG keys, certificates, and aliases,
 which should work for the Linux subsystem. The SSH key and config instructions should also work in
 PowerShell because OpenSSH is installed. The GPG key instructions may need tweaking.
 Definitely enable BitLocker or an equivalent.
-

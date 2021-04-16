@@ -5,54 +5,13 @@ draft: false
 slug: data-science-setup
 ---
 
-This is a *draft*.
-
 Here are steps for a typical initial setup for data science in Python.  
 I’ve given similar instructions so much that I figured I’d write this down.
 
-
-### Install [Oh My Zsh](https://ohmyz.sh/)
-
-You’ll thank me later. (You’ll need ZSH installed for this to work.)
-
-```bash
-
-chsh -s /usr/bin/env zsh
-zsh
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
-
-###  Configure Git
-
-First, configure your username and email:
-
-```bash
-git config --global user.name "your_username"
-git config --global user.email "your_email@address.tld"
-```
-
-Generate SSH keys if needed:
-
-```bash
-ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
-eval $(ssh-agent -s)
-ssh-add ~/.ssh/id_rsa
-```
-
-Save to the default location and skip adding a passphrase. After,
-[add the SSH key to GitHub](https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account).
-If you don’t already have a GPG key somewhere, run this, skipping the passphrase:
-
-```bash
-gpg --full-generate-key
-```
-
-Now add the output from this into GitHub:
-
-```bash
-gpg --list-secret-keys --keyid-format LONG
-```
+*Note:* These instructions should work on Linux, macOS, and Windows.
+I recommend following the [Linux setup guide](https://dmyersturnbull.github.io/linux-setup/),
+[macOS setup guide](https://dmyersturnbull.github.io/macos-setup/) or
+[Windows setup guide](https://dmyersturnbull.github.io/windows-setup/) first.
 
 
 ### Install Miniconda
@@ -62,16 +21,18 @@ You don’t want to use your root environment anyway, so don’t bother with all
 Never install packages in your root environment.
 
 ```bash
-curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-chmod u+x Miniconda3-latest-Linux-x86_64.sh
-./Miniconda3-latest-Linux-x86_64.sh -b
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
+chmod u+x miniconda.sh
+./miniconda.sh
 ```
 
-**Note:** On macOS and Windows, just use the .pkg/.exe [Miniconda installers](https://docs.conda.io/en/latest/miniconda.html).
+(On macOS and Windows, the graphical installers (.pkg and .msi) are good.)
 
 Then, add this to `~/.condarc`:
 
 ```yml
+ssl_verify: true
+auto_activate_base: false
 pip_interop_enabled: false
 channel_priority: strict
 auto_update_conda: true
@@ -81,6 +42,7 @@ channels:
 ```
 
 The rationale is:
+- `auto_activate_base` means you start in your environment (instead of the OS default).
 - `pip_interop_enabled` is extremely slow and often doesn’t work anyway
 - `strict` `channel_priority` greatly reduces conflicts
 - removing the `default` channel from `channels` ensures that only conda-forge is ever used
@@ -153,15 +115,7 @@ jupyter lab --no-browser &!
 (The `&!` will keep it running even when the session quits.)
 There’s no reason to set a password: It’s unlikely to add any security, and I wouldn’t rely on it.
 Instead, if you want to access Jupyter remotely, use an SSH tunnel.  
-First, make sure to set up SSH keys to your server. For that, run this on your client:
-
-```bash
-ssh-keygen -t rsa -b 4096 -C "your_email@example.com"
-eval $(ssh-agent -s)
-ssh-add ~/.ssh/id_rsa
-ssh-copy-id
-```
-
+First, make sure to set up SSH keys to your server.
 Now open the tunnel:
 
 ```
@@ -197,3 +151,11 @@ have excellent [CI/CD](https://en.wikipedia.org/wiki/CI/CD) via Poetry,
 [Tox](https://tox.readthedocs.io), and [GitHub Actions](https://github.com/features/actions):
 `tyrannosaurus new myprojectname --track`.
 
+
+### Final info
+
+- You may need to install the [Rust toolchain](https://rustup.rs/), and the conda package may not be sufficient.
+- Will Connell has a nice, hands-on [tutorial for git and conda](https://github.com/wconnell/intro-comp-wrkflw/blob/master/tutorial.txt).
+- Read [Organization for research projects](https://dmyersturnbull.github.io/research-layout/)
+- Read [Ten simple rules for reproducible computational research](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285)
+- Read [A quick guide to organizing computational biology projects](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424)

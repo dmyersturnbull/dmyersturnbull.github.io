@@ -3,7 +3,7 @@
 <meta charset="utf-8" />
 <meta name="language" content="english" />
 <meta http-equiv="content-type" content="text/html" />
-<meta name="generator" content="Hugo 0.80.0" />
+<meta name="generator" content="Hugo 0.82.0" />
 <meta name="description" content="Gastlit by a computer" />
 <meta name="author" content="Douglas Myers-Turnbull" />
 <title>New data science steps with Python | Gaslit by a computer</title>
@@ -24,38 +24,24 @@
     <h1>New data science steps with Python</h1>
     
   </header>
-  <p>This is a <em>draft</em>.</p>
-<p>Here are steps for a typical initial setup for data science in Python.<br>
+  <p>Here are steps for a typical initial setup for data science in Python.<br>
 I’ve given similar instructions so much that I figured I’d write this down.</p>
-<h3 id="install-oh-my-zshhttpsohmyzsh">Install <a href="https://ohmyz.sh/">Oh My Zsh</a></h3>
-<p>You’ll thank me later. (You’ll need ZSH installed for this to work.)</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">
-chsh -s /usr/bin/env zsh
-zsh
-sh -c <span style="color:#e6db74">&#34;</span><span style="color:#66d9ef">$(</span>curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh<span style="color:#66d9ef">)</span><span style="color:#e6db74">&#34;</span>
-</code></pre></div><h3 id="configure-git">Configure Git</h3>
-<p>First, configure your username and email:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">git config --global user.name <span style="color:#e6db74">&#34;your_username&#34;</span>
-git config --global user.email <span style="color:#e6db74">&#34;your_email@address.tld&#34;</span>
-</code></pre></div><p>Generate SSH keys if needed:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C <span style="color:#e6db74">&#34;your_email@example.com&#34;</span>
-eval <span style="color:#66d9ef">$(</span>ssh-agent -s<span style="color:#66d9ef">)</span>
-ssh-add ~/.ssh/id_rsa
-</code></pre></div><p>Save to the default location and skip adding a passphrase. After,
-<a href="https://docs.github.com/en/free-pro-team@latest/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account">add the SSH key to GitHub</a>.
-If you don’t already have a GPG key somewhere, run this, skipping the passphrase:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gpg --full-generate-key
-</code></pre></div><p>Now add the output from this into GitHub:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">gpg --list-secret-keys --keyid-format LONG
-</code></pre></div><h3 id="install-miniconda">Install Miniconda</h3>
+<p><em>Note:</em> These instructions should work on Linux, macOS, and Windows.
+I recommend following the <a href="https://dmyersturnbull.github.io/linux-setup/">Linux setup guide</a>,
+<a href="https://dmyersturnbull.github.io/macos-setup/">macOS setup guide</a> or
+<a href="https://dmyersturnbull.github.io/windows-setup/">Windows setup guide</a> first.</p>
+<h3 id="install-miniconda">Install Miniconda</h3>
 <p>Miniconda is a much better choice than Anaconda.<br>
 You don’t want to use your root environment anyway, so don’t bother with all of those extra packages.
 Never install packages in your root environment.</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-chmod u+x Miniconda3-latest-Linux-x86_64.sh
-./Miniconda3-latest-Linux-x86_64.sh -b
-</code></pre></div><p>Then, add this to <code>~/.condarc</code>:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#f92672">pip_interop_enabled</span>: <span style="color:#66d9ef">false</span>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
+chmod u+x miniconda.sh
+./miniconda.sh
+</code></pre></div><p>(On macOS and Windows, the graphical installers (.pkg and .msi) are good.)</p>
+<p>Then, add this to <code>~/.condarc</code>:</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-yml" data-lang="yml"><span style="color:#f92672">ssl_verify</span>: <span style="color:#66d9ef">true</span>
+<span style="color:#f92672">auto_activate_base</span>: <span style="color:#66d9ef">false</span>
+<span style="color:#f92672">pip_interop_enabled</span>: <span style="color:#66d9ef">false</span>
 <span style="color:#f92672">channel_priority</span>: <span style="color:#ae81ff">strict</span>
 <span style="color:#f92672">auto_update_conda</span>: <span style="color:#66d9ef">true</span>
 
@@ -63,6 +49,7 @@ chmod u+x Miniconda3-latest-Linux-x86_64.sh
   - <span style="color:#ae81ff">conda-forge</span>
 </code></pre></div><p>The rationale is:</p>
 <ul>
+<li><code>auto_activate_base</code> means you start in your environment (instead of the OS default).</li>
 <li><code>pip_interop_enabled</code> is extremely slow and often doesn’t work anyway</li>
 <li><code>strict</code> <code>channel_priority</code> greatly reduces conflicts</li>
 <li>removing the <code>default</code> channel from <code>channels</code> ensures that only conda-forge is ever used</li>
@@ -110,12 +97,8 @@ c<span style="color:#f92672">.</span>ServerApp<span style="color:#f92672">.</spa
 </code></pre></div><p>(The <code>&amp;!</code> will keep it running even when the session quits.)
 There’s no reason to set a password: It’s unlikely to add any security, and I wouldn’t rely on it.
 Instead, if you want to access Jupyter remotely, use an SSH tunnel.<br>
-First, make sure to set up SSH keys to your server. For that, run this on your client:</p>
-<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-bash" data-lang="bash">ssh-keygen -t rsa -b <span style="color:#ae81ff">4096</span> -C <span style="color:#e6db74">&#34;your_email@example.com&#34;</span>
-eval <span style="color:#66d9ef">$(</span>ssh-agent -s<span style="color:#66d9ef">)</span>
-ssh-add ~/.ssh/id_rsa
-ssh-copy-id
-</code></pre></div><p>Now open the tunnel:</p>
+First, make sure to set up SSH keys to your server.
+Now open the tunnel:</p>
 <pre><code>ssh -L 8899:localhost:8888 myservername
 </code></pre><p>Then leave that open and go to: <code>https://localhost:8899</code>.
 Now you can lose the connection and your notebooks will still be there.</p>
@@ -140,6 +123,14 @@ in <a href="https://pythonwheels.com/">wheels</a>. You can use
 have excellent <a href="https://en.wikipedia.org/wiki/CI/CD">CI/CD</a> via Poetry,
 <a href="https://tox.readthedocs.io">Tox</a>, and <a href="https://github.com/features/actions">GitHub Actions</a>:
 <code>tyrannosaurus new myprojectname --track</code>.</p>
+<h3 id="final-info">Final info</h3>
+<ul>
+<li>You may need to install the <a href="https://rustup.rs/">Rust toolchain</a>, and the conda package may not be sufficient.</li>
+<li>Will Connell has a nice, hands-on <a href="https://github.com/wconnell/intro-comp-wrkflw/blob/master/tutorial.txt">tutorial for git and conda</a>.</li>
+<li>Read <a href="https://dmyersturnbull.github.io/research-layout/">Organization for research projects</a></li>
+<li>Read <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285">Ten simple rules for reproducible computational research</a></li>
+<li>Read <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424">A quick guide to organizing computational biology projects</a></li>
+</ul>
 
 </article>
 
