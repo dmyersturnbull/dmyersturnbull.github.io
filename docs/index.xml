@@ -7,6 +7,18 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language><atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     <item>
+      <title>Best practices for MySQL/MariaDB in 2021</title>
+      <link>/mariadb-best-practices/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/mariadb-best-practices/</guid>
+      <description>This lists some best practices for MariaDB and MySQL along with scripts. Also see: install MariaDB without sudo
+Database creation The current best way to create a database is:
+CREATE DATABASE `valar` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci; Hardening To improve security, I recommend following dedicated security guides. Note: your config file might be my.cnf or .my.cnf (with a dot). Basic steps might include:
+ Install with mysql_secure_installation Drop the test database Disable remote access (e.</description>
+    </item>
+    
+    <item>
       <title>Coding tips</title>
       <link>/coding-tips/</link>
       <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
@@ -46,6 +58,16 @@ In 2015, I wrote parsers for the genomics formats VCF and BED. I rewrote them a 
       <guid>/video-encoding/</guid>
       <description># Idiot’s guide to video encoding This is a stub.
 Summary of video compression algorithms, including AVI, h.264, h.265, AV1, aVP9, and h.266. Bitrate and quality control. Hardware encoding pipelines, including Intel Quick Sync Video and Nvidia NVENC.</description>
+    </item>
+    
+    <item>
+      <title>Install MariaDB without sudo</title>
+      <link>/local-mariadb/</link>
+      <pubDate>Mon, 01 Jan 0001 00:00:00 +0000</pubDate>
+      
+      <guid>/local-mariadb/</guid>
+      <description>This describes how to install and configure MariaDB on Linux without sudo. We tried these mariadb non-sudo install instructions and had to make several changes. Here’s the script:
+#!/usr/bin/env bash set -euo pipefail IFS=$&amp;#39;\n\t&amp;#39; default_mariadb_vr=&amp;#34;10.5.9&amp;#34; if (( $# == 1 )) &amp;amp;&amp;amp; [[ &amp;#34;${1}&amp;#34; == &amp;#34;--help&amp;#34; ]]; then echo &amp;#34;Usage: ${0}[version=${default_mariadb_vr}]&amp;#34; echo &amp;#34;Sets up a local installation of MariaDB without root access.&amp;#34; exit 0 fi if (( $# &amp;gt; 1 )); then echo &amp;#34;Usage: ${0}[version=10.</description>
     </item>
     
     <item>
