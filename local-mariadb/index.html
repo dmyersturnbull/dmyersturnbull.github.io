@@ -1,5 +1,6 @@
-<!doctype html><html lang=en-us><meta charset=utf-8><meta name=language content="english"><meta http-equiv=content-type content="text/html"><meta name=generator content="Hugo 0.82.1"><meta name=description content="Gastlit by a computer"><meta name=author content="Douglas Myers-Turnbull"><title>Install MariaDB without sudo | Gaslit by a computer</title><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/index.css><link rel=canonical href=/local-mariadb/><link rel=alternate type=application/rss+xml href title="Gaslit by a computer"><header><h1><a href>Gaslit by a computer</a></h1></header><article><header><h1>Install MariaDB without sudo</h1></header><p>This describes how to install and configure MariaDB on Linux without sudo.
-We tried these <a href=https://mariadb.com/kb/en/installing-mariadb-binary-tarballs/#installing-mariadb-as-not-root-in-any-directory>mariadb non-sudo install instructions</a> and had to make a couple changes.</p><p>Save this script and run it.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e>#!/usr/bin/env bash
+<!doctype html><html lang=en-us><meta charset=utf-8><meta name=language content="english"><meta http-equiv=content-type content="text/html"><meta name=generator content="Hugo 0.82.1"><meta name=description content="Gastlit by a computer"><meta name=author content="Douglas Myers-Turnbull"><title>Install MariaDB without sudo | Gaslit by a computer</title><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/index.css><link rel=canonical href=/local-mariadb/><link rel=alternate type=application/rss+xml href title="Gaslit by a computer"><header><h1><a href>Gaslit by a computer</a></h1></header><article><header><h1>Install MariaDB without sudo</h1></header><p>This describes how to install and configure MariaDB on Linux without sudo. We tried these
+<a href=https://mariadb.com/kb/en/installing-mariadb-binary-tarballs/#installing-mariadb-as-not-root-in-any-directory>mariadb non-sudo install instructions</a>
+and had to make several changes. Here’s the script:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e>#!/usr/bin/env bash
 </span><span style=color:#75715e></span>set -euo pipefail
 IFS<span style=color:#f92672>=</span><span style=color:#e6db74>$&#39;\n\t&#39;</span>
 
@@ -32,11 +33,14 @@ chmod u+x mysql/scripts/mariadb-install-db
 mysql/scripts/mariadb-install-db  --defaults-file<span style=color:#f92672>=</span>~/.my.cnf
 
 mkdir -p ~/bin
-ln -s ~/mysql/scripts/mysql_safe ~/bin/mysql_start
+ln -s ~/mysql/scripts/mysql_safe ~/bin/mysqlstart
+ln -s ~/mysql/scripts/mysqldump ~/bin/mysqldump
+ln -s ~/mysql/scripts/mysqladmin ~/bin/mysqladmin
+ln -s ~/mysql/scripts/mysqlimport ~/bin/mysqlimport
+ln -s ~/mysql/scripts/mysqlcheck ~/bin/mysqlcheck
 ln -s ~/mysql/scripts/mysql ~/bin/mysql
 
 popd
 </code></pre></div><p>Note that <code>~/bin/</code> must be on your <code>PATH</code>.
-You can start the server:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>nohup mysql_start &amp;
-</code></pre></div><p>And log in as an admin user:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>mysql --user<span style=color:#f92672>=</span><span style=color:#e6db74>${</span>USER<span style=color:#e6db74>}</span>
-</code></pre></div><p><strong>Also see the <a href=https://dmyersturnbull.github.io/mariadb-best-practices>MariaDB best practices</a> guide.</strong></p></article></html>
+You can start the server with <code>nohup mysql_start &</code>
+And log in as an admin user: <code>mysql --user=${USER}</code></p><p><strong>Also see the <a href=https://dmyersturnbull.github.io/mariadb-best-practices>MariaDB best practices</a> guide.</strong></p></article></html>
