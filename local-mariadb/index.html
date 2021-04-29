@@ -1,7 +1,8 @@
 <!doctype html><html lang=en-us><meta charset=utf-8><meta name=language content="english"><meta http-equiv=content-type content="text/html"><meta name=generator content="Hugo 0.82.1"><meta name=description content="Gastlit by a computer"><meta name=author content="Douglas Myers-Turnbull"><title>Install MariaDB without sudo | Gaslit by a computer</title><meta name=viewport content="width=device-width,initial-scale=1"><link rel=stylesheet href=/css/index.css><link rel=canonical href=/local-mariadb/><link rel=alternate type=application/rss+xml href title="Gaslit by a computer"><header><h1><a href>Gaslit by a computer</a></h1></header><article><header><h1>Install MariaDB without sudo</h1></header><p>This describes how to install and configure MariaDB on Linux without sudo. We tried these
 <a href=https://mariadb.com/kb/en/installing-mariadb-binary-tarballs/#installing-mariadb-as-not-root-in-any-directory>mariadb non-sudo install instructions</a>
 and had to make several changes. Here’s the script:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e>#!/usr/bin/env bash
-</span><span style=color:#75715e></span>set -euo pipefail
+</span><span style=color:#75715e></span><span style=color:#75715e># safe options</span>
+set -euo pipefail
 IFS<span style=color:#f92672>=</span><span style=color:#e6db74>$&#39;\n\t&#39;</span>
 
 default_mariadb_vr<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;10.5.9&#34;</span>
@@ -13,7 +14,7 @@ default_mariadb_vr<span style=color:#f92672>=</span><span style=color:#e6db74>&#
 <span style=color:#66d9ef>fi</span>
 
 <span style=color:#66d9ef>if</span> <span style=color:#f92672>((</span> $# &gt; <span style=color:#ae81ff>1</span> <span style=color:#f92672>))</span>; <span style=color:#66d9ef>then</span>
-	echo <span style=color:#e6db74>&#34;Usage: </span><span style=color:#e6db74>${</span>0<span style=color:#e6db74>}</span><span style=color:#e6db74> [version=10.5.9]&#34;</span>
+	echo <span style=color:#e6db74>&#34;Usage: </span><span style=color:#e6db74>${</span>0<span style=color:#e6db74>}</span><span style=color:#e6db74> [version=</span><span style=color:#e6db74>${</span>default_mariadb_vr<span style=color:#e6db74>}</span><span style=color:#e6db74>]&#34;</span>
 	exit <span style=color:#ae81ff>1</span>
 <span style=color:#66d9ef>fi</span>
 
@@ -24,21 +25,41 @@ mariavr<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;</span><
 
 pushd ~
 
+<span style=color:#75715e># download mariadb</span>
 curl -O -J -L <span style=color:#e6db74>&#34;https://downloads.mariadb.org/f/mariadb-</span><span style=color:#e6db74>${</span>mariavr<span style=color:#e6db74>}</span><span style=color:#e6db74>/bintar-linux-x86_64/mariadb-</span><span style=color:#e6db74>${</span>mariavr<span style=color:#e6db74>}</span><span style=color:#e6db74>-linux-x86_64.tar.gz/from/https%3A//ftp.osuosl.org/pub/mariadb/?serve&#34;</span>
 gunzip &lt; <span style=color:#e6db74>&#34;mariadb-</span><span style=color:#e6db74>${</span>mariavr<span style=color:#e6db74>}</span><span style=color:#e6db74>-linux-x86_64.tar.gz&#34;</span> | tar xf -
-mv <span style=color:#e6db74>&#34;mariadb-</span><span style=color:#e6db74>${</span>mariavr<span style=color:#e6db74>}</span><span style=color:#e6db74>-linux-x86_64&#34;</span> mariadb
+mv <span style=color:#e6db74>&#34;mariadb-</span><span style=color:#e6db74>${</span>mariavr<span style=color:#e6db74>}</span><span style=color:#e6db74>-linux-x86_64&#34;</span> mysql
 
+<span style=color:#75715e># create a local defaults file</span>
 touch ~/.my.cnf
+
+<span style=color:#75715e># install MariaDB</span>
 chmod u+x mysql/scripts/mariadb-install-db
 mysql/scripts/mariadb-install-db  --defaults-file<span style=color:#f92672>=</span>~/.my.cnf
 
+<span style=color:#75715e># optional: declare a specific, local socket</span>
+cat &gt;&gt; ~/.my.cnf <span style=color:#e6db74>&lt;&lt;- EOM
+</span><span style=color:#e6db74>[mysqld]
+</span><span style=color:#e6db74>socket = ~/mysql/socket
+</span><span style=color:#e6db74>[mysql]
+</span><span style=color:#e6db74>socket = ~/mysql/socket
+</span><span style=color:#e6db74>
+</span><span style=color:#e6db74>EOM</span>
+
+<span style=color:#75715e># add a script &#39;mysqlstart&#39; to start the server with the right defaults file</span>
 mkdir -p ~/bin
-ln -s ~/mysql/scripts/mysql_safe ~/bin/mysqlstart
-ln -s ~/mysql/scripts/mysqldump ~/bin/mysqldump
-ln -s ~/mysql/scripts/mysqladmin ~/bin/mysqladmin
-ln -s ~/mysql/scripts/mysqlimport ~/bin/mysqlimport
-ln -s ~/mysql/scripts/mysqlcheck ~/bin/mysqlcheck
-ln -s ~/mysql/scripts/mysql ~/bin/mysql
+cat &gt;&gt; ~/bin/mysqlstart
+nohup ~/mysql/bin/mysqld_safe --defaults-file<span style=color:#f92672>=</span>~/.my.cnf &amp;
+EOM
+
+<span style=color:#75715e># add symlinks to other commands</span>
+<span style=color:#75715e># (you could also add ~/mysql/bin to your PATH)</span>
+ln -s ~/mysql/bin/mysql_safe ~/bin/mysqlstart
+ln -s ~/mysql/bin/mysqldump ~/bin/mysqldump
+ln -s ~/mysql/bin/mysqladmin ~/bin/mysqladmin
+ln -s ~/mysql/bin/mysqlimport ~/bin/mysqlimport
+ln -s ~/mysql/bin/mysqlcheck ~/bin/mysqlcheck
+ln -s ~/mysql/bin/mysql ~/bin/mysql
 
 popd
 </code></pre></div><p>Note that <code>~/bin/</code> must be on your <code>PATH</code>.

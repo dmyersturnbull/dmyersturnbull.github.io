@@ -4,12 +4,10 @@ I recommend following the <a href=https://dmyersturnbull.github.io/linux-setup/>
 <a href=https://dmyersturnbull.github.io/windows-setup/>Windows setup guide</a> first.</p><h3 id=install-miniconda>Install Miniconda</h3><p>Miniconda is a much better choice than Anaconda.<br>You don’t want to use your root environment anyway, so don’t bother with all of those extra packages.
 Never install packages in your root environment.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash>curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
 chmod u+x miniconda.sh
-./miniconda.sh
-</code></pre></div><p>(On macOS and Windows, the graphical installers (.pkg and .msi) are good.)</p><p>Then, add this to <code>~/.condarc</code>:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=color:#f92672>ssl_verify</span>: <span style=color:#66d9ef>true</span>
-<span style=color:#f92672>auto_activate_base</span>: <span style=color:#66d9ef>false</span>
+./miniconda.sh -b
+</code></pre></div><p>(On macOS and Windows, the graphical installers (.pkg and .msi) are good.)</p><p>Then, add this to <code>~/.condarc</code>:</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-yml data-lang=yml><span style=color:#f92672>auto_activate_base</span>: <span style=color:#66d9ef>false</span>
 <span style=color:#f92672>pip_interop_enabled</span>: <span style=color:#66d9ef>false</span>
 <span style=color:#f92672>channel_priority</span>: <span style=color:#ae81ff>strict</span>
-<span style=color:#f92672>auto_update_conda</span>: <span style=color:#66d9ef>true</span>
 
 <span style=color:#f92672>channels</span>:
   - <span style=color:#ae81ff>conda-forge</span>
@@ -66,4 +64,74 @@ in <a href=https://pythonwheels.com/>wheels</a>. You can use
 <a href=https://github.com/dmyersturnbull/tyrannosaurus>Tyrannosaurus</a> to generate projects that
 have excellent <a href=https://en.wikipedia.org/wiki/CI/CD>CI/CD</a> via Poetry,
 <a href=https://tox.readthedocs.io>Tox</a>, and <a href=https://github.com/features/actions>GitHub Actions</a>:
-<code>tyrannosaurus new myprojectname --track</code>.</p><h3 id=final-info>Final info</h3><ul><li>You may need to install the <a href=https://rustup.rs/>Rust toolchain</a>, and the conda package may not be sufficient.</li><li>Will Connell has a nice, hands-on <a href=https://github.com/wconnell/intro-comp-wrkflw/blob/master/tutorial.txt>tutorial for git and conda</a>.</li><li>Read <a href=https://dmyersturnbull.github.io/research-layout/>Organization for research projects</a></li><li>Read <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285">Ten simple rules for reproducible computational research</a></li><li>Read <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424">A quick guide to organizing computational biology projects</a></li></ul></article></html>
+<code>tyrannosaurus new myprojectname --track</code>.</p><h3 id=final-info>Final info</h3><ul><li>You may need to install the <a href=https://rustup.rs/>Rust toolchain</a>, and the conda package may not be sufficient.
+Use <code>curl https://sh.rustup.rs -sSf | sh</code> with the default options</li><li>Will Connell has a nice, hands-on <a href=https://github.com/wconnell/intro-comp-wrkflw/blob/master/tutorial.txt>tutorial for git and conda</a>.</li><li>Read <a href=https://dmyersturnbull.github.io/research-layout/>Organization for research projects</a></li><li>Read <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285">Ten simple rules for reproducible computational research</a></li><li>Read <a href="https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424">A quick guide to organizing computational biology projects</a></li></ul><h4 id=all-in-one-script-linux-only>All in one script (Linux only)</h4><p>This script will probably work in ZSH and Bash.
+It seems to work, but I have not tested it thoroughly.</p><div class=highlight><pre style=color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4><code class=language-bash data-lang=bash><span style=color:#75715e>#!/usr/bin/env bash
+</span><span style=color:#75715e></span>set -euo pipefail
+IFS<span style=color:#f92672>=</span><span style=color:#e6db74>$&#39;\n\t&#39;</span>
+
+<span style=color:#75715e># Download miniconda</span>
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
+
+<span style=color:#75715e># Install it</span>
+chmod u+x miniconda.sh
+./miniconda.sh -b
+
+<span style=color:#75715e># choose where to add aliases</span>
+myshell_<span style=color:#f92672>=</span><span style=color:#66d9ef>$(</span>basename -- <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>SHELL<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span> <span style=color:#66d9ef>)</span>
+myrc_<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;~/.</span><span style=color:#e6db74>${</span>myshell_<span style=color:#e6db74>}</span><span style=color:#e6db74>rc&#34;</span>
+<span style=color:#75715e># from my own choice for shared shell config:</span>
+<span style=color:#66d9ef>if</span> <span style=color:#f92672>[[</span> -e <span style=color:#e6db74>&#34;~/.commonrc&#34;</span> <span style=color:#f92672>]]</span>; <span style=color:#66d9ef>then</span>
+	myrc_<span style=color:#f92672>=</span><span style=color:#e6db74>&#34;~/.commonrc&#34;</span>
+<span style=color:#66d9ef>fi</span>
+
+<span style=color:#75715e># Activate miniconda in your shell</span>
+~/miniconda3/bin/conda update conda
+~/miniconda3/bin/conda init <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>myshell_<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+source <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>myrc_<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+
+<span style=color:#75715e># Create the .condarc file</span>
+cat &gt; <span style=color:#e6db74>&#34;~/.condarc &lt;&lt;- EOM
+</span><span style=color:#e6db74>auto_activate_base: false
+</span><span style=color:#e6db74>pip_interop_enabled: false
+</span><span style=color:#e6db74>channel_priority: strict
+</span><span style=color:#e6db74>
+</span><span style=color:#e6db74>channels:
+</span><span style=color:#e6db74>  - conda-forge
+</span><span style=color:#e6db74>
+</span><span style=color:#e6db74>EOM
+</span><span style=color:#e6db74>
+</span><span style=color:#e6db74># Create the build environment
+</span><span style=color:#e6db74>conda create --name build --yes python=3.9
+</span><span style=color:#e6db74>conda activate build
+</span><span style=color:#e6db74>pip install poetry tox
+</span><span style=color:#e6db74>
+</span><span style=color:#e6db74># Create the playground environment
+</span><span style=color:#e6db74>conda create --name playground --yes python=3.9 \
+</span><span style=color:#e6db74>  jupyterlab numpy pandas pytorch scikit-learn tensorflow-gpu keras opencv3 \
+</span><span style=color:#e6db74>  jupyter-lab ipympl nb_conda_kernels
+</span><span style=color:#e6db74>
+</span><span style=color:#e6db74># Add a good jupyter configuration
+</span><span style=color:#e6db74>if [[ ! -e &#34;</span>~/.jupyter<span style=color:#e6db74>&#34; ]]; then
+</span><span style=color:#e6db74>	mkdir &#34;</span>~/.jupyter<span style=color:#e6db74>&#34;
+</span><span style=color:#e6db74>fi
+</span><span style=color:#e6db74># Only create the jupyter config if it doesn&#39;t exist
+</span><span style=color:#e6db74># -- start of jupyter config file
+</span><span style=color:#e6db74>if [[ ! -e &#34;</span>~/.jupyter/jupyter/jupyter_lab_config.py<span style=color:#e6db74>&#34; ]]; then
+</span><span style=color:#e6db74>	cat &gt;&gt; &#34;</span>~/.jupyter/jupyter_lab_config.py<span style=color:#e6db74>&#34; &lt;&lt;- EOM
+</span><span style=color:#e6db74>from pathlib import Path
+</span><span style=color:#e6db74>c.ServerApp.root_dir = str(Path.home())
+</span><span style=color:#e6db74>c.ServerApp.token = &#39;&#39;
+</span><span style=color:#e6db74>c.ServerApp.password = &#39;&#39;
+</span><span style=color:#e6db74>c.ServerApp.port = 8888
+</span><span style=color:#e6db74>c.ServerApp.port_retries = 0
+</span><span style=color:#e6db74>c.ServerApp.autoreload = False
+</span><span style=color:#e6db74>
+</span><span style=color:#e6db74>EOM
+</span><span style=color:#e6db74>fi
+</span><span style=color:#e6db74># -- end of jupyter config file
+</span><span style=color:#e6db74>
+</span><span style=color:#e6db74># add a cute alias called &#39;saturn&#39; to start Jupyter in the bg with no browser
+</span><span style=color:#e6db74>echo &#34;</span>alias saturn<span style=color:#f92672>=</span><span style=color:#e6db74>&#39;cd &#34;~&#34; &amp;&amp; nohup jupyter lab --no-browser &amp;&#39;</span> &gt;&gt; <span style=color:#e6db74>&#34;</span><span style=color:#e6db74>${</span>myrc_<span style=color:#e6db74>}</span><span style=color:#e6db74>&#34;</span>
+
+</code></pre></div></article></html>
