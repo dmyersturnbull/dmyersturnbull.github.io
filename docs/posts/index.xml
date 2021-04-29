@@ -67,7 +67,7 @@ Summary of video compression algorithms, including AVI, h.264, h.265, AV1, aVP9,
       
       <guid>/local-mariadb/</guid>
       <description>This describes how to install and configure MariaDB on Linux without sudo. We tried these mariadb non-sudo install instructions and had to make several changes. Here’s the script:
-#!/usr/bin/env bash set -euo pipefail IFS=$&amp;#39;\n\t&amp;#39; default_mariadb_vr=&amp;#34;10.5.9&amp;#34; if (( $# == 1 )) &amp;amp;&amp;amp; [[ &amp;#34;${1}&amp;#34; == &amp;#34;--help&amp;#34; ]]; then echo &amp;#34;Usage: ${0}[version=${default_mariadb_vr}]&amp;#34; echo &amp;#34;Sets up a local installation of MariaDB without root access.&amp;#34; exit 0 fi if (( $# &amp;gt; 1 )); then echo &amp;#34;Usage: ${0}[version=10.</description>
+#!/usr/bin/env bash # safe options set -euo pipefail IFS=$&amp;#39;\n\t&amp;#39; default_mariadb_vr=&amp;#34;10.5.9&amp;#34; if (( $# == 1 )) &amp;amp;&amp;amp; [[ &amp;#34;${1}&amp;#34; == &amp;#34;--help&amp;#34; ]]; then echo &amp;#34;Usage: ${0}[version=${default_mariadb_vr}]&amp;#34; echo &amp;#34;Sets up a local installation of MariaDB without root access.&amp;#34; exit 0 fi if (( $# &amp;gt; 1 )); then echo &amp;#34;Usage: ${0}[version=${default_mariadb_vr}]&amp;#34; exit 1 fi mariavr=&amp;#34;${default_mariadb_vr}&amp;#34; if (( $# == 1)); then mariavr=&amp;#34;${1}&amp;#34; fi pushd ~ # download mariadb curl -O -J -L &amp;#34;https://downloads.</description>
     </item>
     
     <item>

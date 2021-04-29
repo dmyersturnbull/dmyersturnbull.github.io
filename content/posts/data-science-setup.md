@@ -23,7 +23,7 @@ Never install packages in your root environment.
 ```bash
 curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
 chmod u+x miniconda.sh
-./miniconda.sh
+./miniconda.sh -b
 ```
 
 (On macOS and Windows, the graphical installers (.pkg and .msi) are good.)
@@ -31,11 +31,9 @@ chmod u+x miniconda.sh
 Then, add this to `~/.condarc`:
 
 ```yml
-ssl_verify: true
 auto_activate_base: false
 pip_interop_enabled: false
 channel_priority: strict
-auto_update_conda: true
 
 channels:
   - conda-forge
@@ -126,6 +124,7 @@ Then leave that open and go to: `https://localhost:8899`.
 Now you can lose the connection and your notebooks will still be there.
 
 
+
 #### Building real packages for production
 
 The playground environment is your unreliable *I don’t care* workspace.
@@ -155,7 +154,85 @@ have excellent [CI/CD](https://en.wikipedia.org/wiki/CI/CD) via Poetry,
 ### Final info
 
 - You may need to install the [Rust toolchain](https://rustup.rs/), and the conda package may not be sufficient.
+  Use `curl https://sh.rustup.rs -sSf | sh` with the default options
 - Will Connell has a nice, hands-on [tutorial for git and conda](https://github.com/wconnell/intro-comp-wrkflw/blob/master/tutorial.txt).
 - Read [Organization for research projects](https://dmyersturnbull.github.io/research-layout/)
 - Read [Ten simple rules for reproducible computational research](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285)
 - Read [A quick guide to organizing computational biology projects](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424)
+
+
+#### All in one script (Linux only)
+
+This script will probably work in ZSH and Bash.
+It seems to work, but I have not tested it thoroughly.
+
+```bash
+#!/usr/bin/env bash
+set -euo pipefail
+IFS=$'\n\t'
+
+# Download miniconda
+curl https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -o miniconda.sh
+
+# Install it
+chmod u+x miniconda.sh
+./miniconda.sh -b
+
+# choose where to add aliases
+myshell_=$(basename -- "${SHELL}" )
+myrc_="~/.${myshell_}rc"
+# from my own choice for shared shell config:
+if [[ -e "~/.commonrc" ]]; then
+	myrc_="~/.commonrc"
+fi
+
+# Activate miniconda in your shell
+~/miniconda3/bin/conda update conda
+~/miniconda3/bin/conda init "${myshell_}"
+source "${myrc_}"
+
+# Create the .condarc file
+cat > "~/.condarc <<- EOM
+auto_activate_base: false
+pip_interop_enabled: false
+channel_priority: strict
+
+channels:
+  - conda-forge
+
+EOM
+
+# Create the build environment
+conda create --name build --yes python=3.9
+conda activate build
+pip install poetry tox
+
+# Create the playground environment
+conda create --name playground --yes python=3.9 \
+  jupyterlab numpy pandas pytorch scikit-learn tensorflow-gpu keras opencv3 \
+  jupyter-lab ipympl nb_conda_kernels
+
+# Add a good jupyter configuration
+if [[ ! -e "~/.jupyter" ]]; then
+	mkdir "~/.jupyter"
+fi
+# Only create the jupyter config if it doesn't exist
+# -- start of jupyter config file
+if [[ ! -e "~/.jupyter/jupyter/jupyter_lab_config.py" ]]; then
+	cat >> "~/.jupyter/jupyter_lab_config.py" <<- EOM
+from pathlib import Path
+c.ServerApp.root_dir = str(Path.home())
+c.ServerApp.token = ''
+c.ServerApp.password = ''
+c.ServerApp.port = 8888
+c.ServerApp.port_retries = 0
+c.ServerApp.autoreload = False
+
+EOM
+fi
+# -- end of jupyter config file
+
+# add a cute alias called 'saturn' to start Jupyter in the bg with no browser
+echo "alias saturn='cd "~" && nohup jupyter lab --no-browser &' >> "${myrc_}"
+
+```
