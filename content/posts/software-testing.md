@@ -247,7 +247,7 @@ Static analysis is a freebie.
 There are lots of tools you can easily add to your test infrastructure to detect potential bugs.
 
 IDEs like IntelliJ, [PyCharm](https://www.jetbrains.com/pycharm/), and CLion can catch simple bugs
-in Java, Scala, Python, and C/C++. These are all by JetBrains, and they’re similar.
+in [Java](https://en.wikipedia.org/wiki/Java_(programming_language)), Scala, [Python](https://www.scaler.com/topics/python/), and [C/C++](https://www.geeksforgeeks.org/difference-between-c-and-c/). These are all by JetBrains, and they’re similar.
 They have configurable *inspections* that can detect potential bugs and bad coding practices.
 They can make your coding experience much easier too with Git integration and refactoring tools.
 For example, you can rename a function and update all references to it. Or move a file.
