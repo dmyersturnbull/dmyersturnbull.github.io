@@ -8,11 +8,13 @@ site_description: "Gaslit by a computer"
 # Navigation menu
 nav:
   - Home: index.md
-  - Contributing guide: contributing-guide.md
+  - Contributor guide: contributor-guide.md
+  - Maintainer guide: maintainer-guide.md
   - Coding conventions: coding-conventions.md
   - Linux setup: linux-setup.md
   - macOS setup: macos-setup.md
   - Windows setup: windows-setup.md
+  - Research layout: research-layout.md
   - MariaDB best practices: mariadb-best-practices.md
   - MariaDB local install: mariadb-local-install.md
   - Software testing (post): software-testing.md
