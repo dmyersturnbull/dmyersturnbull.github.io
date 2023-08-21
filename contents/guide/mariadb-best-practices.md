@@ -1,7 +1,7 @@
 # MariaDB best practices
 
 This lists some best practices for MariaDB and MySQL along with scripts.
-_Also see: [install MariaDB without sudo](https://dmyersturnbull.github.io/software-testing/)_
+_Also see: [install MariaDB without sudo](https://dmyersturnbull.github.io/mariadb-local-install)_
 
 ## Database creation
 
@@ -46,7 +46,7 @@ grant all on MY_DB_NAME to admin@localhost;
 flush privileges;
 ```
 
-## Generate robust backups
+## Robust backups
 
 This script will generate robust backups.
 Each table is written to one gzipped file, with binary data hex-encoded.
@@ -54,9 +54,9 @@ Having one table per file means that we only lose one table if a file is corrupt
 Hex-encoding adds more robustness because tools can often fix corrupted gzip and UTF-8 files.
 Since gzip is used, no more storage is needed, and the only downside is reduced write speed.
 
-**I do not recommend mysqlpump** (with a **p**). In 2015, the MySQL team
-[did not recommend mysqlpump as a backup solution](http://mysqlserverteam.com/introducing-mysqlpump/),
-noting:
+**I do not recommend mysqlpump** (with a **p**).
+In 2015, the MySQL team
+[did not recommend mysqlpump as a backup solution](http://mysqlserverteam.com/introducing-mysqlpump/), noting:
 
 > This makes it currently unsafe as a general purpose backup replacement (i.e. fully replacing mysqldump).
 
@@ -98,8 +98,8 @@ for t in $(mysql -NBA -u "${db_user_}" --password="${db_password_}" -D "${db_nam
 	--single-transaction \
 	--hex-blob \
 	--max_allowed_packet=2147483648 \
-	--port="${valar_port_}" \
-	--user="${valar_user_}" \
+	--port="${db_port_}" \
+	--user="${db_user_}" \
 	--password="${db_password_}" \
 	"${db_name_}" \
 	"${t}" \
@@ -109,7 +109,7 @@ done
 echo "Backed up to ${loc_}"
 ```
 
-## Write a schema file
+## Schema files
 
 Here’s a script to write the schema in a nice way.
 
@@ -127,8 +127,8 @@ fi
 
 db_port_="3306"
 db_name_="${DB_NAME}"
-valar_user_="${DB_USER}"
-valar_password_="${DB_PASSWORD}"
+db_user_="${DB_USER}"
+db_password_="${DB_PASSWORD}"
 
 if (( $# > 0 )); then
 	(>&2 echo "Usage: ${0}")
@@ -150,7 +150,7 @@ mysqldump \
 sed -r -i -e 's/AUTO_INCREMENT=[0-9]+ //g' "schema-${db_name_}.sql"
 ```
 
-## Generate an ERD
+## ERDs
 
 This will generate an [ERD](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model)
 from a database connection. The script will output a
@@ -189,105 +189,4 @@ groovy erd.groovy > erd.graphml
 ```
 
 Include this Groovy script in the same directory:
-
-```groovy
-/*
-Taken almost entirely from https://gist.github.com/agea/6591881
-The author is Andrea Agili
-To run, you'll need mysql-connector on the classpath
-*/
-
-import groovy.sql.*
-
-def env = System.getenv()
-
-def tables = [:]
-
-def visitTable = { dbmd, schema, tableName ->
-	if (!tables[tableName]) {
-		tables[tableName] = new HashSet()
-	}
-	def keyRS = dbmd.getExportedKeys(null, schema, tableName)
-	while (keyRS.next()) {
-		tables[tableName] << keyRS.getString("FKTABLE_NAME")
-	}
-	keyRS.close()
-}
-
-def config = [
-	host: "localhost", port: 3306,
-	dbname: env['DB_NAME'], username: env['DB_USER'], password: env['DB_PASSWORD'],
-	driver: "com.mysql.jdbc.Driver",
-	schema: env['DB_NAME']
-]
-// we don't care about the timezone, so set it to UTC
-def url = "jdbc:mysql://${config.host}/${config.dbname}?serverTimezone=UTC"
-
-def sql = Sql.newInstance(url, config.username, config.password, config.driver)
-def dbmd = sql.connection.metaData
-
-def tableRS = dbmd.getTables(null, config.schema, null, "TABLE")
-while (tableRS.next()) {
-	visitTable(dbmd, config.schema, tableRS.getString("TABLE_NAME"))
-	System.err.print "."
-}
-System.err.println ""
-tableRS.close()
-
-sql.connection.close()
-
-println """
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<graphml xmlns="http://graphml.graphdrawing.org/xmlns/graphml" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:y="http://www.yworks.com/xml/graphml" xsi:schemaLocation="http://graphml.graphdrawing.org/xmlns/graphml http://www.yworks.com/xml/schema/graphml/1.0/ygraphml.xsd">
-  <key for="node" id="d0" yfiles.type="nodegraphics"/>
-  <key attr.name="description" attr.type="string" for="node" id="d1"/>
-  <key for="edge" id="d2" yfiles.type="edgegraphics"/>
-  <key attr.name="description" attr.type="string" for="edge" id="d3"/>
-  <key for="graphml" id="d4" yfiles.type="resources"/>
-  <graph id="${config.schema}" edgedefault="directed">
-"""
-
-tables.each { k,v ->
-	nodeId = "${config.schema}_${k}"
-	println """
-<node id="${nodeId}">
-<data key="d0">
-<y:ShapeNode>
-<y:Geometry height="30.0" width="${nodeId.length() * 8}.0" x="0.0" y="0.0"/>
-<y:Fill color="#E8EEF7" color2="#B7C9E3" transparent="false"/>
-<y:BorderStyle color="#000000" type="line" width="1.0"/>
-<y:NodeLabel alignment="center" autoSizePolicy="content" fontFamily="Dialog" fontSize="13" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="19.92626953125" modelName="internal" modelPosition="c" textColor="#000000" visible="true" width="37.0" x="5.5" y="5.036865234375">${k}</y:NodeLabel>
-<y:Shape type="rectangle"/>
-<y:DropShadow color="#B3A691" offsetX="2" offsetY="2"/>
-</y:ShapeNode>
-</data>
-</node>
-"""
-}
-
-tables.each { k,v ->
-	v.each { referer ->
-		edgeId = "${config.schema}_${referer}_${k}"
-		println """
-<edge id="${edgeId}" source="${config.schema}_${referer}" target="${config.schema}_${k}">
-<data key="d2">
-<y:PolyLineEdge>
-<y:Path sx="0.0" sy="13.5" tx="0.0" ty="-15.0"/>
-<y:LineStyle color="#000000" type="line" width="1.0"/>
-<y:Arrows source="none" target="crows_foot_many_mandatory"/>
-<y:EdgeLabel alignment="center" distance="2.0" fontFamily="Dialog" fontSize="12" fontStyle="plain" hasBackgroundColor="false" hasLineColor="false" height="4.0" modelName="six_pos" modelPosition="tail" preferredPlacement="anywhere" ratio="0.5" textColor="#000000" visible="true" width="4.0" x="2.0000069969042897" y="18.5"/>
-<y:BendStyle smoothed="false"/>
-</y:PolyLineEdge>
-</data>
-</edge>
-"""
-	}
-}
-
-println """
-  <data key="d4">
-    <y:Resources/>
-  </data>
-  </graph>
-</graphml>"""
-```
+- https://gist.github.com/agea/6591881

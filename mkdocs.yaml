@@ -3,38 +3,53 @@ docs_dir: "contents"
 site_dir: "docs"
 
 copyright: Copyright 2023, Douglas Myers-Turnbull
-site_description: "Gaslit by a computer"
+site_description: "Software guides and reference docs."
 
 # Navigation menu
 nav:
   - Home: index.md
-  - Contributor guide: contributor-guide.md
-  - Maintainer guide: maintainer-guide.md
-  - Coding conventions: coding-conventions.md
-  - Linux setup: linux-setup.md
-  - macOS setup: macos-setup.md
-  - Windows setup: windows-setup.md
-  - Research layout: research-layout.md
-  - MariaDB best practices: mariadb-best-practices.md
-  - MariaDB local install: mariadb-local-install.md
-  - Software testing (post): software-testing.md
-  - Python infrastructure (post): python-infrastructure.md
-  - Web stuff (_draft_): web-stuff.md
-  - Research layout (_draft_): web-stuff.md
-  - Video encoding (_draft_): video-encoding.md
-  - Parser design (_draft_): parser-design.md
+  - Reference docs:
+      - Contributor guide: ref/contributor-guide.md
+      - Maintainer guide: ref/maintainer-guide.md
+      - Coding conventions: ref/coding-conventions.md
+  - Setup / best-practices guides:
+      - Linux setup: guide/linux-setup.md
+      - macOS setup: guide/macos-setup.md
+      - Windows setup: guide/windows-setup.md
+      - MariaDB best practices: guide/mariadb-best-practices.md
+      - MariaDB local install: guide/mariadb-local-install.md
+      - Compiling ffmpeg: guide/ffmpeg-compile.md
+      - Research projects: guide/research-projects.md
+  - Posts / miscellaneous:
+      - Software testing: post/software-testing.md
+      - Scientific software testing: post/scientific-software-testing.md
+      - Python infrastructure: post/python-infrastructure.md
+      - Web stuff: post/web-stuff.md
 
 # Theme
 theme:
   name: material
   features:
-    - tabs
     - content.action.edit
     - content.code.copy
     - content.code.annotate
-  icon:
-    logo: material/cloud
-    repo: fontawesome/brands/github
+    - navigation.expand
+    - navigation.instant
+    - navigation.sections
+    - navigation.top
+    - navigation.tracking
+    - search.highlight
+    - search.suggest
+    - tags
+    - toc.follow
+    #- toc.integrate
+    - typeset
+  #icon:
+  #  logo: material/thunderstorm
+  #  repo: fontawesome/brands/github
+  #favicon:
+  #  logo: material/thunderstorm
+  #  repo: fontawesome/brands/github
   font:
     text: Noto Sans
     code: Noto Sans Mono
@@ -70,6 +85,7 @@ theme:
 
 # Extensions
 markdown_extensions:
+  - abbr
   - admonition
   - attr_list
   - pymdownx.betterem:
@@ -109,6 +125,9 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
+      #slugify: !!python/object/apply:pymdownx.slugs.slugify
+      #  kwds:
+      #    case: lower
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
@@ -120,9 +139,12 @@ markdown_extensions:
 extra_javascript:
   - javascripts/mathjax.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
+  - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
+  - javascripts/tablesort.js
 
 plugins:
   - search
+  - table-reader
   - mkdocstrings:
       handlers:
         python:

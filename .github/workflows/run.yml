@@ -23,7 +23,7 @@ jobs:
           python-version: "3.11"
       - name: Build
         run: |
-          pip install mkdocs mkdocs-material mkdocs-minify-plugin 'mkdocstrings[python]'
+          pip install mkdocs mkdocs-material mkdocs-minify-plugin 'mkdocstrings[python]' 'mkdocs-table-reader-plugin'
           mkdocs build
       - name: Setup pages
         uses: actions/configure-pages@v3

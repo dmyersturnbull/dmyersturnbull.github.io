@@ -3,24 +3,50 @@
 This documents best practice setup for shell profiles, security, SSH, and GPG
 that work in Linux, macOS, and the Windows subsystem.
 
-Also see the [macOS setup guide](https://dmyersturnbull.github.io/macos-setup/) or
-[Windows setup guide](https://dmyersturnbull.github.io/windows-setup/),
-which I recommend checking out first.
+Also see the [macOS setup guide](https://dmyersturnbull.github.io/macos-setup/) and
+[Windows setup guide](https://dmyersturnbull.github.io/windows-setup/).
 
-### Install [Oh My Zsh](https://ohmyz.sh/)
+## Install Ubuntu
+
+Install Ubuntu 23.04.
+Change the UEFI/BIOS settings so that you boot from the drive. Follow the instructions that show up
+to install Linux.
+
+!!! tip
+    I faced this issue when installing the Linux OS onto Samsung SSD drives:
+    `Unable to install GRUB`
+    Try the following things in the UEFI interface to resolve this issue:
+    - Make sure Fast Boot is Disabled.
+    - Make sure Secure Boot is Disabled. Also, check to see if CSM/Legacy options is disabled.
+    - Manually install the bootloader (not recommended).
+    - Take a look at this [page](http://www.rodsbooks.com/linux-uefi/) for troubleshooting.
+
+## Update & install packages
+
+Open a terminal and enter the following commands to install the necessary packages:
+
+```bash
+sudo apt update && upgrade
+sudo apt install python3 git vim wget xz-utils brotli lzma zstd exa
+```
+
+## Install [Oh My Zsh](https://ohmyz.sh/)
 
 You’ll thank me later. (You’ll need ZSH installed for this to work.)
 
 ```bash
+sudo apt install zsh
 chsh -s /usr/bin/env zsh
 zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+chsh -s $(which zsh)
 ```
 
-Switch to ZSH as your default shell: `chsh -s $(which zsh)` and
 Restart your terminal. You should now have a colorful shell, complete with a plugin for Git.
 
-To keep the config for ZSH and Bash consistent, add a common config file:
+## `.commonrc` file
+
+To keep the config for ZSH and Bash consistent, add a common config file called `.commonrc`:
 
 ```bash
 echo 'export PATH=/usr/local/git/bin:/usr/local/sbin:$PATH' > ~/.commonrc
@@ -30,7 +56,7 @@ echo 'source ~/.commonrc' >> ~/.bashrc
 
 From here on, only modify `.commonrc` so that both Bash and ZSH have the same environment.
 
-### Generate SSH keys
+## Generate SSH keys
 
 _What you’ll be doing:_ SSH keys provide asymmetric cryptography for securing your
 connections. In asymmetric cryptography, there are two keys: a public one and a private one.
@@ -62,7 +88,7 @@ In either case, don’t bother to set a passcode: If someone has access
 to your files you have bigger problems. (Instead, rely on encryption (e.g. FileVault) and
 a strong password.) Start the SSH agent: `eval $(ssh-agent -s)`.
 
-### Configure SSH securely
+## Harden SSH
 
 Create or edit `~/.ssh/config`:
 
@@ -110,9 +136,9 @@ After saving the config, run:
 chmod 644 ~/.ssh/config
 ```
 
-### Create GPG keys
+## Create GPG keys
 
-Install GPG: `apt install gnupg`, `dnf install gnupg`, `brew install gnupg`, or `choco install gpg4win`.
+Install GPG: `apt install gnupg` or `dnf install gnupg`.
 Then:
 
 ```
@@ -128,9 +154,12 @@ Among other things, this will allow you to
 [sign your commits](https://docs.github.com/en/github/authenticating-to-github/signing-commits): run
 `git config --global commit.gpgsign true`.
 
-### Configure Git
+## Configure Git
 
-First, configure your username and email:
+!!! note
+    Run `git config --global commit.gpgsign true` if you didn't before.
+
+Configure your username and email:
 
 ```bash
 git config --global user.name "your_username"
@@ -139,26 +168,40 @@ git config --global user.email "your_email@address.tld"
 
 Follow GitHub’s instructions to add [SSH keys to GitHub](https://docs.github.com/en/github/authenticating-to-github/adding-a-new-ssh-key-to-your-github-account)
 To clone with https, you may need to [add the git https helper](https://stackoverflow.com/questions/8329485/unable-to-find-remote-helper-for-https-during-git-clone).
-Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu
-or `dnf install curl-devel` in Fedora.
+Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu or `dnf install curl-devel` in Fedora.
 
-### Generate a certificate
+## Generate a certificate
 
 If you need a certificate, set a static IP address and generate a certificate with
 [certbot](https://certbot.eff.org/). Choose “None of the above” for Software.
 Then follow the instructions exactly, including the “Automating renewal” section.
 This may not work through some company and university firewalls.
 
-### Final software
+## Update final software
 
-Download and install Java from Oracle:
-[JDK 20+](https://www.oracle.com/java/technologies/downloads/).
-Don't use OpenJDK: The performance is nowhere near as high.
-(You might only need the runtime platform, but the Development Kit isn’t large.)
+Install the most recent version of the [JDK](https://www.oracle.com/java/technologies/downloads/).
+**Download JDK 20+ from Oracle. Do not use Java 8, java.com, or OpenJDK.**
 
-### Supplement: aliases
+## Sudoers
 
-Also see [awesome-dotfiles](https://github.com/webpro/awesome-dotfiles).
+Add a line in to the `/etc/sudoers` file that allows your user to have root privileges without password prompts.
+Refer to this [sudoers guide](https://www.cyberciti.biz/faq/how-to-sudo-without-password-on-centos-linux/).
+
+## Allow SSH login
+
+Install ssh to allow for remote logins.
+
+```
+sudo apt update
+sudo apt install openssh-server
+sudo ufw allow 22
+```
+
+## Dotfiles
+
+See [awesome-dotfiles](https://github.com/webpro/awesome-dotfiles).
+
+Here's some I used:
 
 ```bash
 # xdg-open occasionally assumed in scripts,
@@ -207,23 +250,30 @@ grab() {
 
 # This one's modified from https://serverfault.com/questions/3743/what-useful-things-can-one-add-to-ones-bashrc
 extract () {
-   if [[ -f "$1" ]] ; then
-       case "$1" in
-           *.tar.bz2)   tar xvjf $1    ;;
-           *.tar.gz)    tar xvzf $1    ;;
-           *.bz2)       bunzip2 $1     ;;
-           *.rar)       unrar x $1       ;;
-           *.gz)        gunzip $1      ;;
-           *.tar)       tar xvf $1     ;;
-           *.tbz2)      tar xvjf $1    ;;
-           *.tgz)       tar xvzf $1    ;;
-           *.zip)       unzip $1       ;;
-           *.Z)         uncompress $1  ;;
-           *.7z)        7z x $1        ;;
-           *)           echo "don't know how to extract '$1'..." ;;
-       esac
-   else
-       echo "'$1' is not a valid file!"
+   if [[ ! -f "$1" ]] ; then
+       >&2 echo "'$1' is not a file"
+       exit 1
    fi
+   case "$1" in
+       *.tar.bz2)   tar xvjf "$1"    ;;
+       *.tar.gz)    tar xvzf "$1"    ;;
+       *.bz2)       bunzip2 "$1"     ;;
+       *.rar)       unrar x "$1"     ;;
+       *.gz)        gunzip "$1"      ;;
+       *.tar)       tar xvf "$1"     ;;
+       *.tbz2)      tar xvjf "$1"    ;;
+       *.tgz)       tar xvzf "$1"    ;;
+       *.zip)       unzip "$1"       ;;
+       *.Z)         uncompress "$1"  ;;
+       *.snappy)    snunzip "$1"     ;;
+       *.sz)        snunzip "$1"     ;;
+       *.br)        brotli -d "$1"   ;;
+       *.xz)        unxz "$1"        ;;
+       *.lz4)       unlz4 "$1"       ;;
+       *.lzma)      unlzma  "$1"     ;;
+       *.zst)       unzstd "$1"      ;;
+       *.7z)        7z x "$1"        ;;
+       *)           >&2 echo "I don't know how to extract '$1'"; exit 1 ;;
+   esac
  }
 ```

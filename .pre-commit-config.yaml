@@ -68,6 +68,7 @@ repos:
         stages: [commit]
         # :tyranno: [--print-width, "${tool.ruff.line-length}"]
         args: [--print-width, "120"]
+        types_or: [json, yaml, toml, less, css, javascript, html]
         exclude: ^recipes/.*
 
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks

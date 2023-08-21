@@ -9,7 +9,10 @@ and the [Contributor Code of Conduct, version 2.0](https://www.contributor-coven
 ## Starting work
 
 !!! note
-It is helpful to configure Git to use your GPG keys. - [Generate a GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key) - [Tell Git about your key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key) - [Add a GPG key to your GitHub account](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account)
+    It is helpful to configure Git to use your GPG keys.
+    - [Generate a GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
+    - [Tell Git about your key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key)
+    - [Add a GPG key to your GitHub account](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account)
 
 You may want to discuss with the maintainers before starting any work to avoid wasting any time.
 Please create an issue for this.
@@ -20,7 +23,7 @@ To fork and clone, run:
 gh repo fork https://github.com/<org>/<repo> --default-branch-only --clone
 ```
 
-## Making changes & committing
+## Coding & committing
 
 Always run `hatch run fmt` before committing to auto-format your code.
 
@@ -33,8 +36,8 @@ that you have the right to submit your contributions under this project’s lice
 ## Submitting a pull request
 
 !!! tip
-Feel free to solicit feedback on your changes by opening a draft pull request.
-After that, `git push` to your fork to update the pull request. To start, run:
+    Feel free to solicit feedback on your changes by opening a draft pull request.
+    After that, `git push` to your fork to update the pull request. To start, run:
 
     ```bash
     gh pr create --fill-first --web --draft
