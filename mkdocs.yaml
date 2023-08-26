@@ -12,19 +12,21 @@ nav:
       - Contributor guide: ref/contributor-guide.md
       - Maintainer guide: ref/maintainer-guide.md
       - Coding conventions: ref/coding-conventions.md
-  - Setup / best-practices guides:
+  - Setup & best-practices guides:
       - Linux setup: guide/linux-setup.md
       - macOS setup: guide/macos-setup.md
       - Windows setup: guide/windows-setup.md
-      - MariaDB best practices: guide/mariadb-best-practices.md
-      - MariaDB local install: guide/mariadb-local-install.md
-      - Compiling ffmpeg: guide/ffmpeg-compile.md
+      - Git and SSH config: guide/git-and-ssh.md
       - Research projects: guide/research-projects.md
-  - Posts / miscellaneous:
+      - MariaDB best practices: guide/mariadb-best-practices.md
+  - Posts & tutorials:
       - Software testing: post/software-testing.md
       - Scientific software testing: post/scientific-software-testing.md
       - Python infrastructure: post/python-infrastructure.md
       - Web stuff: post/web-stuff.md
+  - Mini guides:
+      - MariaDB local install: misc/mariadb-local-install.md
+      - Compiling ffmpeg: misc/ffmpeg-compile.md
 
 # Theme
 theme:
@@ -42,7 +44,6 @@ theme:
     - search.suggest
     - tags
     - toc.follow
-    #- toc.integrate
     - typeset
   #icon:
   #  logo: material/thunderstorm
@@ -94,6 +95,8 @@ markdown_extensions:
       guess_lang: false
   - def_list
   - footnotes
+  - markdown_include.include:
+      base_path: contents
   - meta
   - pymdownx.arithmatex:
       generic: true
@@ -115,7 +118,7 @@ markdown_extensions:
       # :tyranno: user: ${.vendor}
       user: dmyersturnbull
       # :tyranno: repo: ${project.name}
-      repo: cicd
+      repo: dmyersturnbull.github.io
   - pymdownx.saneheaders
   - pymdownx.smartsymbols
   - pymdownx.superfences:

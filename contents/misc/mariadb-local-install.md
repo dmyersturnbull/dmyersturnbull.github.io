@@ -10,7 +10,7 @@ and had to make several changes. Here’s the script:
 set -euo pipefail
 IFS=$'\n\t'
 
-default_mariadb_vr="10.5.9"
+default_mariadb_vr="10.11.0"  # latest LTS release
 
 if (( $# == 1 )) && [[ "${1}" == "--help" ]]; then
 	echo "Usage: ${0} [version=${default_mariadb_vr}]"

@@ -1,14 +1,17 @@
 # MariaDB best practices
 
 This lists some best practices for MariaDB and MySQL along with scripts.
-_Also see: [install MariaDB without sudo](https://dmyersturnbull.github.io/mariadb-local-install)_
+_Also see: [install MariaDB without sudo](mariadb-local-install.md)_
 
 ## Database creation
 
 The current best way to create a database is:
 
 ```sql
-CREATE DATABASE `valar` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_520_ci;
+CREATE DATABASE `mydatabase`\
+    DEFAULT CHARACTER SET utf8mb4\
+    COLLATE utf8mb4_unicode_520_ci\
+;
 ```
 
 ## Hardening
@@ -36,7 +39,10 @@ I recommend an admin user, a write-access user, and a read-only user per databas
 Here’s a single script for all of this (replace `MY_DB_NAME`):
 
 ```sql
-create database MY_DB_NAME default character set utf8mb4 collate utf8mb4_unicode_520_ci;
+create database MY_DB_NAME \
+    default character set utf8mb4 \
+    collate utf8mb4_unicode_520_ci \
+;
 create user readonly@localhost identified by 'hasread';
 create user writeaccess@localhost identified by 'haswrite';
 create user admin@localhost identified by 'hasallaccess';
@@ -91,19 +97,25 @@ if (( $# > 0 )); then
 	loc="${1}"
 fi
 
-for t in $(mysql -NBA -u "${db_user_}" --password="${db_password_}" -D "${db_name_}" -e 'show tables'); do
+tables=$(\
+  mysql -NBA \
+  -u "${db_user_}" \
+  -P="${db_password_}" \
+  -D "${db_name_}" \
+  -e 'show tables'\
+);
+for t in $tables do
 	echo "Backing up $t..."
 	# 2147483648 is the max
 	mysqldump \
-	--single-transaction \
-	--hex-blob \
-	--max_allowed_packet=2147483648 \
-	--port="${db_port_}" \
-	--user="${db_user_}" \
-	--password="${db_password_}" \
-	"${db_name_}" \
-	"${t}" \
-	| gzip > "${loc_}/${t}.sql.gz"
+    --single-transaction \
+    --hex-blob \
+    --max_allowed_packet=2147483648 \
+    --port="${db_port_}" \
+    --user="${db_user_}" \
+    --password="${db_password_}" \
+    "${db_name_}" \
+    "${t}" | gzip > "${loc_}/${t}.sql.gz"
 done
 
 echo "Backed up to ${loc_}"

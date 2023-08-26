@@ -1,5 +1,16 @@
 # Contributing guide
 
+!!! abstract "How to use these docs"
+    These docs are meant to be linked to.
+    Include a link in your project's readme or _CONTRIBUTING.md_.
+    E.g.,
+    ```markdown
+    See https://dmyersturnbull.github.io/ref/contributor-guide/
+    but disregard the `security:` commit type, which we don't use.
+    ```
+
+    Or just link to individual sections.
+
 Feel free to ask a question on the Discussions tab.
 New issues and pull requests are also welcome.
 Contributors are asked to abide by the
@@ -40,7 +51,7 @@ that you have the right to submit your contributions under this project’s lice
     After that, `git push` to your fork to update the pull request. To start, run:
 
     ```bash
-    gh pr create --fill-first --web --draft
+    gh pr create --fill --web --draft
     ```
 
 Consider using `rebase -i` to clean up your commits.

@@ -1,23 +1,34 @@
 # Maintainers' guide
 
+!!! abstract "How to use these docs"
+    These docs are meant to be linked to.
+    Include a link in your project's readme or _CONTRIBUTING.md_.
+    E.g.,
+    ```markdown
+    See https://dmyersturnbull.github.io/ref/maintainer-guide/
+    but disregard the `security:` commit type.
+    ```
+
+    Or just link to individual sections; e.g.,
+    ```markdown
+    Source headers: Please refer to https://dmyersturnbull.github.io/ref/maintainer-guide/#source-headers
+    ```
+
 This guide contains a collection of best-practices.
 They tend to be easy to learn, easy to use, and easy to automate.
 They work with a range of CI/CD workflows and various automation tools.
 More notably, they are sufficient to get a transparent 1-1-1-1-1 mapping between
 issues, feature branches, pull requests, main branch commits, and changelog entries.
 
-## Flow
-
-### Branches
+## Branches
 
 Use [GitLab Flow](https://about.gitlab.com/topics/version-control/what-is-gitlab-flow/)
 / [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow).
 Name feature branches `<type>/<issue>-<description>`, such as `feat/14-add-schema`.
 Each must be tied to exactly 1 issue and result in 1 merge to _main_.
-
 If used, stable release branches must be named `releases/<vr>`; e.g., `releases/v1`.
 
-### Issues
+## Issues
 
 Issues to be worked on must have exactly 1 `type:` label, and they must have the label `status: ready for dev`.
 Use `effort:` and `priority:` labels where helpful.
@@ -34,7 +45,7 @@ Split large issues into bit-sized pieces and list those in the larger issue’s 
     - [ ] [create infrastructure to deploy schema](#23)
     ```
 
-### Handling pull requests
+## Handling pull requests
 
 Do not submit a review until the required status checks completed successfully.
 (You can add comments before this.)
@@ -49,13 +60,13 @@ To help a contributor with their PR directly, see
 ["Committing changes to a pull request branch created from a fork"](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/committing-changes-to-a-pull-request-branch-created-from-a-fork).
 If the contributor abandoned the PR, instead use `gh pr checkout <number>`.
 
-### Versioning
+## Versioning
 
 Versioning is a subset of [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Pre-releases are permitted only in the forms `alpha<int>`, `beta<int>`, and `rc<int>`,
 where `<int>` starts at 0. Alpha/beta/RC MUST NOT be used out of order (e.g., **not** `alpha1`, `beta1`, `alpha2`).
 
-### Tags and deployment
+## Tags and deployment
 
 Tags of the form `v<semver>` should result in full deployments.
 Tags of the form `v<major>` should automatically track their most recent semver tags.
@@ -64,9 +75,7 @@ The `latest` tag should always match the main branch.
 Deploy off of the main branch or tags.
 Make sure tests passed on the main branch before deploying.
 
-## Legal aspects
-
-### Source headers
+## Source headers
 
 Ensure that nontrivial files contain a header:
 
@@ -86,7 +95,7 @@ SPDX-License-Identifier: <spdx-id>
     SPDX-License-Identifier: Apache-2.0
     ```
 
-### 3rd-party code
+## 3rd-party code
 
 Use SPDX headers in the aforementioned form.
 Include a section in `NOTICE.txt` mentioning the source file(s), license, and external source.

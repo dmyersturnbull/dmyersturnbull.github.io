@@ -9,7 +9,9 @@ Here’s what you’ll do:
 - Fix security problems and add SSH and GPG keys
 - Install final software
 
-Also see the [Windows setup guide](https://dmyersturnbull.github.io/windows-setup/).
+!!! note "See also"
+    [Linux setup guide](linux-setup.md) and
+    [Windows setup guide](windows-setup.md)
 
 ## Initial setup
 
@@ -28,20 +30,14 @@ And a couple of small things:
 - In Finder, add your home folder to the SideBar. File → add to sidebar.
 - Finder → settings → Advanced → Show all filenames.
 
-## SSH & GPG
+## Install SSH
 
 Install a version of OpenSSL (actually [LibreSSL](https://www.libressl.org/) that will receive updates:
 `brew install libressl`.
 The OpenSSL version in macOS by default was seriously out-of-date when
 [Heartbleed](https://heartbleed.com/) was made public, and took a long time to  get patched.
 
-Now, **follow these [Linux instructions](https://dmyersturnbull.github.io/linux-setup/)** to set up everything else.
-
-## Update software
-
-macOS’s built-in Java is seriously out-of-date.
-Install the most recent version of the [JDK](https://www.oracle.com/java/technologies/downloads/).
-**Download JDK 20+ from Oracle. Do not use Java 8, java.com, or OpenJDK.**
+## Update command
 
 I like running this to add a `brewing` command:
 
@@ -50,6 +46,13 @@ echo 'alias brewing="brew update && brew upgrade && brew cleanup; brew doctor"' 
 ```
 
 From that, you can run `brewing` to update Brew and its packages, and fix problems.
-Although Homebrew only recommends running `brew doctor` if there’s a problem, chances are you’ll
-eventually need to run it, so it’s not a bad idea to deal with those issues immediately rather than
-to accumulate a daunting stack of issues to fix simultaneously later.
+
+!!! note
+    Although Homebrew only recommends running `brew doctor` if there’s a problem, chances are you’ll
+    eventually need to run it, so it’s not a bad idea to deal with those issues immediately rather than
+    to accumulate a daunting stack of issues to fix simultaneously later.
+
+{!guide/_common-setup.md!}
+
+!!! note
+    Thank you to Cole Helsell for drafting this guide with me.

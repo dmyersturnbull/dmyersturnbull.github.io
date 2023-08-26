@@ -7,7 +7,7 @@ teal { color: Teal }
 purple { color: Purple }
 </style>
 
-# Testing guide
+# Software testing
 
 ## Layers of tests
 

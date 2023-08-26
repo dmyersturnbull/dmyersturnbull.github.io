@@ -45,19 +45,26 @@ I just wrote a
 [StackOverflow answer](https://stackoverflow.com/questions/61624631/using-anaconda-is-a-messy-base-root-going-to-be-a-problem-in-the-long-term/61624747#61624747)
 regarding this.
 
-## Finally a nice build
+## Finally, a nice build
 
 It took me an unacceptable number of hours and commits.
 I’d change, push, wait for CI failures, and repeat.
 To help others avoid that build hell, I set up a [template repository](https://github.com/dmyersturnbull/tyrannosaurus).
 
-It heavily uses [Poetry](https://python-poetry.org/), [Tox](https://tox.readthedocs.io/en/latest/),
+!!! warning
+    Tyrannosaurus/Tyranno is undergoing an overhaul, so these instructions might be out of sync in September 2023.
+    Tyrannosaurus used to use [Poetry](https://python-poetry.org/),
+    which is also quite good. I switched to Hatch to use [PEP 621](https://peps.python.org/pep-0621/)
+    and to drop [Tox](https://tox.readthedocs.io/).
+
+It heavily uses [Hatch](https://hatch.pypa.io/),
 [GitHub actions](https://help.github.com/en/actions), and adds a package that syncs metadata (tyrannosaurus).
 It doesn’t contain a `setup.py` or `setup.cfg`.
 In fact, `pyproject.toml` is the only file that contains metadata to edit.
-When you run `tox` (or `tyrannosaurus sync`), metadata is copied from `pyproject.toml` to other files,
-such as `docs/requirements.txt`, `tox.ini`, `__init__.py`, `codemeta.json`, `meta.yaml`, and `environment.yml`.
+When you commit, metadata is copied from `pyproject.toml` to other files,
+such as  `__init__.py`, `CITATION.cff`, and `environment.yml`.
 So if you add a contributor, keyword, or dependency, it will be reflected everywhere.
+It also formats all of your files.
 
 When you push, it builds wheels, sdists, and a Docker image, and runs tests.
 It lints on commit using [pre-commit](https://pre-commit.com/).

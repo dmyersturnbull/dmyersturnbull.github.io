@@ -9,7 +9,12 @@ Contents:
 - Features & configuration
 - Fixing power settings issues
 - Installing Chocolatey and useful apps
-- Final security steps
+- Git and SSH config
+- Windows Linux Subsystem
+
+!!! note "See also"
+    [macOS setup guide](macos-setup.md) and
+    [Linux setup guide](linux-setup.md)
 
 ## Basic hardening
 
@@ -68,17 +73,9 @@ Disable them again when you’re done.
 ## Chocolatey
 
 Install [Chocolatey](https://chocolatey.org/), a fantastic package manager.
-Run `choco upgrade all`.
-Install with `choco install`: `powershell-core`,
-`choco install poshgit gh libressl openssh gnupg notepadplusplus ffmpeg 7zip vlc pandoc treesizefree rsync nodejs -Y`.
-A few are not necessary.
-You can install user applications via Chocolatey, such as VLC, Slack, Chrome, and Firefox.
-Update them all with `choco upgrade all`.
-
-### Outdated software
-
-Install the most recent version of the [JDK](https://www.oracle.com/java/technologies/downloads/).
-**Download JDK 20+ from Oracle. Do not use Java 8, java.com, or OpenJDK.**
+After installing, run `choco upgrade all -Y`.
+Then install powershell-core with `choco install powershell-core -Y` and restart your terminal,
+choosing PowerShell Core.
 
 Set powershell-core as your default shell.
 Check the PowerShell version using: `Get-Host | Select-Object Version`. Make sure it’s 7+.
@@ -90,9 +87,32 @@ Check the PowerShell version using: `Get-Host | Select-Object Version`. Make sur
     [learning it](https://devblogs.microsoft.com/powershell/getting-started-with-powershell-core-on-windows-mac-and-linux/).
     You can install it in Linux and macOS.
 
+Install some essential packages:
+`choco install poshgit gh libressl openssh gnupg  rsync nodejs python -Y`.
+
+For some additional packages:
+`choco install notepadplusplus sysinternals 7zip ffmpeg vlc pandoc treesizefree docker-desktop`
+
+Applications like Zoom, Spotify, DropBox, Chrome, and Firefox are also available.
+Keep packages up-to-date with `choco upgrade all`.
+
+## Snappy
+
+Install [Snappy](https://snappy.computop.org/installing.html#windows),
+a cross-platform package manager.
+
 ## SSH & GPG
 
-**Follow the [guide for Linux](https://dmyersturnbull.github.io/#-linux-setup)**,
-which shows how to set up SSH and GPG keys, certificates, and aliases,
-which should work for the Linux subsystem. The SSH key and config instructions should also work in
-PowerShell because OpenSSH is installed. The GPG key instructions may need tweaking.
+**Follow the [Git and SSH guide](git-and-ssh.md)**.
+The SSH key and config instructions work in PowerShell because OpenSSH is installed.
+Note that GitHub CLI is also installed.
+
+## Windows Linux Subsystem
+
+Follow [Microsoft's instructions](https://learn.microsoft.com/en-us/windows/wsl/install)
+to install the WLS. Then follow the [Linux setup guide](linux-setup.md).
+
+*[WLS]: Windows Linux Subsystem
+
+!!! note
+    Thank you to Cole Helsell for drafting this guide with me.

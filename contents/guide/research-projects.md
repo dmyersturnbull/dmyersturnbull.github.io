@@ -1,37 +1,66 @@
-# Research layout
-
-!!! warning
-    This document is not finished.
+# Research projects
 
 There are some great resources on good data organization, such as the
-[OSF’s guide](https://help.osf.io/hc/en-us/articles/360019738994-Organizing-files).
+[OSF’s guide](https://help.osf.io/article/147-organizing-files).
 Here, I’ll document the aspects of my protocols that work well.
 
 ## Living and frozen data
 
 !!! success "DO"
-    Designate data as either living or frozen. - Frozen data can never be changed. - Living data can be updated.
-    Code should never read these files directly.
-    Instead, copy living data into frozen files and timestamp them.
+    Designate data as either _living_ or _frozen_.
+    Code should never read from living files,
+    and should never write to frozen files.
+
+!!! success "DO"
+    Indicate manually curated data as such.
+    When finished, make a frozen copy and include a timestamp.
+    Have your scripts read from the frozen copy.
 
 !!! failure "DO NOT"
-    Organize into `input/` and `output/` directories.
+    Just organize into `input/` and `output/` directories.
     One source file’s input is another’s output.
 
-## Example layout
+!!! success "DO"
+    Reorganize your files if the current structure isn’t working.
+    Freely improve documentation at later times.
+
+## Example
 
 ```bash
 ├── src
 │   └── pkg/
 │       ├── __init__.py
-│       ├── generate_name_mapping.py
+│       ├── generate_raw_name_mapping.py
 │       └── analyze.py
 ├── data
+│   ├── temp-output/
+│       ├── raw-name-mapping.tsv
+│       └── figures/
 │   ├── living/
 │   │   ├── name-mapping.tsv
-│   │   └── edited-figures/
+│   │   └── figures/
+│   │   │   └── samples.pdf
 │   └── frozen/
-│       ├── name-mapping.tsv
+│       ├── name-mapping-2022-01-14.tsv
 │       ├── microscopy/
-│       └── output-figures/
+│       └── reference/
+│           └── weird-sample-analysis-2022-01-24.ipynb
+│           └── weird-samples-2022-01-24.pdf
+└── README.md
 ```
+
+Here, `temp-output/` and `living/` both contain living data.
+`temp-output/` can be overwritten any time, while `living/` contains manually curated files.
+You should probably avoid checking `output/` into a repository.
+
+`src/pkg/generate_raw_name_mapping.py` outputs `data/temp-output/raw-name-mapping.tsv`.
+Maybe it maps microscope filenames to sample names, but that mapping can’t be fully automated.
+So, we copy to `data/living/name-mapping.tsv` and edit it.
+When we’re done, we copy it to `data/frozen/name-mapping-2022-01-14.tsv`.
+
+We then run `src/pkg/analyze.py`, which outputs figures to `data/temp-output/figures/`.
+They need a little tweaking, so we copy each to `living/figures/` and align labels, etc.
+Or maybe we combine several figure panels into full figures.
+We want to keep this exact analysis, so we copy it to `data/frozen/reference/`.
+And we write a script to generate that figure (in this case, a Jupyter notebook).
+The script writes to `data/temp-output/` (**not** `data/frozen`).
