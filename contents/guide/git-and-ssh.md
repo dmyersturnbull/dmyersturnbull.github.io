@@ -2,7 +2,23 @@
 
 These instructions should work for Linux, macOS, and Windows.
 
-## Generate SSH keys
+!!! note
+    Install Git, SSH, GPG, and the [GitHub CLI](https://cli.github.com/) before proceeding.
+
+## Configure Git
+
+Configure your username and email:
+
+```bash
+git config --global user.name "your_username"
+git config --global user.email "email_used_for_github@address.tld"
+```
+
+To clone with https, you may need to
+[add the git https helper](https://stackoverflow.com/questions/8329485/unable-to-find-remote-helper-for-https-during-git-clone).
+Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu or `dnf install curl-devel` in Fedora.
+
+## Set up SSH keys
 
 !!! abstract "What you’ll be doing"
     SSH keys provide asymmetric cryptography for securing your
@@ -12,30 +28,11 @@ These instructions should work for Linux, macOS, and Windows.
     But your private key must remain on your computer and be secure.
     For historical reasons, SSH, OpenSSL, and GPG provide independent mechanisms, but they’re similar.
 
-## 1. [Generate a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key)
-## 2. [Add it to the ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent)
-## 3. [Add it to GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
+### [Generate a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key)
+### [Add it to the ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent)
+### [Add it to GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 
-## 4. Configure Git
-
-Configure your username and email:
-
-```bash
-git config --global user.name "your_username"
-git config --global user.email "email_used_for_github@address.tld"
-git config --global gpg.format ssh
-git config --global user.signingkey ~/.ssh/id_ed25519
-git config --global commit.gpgsign true
-```
-
-!!! note
-    Although it's the config keys are called 'gpg', it's actually using SSH.
-
-To clone with https, you may need to
-[add the git https helper](https://stackoverflow.com/questions/8329485/unable-to-find-remote-helper-for-https-during-git-clone).
-Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu or `dnf install curl-devel` in Fedora.
-
-## 5. Configure SSH
+### Configure SSH
 
 !!! abstract "About these steps"
     Disable SSH agent forwarding, [which](https://security.stackexchange.com/questions/101783/are-there-any-risks-associated-with-ssh-agent-forwarding)
@@ -67,7 +64,7 @@ IdentityFile ~/.ssh/id_ed25519
 User kelly@gmail.com
 ```
 
-## Set up connections to another server
+### _Optional:_ Connect to another server
 
 To set up your keys to connect to another server, run `ssh-copy-id` to transfer your key.
 Also add it to your config:
@@ -87,13 +84,27 @@ IdentityFile ~/.ssh/id_ed25519
     ```
     Substitute `id_ed25519` for `id_rsa` in your config.
 
+### _Alternative to GPG_ Sign with SSH
+
+As of August 2022, GitHub supports
+[signing with SSH keys](https://github.blog/changelog/2022-08-23-ssh-commit-verification-now-supported/),
+which you can use instead.
+This is an alternative to signing with GPG keys.
+However, this has no significant advantages, is more limited, and may be less secure.
+
+??? warning "If you still want to sign with SSH keys"
+
+    Run:
+    ```bash
+    git config --global gpg.format ssh
+    git config --global user.signingkey ~/.ssh/id_ed25519
+    git config --global commit.gpgsign true
+    ```
+
+    **Note:** Although the config keys are `gpg.format` and `gpg.format`, it will actually use SSH.
 
 ## Set up GPG keys
 
-!!! note
-    As of August 2022, GitHub supports
-    [signing with SSH keys](https://github.blog/changelog/2022-08-23-ssh-commit-verification-now-supported/),
-    which you can use instead. This seems to be trickier overall.
 
 ### Generate a key pair
 
@@ -185,7 +196,7 @@ gh gpg-key add key.private.gpg --title "IBM Laptop" # (1)!
 
 Delete the `key.private.gpg` file when done.
 
-### Publicizing your public key
+### _Optional:_ Publicize your public key
 
 !!! note
     This assumes that you used a real email address, not a `@users.noreply.github.com` address.

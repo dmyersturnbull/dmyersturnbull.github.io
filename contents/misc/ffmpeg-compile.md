@@ -1,5 +1,8 @@
 
-# Building FFmpeg
+# Compiling FFmpeg
+
+!!! note
+    These instructions will only work on Ubuntu.
 
 Configure hardware video encoding, if supported by your GPU.
 QuickSync is one option; it should support AV1 eventually on Alder Lake and higher.
@@ -7,9 +10,11 @@ QuickSync is one option; it should support AV1 eventually on Alder Lake and high
 Then, compile ffmpeg with required options:
 
 ```bash
-ffmpeg_vr=6.0
+set -euo pipefail
+IFS=$'\n\t'
 
-sudo apt install l
+ffmpeg_vr="6.0"  # (1)!
+
 sudo apt install \
   autoconf \
   automake \
@@ -30,14 +35,18 @@ sudo apt install \
   libvpx-dev \
   libwebp-dev \
   libx265-dev \
-  libaom-dev
-sudo apt install nasm yasm xz-utils
+  libaom-dev \
+  nasm \
+  yasm \
+  xz-utils
 
 export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
 export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig"
 
-curl -L -s https://ffmpeg.org/releases/ffmpeg-${ffmpeg_vr}.tar.xz | tar -xf > ffmpeg-${ffmpeg_vr}
-cd ffmpeg-${ffmpeg_vr}
+curl -L -s https://ffmpeg.org/releases/ffmpeg-${ffmpeg_vr}.tar.xz \
+    | tar -xf \
+    > "ffmpeg-${ffmpeg_vr}"
+cd "ffmpeg-${ffmpeg_vr}"
 
 # Need to configure SSH keys with GitLab
 git clone --depth=1 https://gitlab.com/AOMediaCodec/SVT-AV1.git
@@ -64,6 +73,8 @@ sudo make install
 
 # Make sure this shows libsvtav1
 if ! $( ffmpeg -version | grep libsvtav1 ) ; then
-    echo "No libsvtav1" >&2
+    >&2 echo "No libsvtav1"
 fi
 ```
+
+1. Set this to the most recent version

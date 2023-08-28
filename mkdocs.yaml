@@ -28,6 +28,7 @@ nav:
   - Mini guides:
       - MariaDB local install: misc/mariadb-local-install.md
       - Compiling ffmpeg: misc/ffmpeg-compile.md
+      - Micromamba setup: misc/micromamba-setup.md
 
 # Theme
 theme:

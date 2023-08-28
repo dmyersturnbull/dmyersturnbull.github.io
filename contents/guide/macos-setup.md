@@ -1,17 +1,17 @@
 # macOS setup
 
-There are other guides for setting up macOS for development.
-I found this guide useful for graduate students who are relatively new to programming.
-Here’s what you’ll do:
-
-- Basic setup and installing tools
-- Set up a good shell environment
-- Fix security problems and add SSH and GPG keys
-- Install final software
+A setup guide for programmers, etc., on Windows.
 
 !!! note "See also"
     [Linux setup guide](linux-setup.md) and
     [Windows setup guide](windows-setup.md)
+
+!!! abstract "Contents"
+
+    - Basic setup and installing tools
+    - Set up a good shell environment
+    - Fix security problems and add SSH and GPG keys
+    - Install final software
 
 ## Initial setup
 
@@ -30,12 +30,15 @@ And a couple of small things:
 - In Finder, add your home folder to the SideBar. File → add to sidebar.
 - Finder → settings → Advanced → Show all filenames.
 
-## Install SSH
+## Install SSH, GPG, and the GitHub CLI
 
 Install a version of OpenSSL (actually [LibreSSL](https://www.libressl.org/) that will receive updates:
 `brew install libressl`.
 The OpenSSL version in macOS by default was seriously out-of-date when
 [Heartbleed](https://heartbleed.com/) was made public, and took a long time to  get patched.
+
+Also install GPG: `brew install gnupg`.
+And the GitHub CLI: `brew install gh`.
 
 ## Update command
 

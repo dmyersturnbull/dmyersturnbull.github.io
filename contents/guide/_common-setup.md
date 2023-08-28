@@ -28,11 +28,13 @@ From here on, only modify `.commonrc` so that both Bash and ZSH have the same en
 
 **See [this guide](git-and-ssh.md).**
 
-## Install a recent JDK
+## Install Java and Rust
 
-Install the most recent version of the JDK.
-**Download (JDK 17+ from Temurin](https://adoptium.net/temurin/releases/).
+First, [Install the Rust toolchain](https://rustup.rs/).
+
+Then, **download [JDK 17 or 21 from Temurin](https://adoptium.net/temurin/releases/).
 Do not use Java 8, java.com, or OpenJDK.**
+Make sure it’s on your `$PATH` by running `java --version` in a new shell.
 
 ## Generate a certificate
 

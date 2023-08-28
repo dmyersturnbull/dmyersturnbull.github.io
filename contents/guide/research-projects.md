@@ -61,3 +61,8 @@ Or maybe we combine several figure panels into full figures.
 We want to keep this exact analysis, so we copy it to `data/frozen/reference/`.
 And we write a script to generate that figure (in this case, a Jupyter notebook).
 The script writes to `data/temp-output/` (**not** `data/frozen`).
+
+## Further information
+
+- [Ten simple rules for reproducible computational research](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1003285)
+- [A quick guide to organizing computational biology projects](https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1000424)

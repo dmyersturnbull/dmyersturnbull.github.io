@@ -1,7 +1,6 @@
 # Linux setup
 
-This documents best practice setup for shell profiles, security, SSH, and GPG
-that work in Linux, macOS, and the Windows subsystem.
+A setup guide for programmers, etc., on Linux and the Windows Linux Subsystem.
 
 !!! note "See also"
     [macOS setup guide](macos-setup.md) and
@@ -13,7 +12,7 @@ Install the most recent version or most recent LTS version of Ubuntu.
 Change the UEFI settings so that you boot from the drive. Follow the instructions that show up
 to install Linux.
 
-!!! tip
+??? bug "Linux and UEFI bug"
     I faced this issue when installing the Linux OS onto Samsung SSD drives:
     `Unable to install GRUB`
     Try the following things in the UEFI interface to resolve this issue:
@@ -31,6 +30,9 @@ sudo apt update && upgrade
 sudo apt install python3 git vim wget xz-utils brotli lzma zstd exa
 sudo apt install zsh
 ```
+
+Install the GitHub CLI per the
+[official GH Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md).
 
 {!guide/_common-setup.md!}
 
