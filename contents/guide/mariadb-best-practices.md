@@ -1,7 +1,7 @@
 # MariaDB best practices
 
 This lists some best practices for MariaDB and MySQL along with scripts.
-_Also see: [install MariaDB without sudo](mariadb-local-install.md)_
+_Also see: [install MariaDB without sudo](../misc/mariadb-local-install.md)_
 
 ## Database creation
 
@@ -164,41 +164,18 @@ sed -r -i -e 's/AUTO_INCREMENT=[0-9]+ //g' "schema-${db_name_}.sql"
 
 ## ERDs
 
-This will generate an [ERD](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model)
-from a database connection. The script will output a
-[GraphML](https://en.wikipedia.org/wiki/GraphML) file, which you can open in a tool
-like [yEd](https://www.yworks.com/products/yed) to apply a layout algorithm or apply
-[crow’s foot notation](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model#Crow's_foot_notation).
-Thanks to [Andrea Agili](https://gist.github.com/agea) for most of the Groovy script.
-Idea: After generating a SVG from yEd, you can modify the SVG code to add an
-[<a> element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/a) links to per-table anchors in
-a schema file.
+[This script by Andrea Agili](https://gist.github.com/agea/6591881)
+will generate an [ERD](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model) from a database connection.
+It will write a [GraphML](https://en.wikipedia.org/wiki/GraphML) file, which you can open in a tool like [yEd](https://www.yworks.com/products/yed) to apply a layout algorithm
+and [crow’s foot notation](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model#Crow's_foot_notation).
+After generating an SVG from yEd, you can modify the SVG code to add an
+[<a> element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/a) links to per-table anchors in a schema file.
+
+After downloading the script, also download [the MySQL Connector](https://dev.mysql.com/downloads/connector/j/).
+Extract the JAR alongside.
+
+Then output a graphml file by running:
 
 ```bash
-#!/usr/bin/env bash
-set -euo pipefail
-IFS=$'\n\t'
-
-if (( $# == 1 )) && [[ "${1}" == "--help" ]]; then
-	echo "Usage: ${0}"
-	echo "Writes an ERD of the schema in graphml to erd.graphml."
-	echo "Requires environment vars DB_NAME, DB_USER, and DB_PASSWORD"
-	exit 0
-fi
-
-if (( $# > 0 )); then
-	(>&2 echo "Usage: ${0}")
-	exit 1
-fi
-
-if [[ ! -e "~/.groovy" ]]; then
-  mkdir "~/.groovy"
-fi
-wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-java-8.0.23.zip
-unzip mysql-connector-java-8.0.23.zip -d "~/.groovy"
-
 groovy erd.groovy > erd.graphml
 ```
-
-Include this Groovy script in the same directory:
-- https://gist.github.com/agea/6591881

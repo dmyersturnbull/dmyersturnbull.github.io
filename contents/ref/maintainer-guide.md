@@ -2,7 +2,7 @@
 
 !!! abstract "How to use these docs"
     These docs are meant to be linked to.
-    Include a link in your project's readme or _CONTRIBUTING.md_.
+    Include a link in your project's readme or `CONTRIBUTING.md` file.
     E.g.,
     ```markdown
     See https://dmyersturnbull.github.io/ref/maintainer-guide/
@@ -11,7 +11,7 @@
 
     Or just link to individual sections; e.g.,
     ```markdown
-    Source headers: Please refer to https://dmyersturnbull.github.io/ref/maintainer-guide/#source-headers
+    Source headers: Refer to https://dmyersturnbull.github.io/ref/maintainer-guide/#source-headers
     ```
 
 This guide contains a collection of best-practices.

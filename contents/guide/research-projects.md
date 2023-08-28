@@ -4,25 +4,22 @@ There are some great resources on good data organization, such as the
 [OSF’s guide](https://help.osf.io/article/147-organizing-files).
 Here, I’ll document the aspects of my protocols that work well.
 
-## Living and frozen data
+## Main ideas
 
-!!! success "DO"
-    Designate data as either _living_ or _frozen_.
-    Code should never read from living files,
-    and should never write to frozen files.
+**✅ DO:**
+Designate data as either _living_ or _frozen_.
+Code should never read from living files and should never write to frozen files.
 
-!!! success "DO"
-    Indicate manually curated data as such.
-    When finished, make a frozen copy and include a timestamp.
-    Have your scripts read from the frozen copy.
+**✅ DO:**
+Indicate manually curated / edited data as such.
+When ready, make a frozen copy and add a timestamp.
+Let scripts read the frozen copy.
 
-!!! failure "DO NOT"
-    Just organize into `input/` and `output/` directories.
-    One source file’s input is another’s output.
+**❌ DO NOT:**
+Just organize into `input/` and `output/` directories.
 
-!!! success "DO"
-    Reorganize your files if the current structure isn’t working.
-    Freely improve documentation at later times.
+**✅ DO:**
+Reorganize your files if your current structure isn’t working.
 
 ## Example
 

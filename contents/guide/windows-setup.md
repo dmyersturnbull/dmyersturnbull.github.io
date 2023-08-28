@@ -16,25 +16,26 @@ Contents:
     [macOS setup guide](macos-setup.md) and
     [Linux setup guide](linux-setup.md)
 
-## Basic hardening
+## Basics
 
 Enable BitLocker.
 
-## Intel + NVIDIA
+!!! details "Intel and NVIDIA"
 
-This details setup for specific hardware that I have used on 6 PC/workstation builds.
+    I used these steps on 6 Intel+NVIDIA workstation builds.
 
-- Download at the [NVIDIA driver page](https://www.geforce.com/drivers).
-- Download and install the [Intel Extreme Tuning Utility](https://downloadcenter.intel.com/download/24075/Intel-Extreme-Tuning-Utility-Intel-XTU-).
-  Open it and view the system info and temperatures.
-- Overclock:
-  Restart your computer, enter the BIOS, and open the overclocking settings.
-  In general, you’ll want to overclock the memory to the XMP profile. For our typical motherboards
-  and RAM, this meant a change from 2400 MHz to 3600 MHz. This was crucial for running some custom
-  hardware. Overclock the CPU frequency and cache frequency a little bit at a time. After each
-  marginal change, run the Intel tuning utility: Run multiple "benchmarks" and watch the
-  temperature closely.
-- Install the [CUDA toolkit](https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64&target_version=10&target_type=exelocal).
+    - Download  drivers from the [NVIDIA driver page](https://www.geforce.com/drivers).
+      - Download and install the [Intel Extreme Tuning Utility](https://downloadcenter.intel.com/download/24075/Intel-Extreme-Tuning-Utility-Intel-XTU-).
+        Open it and view the system info and temperatures.
+      - Overclock:
+        Restart your computer, enter the BIOS, and open the overclocking settings.
+        In general, you’ll want to overclock the memory to the XMP profile.
+        For our typical motherboards and RAM, this meant a change from 2400 MHz to 3600 MHz.
+        This was crucial for running some custom
+        hardware. Overclock the CPU frequency and cache frequency a little bit at a time. After each
+        marginal change, run the Intel tuning utility: Run multiple "benchmarks" and watch the
+        temperature closely.
+      - Install the [CUDA toolkit](https://developer.nvidia.com/cuda-downloads?target_os=Windows&target_arch=x86_64&target_version=10&target_type=exelocal).
 
 ## Developer mode & config
 
@@ -114,5 +115,5 @@ to install the WLS. Then follow the [Linux setup guide](linux-setup.md).
 
 *[WLS]: Windows Linux Subsystem
 
-!!! note
+!!! note "Thanks"
     Thank you to Cole Helsell for drafting this guide with me.

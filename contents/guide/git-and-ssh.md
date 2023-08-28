@@ -90,26 +90,138 @@ IdentityFile ~/.ssh/id_ed25519
 
 ## Set up GPG keys
 
-!!! warning
-    You probably don't need this. As of August 2022, GitHub now supports
-    [signing with SSH keys](https://github.blog/changelog/2022-08-23-ssh-commit-verification-now-supported/).
+!!! note
+    As of August 2022, GitHub supports
+    [signing with SSH keys](https://github.blog/changelog/2022-08-23-ssh-commit-verification-now-supported/),
+    which you can use instead. This seems to be trickier overall.
 
-Install GPG: `apt install gnupg` or `dnf install gnupg`.
-Then:
+### Generate a key pair
 
+Also see
+[GitHub's guide](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
+to generating GPG keys.
+You may consider using an  [`@users.noreply` email address](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address)
+per their suggestion.
+
+1. Install GPG:
+
+    === "Ubuntu"
+
+        `sudo apt install gnupg`
+
+    === "Fedora"
+
+        `sudo dnf install gnupg`
+
+    === "macOS"
+
+        `brew install gnupg`
+
+    === "Windows"
+
+        `choco install gnupg` (as an administrator)
+
+2. Launch gpg-agent:
+    ```bash
+    gpg-connect-agent reloadagent /bye
+    ```
+
+3. Then, generate a key pair by running:
+
+    ```bash
+    gpg --full-generate-key -t ed25519
+    ```
+
+    Use your full name and the email address you used on GitHub.
+    As with SSH keys, you may choose to use a passphrase.
+    Choose a reasonable expiration date.
+
+### Tell Git to use your GPG key
+
+To see your generate key pair, run:
+
+```bash
+gpg --list-keys --keyid-format long
 ```
-gpg --full-generate-key -t ed25519
+
+```asc
+sec   ed25519 2023-11-04 [SC] [expires: 2025-11-03]                (1)!
+      983C8320158FBB03818D3910C01A28311C1501SH                     (2)!
+uid           [ultimate] Kerri Johnson <kerri-johnson@hotmail.com>
+ssb   cv25519 2023-11-04 [E] [expires: 2025-08-03]
 ```
 
-Move your mouse or type some keys to help the pseudorandom number generator.
-As with SSH keys, you may choose to use a passphrase.
+1. Check the type: `pub` is public; `sec` is your private key. **Here, we want `sec`.**
+2. This is your key ID. (Note: There may be a prefix, using `/` as a seperator.)
 
-Then follow GitHub’s guide to [add the GPG key to your account](https://docs.github.com/en/github/authenticating-to-github/adding-a-new-gpg-key-to-your-github-account).
-The steps are: copy the output of
-`gpg --list-secret-keys --keyid-format LONG` to GitHub.
-Among other things, this will allow you to
-[sign your commits](https://docs.github.com/en/github/authenticating-to-github/signing-commits): run
-`git config --global commit.gpgsign true`.
+If you have multiple keys, make sure to select the one you want.
+Using your secret key ID, run:
+
+```bash
+git config --global\
+  --unset gpg.format
+git config --global\
+  commit.gpgsign true
+git config --global\
+  user.signingkey 983C8320158FBB03818D3910C01A28311C1501SH
+```
+
+### Upload the GPG key to GitHub
+
+Using your secret key ID, run:
+
+```bash
+gpg \
+  --armor\
+  --export 983C8320158FBB03818D3910C01A28311C1501SH\
+  --output key.private.gpg
+```
+
+Then upload to GitHub by running the following.
+```bash
+gh gpg-key add key.private.gpg --title "IBM Laptop" # (1)!
+```
+1. Use a good title.
+
+Delete the `key.private.gpg` file when done.
+
+### Publicizing your public key
 
 !!! note
+    This assumes that you used a real email address, not a `@users.noreply.github.com` address.
+
+To list your public keys, run:
+
+```bash
+gpg --list-keys --keyid-format long
+```
+
+You'll see this:
+
+```asc
+pub   ed25519 2023-11-04 [SC] [expires: 2025-11-03]                (1)!
+      AC03281HD01A83C8DD50A9BEAA130FA03599207C                     (2)!
+uid           [ultimate] Kerri Johnson <kerri.johnson@hotmail.com>
+sub   cv25519 2023-11-04 [E] [expires: 2025-11-03]
+```
+
+1. Check the type: `pub` is public; `sec` is your private key. **Here, we want `pub`.**
+2. This is your key ID. (Note: There may be a prefix, using `/` as a seperator.)
+
+!!! warning
+    Make sure you are using your public (`pub`) key, not your private key (`sec`).
+
+Using your public key ID, run the following to get a key file called `kerri-johnson.pub.asc`:
+
+```bash
+gpg\
+  --armor\
+  --export AC03281HD01A83C8DD50A9BEAA130FA03599207C\
+  --output kerri-johnson.asc
+```
+
+You can make this file available publicly, such as on your website.
+
+
+!!! note "Thanks"
     Thank you to Cole Helsell for drafting this guide with me.

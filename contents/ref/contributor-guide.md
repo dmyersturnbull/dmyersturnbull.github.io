@@ -2,7 +2,7 @@
 
 !!! abstract "How to use these docs"
     These docs are meant to be linked to.
-    Include a link in your project's readme or _CONTRIBUTING.md_.
+    Include a link in your project's readme or `CONTRIBUTING.md` file.
     E.g.,
     ```markdown
     See https://dmyersturnbull.github.io/ref/contributor-guide/
@@ -21,9 +21,10 @@ and the [Contributor Code of Conduct, version 2.0](https://www.contributor-coven
 
 !!! note
     It is helpful to configure Git to use your GPG keys.
-    - [Generate a GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
-    - [Tell Git about your key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key)
-    - [Add a GPG key to your GitHub account](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account)
+
+      - [Generate a GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
+      - [Tell Git about your key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key)
+      - [Add a GPG key to your GitHub account](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account)
 
 You may want to discuss with the maintainers before starting any work to avoid wasting any time.
 Please create an issue for this.

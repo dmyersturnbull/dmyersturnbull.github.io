@@ -34,5 +34,5 @@ sudo apt install zsh
 
 {!guide/_common-setup.md!}
 
-!!! note
+!!! note "Thanks"
     Thank you to Cole Helsell for drafting this guide with me.
