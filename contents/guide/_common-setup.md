@@ -26,7 +26,7 @@ From here on, only modify `.commonrc` so that both Bash and ZSH have the same en
 
 ## Git, SSH, and GPG
 
-**See [this guide](git-and-ssh.md).**
+**See [this guide](git-ssh-gpg.md).**
 
 ## Install Java and Rust
 
@@ -45,8 +45,16 @@ This may not work through some company and university firewalls.
 
 ## Sudoers
 
-Add a line in to the `/etc/sudoers` file that allows your user to have root privileges without password prompts.
-Refer to this [sudoers guide](https://www.cyberciti.biz/faq/how-to-sudo-without-password-on-centos-linux/).
+The easiest way is to run
+
+```bash
+su  #(1)!
+usermod -aG sudo $USER
+```
+
+1. This will require you to enter the root password.
+
+See this [sudoers guide](https://www.cyberciti.biz/faq/how-to-sudo-without-password-on-centos-linux/) for more info.
 
 ## Allow SSH login
 
@@ -60,9 +68,7 @@ sudo ufw allow 22
 
 ## Dotfiles
 
-See [awesome-dotfiles](https://github.com/webpro/awesome-dotfiles).
-
-Here's some I used:
+See [awesome-dotfiles](https://github.com/webpro/awesome-dotfiles). Here are some I used:
 
 ```bash
 # xdg-open occasionally assumed in scripts,
@@ -113,7 +119,7 @@ grab() {
 extract () {
    if [[ ! -f "$1" ]] ; then
        >&2 echo "'$1' is not a file"
-       exit 1
+       exit 2
    fi
    case "$1" in
        *.tar.bz2)   tar xvjf "$1"    ;;

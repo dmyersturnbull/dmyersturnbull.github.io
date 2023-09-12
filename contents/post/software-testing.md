@@ -38,8 +38,8 @@ It doesn’t matter, as long as you distinguish between the extremes and have bo
 
 ## Layer 0 - Static
 
-Just because your code compiled doesn't mean it's correct.
-So, a static type system isn't a replacement for tests.
+Just because your code compiled doesn’t mean it’s correct.
+So, a static type system isn’t a replacement for tests.
 However, it _does_ constrain the input surface, which makes % test coverage meaningful.
 See [Duck typing is quackery](duck-typing-is-quackery.md) for more details.
 

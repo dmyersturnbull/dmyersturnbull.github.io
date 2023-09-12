@@ -4,6 +4,11 @@ These instructions should work for Linux, macOS, and Windows.
 
 !!! note
     Install Git, SSH, GPG, and the [GitHub CLI](https://cli.github.com/) before proceeding.
+    Follow the
+    [Linux setup guide](macos-setup.md),
+    [macOS setup guide](macos-setup.md),
+    or [Windows setup guide](windows-setup.md).
+
 
 ## Configure Git
 
@@ -84,7 +89,43 @@ IdentityFile ~/.ssh/id_ed25519
     ```
     Substitute `id_ed25519` for `id_rsa` in your config.
 
-### _Alternative to GPG_ Sign with SSH
+### _Optional:_ Allow remote access
+
+You will need to install and configure the SSH server.
+
+=== "Ubuntu"
+
+    ```bash
+    sudo apt install openssh-server
+    sudo systemctl enable ssh
+    ```
+
+    Open port 22:
+
+    ```bash
+    sudo ufw allow 22
+    ```
+
+=== "Fedora"
+
+    ```bash
+    sudo dnf install openssh-server
+    sudo systemctl enable ssh
+    ```
+
+    `firewalld` should accept communications over port 22 without additional configuration.
+    If not, look for firewalld guides (and shoot me a message).
+
+=== "macOS"
+
+    Enable "Remote Login" and "Allow full disk access for remote users" under Sharing settings.
+
+=== "Windows"
+
+    Enable "OpenSSH server" under Optional Features.
+
+
+### _Alternative to GPG:_ Sign with SSH
 
 As of August 2022, GitHub supports
 [signing with SSH keys](https://github.blog/changelog/2022-08-23-ssh-commit-verification-now-supported/),
@@ -104,7 +145,6 @@ However, this has no significant advantages, is more limited, and may be less se
     **Note:** Although the config keys are `gpg.format` and `gpg.format`, it will actually use SSH.
 
 ## Set up GPG keys
-
 
 ### Generate a key pair
 
@@ -132,12 +172,12 @@ per their suggestion.
 
         `choco install gnupg` (as an administrator)
 
-2. Launch gpg-agent:
+2. Launch gpg-agent by running
     ```bash
     gpg-connect-agent reloadagent /bye
     ```
 
-3. Then, generate a key pair by running:
+3. Then, generate a key pair by running
 
     ```bash
     gpg --full-generate-key -t ed25519
@@ -149,7 +189,7 @@ per their suggestion.
 
 ### Tell Git to use your GPG key
 
-To see your generate key pair, run:
+To see your generate key pair, run
 
 ```bash
 gpg --list-keys --keyid-format long
@@ -179,7 +219,7 @@ git config --global\
 
 ### Upload the GPG key to GitHub
 
-Using your secret key ID, run:
+Using your secret key ID, run
 
 ```bash
 gpg \
@@ -189,9 +229,11 @@ gpg \
 ```
 
 Then upload to GitHub by running the following.
+
 ```bash
 gh gpg-key add key.private.gpg --title "IBM Laptop" # (1)!
 ```
+
 1. Use a good title.
 
 Delete the `key.private.gpg` file when done.
@@ -201,7 +243,7 @@ Delete the `key.private.gpg` file when done.
 !!! note
     This assumes that you used a real email address, not a `@users.noreply.github.com` address.
 
-To list your public keys, run:
+To list your public keys, run
 
 ```bash
 gpg --list-keys --keyid-format long

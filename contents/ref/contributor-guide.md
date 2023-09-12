@@ -2,11 +2,11 @@
 
 !!! abstract "How to use these docs"
     These docs are meant to be linked to.
-    Include a link in your project's readme or `CONTRIBUTING.md` file.
+    Include a link in your project’s readme or `CONTRIBUTING.md` file.
     E.g.,
     ```markdown
     See https://dmyersturnbull.github.io/ref/contributor-guide/
-    but disregard the `security:` commit type, which we don't use.
+    but disregard the `security:` commit type, which we don’t use.
     ```
 
     Or just link to individual sections.
@@ -20,22 +20,23 @@ and the [Contributor Code of Conduct, version 2.0](https://www.contributor-coven
 ## Starting work
 
 !!! note
-    It is helpful to configure Git to use your GPG keys.
 
-      - [Generate a GPG key](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
-      - [Tell Git about your key](https://docs.github.com/en/authentication/managing-commit-signature-verification/telling-git-about-your-signing-key)
-      - [Add a GPG key to your GitHub account](https://docs.github.com/en/authentication/managing-commit-signature-verification/adding-a-gpg-key-to-your-github-account)
+    This document assumes that you have the [GitHub CLI](https://cli.github.com/) installed.
 
 You may want to discuss with the maintainers before starting any work to avoid wasting any time.
 Please create an issue for this.
 
-To fork and clone, run:
+To fork and clone, run
 
 ```bash
 gh repo fork https://github.com/<org>/<repo> --default-branch-only --clone
 ```
 
 ## Coding & committing
+
+!!! note
+    It is helpful to configure Git to use your GPG keys.
+    See the [Git, SSH, and GPG guide](../guide/git-ssh-gpg.md).
 
 Always run `hatch run fmt` before committing to auto-format your code.
 
@@ -49,7 +50,8 @@ that you have the right to submit your contributions under this project’s lice
 
 !!! tip
     Feel free to solicit feedback on your changes by opening a draft pull request.
-    After that, `git push` to your fork to update the pull request. To start, run:
+    After that, `git push` to your fork to update the pull request.
+    To start, run
 
     ```bash
     gh pr create --fill --web --draft
@@ -58,20 +60,22 @@ that you have the right to submit your contributions under this project’s lice
 Consider using `rebase -i` to clean up your commits.
 Edit (`e`) commit messages to clarify them and fixup (`f`) any messages that should be excluded.
 
-To open a pull request, run:
+To open a pull request, run
 
 ```bash
 gh pr create --fill --title '<type>: <message>' --web
 ```
 
 (Refer to the table below for the types.)
-When you’re ready, mark your pull request as "ready for review" on github.com or by running:
+When you’re ready, mark your pull request as "ready for review" on github.com or by running
 
 ```bash
 gh pr ready <id>
 ```
 
 ## Commit and issue types
+
+For more details, see the [GitHub labels document](github-labels.md).
 
 | Type        | Label               | Description                         |
 | ----------- | ------------------- | ----------------------------------- |

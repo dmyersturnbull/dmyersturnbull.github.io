@@ -21,14 +21,15 @@ I want to focus on two downsides that seem seldom discussed.
    a practice that duck typing countermands.
 2. Because users can pass instances of any types, tests must cover arbitrary inputs.
 
-I'll discuss these through a real example.
+I’ll discuss these through a real example.
 
 ## A matrix algorithm
 
 You devised some clever matrix algorithm that operates on two matrices and outputs a third.
-After putting your paper on arXiv, you implement it in three languages -- Java, Scala, and Python.
+After putting your paper on arXiv, you implement it in three languages—Java, Scala, and Python.
 
 === "Java"
+
     ```java
     import org.nd4j.linalg.api.ndarray.IndArray;
     public class MyAlgorithm {
@@ -39,6 +40,7 @@ After putting your paper on arXiv, you implement it in three languages -- Java, 
     ```
 
 === "Scala"
+
     ```scala
     import breeze.linalg.Matrix;
     class MyAlgorithm {
@@ -49,6 +51,7 @@ After putting your paper on arXiv, you implement it in three languages -- Java, 
     ```
 
 === "Python"
+
     ```python
     class MyAlgorithm:
         def calculate(self, matrix_a, matrix_b):
@@ -57,12 +60,12 @@ After putting your paper on arXiv, you implement it in three languages -- Java, 
     ```
 
 In Java, the method takes two `IndArray` instances and outputs a third.
-If people read your paper, it's clear how to use it.
+If people read your paper, it’s clear how to use it.
 In Scala, the function takes two [Breeze Matrices](http://www.scalanlp.org/api/breeze/#breeze.linalg.Matrix)
 and outputs a matrix.
 
-For the Python code, you realize that `matrix_a` isn't clear to users.
-You don't want them passing in lists of lists, so you add some documentation:
+For the Python code, you realize that `matrix_a` isn’t clear to users.
+You don’t want them passing in lists of lists, so you add some documentation:
 
 
 ```python
@@ -72,7 +75,7 @@ class MyAlgorithm:
         Calculates on matrices a and b.
 
         Arguments:
-            matrix_a: A matrix, like Numpy's (i.e., not a list of lists)
+            matrix_a: A matrix, like Numpy’s (i.e., not a list of lists)
             matrix_b: A second matrix
 
         Returns:
@@ -88,14 +91,14 @@ Then, you write some tests.
 In fact, you test your code with Numpy `ndarray`,
 [PySpark matrices](https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.mllib.linalg.Matrices.html),
 and [Polars DataFrames](https://pola-rs.github.io/polars/py-polars/html/reference/dataframe/index.html).
-That's three times the work of your Java and Scala implementations, but at least you're safe and sound.
+That’s three times the work of your Java and Scala implementations, but at least you’re safe and sound.
 
 A year later, a PhD student in a dark room finds your lovely Python library.
-It's got 450 GitHub stars, so it must be good.
-She incorporates it into her own code, which she's already written tests for.
-She's not testing your code -- nor should she. She assumes it works.
-She gets an answer -- a reasonable-looking matrix, and it gets published.
-Of course, it's wrong.
+It’s got 450 GitHub stars, so it must be good.
+She incorporates it into her own code, which she’s already written tests for.
+She’s not testing your code—nor should she. She assumes it works.
+She gets an answer—a reasonable-looking matrix, and it gets published.
+Of course, it’s wrong.
 
 What happened?
 Somewhere in `calculate` is this code:
@@ -107,9 +110,10 @@ def calculate(self, matrix_a, matrix_b):
     return final_matrix
 ```
 
-You assumed element-wise multiplication because that's what [Numpy `ndarray`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html) does.
+You assumed element-wise multiplication because thats what [Numpy `ndarray`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html) does.
 The matrix library she used defines `__mul__` as matrix multiplication.
-That's not her fault. Maybe you can improve the documentation:
+That’s not her fault.
+Maybe you can improve the documentation:
 
 ```python
 def calculate(matrix_a, matrix_b):
@@ -134,14 +138,12 @@ def calculate(matrix_a, matrix_b):
 ```
 
 Ok, it got out of hand.
-We've made a lot of work for ourselves writing docs and tests,
+We’ve made a lot of work for ourselves writing docs and tests,
 made an unreadable mess of documentation,
 and still failed to over all possible libraries that follow the documented semantics.
-But it really wasn't your fault; you were writing Pythonic code and following duck typing.
+But it really wasn’t your fault; you were writing Pythonic code and following duck typing.
 
-In contrast, our Scala code was easy to test, and it's easy to understand how to use at a glance.
-
-```scala
+In contrast, our Scala code was easy to test, and it’s easy to understand how to use at a glance.
 
 ```scala
 import breeze.linalg.Matrix;
@@ -157,7 +159,7 @@ When documentation is rendered, it shows that `matrixA` and `matrixB` are both `
 Upon seeing the method signature, a user could read up about how Breeze matrices works.
 Alternatively, they could skip that --
 because you, as the library author, are certifying that your code works with Breeze matrices.
-If they're using matrices of another library, they can write an adapter.
+If they’re using matrices of another library, they can write an adapter.
 
 ```scala
 import breeze.linalg.Matrix;
@@ -168,8 +170,10 @@ class GooborToBreezeMatrixAdapter extends Matrix {
 ```
 
 ??? note "Scala structural typing"
+
     Scala supports true compile-time structural typing.
     You could easily rewrite `calculate` like this:
+
     ```scala
     type Matrix = {
       def rows: Int
@@ -186,9 +190,9 @@ class GooborToBreezeMatrixAdapter extends Matrix {
     ```
     This can be useful, but perhaps not here (because `*` is ambiguous).
 
-## Example 2: Let's break `quack`
+## Example 2: Lets break `quack`
 
-Let's consider a much simpler example.
+Let’s consider a much simpler example.
 A `quack` function could behave in _at least_ two ways:
 
 === "Stateful duck"
@@ -224,7 +228,7 @@ A `quack` function could behave in _at least_ two ways:
             return Duck(quacking=True)  # (1)!
     ```
 
-    1. Return a new duck that's quacking.
+    1. Return a new duck that’s quacking.
 
 When using this function, how do you call it?
 You have two options.
@@ -245,11 +249,11 @@ You have two options.
         ...
     ```
 
-In fact, what really matters is the _behavior_ of the duck, not whether it's a duck.
-Knowing (or suspecting) that it's a duck is not enough; you need to know how the duck-like object behaves.
+In fact, what really matters is the _behavior_ of the duck, not whether it’s a duck.
+Knowing (or suspecting) that it’s a duck is not enough; you need to know how the duck-like object behaves.
 As Alex Martelli (the author of Python in a Nutshell) wrote in an email thread:
 
 !!! quote
-    Amen, hallelujah. You don't really care for IS-A -- you really only care for BEHAVES-LIKE-A- [...],
+    Amen, hallelujah. You don’t really care for IS-A -- you really only care for BEHAVES-LIKE-A- [...],
     so, if you do test, this behaviour is what you should be testing for
     **--- [Alex Martelli](https://groups.google.com/g/comp.lang.python/c/CCs2oJdyuzc/m/NYjla5HKMOIJ)**

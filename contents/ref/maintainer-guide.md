@@ -77,7 +77,7 @@ Make sure tests passed on the main branch before deploying.
 
 ## Source headers
 
-Ensure that nontrivial files contain a header:
+Ensure that nontrivial files contain a header such as
 
 ```text
 SPDX-FileCopyrightText: Copyright <years>, Contributors to <project>
@@ -107,10 +107,14 @@ We follow [Conventional Commits](https://www.conventionalcommits.org/) using the
 The general pattern for the subject is `<type>[(<scope>)][!]: <subject>`,
 where `(<scope>)` is empty, `plugins`, or `i18n`; and `!` denotes a breaking change.
 
-!!! example
+!!! example "Example 1"
+
     ```text
     feat!: add schema
     ```
+
+!!! example "Example 2"
+
     ```text
     doc(i18n): add JP translation
     ```

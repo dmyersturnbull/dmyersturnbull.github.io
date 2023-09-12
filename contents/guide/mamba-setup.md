@@ -36,7 +36,6 @@ conda activate build
 pip install poetry hatch tox pytest pytest-cov
 ```
 
-
 ## Create a playground environment
 
 You can add packages in here and wreck it.
@@ -65,7 +64,6 @@ conda activate ds
     and the PyPi pywin32 package version 300 is broken.
     You may need to run `/path/to/your/environment/pywin32_postinstall.py -install` after.
 
-
 ## Configure Jupyter
 
 Copy this to `~/.jupyter/jupyter_lab_config.py`:
@@ -91,7 +89,7 @@ jupyter lab --no-browser &!
 There’s no reason to set a password: It’s unlikely to add any security, and you shouldn’t rely on it.
 Instead, if you want to access Jupyter remotely, use an SSH tunnel.
 First, make sure to set up SSH keys to your server.
-Now open the tunnel:
+Now open the tunnel by running
 
 ```
 ssh -L 8899:localhost:8888 myservername
@@ -100,10 +98,9 @@ ssh -L 8899:localhost:8888 myservername
 Then leave that open and go to: `https://localhost:8899`.
 Now you can lose the connection and your notebooks will still be there.
 
-
 ## Build real packages
 
-The playground environment is your unreliable _* don’t care_ workspace.
+The playground environment is your unreliable _I don’t care_ workspace.
 
 You should use an isolated build procedure whenever you care about reproducibility.
 Your project should list dependencies with version ranges and be rebuilt from scratch on each build.

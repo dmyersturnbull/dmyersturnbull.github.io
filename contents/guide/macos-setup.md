@@ -6,13 +6,6 @@ A setup guide for programmers, etc., on Windows.
     [Linux setup guide](linux-setup.md) and
     [Windows setup guide](windows-setup.md)
 
-!!! abstract "Contents"
-
-    - Basic setup and installing tools
-    - Set up a good shell environment
-    - Fix security problems and add SSH and GPG keys
-    - Install final software
-
 ## Initial setup
 
 The obvious: Upgrade macOS, enable FileVault, and remove unneeded Login Items.
@@ -25,12 +18,12 @@ Install the text editor [Sublime](https://www.sublimetext.com/) (`brew cask inst
 And a couple of small things:
 
 - Show hidden files: Run `defaults write com.apple.Finder AppleShowAllFiles true`.
-  Then: `killall Finder`
+  Then run `killall Finder`.
 - Show filename extensions: Do this in Finder → Settings → Advanced.
 - In Finder, add your home folder to the SideBar. File → add to sidebar.
 - Finder → settings → Advanced → Show all filenames.
 
-## Install SSH, GPG, and the GitHub CLI
+## SSH, GPG, & GitHub CLI
 
 Install a version of OpenSSL (actually [LibreSSL](https://www.libressl.org/) that will receive updates:
 `brew install libressl`.
