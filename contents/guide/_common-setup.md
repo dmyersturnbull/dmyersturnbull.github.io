@@ -4,7 +4,7 @@
 You’ll thank me later. (You’ll need ZSH installed for this to work.)
 
 ```bash
-chsh -s /usr/bin/env zsh
+chsh -s $(which zsh)
 zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 chsh -s $(which zsh)
@@ -32,7 +32,7 @@ From here on, only modify `.commonrc` so that both Bash and ZSH have the same en
 
 First, [Install the Rust toolchain](https://rustup.rs/).
 
-Then, **download [JDK 17 or 21 from Temurin](https://adoptium.net/temurin/releases/).
+Then, **download [JDK 21 from Temurin](https://adoptium.net/temurin/releases/).
 Do not use Java 8, java.com, or OpenJDK.**
 Make sure it’s on your `$PATH` by running `java --version` in a new shell.
 

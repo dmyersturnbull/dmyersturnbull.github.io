@@ -28,45 +28,63 @@ Follow the instructions that show up to install.
 
 ### Choose a partition scheme
 
-I **strongly** recommend using Btrfs.
-Btrfs is a copy-on-write option and is much more robust than EXT4 at this point.
+#### Use Btrfs.
+Btrfs is a copy-on-write option and is now much more robust than EXT4.
 
-For multi-user systems, consider keeping `/home` separate.
-For single-user systems, also consider other mount points (such as `/files` or `/data`)
+#### Use a swap paritition the same size as your RAM.
+
+There's an adage that it's important for emergency memory – in case your main memory runs out.
+Meanwhile, mavericks insist on skipping it altogether,
+pointing out that using it for emergency memory would render a system excessively slow.
+Linux uses swap space as a _complement_ to memory by swapping out infrequently used pages.
+You should definitely use it, but it probably doesn't need to fit more than your memory.
+
+#### For single-user systems, skip `/home` in favor of `/files`.
+
+`/home` will probably fill with miscellaneous configuration
+and even temp data that doesn't need to be backed up.
+It's probably even best to discard such files when upgrading or installing a new distro.
+So, leave `/home` in the root partition and use another mount point like `/data` or `/files` instead.
+
+#### Skip the `/boot` partition.
+
+It's not needed on a modern UEFI system.
+
+#### For workstations, consider a separate `/tmp`.
+
+Things like an inefficient SQL query can quickly take hundreds of gigabytes in `/tmp`.
+If `/tmp` is in your root partition, this can brick your system,
+and you might have to boot to a flash drive to clean up the system.
+If `/tmp` is a separate partition, filling it up won't leave your system unbootable.
+Of course, consider the tradeoff.
 
 ??? example "Example scheme 1 – small workstation"
 
     | mount point | size (GB) | filesystem | purpose        |
     |-------------|-----------|------------|----------------|
-    | (efi)       | 0.5       | FAT32      |                |
-    | (swap)      | 64        | swap       |                |
-    | `/tmp`      | 96        | btrfs      |                |
-    | `/`         | 160       | btrfs      |                |
-    | `/data`     | 624       | btrfs      | Large datasets |
+    | (efi)       |    0.5    | FAT32      |                |
+    | (swap)      |   64      | swap       |                |
+    | `/tmp`      |  256      | btrfs      |                |
+    | `/`         |  512      | btrfs      |                |
+    | `/data`     | 1168      | btrfs      | Data and files |
 
-??? example "Example scheme 2 – personal laptop"
+??? example "Example scheme 2 – multi-user workstation"
 
-    | mount point | size (GB) | filesystem | purpose                       |
-    |-------------|-----------|------------|-------------------------------|
-    | (efi)       | 0.5       | FAT32      |                               |
-    | (swap)      | 64        | swap       |                               |
-    | `/`         | 200       | btrfs      |                               |
-    | `/files`    | 380       | btrfs      | Data backed up with snapshots |
-    | `/movies`   | 380       | btrfs      | Data backed up in-place       |
+    Context: nvme0 and nvme1 are ultra-fast drives (CPU chipset and 4 PCIe lanes, respectively), while nvme2 and nvme3 are slower.
 
-??? example "Example scheme – multi-user workstation"
-
-      | disk | mount point  | size (GB) | filesystem | purpose                   |
-      |------|--------------|-----------|------------|---------------------------|
-      | 1    | (efi)        | 1         | FAT32      |                           |
-      | 1    | (swap)       | 64        | swap       |                           |
-      | 1    | `/tmp`       | 256       | btrfs      |                           |
-      | 1    | `/`          | 703       | btrfs      |                           |
-      | 1    | `/blaze`     | 1024      | btrfs      | Ultra-fast scratch        |
-      | 2    | `/home`      | 1024      | btrfs      | User files                |
-      | 2    | `/usr/share` | 1024      | btrfs      | Shared processed data     |
-      | 3–4  | `/lake`      | 4096      | btrfs      | Main shared data (raid 0) |
-      | 5–6  | `/scratch`   | 4096      | btrfs      | Replaceable data (raid 0) |
+    | drive(s) | mount point | size (GB) | filesystem | purpose              |
+    |----------|-------------|-----------|------------|----------------------|
+    | nvme0    | (efi)       |    0.5    | FAT32      |                      |
+    | nvme0    | (swap)      |  128      | swap       |                      |
+    | nvme0    | `/tmp`      |  512      | btrfs      |                      |
+    | nvme0    | `/`         | 1408      | btrfs      |                      |
+    | nvme1    | `/scratch`  | 2048      | btrfs      | Ultra-fast scratch   |
+    | nvme2    | `/lake`     | 2048      | btrfs      | Fast shared data     |
+    | nvme3    | `/home`     | 2048      | btrfs      | User files           |
+    | sda,sdb  | `/stock`    | 8192      | btrfs      | Frozen data (raid 0) |
+    | sdc      | `/bakroot`  | 2048      | btrfs      | `dd` of `/`          |
+    | sdd      | `/baklake`  | 2048      | btrfs      | `dd` of `/lake`      |
+    | sde      | `/bakhome`  | 2048      | btrfs      | `dd` of `/home`      |
 
 ## Update & install packages
 
@@ -74,22 +92,40 @@ Open a terminal and enter the following commands to install the necessary packag
 
 === "Ubuntu"
 
+    First, enable the Universe repository:
+
+	```bash
+	sudo add-apt-repository universe -y
+	```
+
     ```bash
     sudo apt update && upgrade
-    sudo apt install git vim wget xz-utils brotli lzma zstd exa
-    sudo apt install zsh
+    sudo apt install -y git vim curl wget xz-utils brotli lzma zstd exa
+	sudo apt install libncurses-dev
+	sudo apt install -y build-essential cmake
+    sudo apt install -y zsh
     ```
 
 === "Fedora"
 
     ```bash
     sudo dnf update && upgrade
-    sudo dnf install git vim wget xz-utils brotli lzma zstd exa
-    sudo dnf install zsh
+    sudo dnf install -y git vim curl wget xz-utils brotli lzma zstd exa
+	sudo dnf install -y ncurses-devel
+	sudo dnf install -y make automake gcc gcc-c++ kernel-devel cmake
+    sudo dnf install -y zsh
     ```
 
 Install the GitHub CLI per the
 [official GH Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md).
+
+## Drivers
+
+=== "NVIDIA"
+
+    Install [NVIDIA drivers](https://www.nvidia.com/download/index.aspx).
+	Follow the instructions, which will include UEFI configuration.
+	To test, run `nvidia-smi` on reboot.
 
 ## Set up firewall
 

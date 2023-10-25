@@ -11,9 +11,13 @@ A setup guide for programmers, etc., on Windows.
 The obvious: Upgrade macOS, enable FileVault, and remove unneeded Login Items.
 
 Install [Homebrew](https://brew.sh/) and update it: `brew update && brew upgrade`.
-Install a few extra Linux utils: `brew install ssh-copy-id coreutils git` and an upgraded version of Bash (Bash 5):
-`brew install bash` as well as ZSH: `brew install zsh`.
-Install the text editor [Sublime](https://www.sublimetext.com/) (`brew cask install sublime-text`).
+Install a few extra Linux utils:
+
+```bash
+brew install ssh-copy-id coreutils git bash zsh
+```
+Install the text editor [Sublime](https://www.sublimetext.com/) (`brew install --cask sublime-text
+`).
 
 And a couple of small things:
 
