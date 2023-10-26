@@ -4,22 +4,33 @@
 You’ll thank me later. (You’ll need ZSH installed for this to work.)
 
 ```bash
-chsh -s $(which zsh)
-zsh
 sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+```
+
+You should be prompted to change your shell.
+If you are not, run
+
+```bash
 chsh -s $(which zsh)
 ```
 
-Restart your terminal. You should now have a colorful shell, complete with a plugin for Git.
+Make sure it is set by running
+
+```bash
+sudo cat /etc/passwd | grep ${USER}
+```
+
+You may need to reboot for the change to your login shell to take effect.
+You should now have a colorful shell, complete with a plugin for Git.
 
 ## `.commonrc` file
 
 To keep the config for ZSH and Bash consistent, add a file called `.commonrc` in your home directory:
 
 ```bash
-echo 'export PATH=/usr/local/git/bin:/usr/local/sbin:$PATH' > ~/.commonrc
-echo 'source ~/.commonrc' >> ~/.zshrc
-echo 'source ~/.commonrc' >> ~/.bashrc
+echo 'export PATH=/usr/local/sbin:$PATH\n' > ~/.commonrc
+echo 'source ~/.commonrc\n' >> ~/.zshrc
+echo 'source ~/.commonrc\n' >> ~/.bashrc
 ```
 
 From here on, only modify `.commonrc` so that both Bash and ZSH have the same environment.
@@ -32,8 +43,8 @@ From here on, only modify `.commonrc` so that both Bash and ZSH have the same en
 
 First, [Install the Rust toolchain](https://rustup.rs/).
 
-Then, **download [JDK 21 from Temurin](https://adoptium.net/temurin/releases/).
-Do not use Java 8, java.com, or OpenJDK.**
+Then, download [JDK 21 from Temurin](https://adoptium.net/temurin/releases/).
+Do not use Java 8, java.com, or OpenJDK.
 Make sure it’s on your `$PATH` by running `java --version` in a new shell.
 
 ## Generate a certificate
@@ -103,20 +114,18 @@ alias ..='cd ..'
 alias ...='cd ../../../'
 alias ....='cd ../../../../'
 alias .....='cd ../../../../'
-function cdd { mkdir "$1" && cd "$1" } # make a dir and cd to it
-function cdd. { mkdir "../$1" && cd "../$1" }
-
-# This one's super useful on macOS:
-# open finder with f or f /path/to/folder
-#function f { if (( $# > 0 )); then open -a Finder "$1";  else open -a Finder ./; fi }
+# make a dir and cd to it
+function mkcd {
+    mkdir "$1" && cd "$1"
+}
 
 # This one chowns recursively for you
-grab() {
+function grab() {
 	sudo chown -R ${USER}:${USER} ${1:-.}
 }
 
 # This one's modified from https://serverfault.com/questions/3743/what-useful-things-can-one-add-to-ones-bashrc
-extract () {
+function extract () {
    if [[ ! -f "$1" ]] ; then
        >&2 echo "'$1' is not a file"
        exit 2
