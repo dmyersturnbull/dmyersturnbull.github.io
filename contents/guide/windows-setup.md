@@ -158,15 +158,7 @@ Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 irm get.scoop.sh | iex
 ```
 
-Then install Node.js and Python:
-
-```powershell
-scoop bucket add main
-scoop install nodejs python
-```
-
-_Optional:_ Install [Snappy](https://snappy.computop.org/installing.html#windows), a cross-platform package manager.
-
+Install [Snappy](https://snappy.computop.org/installing.html#windows), a cross-platform package manager.
 
 ## Git, SSH, & GPG
 
@@ -174,7 +166,7 @@ _Optional:_ Install [Snappy](https://snappy.computop.org/installing.html#windows
 The SSH key and config instructions work in PowerShell because OpenSSH is installed.
 Note that GitHub CLI was installed via Chocolatey (in the steps above).
 
-## Java & Rust
+## Language tools
 
 [Install the Rust toolchain](https://rustup.rs/).
 Then, check <i>Add or Remove Programs</i> for _Java_. Uninstall any versions you have installed.
@@ -213,6 +205,20 @@ Then, check <i>Add or Remove Programs</i> for _Java_. Uninstall any versions you
         [EnvironmentVariableTarget]::Machine\
     )
     ```
+
+
+Install Node.js and Python:
+
+```powershell
+scoop bucket add main
+scoop install nodejs python
+```
+
+Finally, install [pnpm](https://pnpm.io/), a faster alternative to npm:
+
+```powershell
+iwr https://get.pnpm.io/install.ps1 -useb | iex
+```
 
 ## Visual C++ Build Tools
 

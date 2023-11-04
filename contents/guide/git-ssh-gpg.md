@@ -9,7 +9,6 @@ These instructions should work for Linux, macOS, and Windows.
     [macOS setup guide](macos-setup.md),
     or [Windows setup guide](windows-setup.md).
 
-
 ## Configure Git
 
 Configure your username and email:
@@ -44,18 +43,16 @@ Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu or `dnf install curl-deve
     [is](https://en.wikipedia.org/wiki/Ssh-agent#Security_issues)
     [very](https://github.com/microsoft/vscode-remote-release/issues/1222)
     [insecure](https://manpages.debian.org/buster/openssh-client/ssh.1.en.html#A).
-    Also disable X forwarding, which also has [security concerns](https://security.stackexchange.com/questions/14815/security-concerns-with-x11-forwarding).
-    You’re unlikely to need either.
+    Also disable X forwarding, which also has
+    [security concerns](https://security.stackexchange.com/questions/14815/security-concerns-with-x11-forwarding).
+    These are usually the defaults.
 
 Create or edit `~/.ssh/config`. Replace the contents with the following.
 
 ```
 AddKeysToAgent yes
-# Disable SSH agent forwarding
-# https://heipei.io/2015/02/26/SSH-Agent-Forwarding-considered-harmful/
 ForwardAgent no
 ForwardX11 no
-# turn off X forwarding for better security
 ForwardX11Trusted no
 
 # Modify these as needed
@@ -68,6 +65,15 @@ HostName github.com
 IdentityFile ~/.ssh/id_ed25519
 User kelly@gmail.com
 ```
+
+!!! tip
+    If needed, fix permissions with this snippet:
+
+    ```bash
+    chmod 600 ~/.ssh/*
+    chmod 700 ~/.ssh/ ~/.ssh/config ~/.ssh/known_hosts
+    chmod 644 ~/.ssh/*.pub
+    ```
 
 ### _Optional:_ Connect to another server
 
@@ -149,7 +155,7 @@ However, this has no significant advantages, is more limited, and may be less se
 ### Generate a key pair
 
 Also see
-[GitHub's guide](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
+[GitHub’s guide](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
 to generating GPG keys.
 You may consider using an  [`@users.noreply` email address](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address)
 per their suggestion.
@@ -249,7 +255,7 @@ To list your public keys, run
 gpg --list-keys --keyid-format long
 ```
 
-You'll see this:
+You’ll see this:
 
 ```asc
 pub   ed25519 2023-11-04 [SC] [expires: 2025-11-03]                (1)!

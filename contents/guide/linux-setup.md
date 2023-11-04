@@ -31,31 +31,31 @@ I have not tested it.
 Btrfs is a copy-on-write option and is now much more robust than ext4.
 See the [btrfs documentation](https://btrfs.readthedocs.io/en/latest).
 
-#### Use a swap paritition the same size as your RAM.
+#### Use a swap partition the same size as your RAM.
 
-There's an adage that it's important for emergency memory – in case your main memory runs out.
+There’s an adage that it’s important for emergency memory – in case your main memory runs out.
 Meanwhile, mavericks insist on skipping it altogether,
 pointing out that using it for emergency memory would render a system excessively slow.
 Linux uses swap space as a _complement_ to memory by swapping out infrequently used pages.
-You should definitely use it, but it probably doesn't need to fit more than your memory.
+You should definitely use it, but it probably doesn’t need to fit more than your memory.
 
 #### For single-user systems, skip `/home` in favor of `/files`.
 
 `/home` will probably fill with miscellaneous configuration
-and even temp data that doesn't need to be backed up.
-It's probably even best to discard such files when upgrading or installing a new distro.
+and even temp data that doesn’t need to be backed up.
+It’s probably even best to discard such files when upgrading or installing a new distro.
 So, leave `/home` in the root partition and use another mount point like `/data` or `/files` instead.
 
 #### Skip the `/boot` partition.
 
-It's not needed on a modern UEFI system.
+It’s not needed on a modern UEFI system.
 
 #### For workstations, consider separate `/tmp` and `/var/tmp`.
 
 Things like an inefficient SQL query can quickly take hundreds of gigabytes in `/tmp`.
 If `/tmp` is in your root partition, this can brick your system,
 and you might have to boot to a flash drive to clean up the system.
-If `/tmp` is a separate partition, filling it up won't leave your system unbootable.
+If `/tmp` is a separate partition, filling it up won’t leave your system unbootable.
 Of course, consider the tradeoff.
 The same goes for `/var/tmp` (more or less).
 If mounted as separate partitions, mount with `noexec`.
@@ -120,7 +120,7 @@ sudo modprobe sha256
   Access timestamps (atime) are written using the default option, `relatime`.
   This makes a lot of otherwise-unnecessary writes, degrading performance.
 - Add `noacl` everywhere.
-  There's probably no performance gain to disable ACL, but you almost definitely don't need it.
+  There’s probably no performance gain to disable ACL, but you almost definitely don’t need it.
 -  Add `noexec`, `nodev`, and `nosuid` to `/tmp` and `/var/tmp` (if they exist).
 
 ### Consider compression.
@@ -137,9 +137,18 @@ Here are my recommendations:
 - `compression=zstd:3` for SATA-connected HDDs.
 - `compression=zstd:3` for USB-connected drives.
 
+!!! bug
+
+    Sometimes filesystems cannot be mounted with `compress`,
+    presumably for any number of reasons.
+
+!!! warning
+
+    Make sure to follow the steps below to verify that your `fstab` is valid and useable.
+
 ### Edit `fstab`
 
-Following these rules, the `fstab` for "Example scheme 1 – single-user workstation" might look like this:
+Following these rules, the `fstab` for “Example scheme 1 – single-user workstation” might look like this:
 
 ```fstab
 # filesystem     mount      type   options                            d p
@@ -186,8 +195,8 @@ Open a terminal and enter the following commands to install the necessary packag
 
     ```bash
     sudo apt install -y git vim curl wget xz-utils brotli lzma zstd exa
-	sudo apt install libncurses-dev
-	sudo apt install -y build-essential cmake
+	  sudo apt install libncurses-dev
+	  sudo apt install -y build-essential cmake
     sudo apt install -y zsh
     ```
 
@@ -196,8 +205,8 @@ Open a terminal and enter the following commands to install the necessary packag
     ```bash
     sudo dnf update && upgrade
     sudo dnf install -y git vim curl wget xz-utils brotli lzma zstd exa
-	sudo dnf install -y ncurses-devel
-	sudo dnf install -y make automake gcc gcc-c++ kernel-devel cmake
+	  sudo dnf install -y ncurses-devel
+	  sudo dnf install -y make automake gcc gcc-c++ kernel-devel cmake
     sudo dnf install -y zsh
     ```
 
@@ -219,7 +228,7 @@ Install the GitHub CLI per the
 
 ## Cosmetics/UI
 
-In GNOME's settings, set the time format to 24-hour and make sure <i>Automatic Data and Time</i> is selected.
+In GNOME’s settings, set the time format to 24-hour and make sure <i>Automatic Data and Time</i> is selected.
 
 ### GNOME extensions
 
@@ -237,13 +246,13 @@ In GNOME's settings, set the time format to 24-hour and make sure <i>Automatic D
 
 Then open https://extensions.gnome.org/ and install the browser extension.
 I recommend installing:
+
 - <i>Force Quit</i>
 - <i>Panel Date Format</i>
   After installing, run
   ```bash
   dconf write /org/gnome/shell/extensions/panel-date-format/format "'%Y-%m-%d %H:%M'"
   ```
-
 
 {!guide/_common-setup.md!}
 
