@@ -241,7 +241,7 @@ _For example, your server might not implement HTTP content negotiation, or even 
 | 202  | Accepted                   | `POST`                        | ∅        |                                     |
 | 204  | No Content                 | `GET`                         | ∅        | Resource not found                  |
 | 204  | No Content                 | `DELETE`                      | ∅        | Successful deletion                 |
-| 200  | Partial Content            | `GET`                         | partial  | Range was requested                 |
+| 206  | Partial Content            | `GET`                         | partial  | Range was requested                 |
 | 303  | See Other †                | any                           | ∅        | Removed endpoint has alternative    |
 | 304  | Not Modified               | `GET`/`HEAD`                  | ∅        | `If-None-Match` matches             |
 | 308  | Permanent Redirect †       | any                           | ∅        | Endpoint moved                      |
