@@ -194,7 +194,7 @@ Open a terminal and enter the following commands to install the necessary packag
 	```
 
     ```bash
-    sudo apt install -y git vim curl wget xz-utils brotli lzma zstd exa
+    sudo apt install -y git vim curl wget xz-utils brotli lzma zstd iotop dexa
 	  sudo apt install libncurses-dev
 	  sudo apt install -y build-essential cmake
     sudo apt install -y zsh
@@ -204,7 +204,7 @@ Open a terminal and enter the following commands to install the necessary packag
 
     ```bash
     sudo dnf update && upgrade
-    sudo dnf install -y git vim curl wget xz-utils brotli lzma zstd exa
+    sudo dnf install -y git vim curl wget xz-utils brotli lzma zstd iotop exa
 	  sudo dnf install -y ncurses-devel
 	  sudo dnf install -y make automake gcc gcc-c++ kernel-devel cmake
     sudo dnf install -y zsh
@@ -228,9 +228,31 @@ Install the GitHub CLI per the
 
 ## Cosmetics/UI
 
-In GNOME’s settings, set the time format to 24-hour and make sure <i>Automatic Data and Time</i> is selected.
+### Exa and Nerd fonts
 
-### GNOME extensions
+Download one or more [Nerd fonts](https://www.nerdfonts.com/font-downloads).
+Then run
+
+```bash
+cd ~/Downloads  # (1)!
+for f in *.zip; do sudo unzip $f -d /usr/local/share/fonts; done
+fc-cache
+```
+
+1. Or wherever your downloaded Nerd fonts are
+
+Set your terminal font to the Nerd font.
+(In [Tilix](https://gnunn1.github.io/), this is a per-profile setting called “Custom font”.)
+Now you can run
+
+```Bash
+exa --icons
+```
+
+### GNOME
+
+In GNOME’s settings, set the time format to 24-hour and make sure <i>Automatic Data and Time</i> is selected.
+Also install extensions:
 
 === "Ubuntu"
 

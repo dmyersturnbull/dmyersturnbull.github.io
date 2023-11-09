@@ -93,20 +93,46 @@ alias chown='chown --preserve-root'
 alias chmod='chmod --preserve-root'
 alias chgrp='chgrp --preserve-root'
 
-# These are colorful/nice variants of commands
-alias la='ls -l --almost-all --no-group --group-directories-first --escape --human-readable --time-style=long-iso'
 alias wgetc='wget -c'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
 
-# This will show open ports in a compact form
-alias ports='netstat -tulanp'
-
-# And this will list open file handles
-# It's really useful when a file handle is incorrectly lingering
-# Also see `losf`
+# list open file handles for the current shell session (also see lsof)
 alias handles='ls -la /proc/$$/fd'
+
+# Check free memory
+alias fre='free --human'
+
+# Check CPU, memory, and swap usage
+alias usg='vmstat --active'
+
+# Check IO usage
+alias iousg='sudo iotop --only --batch'
+
+# List listening sockets
+alias lssockets='sudo --listening --processes'
+alias lstcp='sudo --listening --processes --tcp'
+alias lsudp='sudo --listening --processes --udp'
+
+# List threads
+# -A == all processes
+# -f == full listing (show args)
+# -L == show threads
+# -l == long format
+# -y == Hide flags and show resident set size (RSS; memory used) instead of addr
+# --headers == repeat header line once per page
+# In the output:
+# - NLWP is # of threads
+# - LWP is "light-weight process"
+alias threads='ps -A -f -L -l -y -S --headers'
+
+# Normal grid exa (--created, --modified, and --git have no effect unless we pass --list)
+alias e='exa --all --sort=name --group-directories-first --icons --created --modified --git'
+# Detailed view with --list
+alias el='exa --all --sort=name --group-directories-first --icons --created --modified --git --list'
+# Detailed view in a grid (for wide monitors)
+alias elg='exa --all --sort=name --group-directories-first --icons --created --modified --git --list --grid'
 
 # These are nice as navigation shorthands
 alias cd..='cd ..'
@@ -114,6 +140,7 @@ alias ..='cd ..'
 alias ...='cd ../../../'
 alias ....='cd ../../../../'
 alias .....='cd ../../../../'
+
 # make a dir and cd to it
 function mkcd {
     mkdir "$1" && cd "$1"
