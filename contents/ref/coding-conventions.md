@@ -22,12 +22,11 @@
 
 ## Filenames
 
-!!! info
-    These are general guidelines. For some situations, it may be better to ignore them and create your own.
-    For example, if camelCase is used in your JSON Schema, use camelCase for schema document filenames.
-
 !!! tip
     This section can apply to naming of URI nodes, database IDs, and similar constructs.
+    These are general guidelines.
+    Alternatives should be used in some situations.
+    For example, if camelCase is used in your JSON Schema, use camelCase for schema document filenames.
 
 Prefer using kebab-case (e.g., `full-document.pdf`), treating `-` as a space.
 Restrict to `-`, `.`, `[a-z]`, and `[0-9]`, unless there is a compelling reason otherwise.
@@ -50,13 +49,10 @@ In particular, **do not** use `.yml`, `.htm`, `.jpg`, or `.jfif`.
 
 ## File types
 
-!!! note
-
-    Use common sense with respect to these guidelines.
-    For example, do not convert JPEG files to AVIF if there is a quality loss.
-
-- _Use open standards:_ Use AVIF or WEBP over other image formats, OGG and FLAC over other audio formats,
-- AV1 over other video formats, and webm over other MKV.
+- _Prefer open standards:_
+  Choose AVIF or WEBP over other image formats, OGG and FLAC over other audio formats;
+  choose AV1 over other video formats;
+  and choose webm over (non-webm) MKV.
 - _Use simpler formats:_
   Use Markdown
 - _Use modern compression:_
@@ -118,15 +114,15 @@ Comments must be maintained like all other elements of code.
 
 !!! tip
 
-    Where applicable, guidelines in this section should be applied to documentation in general.
-    Also see [Google’s documentation style guide](https://developers.google.com/style/).
+    Where applicable, apply these guidelines to other documentation, not just Markdown.
+    See [Google’s documentation style guide](https://developers.google.com/style/) for other hints.
 
 ### Line breaks
 
 Break lines at the end of sentences.
 If a line goes over 120 characters, break it after an appropriate punctuation mark.
 For example, break up independent clauses.
-This is not necessary for very short sentences, such as `Sure. Ok. Fine.`.
+(A series of very short sentences can be left on one line.)
 
 !!! info "Rationale"
 
@@ -141,9 +137,8 @@ and other text that should be italicized.
 
 !!! note
 
-    Ubiquitous foreign phrases, including <i>in vivo</i>, <i>in sitro</i>, <i>in silico</i>, and <i>et al.</i>
-    should not be italicized.
-    (They are italicized here to refer to the words themselves.
+    Do not italicize ubiquitous foreign phrases such as
+    <i>in vivo</i>, <i>in sitro</i>, <i>in silico</i>, and <i>et al.</i>
 
 !!! info "Rationale"
     This is primarily to aid grammar checkers.
@@ -196,7 +191,7 @@ Use an en dash surrounded by spaces (` – `) to mark breaks in thoughts, **not*
 For example:
 
 ```markdown
-An en dash – in contrast to an em dash – should be used to mark breaks in thoughts.
+An en dash – in contrast to an em dash – should be used here.
 ```
 
 ### Quotations
@@ -247,8 +242,8 @@ As seen above, use an em dash (—) set in `<i>`/`</i>` to cite a blockquote’s
 
 To format numbers, use:
 
-- `.` as the decimal marker
-- ` ` (narrow no break space, NNBSP (U+002D / `&#x202f;`)) as the thousands separator
+- A period (`.`) as the decimal marker
+- A narrow no break space, ` ` (NNBSP / U+002D / `&#x202f;`) as the thousands separator
 - A full space (` `) to separate magnitude and units
 
 For example: <i>1 024.222 222 µm</i>.
@@ -283,7 +278,6 @@ For example: `2023-11-02T14:55:00 -08:00 [America/Los_Angeles]`.
 
 Always use `/` as a path separator in documentation.
 Denote directories with a trailing `/`.
-
 For filesystem trees, use Unicode box-drawing characters.
 Refer to the
 [research projects guide](https://dmyersturnbull.github.io/guide/research-projects/#example)
@@ -324,7 +318,7 @@ write `<meta charset="utf-8" />`, **not** `<meta charset="utf-8">`.
 !!! info "Rationale"
     Requiring closing tags and trailing slashes improves readability and simplifies parsing.
     It enables XML parsing, obviates the need for custom parsers to remember which HTML tags are self-closing,
-    and helpers parsers emit errors that refer to specific tags.
+    and helps parsers emit errors that refer to specific tags.
 
 #### `<html>`, `<head>`, and `<body>` elements
 
@@ -668,7 +662,7 @@ Use immutable types unless there’s a compelling reason otherwise.
 
 Use `@abstractmethod` in favor of `@staticmethod`;
 `@staticmethod` should only be used in the rare cases where `@abstractmethod` cannot be used.
-As a general rule, prefer regular methods over `@abstractmethod`s.
+As a general rule, prefer using a regular method over an `@abstractmethod`.
 
 Sort class members in the following order.
 
@@ -721,7 +715,7 @@ class A(SomeAbstractType):
     def add_sum(self: Self, *args: int) -> Self:
         return self.__class(self.value + sum(args))
 
-    def delgate(self: Self, *args: Any, **kwargs: Unpack[tuple[str, Any]]) -> None:
+    def delegate(self: Self, *args: Any, **kwargs: Unpack[tuple[str, Any]]) -> None:
         ...  # first do something special
         super().delegate(*args, **kwargs)
 ```
