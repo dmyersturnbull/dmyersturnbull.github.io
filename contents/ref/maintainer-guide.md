@@ -14,19 +14,49 @@
     Source headers: Refer to https://dmyersturnbull.github.io/ref/maintainer-guide/#source-headers
     ```
 
-This guide contains a collection of best-practices.
-They tend to be easy to learn, easy to use, and easy to automate.
-They work with a range of CI/CD workflows and various automation tools.
-More notably, they are sufficient to get a transparent 1-1-1-1-1 mapping between
-issues, feature branches, pull requests, main branch commits, and changelog entries.
+This guide contains a collection of best-practices that are easy to learn, use, and automate.
+They’re sufficient to get a correspondence between
+issues, feature branches, pull requests, commits to the <i>main</i> branch, and changelog items.
+
+This 1-1-1-1-1 correspondence simplifies project management, makes development more transparent,
+and facilitates automation that reduces manual effort and potential human error.
+(Complex things are hard; simple things are easy.)
+
+```mermaid
+flowchart LR
+  A[feature branch] --- B[issue] --- C[PR] --- D[commit to <i>main</i>] --- E[changelog item]
+```
 
 ## Branches
 
-Use [GitLab Flow](https://about.gitlab.com/topics/version-control/what-is-gitlab-flow/)
-/ [GitHub Flow](https://docs.github.com/en/get-started/quickstart/github-flow).
-Name feature branches `<type>/<issue>-<description>`, such as `feat/14-add-schema`.
-Each must be tied to exactly 1 issue and result in 1 merge to _main_.
-If used, stable release branches must be named `releases/<vr>`; e.g., `releases/v1`.
+Use
+[trunk-based development](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development).
+All development should happen in feature branches, and short-lived feature branches are preferred.
+Name feature branches `<type>/<issue>-<description>--<author-initials>`, such as `feat/14-add-schema--dmt`.
+(If necessary, modify `<author-initials>` to distinguish any users with the same initials.)
+
+Each feature branch must be tied to exactly 1 issue and result in 1 merge to <i>main</i>.
+Feature branches should be merged (rebased) into <i>main</i>.
+
+!!! example
+
+    ```mermaid
+    gitGraph
+    commit id: "initial" tag: "v0.1.0"
+    commit id: "update docs"
+    branch feat/12-async-api--dmt
+    checkout feat/12-async-api--dmt
+    commit id: "start feature"
+    checkout main
+    commit id: "fix bug" tag: "v0.1.1"
+    checkout feat/12-async-api--dmt
+    commit id: "complete feature"
+    checkout main
+    merge feat/12-async-api--dmt id: "squash and rebase" tag: "v0.2.0"
+    ```
+
+In some situations, earlier versions need to be maintained, such as for security fixes.
+These must be in branches named `releases/<version>` (e.g., `releases/v1`).
 
 ## Issues
 

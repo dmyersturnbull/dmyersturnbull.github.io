@@ -14,9 +14,11 @@
     ### File names: See https://dmyersturnbull.github.io/ref/coding-conventions/#filenames
     ```
 
-    Use [this `.editorconfig`](https://raw.githubusercontent.com/dmyersturnbull/cicd/main/.editorconfig).
-    Use [Black](https://github.com/psf/black), [Prettier](https://prettier.io/), and other formatters
-    to eliminate time spent formatting, circumvent debates about formatting, and reduce diff sizes.
+    Use [this `.editorconfig`](https://raw.githubusercontent.com/dmyersturnbull/cicd/main/.editorconfig),
+    as well as autoformatters such as [Prettier](https://prettier.io/) and
+    [Black](https://github.com/psf/black) (or the [Ruff formatter](https://docs.astral.sh/ruff/formatter/).
+    This will eliminate time spent formatting, avoid debates, and reduce commit diff sizes.
+    Have these tools run via [pre-commit](https://pre-commit.com/) or pre-merge.
 
 ## Filenames
 
@@ -61,16 +63,63 @@ In particular, **do not** use `.yml`, `.htm`, `.jpg`, or `.jfif`.
   Prefer modern algorithms like [LZ4](https://github.com/lz4/lz4) (`.lz4`)
   and [ZSTD](https://github.com/facebook/zstd) (`.zst`).
 
-## Documentation (general)
+## Comments
 
-See [Google’s documentation style guide](https://developers.google.com/style/).
+Avoid unnecessary comments, such as those added out of habit or ritual.
+Forgo comments that are obvious or otherwise unhelpful.
+For example:
 
-Always use `/` as a path separator in documentation.
-Denote directories with a trailing `/`.
+=== "❌ Incorrect"
+
+    ```python
+    from typing import Self, TypeVar
+
+
+    class SpecialCache:
+        """
+        Soft cache supporting the Foobar backend.
+        Uses a Least Recently Used (LRU) policy with an optional expiration duration.
+        """
+
+        def get_cache_item(self: Self, key: str) -> T:
+            """# (1)!
+            Gets the cache item corresponding to key `key`.
+
+            Arguments:
+                key: A string-valued key
+
+            Returns:
+                The value for the key `key`
+            """
+            return self._items[key]
+    ```
+
+    1. This docstring serves no function.
+
+=== "✅ Correct"
+
+    ```python
+    from typing import Self, TypeVar
+
+
+    class SpecialCache:
+        """
+        Soft cache supporting the Foobar backend.
+        Uses a Least Recently Used (LRU) policy with an optional expiration duration.
+        """
+
+        def get_cache_item(self: Self, key: str) -> T:
+            return self._items[key]
+    ```
+
+Comments must be maintained like all other elements of code.
 
 ## Markdown
 
-Use an automated formatting tool run on pre-commit or prior to merges.
+!!! tip
+
+    Where applicable, guidelines in this section should be applied to documentation in general.
+    Also see [Google’s documentation style guide](https://developers.google.com/style/).
 
 ### Line breaks
 
@@ -128,29 +177,29 @@ However, you MAY use hexadecimal entity references for:
   (such as [soft hyphen](https://www.compart.com/en/unicode/U+00ad), `&#x00ad;`)
 - characters that must be escaped for technical reasons
 
+### Punctuation symbols
+
 Use the correct Unicode characters for punctuation.
 That includes:
 
 - `’` for apostrophes
 - `‘`, `’`, `“`, and `”` for quotation marks
 - `–` (<i>en dash</i>) for numerical ranges (e.g., `5–10`)
-- `—` (<i>em dash</i>) or ` – ` to mark breaks in thought
+- `—` (<i>em dash</i>) to separate a blockquote and its source
 - `‒` (<i>figure dash</i>) in numerical formatting
 - `−` (<i>minus sign</i>)
-- `±` (<i>plus-minus sign</i>)
 - `µ` (<i>micro sign</i>)
-- (however, use <i>hyphen-minus</i> (U+002D) for hyphens, not <i>hyphen</i> (U+2010).
 
-To format numbers, use:
+However, use <i>hyphen-minus</i> (U+002D) for hyphens, **not** <i>hyphen</i> (U+2010).
 
-- `.` as the decimal marker
-- ` ` (narrow no break space, NNBSP (U+002D / `&#x202f;`)) as the thousands separator
-- A full space (` `) to separate magnitude and units
+Use an en dash surrounded by spaces (` – `) to mark breaks in thoughts, **not** an em dash.
+For example:
 
-For example: <i>1 024.222 222 µm</i>.
-Prefer SI units, and use `hour` or `hr`, `minute` or `min`, and `second`, `sec`, or `s` as abbreviations.
+```markdown
+An en dash – in contrast to an em dash – should be used to mark breaks in thoughts.
+```
 
-### Punctuation
+### Quotations
 
 Place punctuation outside of quotation marks (British-style rules).
 For example:
@@ -184,45 +233,145 @@ Mark Twain also said:
 > When in doubt‚ tell the truth.
 > This is a blockquote, which is ordinarily introduced by punctuation.
 > For clarity, we introduce such blockquotes with colons.
+> <i>— Mark Twain</i>
 ```
+
+As seen above, use an em dash (—) set in `<i>`/`</i>` to cite a blockquote’s source.
 
 !!! info "Rationale"
 
     This rule preserves the semantics as much as possible.
     A colon is a visual signal that the prose goes with its following code block, reducing refactoring mistakes.
 
-### Formatting specific types
+### Quantities
 
-For dates and times, use [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339).
+To format numbers, use:
+
+- `.` as the decimal marker
+- ` ` (narrow no break space, NNBSP (U+002D / `&#x202f;`)) as the thousands separator
+- A full space (` `) to separate magnitude and units
+
+For example: <i>1 024.222 222 µm</i>.
+Prefer SI units, and use `hour` or `hr`, `minute` or `min`, and `second`, `sec`, or `s` as abbreviations.
+
+### Uncertainty measurements
+
+State whether the values refer to standard error or standard deviation.
+<i>SE</i> is an acceptable abbreviation for standard error;
+<i>SD</i> is an acceptable abbreviation for standard deviation.
+
+Examples:
+
+- > 7.65 (4.0–12.5, 95% confidence interval)
+- > 7.65 ±1.2 (SE)
+
+**❌ Do not** just write the uncertainty without explanation, e.g., `5.0 ±0.1` – it is ambiguous.
+
+**✅ Do** describe how the uncertainty was estimated (i.e., a statistical test).
+
+### Dates and times
+
+Use [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339).
 For example: `2023-11-02T14:55:00 -08:00`.
 Note that the UTC offset is written with a hyphen, not a minus sign.
+If a timezone is needed, use a recognized IANA timezone such as `America/Los_Angeles`,
+and set it in square brackets.
+The UTC offset must still be included.
+For example: `2023-11-02T14:55:00 -08:00 [America/Los_Angeles]`.
 
-For filesystem trees, use refer to the
-[research projects guide’s example](https://dmyersturnbull.github.io/guide/research-projects/#example).
+### Paths and filesystem trees
+
+Always use `/` as a path separator in documentation.
+Denote directories with a trailing `/`.
+
+For filesystem trees, use Unicode box-drawing characters.
+Refer to the
+[research projects guide](https://dmyersturnbull.github.io/guide/research-projects/#example)
+for an example.
+
+### Accessibility
+
+Use descriptive titles for link titles.
+For example, write:
+
+```markdown
+Refer to the [coding conventions](https://dmyersturnbull.github.io/ref/coding-conventions/).
+```
+
+**Not:**
+
+```markdown
+Click [here](https://dmyersturnbull.github.io/ref/coding-conventions/) for conding conventions.
+```
 
 ## HTML
 
-The rules for Markdown apply to HTML.
-Also follow [Google’s HTML/CSS style guide](https://google.github.io/styleguide/htmlcssguide.html).
+Follow the general guidelines in the Markdown section.
 
-### Tags
+### Formatting
+
+!!! note
+
+    These formatting guidelines only apply to hand-crafted HTML.
+
+#### Closing tags
 
 Always close tags.
 For example, use `<p>The end.</p>`, not `<p>The end.`.
-Use trailing slashes in self-closing tags; for example, `<meta charset="utf-8" />`, not `<meta charset=utf-8">`.
+Use trailing slashes for self-closing tags; for example,
+write `<meta charset="utf-8" />`, **not** `<meta charset="utf-8">`.
 
 !!! info "Rationale"
     Requiring closing tags and trailing slashes improves readability and simplifies parsing.
     It enables XML parsing, obviates the need for custom parsers to remember which HTML tags are self-closing,
     and helpers parsers emit errors that refer to specific tags.
 
+#### `<html>`, `<head>`, and `<body>` elements
+
+Always include these elements.
+
+!!! info "Rationale"
+
+    The rules for
+    [ommitting `<html>`, `<head>`, and `<body>`](https://html.spec.whatwg.org/#syntax-tag-omission)
+    are complex and better ignored.
+
+#### Quoting attributes
+
+Always quote attributes with double quotes.
+
+!!! info "Rationale"
+
+    This is the most widespread choice, and it tends to be easier for custom parsers.
+
+#### Line wrapping
+
 Wrap long tag declarations to 120 characters like this:
+
 ```html
 <link
   rel="stylesheet"
   href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:regular,bold"
->
+/>
 ```
+
+!!! info "Rationale"
+
+    This style horizontally aligns the attribute names.
+    More importantly, it is analogous to styles enforced by autoformatters like Prettier and Black,
+    which are increasing in popularity.
+
+### Attribute values
+
+Use kebab-case for `id` and `name` values and for `data` keys and values.
+
+Skip the `type` attribute  for scripts and stylesheets.
+Instead, use `<link rel="stylesheet" href="..." />` for stylesheets
+and `<script src="..." />` for scripts.
+
+### Accessibility
+
+Use the `alt` attribute for media elements, including `<img>`, `<video>`, `<audio>`, and `<canvas>`.
 
 ## HTTP APIs
 
@@ -231,7 +380,12 @@ Wrap long tag declarations to 120 characters like this:
 This section applies to REST-like HTTP APIs.
 Servers should only issue response codes in accordance with the following table.
 _Note that some or even most of these might not apply!_
-_For example, your server might not implement HTTP content negotiation, or even `POST`._
+_For example, your server might not implement HTTP content negotiation._
+
+!!! info
+
+    `404 Not Found` is reserved for resources that _could_ exist but do not;
+    attempts to access an invalid endpoint must always generate a `400 Bad Request`.
 
 | code | name                       | methods                       | Body     | use case                            |
 |------|----------------------------|-------------------------------|----------|-------------------------------------|
@@ -239,7 +393,6 @@ _For example, your server might not implement HTTP content negotiation, or even 
 | 200  | OK                         | `GET`/`HEAD`/`PATCH`          | resource |                                     |
 | 201  | Created                    | `POST`/`PUT`                  | resource |                                     |
 | 202  | Accepted                   | `POST`                        | ∅        |                                     |
-| 204  | No Content                 | `GET`                         | ∅        | Resource not found                  |
 | 204  | No Content                 | `DELETE`                      | ∅        | Successful deletion                 |
 | 206  | Partial Content            | `GET`                         | partial  | Range was requested                 |
 | 303  | See Other †                | any                           | ∅        | Removed endpoint has alternative    |
@@ -248,7 +401,7 @@ _For example, your server might not implement HTTP content negotiation, or even 
 | 400  | Bad Request                | any                           | ∅        | Invalid endpoint                    |
 | 401  | Unauthorized               | any                           | ∅        | Not authenticated                   |
 | 403  | Forbidden                  | any                           | ∅        | Insufficient privileges             |
-| 404  | Not Found                  | `DELETE`/`PATCH`              | ∅        | Resource does not exist             |
+| 404  | Not Found                  | `GET`/`DELETE`/`PATCH`        | ∅        | Resource does not exist             |
 | 406  | Not Acceptable             | `GET`/`HEAD`                  | error    | `Accept` headers unsatisfiable      |
 | 409  | Conflict                   | `PUT`/`POST`                  | error    | Resource already exists             |
 | 410  | Gone †                     | any                           | error/∅  | Endpoint removed                    |
@@ -278,25 +431,96 @@ Instead, use 505 (HTTP Version Not Supported) with a payload that lists the supp
 101 (Switching Protocols), 103 (Early Hints),
 203 (Non-Authoritative Information), 205 (Reset Content), 208 (Already Reported), 226 (IM Used), WebDav’s 423 (Locked),
 and 408 (Request Timeout)
-are not normally seen as part of REST APIs and are not recommended.
+are not normally seen as part of REST APIs and are strongly discouraged.
 
 ### Headers
 
 #### Content types
 
-**✅ DO:**
-Provide `Accept:` on non-`HEAD` requests. For example, `Content-Type: text/json`.
-
-**✅ DO:**
-Provide `Content-Type:` on `POST`. For example, `Content-Type: text/json`.
-
-**❌ DO NOT:**
-Include a `charset` parameter where it is not applicable, such with `Content-Type: text/json` (which is always UTF-8).
+Provide `Accept:` on non-`HEAD` requests – for example, `Content-Type: text/json`.
+Similarly, provide `Content-Type:` on `POST` – for example, `Content-Type: text/json`.
+Omit `charset` where it is not applicable, such with `Content-Type: text/json`. (JSON is always UTF-8).
 
 #### Rate-limiting
 
 Use [draft IETF rate-limiting headers](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html):
 `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`.
+These should always be included for `429 Too Many Requests` responses
+and MAY be included for other responses as well.
+
+## Docker
+
+Consider using a linter such as [hadolint](https://github.com/hadolint/hadolint).
+
+### `ENV` commands
+
+Break `ENV` commands into one line per command.
+`ENV` no longer adds a layer in new Docker versions,
+so there is no need to chain them on a single line.
+
+### Labels
+
+Use [Open Containers labels](https://github.com/opencontainers/image-spec/blob/master/annotations.md),
+including:
+
+- `org.opencontainers.image.version`
+- `org.opencontainers.image.vendor`
+- `org.opencontainers.image.title`
+- `org.opencontainers.image.url`
+- `org.opencontainers.image.documentation`
+
+### Multistage builds
+
+Where applicable, use a multistage build to separate _build-time_ and _runtime_ to keep containers slim.
+For example, when using Maven, Maven is only needed to assemble, not to run.
+Here, `maven:3-eclipse-temurin-21` is used as a base image, maven is used to compile and build a JAR artifact,
+and everything but the JAR is discarded.
+`eclipse-temurin:21` is used as the runtime base image, and only the JAR file is needed.
+
+```Docker
+FROM maven:3-eclipse-temurin-21 AS build
+WORKDIR /root
+RUN --mount=type=cache mvn package
+
+FROM eclipse-temurin:21 AS run
+ARG JAR_FILE=target/*.jar
+COPY --from=build $JAR_FILE my-app.jar
+EXPOSE 443
+ENTRYPOINT java -jar my-app.jar
+```
+
+## Command-line tools
+
+### Standard streams
+
+As long as doing so sensible, CLI tools should read from stdin and write to stdout.
+In either cases, they must direct logging messages to stderr, never to stdout.
+
+### Arguments
+
+Prefer named options over positional arguments.
+Tools should not accept more than 2 positional arguments
+and should not accept a variable number of positional arguments.
+Use one of these forms:
+
+- `<tool> [<options>]`
+- `<tool> [<options>] <positional-arg-1>`
+- `<tool> [<options>] <positional-arg-1> <positional-arg-2>`
+
+(Named options must be permitted before and after any positional arguments.)
+Tools that always read a single file and output a single file
+should generally take both files as positional arguments.
+
+Use double hyphens for long option names (e.g., `--user`).
+Omit short names for options that are highly specific, rarely used, or dangerous.
+Allow both `--option <arg>` and `--option=<arg>`.
+
+Use standard option names:
+
+- `--help`
+- `--version` (output the version to stdout and exit)
+- `--verbose` (and optionally `-v`)
+- `--quiet` (and optionally `-q`)
 
 ## Bash
 
@@ -354,8 +578,11 @@ fi
 
 ## Python
 
-Use [Black](https://github.com/psf/black), so don’t worry much about formatting.
-If Black wraps lines in an awkward way, either shorten the lines or break it into multiple statements to circumvent.
+[Black](https://github.com/psf/black) or the [Ruff formatter](https://docs.astral.sh/ruff/formatter/)
+should be used, so don’t worry much about formatting.
+
+Sometimes Black wraps lines in an awkward way.
+If this happens, either shorten the lines or break the code into multiple statements.
 For example:
 
 ```python
@@ -437,13 +664,17 @@ Use immutable types unless there’s a compelling reason otherwise.
             return to_json(self)
     ```
 
-### Member ordering
+### Class members
+
+Use `@abstractmethod` in favor of `@staticmethod`;
+`@staticmethod` should only be used in the rare cases where `@abstractmethod` cannot be used.
+As a general rule, prefer regular methods over `@abstractmethod`s.
 
 Sort class members in the following order.
 
 1. `ClassVar`s
 2. attributes
-3. `@staticmethod` _(note: generally avoid these)_
+3. `@staticmethod`
 4. `@classmethod`
 5. magic methods
 6. regular methods
@@ -462,6 +693,49 @@ from pathlib import Path
 directory = Path.cwd()
 (directory / "myfile.txt").write_text("hi", encoding="utf-8")
 ```
+
+### Typing
+
+Use typing annotations for both public APIs and internal components.
+Annotate all module-level variables, class attributes, and functions.
+Annotate both return types and parameters.
+Include any `self`, `cls`, `*args`, and `**kwargs` parameters.
+For example:
+
+```python
+from dataclasses import dataclass
+from typing import Any, Self, Unpack
+
+
+@dataclass(slots=True, frozen=True)
+class A(SomeAbstractType):
+    value: int
+
+    @classmethod
+    def new_zero(cls: type[Self]) -> Self:
+        return cls(0)
+
+    def __add__(self: Self, other: Self) -> Self:
+        return self.__class__(self.value + other.value)
+
+    def add_sum(self: Self, *args: int) -> Self:
+        return self.__class(self.value + sum(args))
+
+    def delgate(self: Self, *args: Any, **kwargs: Unpack[tuple[str, Any]]) -> None:
+        ...  # first do something special
+        super().delegate(*args, **kwargs)
+```
+
+!!! info "Rationale"
+
+    1. Documentation generators such as [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings)
+       (for mkdocs) can use type annotations to provide helpful hints for users;
+       type annotations also aid reading source code.
+    2. Linters, IDEs, and other tools use them to detect mistakes.
+    3. Tools can use type annotations to detect incorrect types at runtime.
+       This can be especially useful because duck typing prevents complete test coverage.
+    4. For annotating `self` and `cls`: they are still subject to
+       [Ruff’s ANN rules](https://docs.astral.sh/ruff/rules/#flake8-annotations-ann).
 
 ## Java
 
@@ -540,6 +814,13 @@ public void extract(
 Always encode source files as UTF-8.
 Write non-ASCII characters without escaping, except for whitespace (excluding spaces)
 and characters that are highly likely to confuse readers.
+
+#### Naming
+
+Follow [Google’s Java naming conventions](https://google.github.io/styleguide/javaguide.html#s5-naming).
+Notably, treat acronyms as words – for example, `IoError`, **not** `IOError`
+Name asynchronous methods (those that return a `CompletableFuture`) with the suffix `Async`; – for example,
+`calculateAsync()`.
 
 #### Member ordering
 
