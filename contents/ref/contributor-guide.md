@@ -19,10 +19,7 @@ and the [Contributor Code of Conduct, version 2.0](https://www.contributor-coven
 
 ## Starting work
 
-!!! note
-
-    This document assumes that you have the [GitHub CLI](https://cli.github.com/) installed.
-
+Install the [GitHub CLI](https://cli.github.com/) if you haven’t already.
 You may want to discuss with the maintainers before starting any work to avoid wasting any time.
 Please create an issue for this.
 
@@ -34,17 +31,27 @@ gh repo fork https://github.com/<org>/<repo> --default-branch-only --clone
 
 ## Coding & committing
 
-!!! note
-    It is helpful to configure Git to use your GPG keys.
-    See the [Git, SSH, and GPG guide](../guide/git-ssh-gpg.md).
+It is best to configure Git to use your GPG keys.
+See the [Git, SSH, and GPG guide](../guide/git-ssh-gpg.md).
+
+For open source projects, commit using `--signoff`,
+which indicates certifies under the [Developer Certificate of Origin](https://developercertificate.org/)
+that you have the right to submit your contributions under this project’s license.
+
+### Python
 
 Always run `hatch run fmt` before committing to auto-format your code.
 
 To commit, use `hatch run commit --signoff`.
-You can also use `git commit` directly by following [supplemental commit messages](#supplemental-commit-messages).
+You can also use `git commit` directly by following [supplemental commit messages](maintainer-guide.md#Reference).
 
-`--signoff` indicates certifies under the [Developer Certificate of Origin](https://developercertificate.org/),
+`--signoff` indicates certifies under the [Developer Certificate of Origin](https://developercertificate.org/)
 that you have the right to submit your contributions under this project’s license.
+
+## Other languages
+
+Format your code before committing.
+Commit with `git commit --signoff`.
 
 ## Submitting a pull request
 
@@ -72,6 +79,11 @@ When you’re ready, mark your pull request as "ready for review" on github.com 
 ```bash
 gh pr ready <id>
 ```
+
+## Conventions
+
+Maintainers can fix up your commits.
+You can also refer to the [coding conventions](https://dmyersturnbull.github.io/ref/contributor-guide/).
 
 ## Commit and issue types
 

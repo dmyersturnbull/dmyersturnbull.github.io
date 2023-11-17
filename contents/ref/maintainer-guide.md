@@ -105,6 +105,18 @@ The `latest` tag should always match the main branch.
 Deploy off of the main branch or tags.
 Make sure tests passed on the main branch before deploying.
 
+## File types
+
+- _Prefer open standards:_
+  Choose AVIF or WEBP over other image formats, OGG and FLAC over other audio formats;
+  choose AV1 over other video formats;
+  and choose webm over (non-webm) MKV.
+- _Use simpler formats:_
+  Use Markdown
+- _Use modern compression:_
+  Prefer modern algorithms like [LZ4](https://github.com/lz4/lz4) (`.lz4`)
+  and [ZSTD](https://github.com/facebook/zstd) (`.zst`).
+
 ## Source headers
 
 Ensure that nontrivial files contain a header such as
