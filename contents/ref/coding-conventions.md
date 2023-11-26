@@ -20,6 +20,14 @@
     to eliminate time spent formatting, avoid debates, and reduce commit diff sizes.
     Have these tools run via [pre-commit](https://pre-commit.com/) or pre-merge.
 
+    If you are using IntelliJ, [IntelliJ formatter settings](intellij-style.xml) are available for
+    Java, Scala, Groovy, Kotlin, JavaScript, and TypeScript.
+    [Eclipse formatter settings](eclipse-style.xml) are also available for Java.
+
+    These guidelines may be too detailed for most contributors.
+    Rather than pointing contributors to this document,
+    it may be better for maintainers to enforce these rules by editing contributors’ pull requests.
+
 ## Filenames
 
 !!! tip
@@ -39,7 +47,7 @@ Always use one or more filename extensions.
 Where possible, use `.yaml` for YAML, `.html` for HTML, and `.jpeg` for JPEG.
 In particular, **do not** use `.yml`, `.htm`, `.jpg`, or `.jfif`.
 
-??? info "Rationale"
+??? rationale
 
     The [official YAML extension is `.yaml`](https://yaml.org/faq.html).
     Moreover, the IANA media types are `application/yaml`, `text/html`, and `image/jpeg`.
@@ -50,6 +58,7 @@ In particular, **do not** use `.yml`, `.htm`, `.jpg`, or `.jfif`.
 
 ## Comments
 
+Comments must be maintained like all other elements of code.
 Avoid unnecessary comments, such as those added out of habit or ritual.
 Forgo comments that are obvious or otherwise unhelpful.
 For example:
@@ -98,8 +107,6 @@ For example:
             return self._items[key]
     ```
 
-Comments must be maintained like all other elements of code.
-
 ## Language and grammar
 
 !!! tip
@@ -114,39 +121,28 @@ Remove text that is repetitive or superfluous.
 Be direct. Use examples, diagrams, formal grammars, pseudocode, and mathematical expressions.
 (Write English descriptions for diagrams and any other elements that are be inaccessible to screen readers.)
 
-??? info "Use, utilize, usage, and utilization"
-
-    Avoid the word <i>utilize</i>, which has lost any semantic distinction from <i>use</i>;
-    Write <i>use</i> instead.
-
-    - <i>utilization</i>: use only to describe _how much_ something is used
-    - <i>usage</i>: use only to describe _how_ something is used or should be used.
-
 Keep language accessible:
 Introduce or explain jargon, favor simpler words, and replace idioms with literal phrasing.
-Substitute long phrases with shorter ones.
 Use singular <i>they</i> and other gender-neutral terms, and use inclusive language.
-_Great documentation should never win awards for literature._
-_Keep things simple and direct._
+Substitute long phrases with shorter ones.
 
-| ❌ Avoid                             | ✅ Preferred                     | Change                   |
-|-------------------------------------|---------------------------------|--------------------------|
-| <i>utilize</i>                      | <i>use</i>                      | simplify text            |
-| <i>due to the fact that</i>         | <i>because</i>                  | simplify text            |
-| <i>a great number of</i>            | <i>many</i>                     | simplify text            |
-| <i>is able to</i>                   | <i>can</i>                      | simplify text            |
-| <i>needless to say</i>              | (omit)                          | simplify text            |
-| <i>it is important to note that</i> | <i>importantly,</i>             | simplify text            |
-| <i>LRU</i>                          | <i>last recently used (LRU)</i> | introduce jargon         |
-| <i>actress</i>                      | <i>actor</i>                    | use gender-neutral terms |
-| <i>he or she</i>                    | <i>they</i>                     | use gender-neutral terms |
-| <i>turned a blind eye to</i>        | <i>ignored</i>                  | avoid ableist language   |
+| ❌ Avoid                             | ✅ Preferred                     |
+|-------------------------------------|---------------------------------|
+| <i>utilize</i>                      | <i>use</i>                      |
+| <i>due to the fact that</i>         | <i>because</i>                  |
+| <i>a great number of</i>            | <i>many</i>                     |
+| <i>is able to</i>                   | <i>can</i>                      |
+| <i>needless to say</i>              | (omit)                          |
+| <i>it is important to note that</i> | <i>importantly,</i>             |
+
+Great documentation should not win poetry awards.
+Keep things simple and direct.
 
 ### Spelling
 
 Use American English spelling.
 
-??? info "Rationale"
+??? rationale
 
     American English is the [most widespread dialect](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5969760/),
     and it generally has more phonetic and shorter spellings.
@@ -155,10 +151,8 @@ Use American English spelling.
 
 Use 1 space between sentences.
 
-Use sentence case for titles and table headers (e.g., <i>This is a title</i>)
+Use sentence case for titles and table headers (e.g., <i>This is a title</i>).
 Capitalize the first word after a colon or semicolon only if it begins a valid sentence.
-Observe a prescriptive distinction between
-[which and that](https://owl.purdue.edu/owl/general_writing/grammar/that_vs_which.html).
 
 ## Markdown
 
@@ -173,7 +167,7 @@ If a line goes over 120 characters, break it after an appropriate punctuation ma
 For example, break up independent clauses.
 (A series of very short sentences can be left on one line.)
 
-??? info "Rationale"
+??? rationale
 
     Keeping each sentence on its own line dramatically improves diffs.
 
@@ -187,7 +181,7 @@ Though not preferred, backticks can be used instead of `<i></i>`.
 Do not italicize ubiquitous foreign phrases such as
 <i>in vivo</i>, <i>in sitro</i>, <i>in silico</i>, and <i>et al.</i>
 
-??? info "Rationale"
+??? rationale
 
     This is primarily to aid grammar checkers.
     For example, this is fine: `Say <i>and</i> and <i>or</i>`
@@ -223,7 +217,7 @@ That includes:
 - `−` (<i>minus sign</i>)
 - `µ` (<i>micro sign</i>)
 
-However, use <i>hyphen-minus</i> (U+002D) for hyphens, **not** <i>hyphen</i> (U+2010).
+<small>However, use regular <i>hyphen-minus</i> (U+002D) for hyphens, **not** <i>hyphen</i> (U+2010).</small>
 
 Use an en dash surrounded by spaces (` – `) to mark breaks in thoughts, **not** an em dash.
 For example:
@@ -241,7 +235,7 @@ For example:
 Also write “hard”, “difficult”, or “strenuous”.
 ```
 
-??? info "Rationale"
+??? rationale
 
     This preserves the semantic difference between punctuation _inside_ versus _outside_ of quotations.
     This rule is always followed when using code in backticks, anyway.
@@ -272,7 +266,7 @@ Mark Twain also said:
 
 As seen above, use an em dash (—) set in `<i>`/`</i>` to cite a blockquote’s source.
 
-??? info "Rationale"
+??? rationale
 
     This rule preserves the semantics as much as possible.
     A colon is a visual signal that the prose goes with its following code block, reducing refactoring mistakes.
@@ -287,8 +281,19 @@ To format numbers and dimensioned quantities, use:
 
 For example: <i>1 024.222 222 µm</i>.
 
-Use SI units unless there is a strong reason not to.
+
+!!! rationale
+
+    This is the format that
+    [IEEE recommends](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/conferences/style_references_manual.pdf).
+
+Preferably, write units using decimal dot (`·`, [U22C5](https://www.compart.com/en/unicode/U+u22c5)).
+For example: <i>5.4 kg·m²·s⁻²</i>.
 Use `hour` or `hr`, `minute` or `min`, and `second`, `sec`, or `s` as abbreviations.
+
+!!! tip
+    You can use inline LaTeX (`$`/`$`) to format dimensioned values instead.
+    E.g., `5.4 kg m^2 s^{-2}`.
 
 ### Uncertainty measurements
 
@@ -356,7 +361,7 @@ For example, use `<p>The end.</p>`, **not** `<p>The end.`.
 Use trailing slashes for self-closing tags; for example,
 write `<meta charset="utf-8" />`, **not** `<meta charset="utf-8">`.
 
-??? info "Rationale"
+??? rationale
 
     Requiring closing tags and trailing slashes improves readability and simplifies parsing.
     It enables XML parsing, obviates the need for custom parsers to remember which HTML tags are self-closing,
@@ -366,7 +371,7 @@ write `<meta charset="utf-8" />`, **not** `<meta charset="utf-8">`.
 
 Always include these elements.
 
-??? info "Rationale"
+??? rationale
 
     The rules for
     [ommitting `<html>`, `<head>`, and `<body>`](https://html.spec.whatwg.org/#syntax-tag-omission)
@@ -376,7 +381,7 @@ Always include these elements.
 
 Always quote attributes with double quotes.
 
-??? info "Rationale"
+??? rationale
 
     This is the most widespread choice, and it tends to be easier for custom parsers.
 
@@ -391,7 +396,7 @@ Wrap long tag declarations to 120 characters like this:
 />
 ```
 
-??? info "Rationale"
+??? rationale
 
     This style horizontally aligns the attribute names.
     More importantly, it is analogous to styles enforced by autoformatters like Prettier and Black,
@@ -415,8 +420,9 @@ Use the `alt` attribute for media elements, including `<img>`, `<video>`, `<audi
 
 This section applies to REST-like HTTP APIs.
 Servers should only issue response codes in accordance with the following table.
-_Note that some or even most of these might not apply!_
-_For example, your server might not implement HTTP content negotiation._
+
+<b>Note:</b> Some or even most of these might not apply!
+For example, your server might not implement HTTP content negotiation.
 
 !!! info
 
@@ -577,7 +583,7 @@ Use standard option names:
 6. Always quote string variables, even those without spaces.
 7. Use new Bash constructs like `[[` instead of `[`.
 
-??? info "Rationale"
+??? rationale
 
     1. so that the correct `bash` is used
     2. Use
@@ -646,13 +652,13 @@ Avoid add trailing commas so that Black can decide whether to keep code on one l
         ).my_other_long_named_function_being_chained(1)
         ```
 
-    === "✅ Correct – shorten the function names"
+    === "✅ Correct – shorten function names"
 
         ```python
         data = my_shorter_function(data).my_other_shorter_function(1)
         ```
 
-    === "✅ Also Correct – split into multiple statements"
+    === "✅ Also Correct – split up statements"
 
         ```python
         data = my_long_named_function_that_makes_the_line_too_long(data)
@@ -731,7 +737,7 @@ As a general rule, prefer using a regular method over an `@abstractmethod`.
 
 Sort class members in the following order.
 
-1. `ClassVar`s
+1. `ClassVar`
 2. attributes
 3. `@staticmethod`
 4. `@classmethod`
@@ -742,7 +748,7 @@ Sort class members in the following order.
 
 Within each of the 8 types, order using three rules, in order of decreasing importance:
 
-1. Pair getters and setters together, with getters first.
+1. Pair getters and setters together, with the getter first.
 2. Group dependent methods together such that callees are immediately below callers.
    That is, using a breadth-first search.
 3. If there are two or more callees, arrange them in the order in which they appear in the caller.
@@ -767,8 +773,7 @@ Always read and write text as UTF-8, and pass `encoding="utf-8"` (i.e., not `utf
 Use typing annotations for both public APIs and internal components.
 Annotate all module-level variables, class attributes, and functions.
 Annotate both return types and parameters.
-Include any `self`, `cls`, `*args`, and `**kwargs` parameters.
-
+Annotate `self`, `cls`, `*args`, and `**kwargs` parameters.
 
 ??? Example
 
@@ -796,7 +801,7 @@ Include any `self`, `cls`, `*args`, and `**kwargs` parameters.
             super().delegate(*args, **kwargs)
     ```
 
-??? info "Rationale"
+??? rationale
 
     1. Documentation generators such as [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings)
        (for mkdocs) can use type annotations to provide helpful hints for users;
@@ -810,7 +815,7 @@ Include any `self`, `cls`, `*args`, and `**kwargs` parameters.
 ### Docstrings
 
 Use [Google-style docstrings](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings)
-as [supported by mkdocstrings](https://mkdocstrings.github.io/griffe/docstrings/#google-style).
+as [mkdocstrings supports](https://mkdocstrings.github.io/griffe/docstrings/#google-style).
 
 ## Java
 
@@ -819,11 +824,28 @@ for _additional_ recommendations.
 
 ### Practices
 
+#### Banned methods
+
+Do not use `clone()` or `finalize()`.
+
+#### Exceptions
+
+Both checked and unchecked exceptions are fine.
+
 #### Constructors
 
 Constructors should map arguments transparently to fields.
 If more complex functionality needs to happen to construct the object,
 it should be moved to a factory, builder, or static factory method.
+
+#### Optional types
+
+Do not return `null` or accept `null` as an argument in public methods; Use `Optional<>` instead.
+`null` is permitted in private code to improve performance.
+
+#### Collections
+
+Prefer collections to arrays unless doing so results in significant performance issues.
 
 #### Immutability and records
 
@@ -831,16 +853,14 @@ Prefer immutable types, and use records for data-carrier-like classes.
 Immutable classes must have only `final` fields and must not allow modification (except by reflection);
 Constructors must make defensive copies, and getters must return defensive copies or views.
 
-#### Collections
-
-Prefer collections to arrays unless doing so results in significant performance issues.
-
-#### Getters and setters
+#### Getters, setters, and builder methods
 
 Use `getXx()`/`setXx()` for mutable types but `Xx()` for immutable types:
 
 - For _mutable_ types: name the getter `public double getAngle()`
 - For _immutable_ types: name the getter `public double angle()`
+
+Builder methods should follow the immutable convention (i.e., `angle()`).
 
 #### `toString`
 
@@ -883,7 +903,15 @@ public class Claz {
 }
 ```
 
+!!! tip
+
+    This is the IntelliJ formatter default.
+
 #### `equals`
+
+!!! tip
+
+    IntelliJ can generally do
 
 `equals()` may use either
 
@@ -895,7 +923,8 @@ public class Claz {
     In some languages, type safety of equality can be checked by the compiler.
     [Scala 3 has type-safe multiversal equality](https://docs.scala-lang.org/scala3/book/ca-multiversal-equality.html).
 
-`instanceof` should be used to check type compatibility, **not** `getClass()`.
+Use `getClass()` to check type compatibility, **not** `instanceof`.
+(For universal equality, only `getClass()` makes sense – and for multiversal equality, there is no difference.)
 Additionally, subclasses of classes defining `equals()` should never add data or state.
 
 ##### Universal equality
@@ -907,12 +936,143 @@ public class Claz {
     @Override public final int hashCode() {
         return Objects.hash(field1); // ...
     }
-    @Override public final boolean equals(final Object obj) {
-        return this == obj
-          || obj instanceof Claz && Objects.equals(field1, obj.field1); // ...
+    @Override public boolean equals(final Object o) {
+        if (o == this) {
+            return true;
+        }
+        if (null == o || getClass() != o.getClass()) {
+            return false;
+        }
+        final var obj = (Test) o;
+        return Objects.equals(message, obj.message) && Objects.equals(items, obj.items);
     }
 }
 ```
+
+??? tip "IntelliJ template for universal equality"
+
+    Use this IntellJ template.
+    Under Generate ➤ equals() and hashCode() ➤ ...
+    make a new template called <i>universal</i>.
+
+    <b>`equals()` template:</b>
+
+    ```text
+    #parse("equalsHelper.vm")
+    @Override public boolean equals(##
+    Object $paramName){
+    if ($paramName == this) {
+    return true;
+    }
+    if (null == $paramName || getClass() != ${paramName}.getClass()) {
+    return false;
+    }
+    final var obj = (${class.getName()}) $paramName;
+    return ##
+    #set($i = 0)
+    #foreach($field in $fields)
+    #if ($i > 0)
+    && ##
+    #end
+    #set($i = $i + 1)
+    #if ($field.primitive)
+    #if ($field.double || $field.float)
+    #addDoubleFieldComparisonConditionDirect($field) ##
+    #else
+    #addPrimitiveFieldComparisonConditionDirect($field) ##
+    #end
+    #elseif ($field.enum)
+    #addPrimitiveFieldComparisonConditionDirect($field) ##
+    #elseif ($field.array)
+    java.util.Arrays.equals($field.accessor, obj.$field.accessor)##
+    #else
+    java.util.Objects.equals($field.accessor, obj.$field.accessor)##
+    #end
+    #end
+    ;
+    }
+    ```
+
+    <b>`hashCode()` template:</b>
+
+    ```
+    public int hashCode() {
+    #if (!$superHasHashCode && $fields.size()==1 && $fields[0].array)
+    return java.util.Arrays.hashCode($fields[0].accessor);
+    #else
+    #set($hasArrays = false)
+    #set($hasNoArrays = false)
+    #foreach($field in $fields)
+    #if ($field.array)
+    #set($hasArrays = true)
+    #else
+    #set($hasNoArrays = true)
+    #end
+    #end
+    #if (!$hasArrays)
+    return java.util.Objects.hash(##
+    #set($i = 0)
+    #if($superHasHashCode)
+    super.hashCode() ##
+    #set($i = 1)
+    #end
+    #foreach($field in $fields)
+    #if ($i > 0)
+    , ##
+    #end
+    $field.accessor ##
+    #set($i = $i + 1)
+    #end
+    );
+    #else
+    #set($resultName = $helper.getUniqueLocalVarName("result", $fields, $settings))
+    #set($resultAssigned = false)
+    #set($resultDeclarationCompleted = false)
+    int $resultName ##
+    #if($hasNoArrays)
+    = java.util.Objects.hash(##
+    #set($i = 0)
+    #if($superHasHashCode)
+    super.hashCode() ##
+    #set($i = 1)
+    #end
+    #foreach($field in $fields)
+    #if(!$field.array)
+    #if ($i > 0)
+    , ##
+    #end
+    $field.accessor ##
+    #set($i = $i + 1)
+    #end
+    #end
+    );
+    #set($resultAssigned = true)
+    #set($resultDeclarationCompleted = true)
+    #elseif($superHasHashCode)
+    = super.hashCode(); ##
+    #set($resultAssigned = true)
+    #set($resultDeclarationCompleted = true)
+    #end
+    #foreach($field in $fields)
+    #if($field.array)
+    #if ($resultDeclarationCompleted)
+    $resultName ##
+    #end
+    = ##
+    #if ($resultAssigned)
+    31 * $resultName + ##
+    #end
+    java.util.Arrays.hashCode($field.accessor);
+    #set($resultAssigned = true)
+    #set($resultDeclarationCompleted = true)
+    #end
+    #end
+    return $resultName;
+    #end
+    #end
+    }
+    ```
+
 
 ##### Multiversal equality
 
@@ -923,15 +1083,154 @@ public class Claz {
     @Override public final int hashCode() {
         return Objects.hash(field1); // ...
     }
-    @Override public final boolean equals(final Object obj) {
-        if (!(obj instanceof Claz)) {
-            throw new IllegalArgumentException("Wrong type in '" + other + "'");
+    @Override public final boolean equals(final Object o) {
+        if (o == this) {
+            return true;
         }
-        return this == obj ||
-            Objects.equals(field1, obj.field1); // ...
+        if (null == o) {
+            return false;
+        }
+        if (getClass() != o.getClass()) {
+            throw new IllegalArgumentException("Type " + o.getClass().getName() + " is incompatible with " + getClass
+              ().getName());
+        }
+        final var obj = (Test) o;
+        return Objects.equals(message, obj.message) && Objects.equals(items, obj.items);
     }
 }
 ```
+
+??? tip "IntelliJ template for multiversal equality"
+
+    Use this IntellJ template.
+    Under Generate ➤ equals() and hashCode() ➤ ...
+    make a new template called <i>universal</i>.
+
+    <b>`equals()` template:</b>
+
+    ```text
+    #parse("equalsHelper.vm")
+    @Override public final boolean equals(##
+    Object $paramName){
+    if ($paramName == this) {
+    return true;
+    }
+    if (null == $paramName) {
+    return false;
+    }
+    if (getClass() != ${paramName}.getClass()) {
+    throw new IllegalArgumentException(
+    "Type "
+    + ${paramName}.getClass().getName()
+    + " is incompatible with "
+    + getClass().getName()
+    );
+    }
+    final var obj = (${class.getName()}) $paramName;
+    return ##
+    #set($i = 0)
+    #foreach($field in $fields)
+    #if ($i > 0)
+    && ##
+    #end
+    #set($i = $i + 1)
+    #if ($field.primitive)
+    #if ($field.double || $field.float)
+    #addDoubleFieldComparisonConditionDirect($field) ##
+    #else
+    #addPrimitiveFieldComparisonConditionDirect($field) ##
+    #end
+    #elseif ($field.enum)
+    #addPrimitiveFieldComparisonConditionDirect($field) ##
+    #elseif ($field.array)
+    java.util.Arrays.equals($field.accessor, obj.$field.accessor)##
+    #else
+    java.util.Objects.equals($field.accessor, obj.$field.accessor)##
+    #end
+    #end
+    ;
+    }
+    ```
+
+    <b>`hashCode()` template:</b>
+
+    ```
+    public int hashCode() {
+    #if (!$superHasHashCode && $fields.size()==1 && $fields[0].array)
+    return java.util.Arrays.hashCode($fields[0].accessor);
+    #else
+    #set($hasArrays = false)
+    #set($hasNoArrays = false)
+    #foreach($field in $fields)
+    #if ($field.array)
+    #set($hasArrays = true)
+    #else
+    #set($hasNoArrays = true)
+    #end
+    #end
+    #if (!$hasArrays)
+    return java.util.Objects.hash(##
+    #set($i = 0)
+    #if($superHasHashCode)
+    super.hashCode() ##
+    #set($i = 1)
+    #end
+    #foreach($field in $fields)
+    #if ($i > 0)
+    , ##
+    #end
+    $field.accessor ##
+    #set($i = $i + 1)
+    #end
+    );
+    #else
+    #set($resultName = $helper.getUniqueLocalVarName("result", $fields, $settings))
+    #set($resultAssigned = false)
+    #set($resultDeclarationCompleted = false)
+    int $resultName ##
+    #if($hasNoArrays)
+    = java.util.Objects.hash(##
+    #set($i = 0)
+    #if($superHasHashCode)
+    super.hashCode() ##
+    #set($i = 1)
+    #end
+    #foreach($field in $fields)
+    #if(!$field.array)
+    #if ($i > 0)
+    , ##
+    #end
+    $field.accessor ##
+    #set($i = $i + 1)
+    #end
+    #end
+    );
+    #set($resultAssigned = true)
+    #set($resultDeclarationCompleted = true)
+    #elseif($superHasHashCode)
+    = super.hashCode(); ##
+    #set($resultAssigned = true)
+    #set($resultDeclarationCompleted = true)
+    #end
+    #foreach($field in $fields)
+    #if($field.array)
+    #if ($resultDeclarationCompleted)
+    $resultName ##
+    #end
+    = ##
+    #if ($resultAssigned)
+    31 * $resultName + ##
+    #end
+    java.util.Arrays.hashCode($field.accessor);
+    #set($resultAssigned = true)
+    #set($resultDeclarationCompleted = true)
+    #end
+    #end
+    return $resultName;
+    #end
+    #end
+    }
+    ```
 
 #### `compareTo`
 
@@ -943,47 +1242,6 @@ Immutable classes should implement `Comparable` and override `compareTo` as long
 End every `case` block with a  `return` or `break` (no fall-through).
 
 ### Formatting
-
-#### Braces
-
-Use the original Java style guidelines:
-
-- Put opening braces on the same line
-- Keep `else` and `else if` on the same line (i.e., `} else {`)
-- Always uses braces for multiline `if`/`else`/`else if`, `switch`, and loop blocks
-- Keep empty blocks on one line (i.e., `{}`), including for multi-block statements
-
-#### Blank lines
-
-Add one blank line before each top-level declaration, excluding between fields.
-List enum members on one line unless they explicitly call constructors
-or extend past the 120-character max line width.
-Single blank lines MAY be added in other places for clarity.
-Do not use multiple consecutive line breaks.
-
-#### Spacing
-
-Follow
-[Google’s horizontal whitespace](https://google.github.io/styleguide/javaguide.html#s4.6.2-horizontal-whitespace)
-section.
-Do not horizontally align.
-
-#### Variable declarations
-
-Declare variables when they are needed, not at the start of a block.
-Always use `var` when initializing directly through a constructor or static factory method;
-otherwise, use it if the type is either obvious or unimportant.
-For array declarations, use `type[] name`, **not** `type name[]`.
-In `main` methods, use `String... args`.
-
-#### Comparisons
-
-Always place constants on the right hand side.
-Omit optional grouping parentheses unless they greatly improve clarity.
-
-#### Comments
-
-Avoid end-of-line comments.
 
 #### Indentation and wrapping
 
@@ -1006,6 +1264,73 @@ public void extract(
 
     IntelliJ can do this for you.
     Enable all “chop” options.
+    Or, import the [IntelliJ formatter settings](intellij-style.xml)
+    or [Eclipse formatter settings](eclipse-style.xml).
+
+#### Braces and line breaks
+
+Use the original Java style guidelines:
+
+1. Put opening braces on the same line
+2. Keep `else` and `else if` on the same line (i.e., `} else {`).
+   Similarly, keep `while` on the same line for do-while loops (i.e., `} while ()`).
+3. Always uses braces and start a new line for `if`/`else`/`else if`, `switch`, and loop blocks.
+4. Chained method calls may be either single-line or chopped into multiple lines.
+  Keep the first call on the same line.
+5. Place every annotation on its own line.
+
+#### Blank lines
+
+Add one blank line before each top-level declaration, excluding between fields.
+List enum members on one line unless they explicitly call constructors
+or extend past the 120-character max line width.
+Single blank lines MAY be added in other places for clarity.
+Do not use multiple consecutive line breaks.
+
+#### Spacing
+
+Follow
+[Google’s horizontal whitespace](https://google.github.io/styleguide/javaguide.html#s4.6.2-horizontal-whitespace)
+section, which are generally compatible with the IntelliJ formatter’s default settings.
+Do not horizontally align.
+
+#### Variable declarations
+
+Declare variables when they are needed, not at the start of a block.
+Always use `var` when initializing directly through a constructor or static factory method;
+otherwise, use it if the type is either obvious or unimportant.
+Only declare one variable per line; e.g., do not use `int var1, var2;`.
+For array declarations, use `type[] name`, **not** `type name[]`.
+In `main` methods, use `String... args`.
+
+#### Comparisons
+
+Always place constants on the right hand side.
+
+#### Optional syntax
+
+Omit any element or syntax that carries no semantic meaning.
+
+Omit:
+
+- All optional grouping parentheses
+- Optional qualifiers with `this`, `super`
+- Optional class name for static members of the same class
+- The name of the outer class when accessing its members
+- Unnecessary qualifier keywords, such as `abstract` methods in interfaces
+- `.toString()`
+
+However, do include:
+
+- The name of the inner class when accessing its members
+- `final` for parameters and local variables
+- Annotation `(key = value)` instead of `(value)` for multi-argument annotations
+
+#### Comments
+
+Generally avoid end-of-line comments.
+Also avoid multiline comments using `/*` and `*/`.
+Instead, comment each line using `//`.
 
 #### Encoding
 
@@ -1025,28 +1350,71 @@ Name asynchronous methods (those that return a `CompletableFuture`) with the suf
 Sort members in the following order.
 
 1. `static final` field
-2. ~~`static` field~~ (non-`final` static fields should be avoided)
-3. initializer block
-4. `final` field
-5. field
-6. constructor
-7. `static` method
-8. method
-9. `enum`
-10. `interface`
-11. `static class`
-12. `class`
+2. initializer block
+3. `final` field
+4. field
+5. constructor
+6. `static` method
+7. method
+8. getters and setters
+9. `compareTo`, `hashCode`, `equals`, and `toString` (in order)
+10. `enum`
+11. `interface`
+12. `static class`
+13. `class`
 
-Within each of the 12 types, order using three rules, in order of decreasing importance:
+!!! note
 
-1. Pair getters and setters together, with getters first.
+    Do not use non-`final` static fields.
+
+Within each of the 13 types, order using 4 rules, in order of decreasing importance:
+
+1. Pair getters and setters together, with the getter first.
 2. Group dependent methods together such that callees are immediately below callers.
    That is, using a breadth-first search.
-3. If there are two or more callees, arrange them in the order in which they appear in the caller.
-4. List `public`, `protected`, default, then `private`.
+3. List overridden methods first.
+4. Order by `public`, `protected`, default, then `private`.
 
 !!! tip
 
     IntelliJ’s formatter can do this for you.
     Keep the default order but select “group dependent methods together”
     and  “keep getters and setters together”.
+    Or, import the [IntelliJ formatter settings](intellij-style.xml)
+    or [Eclipse formatter settings](eclipse-style.xml).
+
+## Scala
+
+In general, follow the [Java guidelines](#Java).
+
+Always surround method bodies with curly braces.
+In Scala 2.xx code: For void members, write `function(): Unit = {`, **not** `function() {`.
+
+## SQL
+
+### Formatting
+
+Use lowercase for keywords, aliases, function names, and columns, and table names.
+
+Wrap at 120 characters and do not align horizontally.
+Multiline statements should follow this indentation format:
+
+```sql
+select
+    pet.name as name,
+    pet.age as age,
+    owner.name as owner
+from
+    pet
+    inner join species on pet.species = species.id
+    left join owner on pet.owner = owner.id
+where
+    owner.name = 'Berk'
+    and species.name like 'Canis%'
+;
+```
+
+!!! tip
+
+    IntelliJ’s formatter can do this for you.
+    Import the [IntelliJ formatter settings](intellij-style.xml).
