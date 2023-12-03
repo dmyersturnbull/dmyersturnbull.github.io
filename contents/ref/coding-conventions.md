@@ -14,28 +14,40 @@
     ### File names: See https://dmyersturnbull.github.io/ref/coding-conventions/#filenames
     ```
 
-    Use [this `.editorconfig`](https://raw.githubusercontent.com/dmyersturnbull/cicd/main/.editorconfig),
-    as well as autoformatters such as [Prettier](https://prettier.io/) and
-    [Black](https://github.com/psf/black) (or the [Ruff formatter](https://docs.astral.sh/ruff/formatter/)).
-    to eliminate time spent formatting, avoid debates, and reduce commit diff sizes.
-    Have these tools run via [pre-commit](https://pre-commit.com/) or pre-merge.
-
-    If you are using IntelliJ, [IntelliJ formatter settings](intellij-style.xml) are available for
-    Java, Scala, Groovy, Kotlin, JavaScript, and TypeScript.
-    [Eclipse formatter settings](eclipse-style.xml) are also available for Java.
-
     These guidelines may be too detailed for most contributors.
-    Rather than pointing contributors to this document,
+    Rather than pointing contributors here,
     it may be better for maintainers to enforce these rules by editing contributors’ pull requests.
+
+Use the auto-formatter setup in [dmyersturnbull/cicd](https://github.com/dmyersturnbull/cicd).
+This includes `.editorconfig`, [Prettier](https://prettier.io/), and
+the [Ruff formatter](https://docs.astral.sh/ruff/formatter/)
+(which is equivalent to [Black](https://github.com/psf/black)).
+
+Prettier handles all the formatting for JavaScript, TypeScript, HTML, and CSS,
+and some of the formatting for Markdown and some other languages.
+For Java, Scala, Groovy, and Kotlin, the [IntelliJ formatter settings](intellij-style.xml)
+can handle most of the formatting conventions for those languages.
+
+These auto-formatters are meant to be run via [pre-commit](https://pre-commit.com/) or before each merge.
+**This document lists non-formatting guidelines (e.g., accessibility)**
+**and formatting conventions that auto-formatters do not handle.**
 
 ## Filenames
 
 !!! tip
 
     This section can apply to naming of URI nodes, database IDs, and similar constructs.
-    These are general guidelines.
-    Alternatives should be used in some situations.
+    These are general guidelines: Alternatives should be used in some situations.
     For example, if camelCase is used in your JSON Schema, use camelCase for schema document filenames.
+
+??? rationale
+
+    The [official YAML extension is `.yaml`](https://yaml.org/faq.html).
+    Moreover, the IANA media types are `application/yaml`, `text/html`, and `image/jpeg`.
+    `.yml`, `.htm`, and `.jpg` are relics of DOS.
+    Extensions are required because provide useful information; ommitting them can cause confusion.
+    For example, a file named `info` could be a plain-text info document or a shell script that writes the info.
+    Instead, write it as `info.txt` or `info.sh`.
 
 Prefer using kebab-case (e.g., `full-document.pdf`), treating `-` as a space.
 Restrict to `-`, `.`, `[a-z]`, and `[0-9]`, unless there is a compelling reason otherwise.
@@ -46,15 +58,6 @@ Always use one or more filename extensions.
 (Name your license file `LICENSE.txt` or `LICENSE.md`.)
 Where possible, use `.yaml` for YAML, `.html` for HTML, and `.jpeg` for JPEG.
 In particular, **do not** use `.yml`, `.htm`, `.jpg`, or `.jfif`.
-
-??? rationale
-
-    The [official YAML extension is `.yaml`](https://yaml.org/faq.html).
-    Moreover, the IANA media types are `application/yaml`, `text/html`, and `image/jpeg`.
-    `.yml`, `.htm`, and `.jpg` are relics of DOS.
-    Extensions are required because provide useful information; ommitting them can cause confusion.
-    For example, a file named `info` could be a plain-text info document or a shell script that writes the info.
-    Instead, write it as `info.txt` or `info.sh`.
 
 ## Comments
 
@@ -123,35 +126,35 @@ Be direct. Use examples, diagrams, formal grammars, pseudocode, and mathematical
 
 Keep language accessible:
 Introduce or explain jargon, favor simpler words, and replace idioms with literal phrasing.
-Use singular <i>they</i> and other gender-neutral terms, and use inclusive language.
+Use singular _they_ and other gender-neutral terms, and use inclusive language.
 Substitute long phrases with shorter ones.
 
-| ❌ Avoid                             | ✅ Preferred                     |
-|-------------------------------------|---------------------------------|
-| <i>utilize</i>                      | <i>use</i>                      |
-| <i>due to the fact that</i>         | <i>because</i>                  |
-| <i>a great number of</i>            | <i>many</i>                     |
-| <i>is able to</i>                   | <i>can</i>                      |
-| <i>needless to say</i>              | (omit)                          |
-| <i>it is important to note that</i> | <i>importantly,</i>             |
+| ❌ Avoid                        | ✅ Preferred    |
+|--------------------------------|----------------|
+| _utilize_                      | _use_          |
+| _due to the fact that_         | _because_      |
+| _a great number of_            | _many_         |
+| _is able to_                   | _can_          |
+| _needless to say_              | (omit)         |
+| _it is important to note that_ | _importantly,_ |
 
 Great documentation should not win poetry awards.
 Keep things simple and direct.
 
 ### Spelling
 
-Use American English spelling.
-
 ??? rationale
 
     American English is the [most widespread dialect](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5969760/),
     and it generally has more phonetic and shorter spellings.
 
+Use American English spelling.
+
 ### Grammar and punctuation
 
 Use 1 space between sentences.
 
-Use sentence case for titles and table headers (e.g., <i>This is a title</i>).
+Use sentence case for titles and table headers (e.g., _This is a title_).
 Capitalize the first word after a colon or semicolon only if it begins a valid sentence.
 
 ## Markdown
@@ -162,62 +165,92 @@ Capitalize the first word after a colon or semicolon only if it begins a valid s
 
 ### Line breaks
 
-Break lines at the end of sentences.
-If a line goes over 120 characters, break it after an appropriate punctuation mark.
-For example, break up independent clauses.
-(A series of very short sentences can be left on one line.)
-
 ??? rationale
 
     Keeping each sentence on its own line dramatically improves diffs.
 
-### Semantic markup
+**Break lines at the end of sentences.**
+If a line goes over 120 characters, break it after an appropriate punctuation mark.
+For example, break up independent clauses, and start a new line before a long hyperlink.
+_Note:_ A series of very short sentences can be left on one line.
 
-Reserve Markdown’s `_`/`_` for emphasized text only;
-For foreign words, names of books, technical terms, references to a word itself,
-and other text that should be italicized,
-use the [`<i>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i).
-Though not preferred, backticks can be used instead of `<i></i>`.
+### Emphasis and semantic markup
+
+#### Italics
+
+**Use `_`/`_` italics for foreign words, technical terms,**
+and references to a word or phrase itself (rather than its meaning).**
+**Never use italics for emphasis.**
+Take `_`/`_` as semantically equivalent to the
+[`<i>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i).
 Do not italicize ubiquitous foreign phrases such as
-<i>in vivo</i>, <i>in sitro</i>, <i>in silico</i>, and <i>et al.</i>
+_in vivo_, _in sitro_, _in silico_, and _et al._
+You can use backticks in places where italics would be unclear; for example, to show Unicode characters.
 
-??? rationale
+??? bug
 
-    This is primarily to aid grammar checkers.
-    For example, this is fine: `Say <i>and</i> and <i>or</i>`
-    Whereas grammar checkers will think this has a duplicate <i>and</i>: `Say _and_ and _or_`.
-    Foreign phrases are comparatively rare.
-    Using `<i></i>` for them as well preserves the semantic distinction between
-    the [`<em>` tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em)
-    and the [`<i>` tag](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i).
+    Unfortunately, grammar checkers do not understand this convention
+    and will mark a duplicate _and_ in `Say _and_ and _or_`.
+
+#### Bold
+
+**Use `**`/`**` bold for emphasis.**
+Take it as semantically equivalent to the
+[`<strong>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong).
+
+Use the [`<b>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b) explicitly
+for text that should be bold but is not emphasized – i.e., is offset from the surrounding text.
+For example, you might write `<b>Score:</b> 55.3%`.
+(`**`/`**` would be inappropriate here.)
+
+#### Code and math
+
+!!! tip
+
+    With the Material for mkdocs
+    ["Smarty" plugin](https://squidfunk.github.io/mkdocs-material/reference/formatting/#adding-keyboard-keys),
+    you can use `++`/`++` instead of `<kdb>`/`<kdb>`; e.g., `++ctrl+alt+del++`.
+
+Use backticks for code, `<kbd>`/`</kdb>` for keyboard keys,
+and LaTeX (`$`/`$`) for variables and mathematical expressions.
+To describe menu navigation, use [`➤`](https://www.compart.com/en/unicode/U+27A4) without markup, as in
+File ➤ Export ➤ Export as Text.
 
 ### Encoding
 
 Write most non-ASCII characters as-is, not with entity references.
 For example, write an en dash as `–`, not `&#x2013;`.
 
-However, you may use hexadecimal entity references for:
+However, you may use hexadecimal entity references for
 
-- non-space whitespace characters
-  (such as [no break space](https://www.compart.com/en/unicode/U+00A0), `&nbsp;`)
+- non-space whitespace characters; and
+  (such as [no break space](https://www.compart.com/en/unicode/U+00A0), `&nbsp;`); and
 - punctuation that is highly likely to confuse anyone reading the source code
-  (such as [soft hyphen](https://www.compart.com/en/unicode/U+00ad), `&#x00ad;`)
+  (such as [soft hyphen](https://www.compart.com/en/unicode/U+00ad), `&#x00ad;`); and
 - characters that must be escaped for technical reasons
 
 ### Punctuation symbols
+
+!!! tip
+
+    With the Material for mkdocs
+    ["Smarty" plugin](https://python-markdown.github.io/extensions/smarty/),
+    you can use use `'` and `"` for quotation marks,
+    `--` for en dashes, `---` for em dashes, and `...` for ellipses.
 
 Use the correct Unicode characters for punctuation.
 That includes:
 
 - `’` for apostrophes
 - `‘`, `’`, `“`, and `”` for quotation marks
-- `–` (<i>en dash</i>) for numerical ranges (e.g., `5–10`)
-- `—` (<i>em dash</i>) to separate a blockquote and its source
-- `‒` (<i>figure dash</i>) in numerical formatting
-- `−` (<i>minus sign</i>)
-- `µ` (<i>micro sign</i>)
+- `–` (_en dash_) for numerical ranges (e.g., `5–10`)
+- `—` (_em dash_) to separate a blockquote and its source
+- `‒` (_figure dash_) in numerical formatting
+- `…` (_ellipses_)
+- `−` (_minus sign_)
+- `µ` (_micro sign_)
 
-<small>However, use regular <i>hyphen-minus</i> (U+002D) for hyphens, **not** <i>hyphen</i> (U+2010).</small>
+<small>However, use regular _hyphen-minus_ (U+002D) for hyphens, **not** _hyphen_ (U+2010).</small>
 
 Use an en dash surrounded by spaces (` – `) to mark breaks in thoughts, **not** an em dash.
 For example:
@@ -228,6 +261,11 @@ An en dash – in contrast to an em dash – should be used here.
 
 ### Quotations
 
+??? rationale
+
+    This preserves the semantic difference between punctuation _inside_ versus _outside_ of quotations.
+    This rule is always followed when using code in backticks, anyway.
+
 Place punctuation outside of quotation marks (British-style rules).
 For example:
 
@@ -235,43 +273,44 @@ For example:
 Also write “hard”, “difficult”, or “strenuous”.
 ```
 
-??? rationale
-
-    This preserves the semantic difference between punctuation _inside_ versus _outside_ of quotations.
-    This rule is always followed when using code in backticks, anyway.
-
 Introduce code blocks with punctuation only where semantically valid.
-
-For example, in the following block, use <i>then run</i>, not <i>then run:</i>.
-
-````markdown
-Then run
-
-```
-ps -a -x
-```
-````
-
-Where it is semantically valid, introduce with a colon, not a comma.
-For example:
-
-```markdown
-Mark Twain also said:
-
-> When in doubt‚ tell the truth.
-> This is a blockquote, which is ordinarily introduced by punctuation.
-> For clarity, we introduce such blockquotes with colons.
-> <i>— Mark Twain</i>
-```
-
-As seen above, use an em dash (—) set in `<i>`/`</i>` to cite a blockquote’s source.
+If it is semantically valid, use a colon rather than a comma.
+In blockquotes, use `_— author_` (with an em dash) to cite the source.
 
 ??? rationale
 
     This rule preserves the semantics as much as possible.
     A colon is a visual signal that the prose goes with its following code block, reducing refactoring mistakes.
 
+??? example "Examples"
+
+    In the following block, use _then run_, not _then run:_.
+
+    ````markdown
+    Then run
+
+    ```
+    ps -a -x
+    ```
+    ````
+
+    Here, a colon is appropriate:
+
+    ```markdown
+    Mark Twain also said:
+
+    > When in doubt‚ tell the truth.
+    > This is a blockquote, which is ordinarily introduced by punctuation.
+    > For clarity, we introduce such blockquotes with colons.
+    > _— Mark Twain_
+    ```
+
 ### Quantities
+
+!!! rationale
+
+    This is the format that
+    [IEEE recommends](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/conferences/style_references_manual.pdf).
 
 To format numbers and dimensioned quantities, use:
 
@@ -279,27 +318,20 @@ To format numbers and dimensioned quantities, use:
 - A narrow no break space, ` ` (NNBSP / U+002D / `&#x202f;`) as the thousands separator
 - A full space (` `) to separate magnitude and units
 
-For example: <i>1 024.222 222 µm</i>.
-
-
-!!! rationale
-
-    This is the format that
-    [IEEE recommends](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/conferences/style_references_manual.pdf).
+For example: _1 024.222 222 µm_.
 
 Preferably, write units using decimal dot (`·`, [U22C5](https://www.compart.com/en/unicode/U+u22c5)).
-For example: <i>5.4 kg·m²·s⁻²</i>.
+For example: _5.4 kg·m²·s⁻²_.
 Use `hour` or `hr`, `minute` or `min`, and `second`, `sec`, or `s` as abbreviations.
 
-!!! tip
-    You can use inline LaTeX (`$`/`$`) to format dimensioned values instead.
-    E.g., `5.4 kg m^2 s^{-2}`.
+You can use inline LaTeX (`$`/`$`) to format dimensioned values instead.
+E.g., `5.4 kg m^2 s^{-2}`.
 
 ### Uncertainty measurements
 
 State whether the values refer to standard error or standard deviation.
-<i>SE</i> is an acceptable abbreviation for standard error;
-<i>SD</i> is an acceptable abbreviation for standard deviation.
+_SE_ is an acceptable abbreviation for standard error;
+_SD_ is an acceptable abbreviation for standard deviation.
 
 Examples:
 
@@ -322,8 +354,8 @@ For example: `2023-11-02T14:55:00 -08:00 [America/Los_Angeles]`.
 
 ### Paths and filesystem trees
 
-Always use `/` as a path separator in documentation.
-Denote directories with a trailing `/`.
+Always use `/` as a path separator in documentation, and denote directories with a trailing `/`.
+
 For filesystem trees, use Unicode box-drawing characters.
 Refer to the
 [research projects guide](https://dmyersturnbull.github.io/guide/research-projects/#example)
@@ -348,60 +380,6 @@ Click [here](coding-conventions.md) for conding conventions.
 
 Follow the general guidelines in the Markdown section.
 
-### Formatting
-
-!!! note
-
-    These formatting guidelines only apply to hand-crafted HTML.
-
-#### Closing tags
-
-Always close tags.
-For example, use `<p>The end.</p>`, **not** `<p>The end.`.
-Use trailing slashes for self-closing tags; for example,
-write `<meta charset="utf-8" />`, **not** `<meta charset="utf-8">`.
-
-??? rationale
-
-    Requiring closing tags and trailing slashes improves readability and simplifies parsing.
-    It enables XML parsing, obviates the need for custom parsers to remember which HTML tags are self-closing,
-    and helps parsers emit errors that refer to specific tags.
-
-#### `<html>`, `<head>`, and `<body>` elements
-
-Always include these elements.
-
-??? rationale
-
-    The rules for
-    [ommitting `<html>`, `<head>`, and `<body>`](https://html.spec.whatwg.org/#syntax-tag-omission)
-    are complex and better ignored.
-
-#### Quoting attributes
-
-Always quote attributes with double quotes.
-
-??? rationale
-
-    This is the most widespread choice, and it tends to be easier for custom parsers.
-
-#### Line wrapping
-
-Wrap long tag declarations to 120 characters like this:
-
-```html
-<link
-  rel="stylesheet"
-  href="https://fonts.googleapis.com/css?family=IBM+Plex+Sans:regular,bold"
-/>
-```
-
-??? rationale
-
-    This style horizontally aligns the attribute names.
-    More importantly, it is analogous to styles enforced by autoformatters like Prettier and Black,
-    which are increasing in popularity.
-
 ### Attribute values
 
 Use kebab-case for `id` and `name` values and for `data` keys and values.
@@ -414,6 +392,35 @@ and `<script src="..." />` for scripts.
 
 Use the `alt` attribute for media elements, including `<img>`, `<video>`, `<audio>`, and `<canvas>`.
 
+### Formatting
+
+Use [Prettier](https://prettier.io/) with default options except for line length, which must be 120.
+
+!!! note
+
+    Prettier wraps tags in way that looks strange at first.
+    It does that to avoid adding extra whitespace.
+
+#### Closing tags
+
+??? rationale
+
+    Requiring closing tags (and trailing slashes, which Prettier will add)
+    improves readability and simplifies parsing.
+
+Always close tags.
+For example, use `<p>The end.</p>`, **not** `<p>The end.`.
+
+#### `<html>`, `<head>`, and `<body>` elements
+
+??? rationale
+
+    The rules for
+    [ommitting `<html>`, `<head>`, and `<body>`](https://html.spec.whatwg.org/#syntax-tag-omission)
+    are complex and better ignored.
+
+Always include these elements.
+
 ## HTTP APIs
 
 ### Status codes
@@ -421,13 +428,13 @@ Use the `alt` attribute for media elements, including `<img>`, `<video>`, `<audi
 This section applies to REST-like HTTP APIs.
 Servers should only issue response codes in accordance with the following table.
 
+Note that 404 (Not Found) is reserved for resources that _could_ exist but do not;
+Attempts to access an invalid endpoint must always generate a 400 (Bad Request).
+
+<small>
 <b>Note:</b> Some or even most of these might not apply!
 For example, your server might not implement HTTP content negotiation.
-
-!!! info
-
-    404 (Not Found) is reserved for resources that _could_ exist but do not;
-    attempts to access an invalid endpoint must always generate a 400 (Bad Request).
+</small>
 
 | code | name                       | methods                       | Body     | use case                            |
 |------|----------------------------|-------------------------------|----------|-------------------------------------|
@@ -466,7 +473,7 @@ Notes:
 
 - † 400 (Bad Request) is an acceptable alternative.
 - ‡ Request Header Fields Too Large
-- <i>error</i> for the body refers to a JSON payload containing pertinant information,
+- _error_ for the body refers to a JSON payload containing pertinant information,
   such as the missing reference for a 422 (Unprocessable Entity).
 
 Do not use 426 (Upgrade Required) and 101 (Switching Protocols).
@@ -553,8 +560,8 @@ The list below summarizes forms that are acceptable and not acceptable:
 - ✅ `<tool> [<options>] <arg-1>`
 - ✅ `<tool> [<options>] <arg-1> <arg-2>`
 - ✅ `<tool> [<options>] <args...>`
-- ❌ `<tool> [<options>] <arg-1> <args...>`
-- ❌ `<tool> [<options>] <arg-1> <arg-2> <arg-3>`
+- ❌ `<tool> [<options>] <arg-1> <args...>` (positional and varargs)
+- ❌ `<tool> [<options>] <arg-1> <arg-2> <arg-3>` (> 2 positional args)
 
 Named options must be permitted before and after any positional arguments.
 Tools that always read a single file and output a single file
@@ -584,6 +591,8 @@ Use standard option names:
 7. Use new Bash constructs like `[[` instead of `[`.
 
 ??? rationale
+
+    By rule number:
 
     1. so that the correct `bash` is used
     2. Use
@@ -775,6 +784,17 @@ Annotate all module-level variables, class attributes, and functions.
 Annotate both return types and parameters.
 Annotate `self`, `cls`, `*args`, and `**kwargs` parameters.
 
+??? rationale
+
+    1. Documentation generators such as [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings)
+       (for mkdocs) can use type annotations to provide helpful hints for users;
+       type annotations also aid reading source code.
+    2. Linters, IDEs, and other tools use them to detect mistakes.
+    3. Tools can use type annotations to detect incorrect types at runtime.
+       This can be especially useful because duck typing prevents complete test coverage.
+    4. For annotating `self` and `cls`: they are still subject to
+       [Ruff’s ANN rules](https://docs.astral.sh/ruff/rules/#flake8-annotations-ann).
+
 ??? Example
 
     ```python
@@ -801,21 +821,18 @@ Annotate `self`, `cls`, `*args`, and `**kwargs` parameters.
             super().delegate(*args, **kwargs)
     ```
 
-??? rationale
-
-    1. Documentation generators such as [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings)
-       (for mkdocs) can use type annotations to provide helpful hints for users;
-       type annotations also aid reading source code.
-    2. Linters, IDEs, and other tools use them to detect mistakes.
-    3. Tools can use type annotations to detect incorrect types at runtime.
-       This can be especially useful because duck typing prevents complete test coverage.
-    4. For annotating `self` and `cls`: they are still subject to
-       [Ruff’s ANN rules](https://docs.astral.sh/ruff/rules/#flake8-annotations-ann).
-
 ### Docstrings
 
 Use [Google-style docstrings](https://google.github.io/styleguide/pyguide.html#38-comments-and-docstrings)
 as [mkdocstrings supports](https://mkdocstrings.github.io/griffe/docstrings/#google-style).
+
+### Ruff rules
+
+Use [Ruff]() to catch potential problems and bad practices.
+Use **at least** the rules enabled in the
+[cicd pyproject.toml](https://github.com/dmyersturnbull/cicd/blob/main/pyproject.toml).
+
+To disable coverage of a line or block, use `# nocov` (not `# pragma: nocov`, etc.).
 
 ## Java
 
@@ -864,6 +881,11 @@ Builder methods should follow the immutable convention (i.e., `angle()`).
 
 #### `toString`
 
+!!! tip
+
+    IntelliJ can do this for you.
+    Use the `StringJoiner` `toString` template.
+
 Classes should override `Object.toString` and should normally use this template:
 
 ```java
@@ -886,11 +908,12 @@ public class Claz {
 }
 ```
 
+#### `hashCode`
+
 !!! tip
 
-    This is called the `StringJoiner` template in IntelliJ.
-
-#### `hashCode`
+    IntelliJ can do this for you.
+    Use the default `hashCode` template.
 
 Most classes should override `hashCode` and `equals`.
 `hashCode` should use this template:
@@ -903,25 +926,22 @@ public class Claz {
 }
 ```
 
-!!! tip
-
-    This is the IntelliJ formatter default.
-
 #### `equals`
 
 !!! tip
 
-    IntelliJ can generally do
+    IntelliJ can do this for you.
+    Use the provided `hashCode` and `equals` templates.
 
 `equals()` may use either
 
 - _universal equality_, where `equals()` returns `false` for incompatible types
 - _multiversal equality_, where `equals()` throws an exception for incompatible types
 
-!!! note
-
-    In some languages, type safety of equality can be checked by the compiler.
-    [Scala 3 has type-safe multiversal equality](https://docs.scala-lang.org/scala3/book/ca-multiversal-equality.html).
+<small>
+In some languages, type safety of equality can be checked by the compiler.
+[Scala 3 has type-safe multiversal equality](https://docs.scala-lang.org/scala3/book/ca-multiversal-equality.html).
+</small>
 
 Use `getClass()` to check type compatibility, **not** `instanceof`.
 (For universal equality, only `getClass()` makes sense – and for multiversal equality, there is no difference.)
@@ -933,19 +953,23 @@ For universal equality, use this template:
 
 ```java
 public class Claz {
-    @Override public final int hashCode() {
-        return Objects.hash(field1); // ...
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(field1); // ...
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (obj == this) {
+      return true;
     }
-    @Override public boolean equals(final Object o) {
-        if (o == this) {
-            return true;
-        }
-        if (null == o || getClass() != o.getClass()) {
-            return false;
-        }
-        final var obj = (Test) o;
-        return Objects.equals(message, obj.message) && Objects.equals(items, obj.items);
+    if (null == obj || getClass() != obj.getClass()) {
+      return false;
     }
+    final var o = (Claz) obj;
+    return Objects.equals(message, o.message) && Objects.equals(items, o.items);
+  }
 }
 ```
 
@@ -953,21 +977,20 @@ public class Claz {
 
     Use this IntellJ template.
     Under Generate ➤ equals() and hashCode() ➤ ...
-    make a new template called <i>universal</i>.
+    make a new template called _universal_.
 
     <b>`equals()` template:</b>
 
     ```text
     #parse("equalsHelper.vm")
-    @Override public boolean equals(##
-    Object $paramName){
-    if ($paramName == this) {
+    @Override public boolean equals(Object obj) {
+    if (obj == this) {
     return true;
     }
-    if (null == $paramName || getClass() != ${paramName}.getClass()) {
+    if (null == obj || getClass() != obj.getClass()) {
     return false;
     }
-    final var obj = (${class.getName()}) $paramName;
+    final var o = (${class.getName()}) obj;
     return ##
     #set($i = 0)
     #foreach($field in $fields)
@@ -1073,7 +1096,6 @@ public class Claz {
     }
     ```
 
-
 ##### Multiversal equality
 
 For multiversal equality, use this template:
@@ -1083,19 +1105,22 @@ public class Claz {
     @Override public final int hashCode() {
         return Objects.hash(field1); // ...
     }
-    @Override public final boolean equals(final Object o) {
+    @Override public final boolean equals(final Object obj) {
         if (o == this) {
             return true;
         }
         if (null == o) {
             return false;
         }
-        if (getClass() != o.getClass()) {
-            throw new IllegalArgumentException("Type " + o.getClass().getName() + " is incompatible with " + getClass
-              ().getName());
+        if (getClass() != obj.getClass()) {
+            throw new IllegalArgumentException(
+                "Type " + obj.getClass().getName()
+                  + " is incompatible with "
+                  + getClass().getName()
+            );
         }
-        final var obj = (Test) o;
-        return Objects.equals(message, obj.message) && Objects.equals(items, obj.items);
+        final var o = (Claz) obj;
+        return Objects.equals(message, o.message) && Objects.equals(items, o.items);
     }
 }
 ```
@@ -1104,29 +1129,28 @@ public class Claz {
 
     Use this IntellJ template.
     Under Generate ➤ equals() and hashCode() ➤ ...
-    make a new template called <i>universal</i>.
+    make a new template called _universal_.
 
     <b>`equals()` template:</b>
 
     ```text
     #parse("equalsHelper.vm")
-    @Override public final boolean equals(##
-    Object $paramName){
-    if ($paramName == this) {
+    @Override public final boolean equals(Object obj) {
+    if (obj == this) {
     return true;
     }
-    if (null == $paramName) {
+    if (null == obj) {
     return false;
     }
-    if (getClass() != ${paramName}.getClass()) {
+    if (getClass() != obj.getClass()) {
     throw new IllegalArgumentException(
     "Type "
-    + ${paramName}.getClass().getName()
+    + obj.getClass().getName()
     + " is incompatible with "
     + getClass().getName()
     );
     }
-    final var obj = (${class.getName()}) $paramName;
+    final var o = (${class.getName()}) obj;
     return ##
     #set($i = 0)
     #foreach($field in $fields)
@@ -1245,6 +1269,11 @@ End every `case` block with a  `return` or `break` (no fall-through).
 
 #### Indentation and wrapping
 
+!!! tip
+
+    IntelliJ can do this for you.
+    Import the [IntelliJ formatter settings](intellij-style.xml).
+
 Use 4 spaces for indentation and 4 for continuation (block indentation).
 Limit lines to 120 characters.
 Chop lines the way that
@@ -1259,13 +1288,6 @@ public void extract(
     // ...
 }
 ```
-
-!!! tip
-
-    IntelliJ can do this for you.
-    Enable all “chop” options.
-    Or, import the [IntelliJ formatter settings](intellij-style.xml)
-    or [Eclipse formatter settings](eclipse-style.xml).
 
 #### Braces and line breaks
 
@@ -1347,6 +1369,13 @@ Name asynchronous methods (those that return a `CompletableFuture`) with the suf
 
 #### Member ordering
 
+!!! tip
+
+    IntelliJ can do this for you.
+    Import the [IntelliJ formatter settings](intellij-style.xml).
+    To acheive manually, choose the default order but select “group dependent methods together”
+    and “keep getters and setters together”.
+
 Sort members in the following order.
 
 1. `static final` field
@@ -1375,24 +1404,36 @@ Within each of the 13 types, order using 4 rules, in order of decreasing importa
 3. List overridden methods first.
 4. Order by `public`, `protected`, default, then `private`.
 
-!!! tip
-
-    IntelliJ’s formatter can do this for you.
-    Keep the default order but select “group dependent methods together”
-    and  “keep getters and setters together”.
-    Or, import the [IntelliJ formatter settings](intellij-style.xml)
-    or [Eclipse formatter settings](eclipse-style.xml).
-
 ## Scala
 
-In general, follow the [Java guidelines](#Java).
+Where applicable, follow the [Java guidelines](#Java).
 
 Always surround method bodies with curly braces.
 In Scala 2.xx code: For void members, write `function(): Unit = {`, **not** `function() {`.
 
+## JavaScript and TypeScript
+
+### Practices
+
+Where applicable, follow the [Java guidelines](#Java).
+
+Always use strict mode, and generally use `===`, not `==`.
+Use [`for`…`of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of)
+instead of `for`…`in`.
+
+### Formatting
+
+[Prettier](https://prettier.io/) will handle almost all formatting.
+Just set the max line length to 120.
+
 ## SQL
 
 ### Formatting
+
+!!! tip
+
+    IntelliJ can do this for you.
+    Import the [IntelliJ formatter settings](intellij-style.xml).
 
 Use lowercase for keywords, aliases, function names, and columns, and table names.
 
@@ -1413,8 +1454,3 @@ where
     and species.name like 'Canis%'
 ;
 ```
-
-!!! tip
-
-    IntelliJ’s formatter can do this for you.
-    Import the [IntelliJ formatter settings](intellij-style.xml).
