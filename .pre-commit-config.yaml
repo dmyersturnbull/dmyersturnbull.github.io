@@ -1,12 +1,12 @@
-# SPDX-FileCopyrightText: Copyright 2020-2023, Contributors to CICD
+# SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to CICD
 # SPDX-PackageHomePage: https://github.com/dmyersturnbull/cicd
 # SPDX-License-Identifier: Apache-2.0
 
 # Check out https://pre-commit.com/ for documentation
-minimum_pre_commit_version: 3.3.3
+minimum_pre_commit_version: 3.6.0
 repos:
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.4.0
+    rev: v4.5.0
     hooks:
       - id: check-case-conflict
       - id: check-merge-conflict
