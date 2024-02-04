@@ -4,12 +4,14 @@
     These docs are meant to be linked to.
     Include a link in your project’s readme or `CONTRIBUTING.md` file.
     E.g.,
+
     ```markdown
     See https://dmyersturnbull.github.io/ref/coding-conventions/
     but disregard the `security:` commit type, which we don’t use.
     ```
 
-    Or just link to individual sections; e.g.,
+    Or just link to individual sections; e.g.
+
     ```markdown
     ### File names: See https://dmyersturnbull.github.io/ref/coding-conventions/#filenames
     ```
@@ -29,7 +31,7 @@ For Java, Scala, Groovy, and Kotlin, the [IntelliJ formatter settings](intellij-
 can handle most of the formatting conventions for those languages.
 
 These auto-formatters are meant to be run via [pre-commit](https://pre-commit.com/) or before each merge.
-**This document lists non-formatting guidelines (e.g., accessibility)**
+**This document lists non-formatting guidelines (e.g. accessibility)**
 **and formatting conventions that auto-formatters do not handle.**
 
 ## Filenames
@@ -49,7 +51,7 @@ These auto-formatters are meant to be run via [pre-commit](https://pre-commit.co
     For example, a file named `info` could be a plain-text info document or a shell script that writes the info.
     Instead, write it as `info.txt` or `info.sh`.
 
-Prefer using kebab-case (e.g., `full-document.pdf`), treating `-` as a space.
+Prefer using kebab-case (e.g. `full-document.pdf`), treating `-` as a space.
 Restrict to `-`, `.`, `[a-z]`, and `[0-9]`, unless there is a compelling reason otherwise.
 If necessary, `--`, `+`, and `~` can be used as word separators with reserved meanings.
 For example, `+` could denote join authorship in `mary-johnson+kerri-swanson-document.pdf`.
@@ -154,8 +156,9 @@ Use American English spelling.
 
 Use 1 space between sentences.
 
-Use sentence case for titles and table headers (e.g., _This is a title_).
-Capitalize the first word after a colon or semicolon only if it begins a valid sentence.
+Use sentence case for titles and table headers (e.g. _This is a title_).
+Capitalize the first word after a colon only if it begins a complete sentence;
+do not capitalize the first word after a semicolon.
 
 ## Markdown
 
@@ -169,10 +172,23 @@ Capitalize the first word after a colon or semicolon only if it begins a valid s
 
     Keeping each sentence on its own line dramatically improves diffs.
 
-**Break lines at the end of sentences.**
-If a line goes over 120 characters, break it after an appropriate punctuation mark.
-For example, break up independent clauses, and start a new line before a long hyperlink.
-_Note:_ A series of very short sentences can be left on one line.
+**Start a new line for each sentence.**
+
+If needed to prevent a line from exceeding 120 characters, add line breaks elsewhere.
+Look for one of these places to add a line break, in order:
+
+1. before a Markdown link
+2. After a colon, semicolon, or dash (` – `)
+3. After a comma that begins an independent clause
+4. After any other punctuation
+5. Before an opening HTML tag (or Markdown equivalent) or after a closing tag
+6. At any other natural place
+
+<b>Notes:</b>
+
+- Feel free to add line breaks wherever you think they are helpful for items 1–4;
+  for example, starting each item of an inline list (i.e. before `(1)`).
+- You may leave a series of very short sentences on one line.
 
 ### Emphasis and semantic markup
 
@@ -199,7 +215,7 @@ Take it as semantically equivalent to the
 [`<strong>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong).
 
 Use the [`<b>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b) explicitly
-for text that should be bold but is not emphasized – i.e., is offset from the surrounding text.
+for text that should be bold but is not emphasized – i.e. is offset from the surrounding text.
 For example, you might write `<b>Score:</b> 55.3%`.
 (`**`/`**` would be inappropriate here.)
 
@@ -209,7 +225,7 @@ For example, you might write `<b>Score:</b> 55.3%`.
 
     With the Material for mkdocs
     ["Smarty" plugin](https://squidfunk.github.io/mkdocs-material/reference/formatting/#adding-keyboard-keys),
-    you can use `++`/`++` instead of `<kdb>`/`<kdb>`; e.g., `++ctrl+alt+del++`.
+    you can use `++`/`++` instead of `<kdb>`/`<kdb>`; e.g. `++ctrl+alt+del++`.
 
 Use backticks for code, `<kbd>`/`</kdb>` for keyboard keys,
 and LaTeX (`$`/`$`) for variables and mathematical expressions.
@@ -243,7 +259,7 @@ That includes:
 
 - `’` for apostrophes
 - `‘`, `’`, `“`, and `”` for quotation marks
-- `–` (_en dash_) for numerical ranges (e.g., `5–10`)
+- `–` (_en dash_) for numerical ranges (e.g. `5–10`)
 - `—` (_em dash_) to separate a blockquote and its source
 - `‒` (_figure dash_) in numerical formatting
 - `…` (_ellipses_)
@@ -258,6 +274,9 @@ For example:
 ```markdown
 An en dash – in contrast to an em dash – should be used here.
 ```
+
+For _i.e._ and _e.g._, skip the comma (British English) and normally introduce with _;_, not _,_.
+For example: `say something nice; e.g. “nice boots”`.
 
 ### Quotations
 
@@ -305,6 +324,14 @@ In blockquotes, use `_— author_` (with an em dash) to cite the source.
     > _— Mark Twain_
     ```
 
+### Inline lists (enumerations)
+
+For inline lists, follow this format:
+(1) Use `(1)`, `(a)`, or `(i)`;
+(2) use commas (or semicolons where necessary);
+(3) optionally add a line break before each item; and
+(4) include an `and`, `or`, or `nor` (at the end of the line).
+
 ### Quantities
 
 !!! rationale
@@ -338,9 +365,9 @@ Examples:
 - > 7.65 (4.0–12.5, 95% confidence interval)
 - > 7.65 ±1.2 (SE)
 
-**❌ Do not** just write the uncertainty without explanation, e.g., `5.0 ±0.1` – it is ambiguous.
+**❌ Do not** just write the uncertainty without explanation, e.g. `5.0 ±0.1` – it is ambiguous.
 
-**✅ Do** describe how the uncertainty was estimated (i.e., a statistical test).
+**✅ Do** describe how the uncertainty was estimated (i.e. a statistical test).
 
 ### Dates and times
 
@@ -421,6 +448,106 @@ For example, use `<p>The end.</p>`, **not** `<p>The end.`.
 
 Always include these elements.
 
+## JSON and data representation
+
+Follow the [Google JSON style guide](https://google.github.io/styleguide/jsoncstyleguide.xml).
+Contradicting that style guide, property names may follow other conventions if needed to accommodate other needs.
+However, avoid using a period (`.`) in a property name unless absolutely necessary.
+
+### Null and missing values
+
+Do not include `null` JSON values: If a value is missing, omit it.
+For example, rewrite `{"value": null}` as `{}`.
+Use the schema to denote whether a key could be defined for an object.
+
+`null` is **only** permissible to denote that a value is expressly null where
+there is a difference between `null` and the string `"null"`.
+For example, `null` is the appropriate encoding for a `null` return value of a method call (or a Python `None`).
+However, it would **not** be the appropriate encoding for, say, the output of a command-line application
+that output nothing − that should be encoded as `""`.
+(Similarly, if the application wrote `null`, it should be encoded in JSON as `"null"`.)
+
+!!! warning
+
+    It is **required** that a missing key is considered semantically different from `null`.
+
+Null values are often used as an implicit way to encode values of type `string | null`, `int | null`, etc.
+Instead, include that information explicitly.
+
+??? example
+
+    === "❌ Incorrect"
+
+        Here, `null` was used to indicate that the voltage was not correctly read in trial 2.
+
+        ```json
+        [
+          {
+            "trial": 1,
+            "sensor_voltage": 12.32
+          },
+          {
+            "trial": 2,
+            "sensor_voltage": null
+          }
+        ]
+        ```
+
+    === "✅ Correct"
+
+        Instead, explicitly indicate the failed reading.
+
+        ```json
+        [
+          {
+            "trial": 1,
+            "status": "success",
+            "sensor_voltage": 12.32
+          },
+          {
+            "trial": 2,
+            "status": "error:no_data_received",
+            "sensor_voltage": null  # (1)!
+          }
+        ]
+        ```
+
+        1. `null` is likely acceptable here, given that it could be considered the actual sensor value.
+
+??? rationale
+
+    Null values are sometimes included where a key is part of the schema but missing for the particular data.
+    However, this is not a useful pattern because it is:
+
+    1. not generally known to or agreed upon by users;
+    2. expensive (wasting bandwidth and memory);
+    3. redundant to the schema; and
+    4. cumbersome to apply to nested objects
+
+### NaN, Inf, and -Inf
+
+!!! note
+
+    For NaN in this context, we are not considering missing values,
+    which are addressed in the previous section.
+    Here, `NaN` would only represent $0/0$ or a value that was expected to be numeric but is literally "not a number".
+
+Consider that JSON floats cannot store `NaN`, `Inf`, or `-Inf`.
+If such values are applicable, encode all those data as strings.
+For example, if values in an array can be a float, `Inf`, or `-Inf`, encode it like this:
+`["5.3", "Inf", "6.8", "-Inf"]`.
+
+??? rationale
+
+    Every item in a list – as well as every item under a single key – should be of the same data type.
+    In this case, only `string` is appropriate.
+
+### Range and precision
+
+Generally, assume that JSON consumers will use IEEE754 _double_ range and precision.
+When writing numbers that might exceed that range or precision (where that precision is important),
+encode them as strings (as in the previous section).
+
 ## HTTP APIs
 
 ### Status codes
@@ -429,7 +556,7 @@ This section applies to REST-like HTTP APIs.
 Servers should only issue response codes in accordance with the following table.
 
 Note that 404 (Not Found) is reserved for resources that _could_ exist but do not;
-Attempts to access an invalid endpoint must always generate a 400 (Bad Request).
+attempts to access an invalid endpoint must always generate a 400 (Bad Request).
 
 <small>
 <b>Note:</b> Some or even most of these might not apply!
@@ -473,7 +600,7 @@ Notes:
 
 - † 400 (Bad Request) is an acceptable alternative.
 - ‡ Request Header Fields Too Large
-- _error_ for the body refers to a JSON payload containing pertinant information,
+- _error_ for the body refers to a JSON payload containing pertinent information,
   such as the missing reference for a 422 (Unprocessable Entity).
 
 Do not use 426 (Upgrade Required) and 101 (Switching Protocols).
@@ -498,6 +625,27 @@ Use [draft IETF rate-limiting headers](https://www.ietf.org/archive/id/draft-pol
 `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`.
 These should always be included for 429 (Too Many Requests) responses
 and MAY be included for other responses as well.
+
+## Formal grammars
+
+Grammars may be specified in any well-known form.
+However, [ABNF](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form) is preferred.
+See [RFC5234](https://datatracker.ietf.org/doc/html/rfc5234).
+It is sometimes useful to assign uppercase names to rules that would probably be parsed by a lexer.
+**Do not use ABNF incremental alternatives notation (`=/`).**
+Avoid these core rules, which are misleading because of their restriction to US-ASCII:
+
+- `CHAR` (“any 7-bit US-ASCII character, excluding NUL”)
+- `LWSP` (“linear white space”)
+- `CTL` (“controls")
+- `VCHAR` (“visible (printing) characters”)
+- `WSP` (“whitespace”)
+
+??? rationale
+
+    `=/` allows a rule to be modified after it has already been defined.
+    This seriously complicates reading, especially for experienced readers who will likely skim.
+    `LWSP` is widely considered confusing and problematic, and is seemingly discouraged in RFC5234.
 
 ## Docker
 
@@ -567,7 +715,7 @@ Named options must be permitted before and after any positional arguments.
 Tools that always read a single file and output a single file
 can take both files as positional arguments.
 
-Use double hyphens for long option names (e.g., `--user`).
+Use double hyphens for long option names (e.g. `--user`).
 Omit short names for options that are highly specific, rarely used, or dangerous.
 Allow both `--option <arg>` and `--option=<arg>`.
 
@@ -766,7 +914,7 @@ Within each of the 8 types, order using three rules, in order of decreasing impo
 ### OS compatibility
 
 Use `pathlib` instead of `os` wherever possible.
-Always read and write text as UTF-8, and pass `encoding="utf-8"` (i.e., not `utf8` or `UTF-8`).
+Always read and write text as UTF-8, and pass `encoding="utf-8"` (i.e. not `utf8` or `UTF-8`).
 
 ??? Example
 
@@ -841,13 +989,23 @@ for _additional_ recommendations.
 
 ### Practices
 
-#### Banned methods
+#### Banned features
 
-Do not use `clone()` or `finalize()`.
+These features are banned:
+
+- `clone()` and `Cloneable`
+- `finalize()`
+- `System.gc()`
+- labels (e.g. `outer_loop: for ...`)
+- `notify()` and `wait()`
+- `synchronized` methods (synchronize on blocks instead)
+- non-`final` or mutable `static` fields
 
 #### Exceptions
 
 Both checked and unchecked exceptions are fine.
+Avoid throwing very general types like `RuntimeException`.
+When extending an exception, override all constructors (assuming no custom fields are added).
 
 #### Constructors
 
@@ -857,18 +1015,21 @@ it should be moved to a factory, builder, or static factory method.
 
 #### Optional types
 
-Do not return `null` or accept `null` as an argument in public methods; Use `Optional<>` instead.
-`null` is permitted in private code to improve performance.
+Do not return `null` or accept `null` as an argument in public methods; use `Optional<>` instead.
+`null` is permitted in non-public code to improve performance.
 
 #### Collections
 
-Prefer collections to arrays unless doing so results in significant performance issues.
+Prefer collections to arrays unless doing so causes significant performance issues.
 
 #### Immutability and records
 
 Prefer immutable types, and use records for data-carrier-like classes.
-Immutable classes must have only `final` fields and must not allow modification (except by reflection);
-Constructors must make defensive copies, and getters must return defensive copies or views.
+
+In general:
+Immutable classes must have only `final` fields and should not allow modification (except by reflection);
+constructors should make defensive copies, and getters should return defensive copies or views.
+This may not always be the appropriate choice, such as in places where performance is paramount.
 
 #### Getters, setters, and builder methods
 
@@ -877,7 +1038,7 @@ Use `getXx()`/`setXx()` for mutable types but `Xx()` for immutable types:
 - For _mutable_ types: name the getter `public double getAngle()`
 - For _immutable_ types: name the getter `public double angle()`
 
-Builder methods should follow the immutable convention (i.e., `angle()`).
+Builder methods should follow the immutable convention (i.e. `angle()`).
 
 #### `toString`
 
@@ -886,7 +1047,7 @@ Builder methods should follow the immutable convention (i.e., `angle()`).
     IntelliJ can do this for you.
     Use the `StringJoiner` `toString` template.
 
-Classes should override `Object.toString` and should normally use this template:
+Classes should normally override `Object.toString` and use this template:
 
 ```java
 public class Claz {
@@ -894,14 +1055,15 @@ public class Claz {
     private final String name;
     private final List<String> items;
 
-    public Test(final String message, final List<String> items) {
+    public Test(String message, List<String> items) {
         this.message = message;
         this.items = new ArrayList<>(items);
     }
 
-    @Override public String toString() {
-        return new StringJoiner(", ", Test.class.getSimpleName() + "[", "]")
-            .add("name='" + name + "'")
+    @Override
+    public String toString() {
+        return new StringJoiner(", ", Test.class.getSimpleName() + '[', "]")
+            .add("name='" + name + '\'')
             .add("items=" + items)
             .toString();
     }
@@ -920,7 +1082,8 @@ Most classes should override `hashCode` and `equals`.
 
 ```java
 public class Claz {
-    @Override public int hashCode() {
+    @Override
+    public int hashCode() {
         return Objects.hash(field1, field2); // ...
     }
 }
@@ -983,7 +1146,8 @@ public class Claz {
 
     ```text
     #parse("equalsHelper.vm")
-    @Override public boolean equals(Object obj) {
+    @Override
+    public boolean equals(final Object obj) {
     if (obj == this) {
     return true;
     }
@@ -1102,10 +1266,12 @@ For multiversal equality, use this template:
 
 ```java
 public class Claz {
-    @Override public final int hashCode() {
+    @Override
+    public final int hashCode() {
         return Objects.hash(field1); // ...
     }
-    @Override public final boolean equals(final Object obj) {
+    @Override
+    public final boolean equals(final Object obj) {
         if (o == this) {
             return true;
         }
@@ -1135,7 +1301,8 @@ public class Claz {
 
     ```text
     #parse("equalsHelper.vm")
-    @Override public final boolean equals(Object obj) {
+    @Override
+    public final boolean equals(final Object obj) {
     if (obj == this) {
     return true;
     }
@@ -1261,9 +1428,16 @@ public class Claz {
 Immutable classes should implement `Comparable` and override `compareTo` as long as it is reasonable.
 `compareTo` should be marked `final`.
 
-#### Pattern matching
+#### `switch` and pattern matching
 
-End every `case` block with a  `return` or `break` (no fall-through).
+End every `case` block with a `return` or `break` (no fall-through).
+Handle all cases by adding default case if necessary.
+
+#### Final
+
+`final` for variables, method arguments, `catch` arguments, `try` resources, etc.,
+is optional but preferred: If present, `final` should be removed only if needed.
+Arguments may be modified, except for simple transformations at the start of the method.
 
 ### Formatting
 
@@ -1294,22 +1468,138 @@ public void extract(
 Use the original Java style guidelines:
 
 1. Put opening braces on the same line
-2. Keep `else` and `else if` on the same line (i.e., `} else {`).
-   Similarly, keep `while` on the same line for do-while loops (i.e., `} while ()`).
-3. Always uses braces and start a new line for `if`/`else`/`else if`, `switch`, and loop blocks.
-4. Chained method calls may be either single-line or chopped into multiple lines.
-  Keep the first call on the same line.
-5. Place every annotation on its own line.
+2. Keep `else` and `else if` on the same line (i.e. `} else {`).
+   Similarly, keep `while` on the same line for do-while loops (i.e. `} while ()`).
+3. Place every annotation, enum member, and record parameter on its own line.
+
+Place call arguments:
+
+1. On the same line as the method name
+2. On a single line after the method name, or
+3. One line per argument (“chopped”)
+
+You may omit braces for single-statement`if`/`else`/`else if`, `for`, and`while` blocks.
+Place the body on the same line.
+
+??? example
+
+    ```java
+    if (s.isBlank()) throw IllegalArgumentException();
+    ```
+
+#### Wrapping and chopping
+
+“Chop” long expressions rather than “wrapping” them.
+Chop long method arguments, annotation arguments, declared parameters, caught exceptions, and try-with-resources.
+
+??? example "Examples"
+
+    === "Option 1"
+
+        ```java
+        public void calculateQuota(String data) {
+            //
+        }
+        ```
+
+    === "Option 2"
+
+        ```java
+        public void calculateQuota(
+            String data, int alphaCoefficient, Map<String, Datum> extraFields
+        ) {
+            //
+        }
+        ```
+
+    === "Option 3"
+
+        ```java
+        public void calculateQuota(
+            String data,
+            Optional<Integer> alphaCoefficient,
+            Map<String, Datum> extraFields,
+            String someOtherLongNamedParameter
+        ) {
+            //
+        }
+        ```
+
+In patterns (enhanced `switch`), multiple case values can be placed on the same line.
+
+??? example
+
+    ```java
+    public void x(int q) {
+      switch (q) {
+        case 1, 2, 3 -> false
+        case 4, 5, 6 -> true
+        default -> throw new IllegalArgumentException("Unexpected value: " + q);
+      }
+    }
+    ```
+
+##### Call chains
+
+Either keep a call chain on one line or chop it with one line per call.
+Include the first call.
+
+??? example "Examples"
+
+    === "Option 1"
+
+        ```java
+        myStream.filter(v -> v > 1.0).map(Integer::toString).limit(10);
+        ```
+
+    === "Option 2"
+
+        ```java
+        myStream
+            .filter(v -> v > 1.0)
+            .map(Integer::toString)
+            .map(someInstance.someFancyLongNamedMethod)
+            .limit(10);
+        ```
+
+##### Type declarations
+
+You may start a new line before `extends` or `implements`.
+Always start a new line before `permits` (for sealed interfaces).
+
+??? example "Examples"
+
+    === "Option 1"
+
+    ```java
+    public sealed interface Animal<T extends MotorControl<T>, I super AnimalInput<T, I>, O extends AnimalOutput<T, O>>
+        extends AnimalLike<T, I, O>        // because the previous line is 119 characters
+        permits Vertebrate, Invertebrate { // always wrap before `permits`
+    }
+    ```
+
+    === "Option 2"
+
+    ```java
+    public sealed interface Animal<
+        T extends MotorControl<T>,
+        I super AnimalInput<T, I>,
+        O extends AnimalOutput<T, O>
+    > extends AnimalLike<T, I, O>
+        permits Vertebrate, Invertebrate { // always wrap before `permits`
+    }
+    ```
 
 #### Blank lines
 
 Add one blank line before each top-level declaration, excluding between fields.
-List enum members on one line unless they explicitly call constructors
-or extend past the 120-character max line width.
 Single blank lines MAY be added in other places for clarity.
 Do not use multiple consecutive line breaks.
+Avoid including blank lines in method bodies:
+If the method is long enough to warrant blank lines, it is probably too long.
+Either break the method up or replace the blank line with a comment.
 
-#### Spacing
+#### Horizontal spacing
 
 Follow
 [Google’s horizontal whitespace](https://google.github.io/styleguide/javaguide.html#s4.6.2-horizontal-whitespace)
@@ -1321,51 +1611,59 @@ Do not horizontally align.
 Declare variables when they are needed, not at the start of a block.
 Always use `var` when initializing directly through a constructor or static factory method;
 otherwise, use it if the type is either obvious or unimportant.
-Only declare one variable per line; e.g., do not use `int var1, var2;`.
+You may declare multiple variables per line; e.g. `int var1, var2;`.
 For array declarations, use `type[] name`, **not** `type name[]`.
 In `main` methods, use `String... args`.
 
 #### Comparisons
 
-Always place constants on the right hand side.
+Place constants on the left hand side.
+
+!!! rationale
+
+    Although this used to be uncommon but is growing in popularity.
+    Its main benefit is that it reduces the likelihood of `NullPointerException`s.
+    It also makes the constant more prominent.
 
 #### Optional syntax
 
-Omit any element or syntax that carries no semantic meaning.
+In most cases, omit syntax that has no effect at runtime (excluding comments and annotations).
 
 Omit:
 
-- All optional grouping parentheses
-- Optional qualifiers with `this`, `super`
-- Optional class name for static members of the same class
-- The name of the outer class when accessing its members
-- Unnecessary qualifier keywords, such as `abstract` methods in interfaces
-- `.toString()`
+- Optional grouping parentheses
+- Optional qualifiers `this` and `super`
+- Optional class name for static members
+- The name of the outer class or the inner class when accessing their members
+- Unnecessary qualifier keywords, such as `abstract` on interface methods
+- Explicit `.toString()` where it is implicit
 
-However, do include:
-
-- The name of the inner class when accessing its members
-- `final` for parameters and local variables
-- Annotation `(key = value)` instead of `(value)` for multi-argument annotations
+However, use `(key = value)` instead of `(value)` for multi-argument annotations.
 
 #### Comments
 
-Generally avoid end-of-line comments.
-Also avoid multiline comments using `/*` and `*/`.
-Instead, comment each line using `//`.
+Avoid end-of-line comments.
+Use `//` for multiline comments instead of `/* */`.
 
 #### Encoding
 
-Always encode source files as UTF-8.
 Write non-ASCII characters without escaping, except for whitespace (excluding spaces)
 and characters that are highly likely to confuse readers.
+
+#### Numbers
+
+Always add `.0` (e.g. `double x = 2.0 * pi`), and prefix with `0.` (e.g. double x = 0.001).
+Digit grouping with `_` is optional.
+If used, use it for amounts or quantities, not identifiers.
 
 #### Naming
 
 Follow [Google’s Java naming conventions](https://google.github.io/styleguide/javaguide.html#s5-naming).
-Notably, treat acronyms as words – for example, `IoError`, **not** `IOError`
-Name asynchronous methods (those that return a `CompletableFuture`) with the suffix `Async`; – for example,
-`calculateAsync()`.
+Notably, treat acronyms as words – for example, `CobolError`, **not** `COBOLError`.
+You may alter this practice if needed to maintain consistency with an extant convention;
+in particular, for `IO` (e.g. in `IOException`).
+Name asynchronous methods (those that return a `CompletableFuture`) with the suffix `Async`;
+for example, `calculateAsync()`.
 
 #### Member ordering
 
@@ -1373,8 +1671,10 @@ Name asynchronous methods (those that return a `CompletableFuture`) with the suf
 
     IntelliJ can do this for you.
     Import the [IntelliJ formatter settings](intellij-style.xml).
-    To acheive manually, choose the default order but select “group dependent methods together”
-    and “keep getters and setters together”.
+    To acheive manually,
+    choose the default order,
+    enable “group dependent methods together” with depth-first order,
+    and enable “keep getters and setters together”.
 
 Sort members in the following order.
 
@@ -1407,9 +1707,6 @@ Within each of the 13 types, order using 4 rules, in order of decreasing importa
 ## Scala
 
 Where applicable, follow the [Java guidelines](#Java).
-
-Always surround method bodies with curly braces.
-In Scala 2.xx code: For void members, write `function(): Unit = {`, **not** `function() {`.
 
 ## JavaScript and TypeScript
 
