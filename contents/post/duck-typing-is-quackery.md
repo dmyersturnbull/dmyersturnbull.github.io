@@ -33,10 +33,11 @@ After putting your paper on arXiv, you implement it in three languages—Java, S
     ```java
     import org.nd4j.linalg.api.ndarray.IndArray;
     public class MyAlgorithm {
-      public Matrix calculate(IndArray matrixA, IndArray matrixB) {
-        // some fancy things...
-        return finalMatrix;
-      }
+        public Matrix calculate(IndArray matrixA, IndArray matrixB) {
+            // some fancy things...
+            return finalMatrix;
+        }
+    }
     ```
 
 === "Scala"

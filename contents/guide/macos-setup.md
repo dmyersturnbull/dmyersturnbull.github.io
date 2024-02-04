@@ -16,8 +16,9 @@ Install a few extra Linux utils:
 ```bash
 brew install ssh-copy-id coreutils git bash zsh
 ```
-Install the text editor [Sublime](https://www.sublimetext.com/) (`brew install --cask sublime-text
-`).
+
+Install the text editor [Sublime](https://www.sublimetext.com/)
+(`brew install --cask sublime-text`).
 
 And a couple of small things:
 
@@ -42,7 +43,8 @@ And the GitHub CLI: `brew install gh`.
 I like running this to add a `brewing` command:
 
 ```bash
-echo 'alias brewing="brew update && brew upgrade && brew cleanup; brew doctor"' >> ~/.commonrc
+echo 'alias brewing="brew update && brew upgrade && brew cleanup; brew doctor"'\
+  >> ~/.commonrc
 ```
 
 From that, you can run `brewing` to update Brew and its packages, and fix problems.

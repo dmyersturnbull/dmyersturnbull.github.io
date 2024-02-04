@@ -281,6 +281,5 @@ gpg\
 
 You can make this file available publicly, such as on your website.
 
-
 !!! note "Thanks"
     Thank you to Cole Helsell for drafting this guide with me.

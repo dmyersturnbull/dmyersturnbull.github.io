@@ -48,34 +48,37 @@ Enable OpenSSH.
 Disable unnecessary Optional Features---which is most of them,
 including the Telnet Client, Windows Media Player, and PowerShell 2.0.
 Uninstall Notepad and Wordpad.
-Your Optional Features list might eventually look like this:
 
-| Feature                                         | On? |
-|-------------------------------------------------|-----|
-| .Net 3.5                                        |     |
-| .Net 4.8                                        | on  |
-| Internet Information Services                   |     |
-| Internet Information Services Hostable Web Core |     |
-| Legacy Components                               |     |
-| Media Features                                  |     |
-| Microsoft Message Queue (MSMQ) Server           |     |
-| Microsoft Print to PDF                          |     |
-| Microsoft XPS Document Writer                   |     |
-| Print and Document Services                     | on  |
-| Remote Differential Compression API Support     | on  |
-| Simple TCPIP services (i.e. echo, daytime etc)  |     |
-| SMB 1.0/CIFS File Sharing Support               |     |
-| Telnet Client                                   |     |
-| TFTP Client                                     |     |
-| Virtual Machine Platform                        | on  |
-| Windows Hypervisor Platform                     |     |
-| Windows Identity Foundation 3.5                 |     |
-| Windows Powershell 2.0                          |     |
-| Windows Process Activation Server               |     |
-| Windows Projected File System                   |     |
-| Windows Subsystem for Linux                     | on  |
-| Windows TIFF IFilter                            |     |
-| Work Folders Client                             |     |
+!!! tip
+
+    Your Optional Features list might eventually look like this:
+
+    | Feature                                         | On? |
+    |-------------------------------------------------|-----|
+    | .Net 3.5                                        |     |
+    | .Net 4.8                                        | on  |
+    | Internet Information Services                   |     |
+    | Internet Information Services Hostable Web Core |     |
+    | Legacy Components                               |     |
+    | Media Features                                  |     |
+    | Microsoft Message Queue (MSMQ) Server           |     |
+    | Microsoft Print to PDF                          |     |
+    | Microsoft XPS Document Writer                   |     |
+    | Print and Document Services                     | on  |
+    | Remote Differential Compression API Support     | on  |
+    | Simple TCPIP services (i.e. echo, daytime etc)  |     |
+    | SMB 1.0/CIFS File Sharing Support               |     |
+    | Telnet Client                                   |     |
+    | TFTP Client                                     |     |
+    | Virtual Machine Platform                        | on  |
+    | Windows Hypervisor Platform                     |     |
+    | Windows Identity Foundation 3.5                 |     |
+    | Windows Powershell 2.0                          |     |
+    | Windows Process Activation Server               |     |
+    | Windows Projected File System                   |     |
+    | Windows Subsystem for Linux                     | on  |
+    | Windows TIFF IFilter                            |     |
+    | Work Folders Client                             |     |
 
 ## Power & update settings
 
@@ -99,8 +102,7 @@ Disable them again when you’re done.
 
 Install [Chocolatey](https://chocolatey.org/), a fantastic package manager.
 After installing, run `choco upgrade all -Y`.
-Then install powershell-core with `choco install powershell-core -Y` and restart your terminal,
-choosing PowerShell Core.
+Install powershell-core (`choco install powershell-core -Y`) and restart your terminal, choosing PowerShell Core.
 
 Set powershell-core as your default shell.
 Check the PowerShell version using: `Get-Host | Select-Object Version`. Make sure it’s 7+.
@@ -123,7 +125,7 @@ choco install -Y \
     rsync
 ```
 
-!!! tip "Other packages"
+??? tip "Other packages"
 
     Applications like Zoom, Spotify, DropBox, Chrome, and Firefox are also available.
     Here is a set of popular developer-oriented packages:
@@ -170,7 +172,7 @@ Note that GitHub CLI was installed via Chocolatey (in the steps above).
 
 [Install the Rust toolchain](https://rustup.rs/).
 Then, check <i>Add or Remove Programs</i> for _Java_. Uninstall any versions you have installed.
-**Download [Temurin JDK 17 or 21](https://adoptium.net/temurin/releases/).**
+**Download [Temurin JDK 21](https://adoptium.net/temurin/releases/).**
 **Do _not_ use Java 8, java.com, or OpenJDK.**
 
 !!! tip "Pro-tip"
@@ -205,7 +207,6 @@ Then, check <i>Add or Remove Programs</i> for _Java_. Uninstall any versions you
         [EnvironmentVariableTarget]::Machine\
     )
     ```
-
 
 Install Node.js and Python:
 

@@ -67,16 +67,6 @@ usermod -aG sudo $USER
 
 See this [sudoers guide](https://www.cyberciti.biz/faq/how-to-sudo-without-password-on-centos-linux/) for more info.
 
-## Allow SSH login
-
-Install ssh to allow for remote logins.
-
-```
-sudo apt update
-sudo apt install openssh-server
-sudo ufw allow 22
-```
-
 ## Dotfiles
 
 See [awesome-dotfiles](https://github.com/webpro/awesome-dotfiles). Here are some I used:

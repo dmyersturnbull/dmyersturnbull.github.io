@@ -132,7 +132,7 @@ SPDX-License-Identifier: <spdx-id>
     For [Tyranno](https://github.com/dmyersturnbull/tyrannosaurus), this is:
 
     ```text
-    SPDX-FileCopyrightText: Copyright 2020-2023, Contributors to CICD
+    SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to CICD
     SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyranno
     SPDX-License-Identifier: Apache-2.0
     ```

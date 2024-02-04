@@ -39,16 +39,17 @@ It doesn’t matter, as long as you distinguish between the extremes and have bo
 ## Layer 0 - Static
 
 Just because your code compiled doesn’t mean it’s correct.
-So, a static type system isn’t a replacement for tests.
-However, it _does_ constrain the input surface, which makes % test coverage meaningful.
+A static type system isn’t a replacement for tests.
+However, it **does** constrain the input surface, which makes % test coverage meaningful.
 See [Duck typing is quackery](duck-typing-is-quackery.md) for more details.
 
 ### For dynamically typed languages
 
-Statically typed languages get a lot of static analysis for free.
+Statically typed languages get a lot for free.
 In dynamically typed (even interpreted) languages, incorporating 3rd-party tools can be helpful.
 
-Use IDEs like IntelliJ, PyCharm and CLion. These are all by JetBrains, and they’re similar.
+Use IDEs like IntelliJ, PyCharm and CLion.
+These are all by JetBrains, and they’re similar.
 They have configurable _inspections_ that can detect potential bugs and bad coding practices.
 They can make your coding experience much easier too, via Git integration and refactoring tools.
 
@@ -152,7 +153,7 @@ def test(qr_text: str) -> None:
 
 Then if it fails for an empty string:
 
-```
+```text
 > Falsifying example: test(qr_text='')
 ```
 
@@ -201,7 +202,7 @@ TODO
 
 These test your code on simple cases.
 These are a useful layer of testing because they’re easy to write.
-They don’t test correctness in more general cases, and they’re weak to results that are just _slightly_ wrong.
+They don’t test correctness in more general cases, and they’re weak to results that are just slightly wrong.
 
 ### Regression tests
 

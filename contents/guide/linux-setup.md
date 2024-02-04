@@ -10,7 +10,9 @@ Alternatives for Ubuntu/Debian-like and Fedora/RedHat-like are shown.
 ## Install
 
 Follow the instructions that show up to install.
-In Ubuntu, select "Default installation" and check "Install third-party software for graphics and Wi-Fi hardware" and "Download and install support for additional media formats".
+In Ubuntu, select “Default installation”
+and check “Install third-party software for graphics and Wi-Fi hardware”
+and “Download and install support for additional media formats”.
 
 If you need encryption, TPM-backed FDE is a potential option.
 Support in Ubuntu and Fedora is experimental (as of October 2023).
@@ -63,12 +65,12 @@ If mounted as separate partitions, mount with `noexec`.
 ??? example "Example scheme 1 – single-user workstation"
 
     | drive(s) | mount point | size (GB) | filesystem | purpose               |
-    | nvme0    |-------------|-----------|------------|-----------------------|
-    | nvme0    | (efi)       |    1      | FAT32      |                       |
-    | nvme0    | (swap)      |   64      | swap       |                       |
-    | nvme0    | `/`         |  256      | btrfs      |                       |
-    | nvme0    | `/tmp`      |  128      | btrfs      |                       |
-    | nvme0    | `/var/tmp`  |  256      | btrfs      |                       |
+    |----------|-------------|-----------|------------|-----------------------|
+    | nvme0    | (efi)       | 1         | FAT32      |                       |
+    | nvme0    | (swap)      | 64        | swap       |                       |
+    | nvme0    | `/`         | 256       | btrfs      |                       |
+    | nvme0    | `/tmp`      | 128       | btrfs      |                       |
+    | nvme0    | `/var/tmp`  | 256       | btrfs      |                       |
     | nvme0    | `/data`     | 1308      | btrfs      | Working data          |
     | nvme1    | `/docs`     | 1024      | btrfs      | Documents             |
     | sda      | `/bak`      | 4096      | btrfs      | External backup (HDD) |
@@ -194,7 +196,7 @@ Open a terminal and enter the following commands to install the necessary packag
 	```
 
     ```bash
-    sudo apt install -y git vim curl wget xz-utils brotli lzma zstd iotop dexa
+    sudo apt install -y git vim curl wget xz-utils brotli lzma zstd iotop exa
 	  sudo apt install libncurses-dev
 	  sudo apt install -y build-essential cmake
     sudo apt install -y zsh
@@ -213,7 +215,6 @@ Open a terminal and enter the following commands to install the necessary packag
 Install the GitHub CLI per the
 [official GH Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md).
 
-
 ## Set up firewall
 
 === "Ubuntu"
@@ -225,6 +226,16 @@ Install the GitHub CLI per the
 === "Fedora"
 
     Fedora should come with `firewalld` installed and enabled by default.
+
+## Allow SSH login
+
+Install ssh to allow for remote logins.
+
+```
+sudo apt update
+sudo apt install openssh-server
+sudo ufw allow 22
+```
 
 ## Cosmetics/UI
 
