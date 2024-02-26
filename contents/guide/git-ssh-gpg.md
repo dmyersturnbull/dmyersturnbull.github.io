@@ -70,9 +70,13 @@ User kelly@gmail.com
     If needed, fix permissions with this snippet:
 
     ```bash
-    chmod 600 ~/.ssh/*
-    chmod 700 ~/.ssh/ ~/.ssh/config ~/.ssh/known_hosts
-    chmod 644 ~/.ssh/*.pub
+    chmod 600 "~/.ssh/*"
+    chmod 700 "~/.ssh/"
+	[[ -e "~/.ssh/config" ]] && chmod 700 "~/.ssh/config"
+	[[ -e "~/.ssh/known_hosts" ]] && chmod 700 "~/.ssh/known_hosts"
+    chmod 644 "~/.ssh/*.pub"
+	[[ -e "~/.ssh/authorized_keys" ]] && chmod 644 "~/.ssh/authorized_keys"
+
     ```
 
 ### _Optional:_ Connect to another server

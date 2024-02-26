@@ -1,9 +1,7 @@
-pre-commit >=3.3
+pre-commit >=3.6
 mkdocs >=1.5
-mike >=1.1
-mkdocs-material >=9.1
-mkdocs-minify-plugin >=0.7
-mkdocstrings[python] >=0.20
+mkdocs-material >=9.5
+mkdocs-minify-plugin >=0.8
 mkdocs-table-reader-plugin >=2.0
 markdown-include >=0.8
 mkdocs-include-markdown-plugin >=6.0

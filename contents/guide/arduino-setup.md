@@ -4,36 +4,28 @@
 ## Install Arduino
 
 !!! note
-    If you are on Windows, make sure `curl` is available.
-    You can get it via [Git for Windows](https://gitforwindows.org/).
-
-    - Using [Chocolatey](https://chocolatey.org/): `choco install poshgit`.
-    - Using Scoop: `scoop install main/curl`.
+    You need [GitHub CLI](https://github.com/cli/cli) (`gh`).
 
 Download and install [Arduino](https://www.arduino.cc/).
 
 === "Linux"
 
     ```bash
-    curl -L -O -J \
-        https://github.com/arduino/arduino-ide/releases/download/2.2.1/arduino-ide_2.2.1_Linux_64bit.zip
-    unzip arduino-ide_2.2.1_Linux_64bit.zip
-    rm -r arduino-ide_2.2.1_Linux_64bit.zip
-    sudo mv arduino-ide_2.2.1_Linux_64bit /opt/arduino
+    gh release download --repo arduino/arduino-ide --archive=zip --dir arduino-temp
+    unzip arduino-temp/*.zip
+    sudo mv $(( ls -Art arduino-temp/ | tail -n 1 )) /opt/arduino
+    rm -r arduino-temp
     ```
 
 === "Windows"
 
-    ```powershell
-    curl -L -O -J \
-        https://github.com/arduino/arduino-ide/releases/download/2.2.1/arduino-ide_2.2.1_Windows_64bit.msi
-    .\arduino-ide_2.2.1_Windows_64bit.msi
-    ```
+    Install the latest from the
+    [Arduino GitHub downloads](https://github.com/arduino/arduino-ide/releases/download/).
 
 === "macOS"
 
-    ```powershell
-    curl -L -O -J \
-        https://github.com/arduino/arduino-ide/releases/download/2.2.1/arduino-ide_2.2.1_macOS_64bit.dmg
-    open -a arduino-ide_2.2.1_macOS_64bit.dmg
+    ```bash
+    gh release download --repo arduino/arduino-ide --archive=dmg --dir arduino-temp
+    open -a $(( ls -Art arduino-temp/*.dmg | tail -n 1 ))
+    rm -r arduino-temp/
     ```

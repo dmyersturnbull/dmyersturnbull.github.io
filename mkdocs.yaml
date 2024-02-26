@@ -11,8 +11,16 @@ nav:
   - Reference docs:
       - Contributor guide: ref/contributor-guide.md
       - Maintainer guide: ref/maintainer-guide.md
-      - Coding conventions: ref/coding-conventions.md
       - GitHub labels: ref/github-labels.md
+  - Coding conventions:
+      - Intro: style/index.md
+      - Documentation: style/documentation.md
+      - APIs: style/apis.md
+      - Scripts & build files: style/scripts.md
+      - Python: style/python.md
+      - Java: style/java.md
+      - JavaScript: style/javascript.md
+      - SQL: style/sql.md
   - Setup guides:
       - Linux setup: guide/linux-setup.md
       - macOS setup: guide/macos-setup.md
@@ -29,8 +37,7 @@ nav:
       - Scientific software tests: post/scientific-software-tests.md
       - Python infrastructure: post/python-infrastructure.md
       - Web stuff: post/web-stuff.md
-      - GET query DSL: post/query-dsl.md
-      - Design pattern zoo: post/design-pattern-zoo.md
+      - ABNF hybrid: post/abnf-hybrid.md
 
 # Theme
 theme:
