@@ -6,6 +6,9 @@
 Add all public members to `__all__`, declared immediately after the imports.
 (Note that [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings) requires this.)
 
+Use `mainpkg/__init__.py` to `import` the most important classes.
+Do not set `__author__` or similar fields, but do set `mainpkg/__version__`.
+
 ## Formatting
 
 [Black](https://github.com/psf/black) or the [Ruff formatter](https://docs.astral.sh/ruff/formatter/)
@@ -188,8 +191,8 @@ as [mkdocstrings supports](https://mkdocstrings.github.io/griffe/docstrings/#goo
 
 ## Ruff rules
 
-Use [Ruff]() to catch potential problems and bad practices.
+Use [Ruff](https://docs.astral.sh/ruff/) to catch potential problems and bad practices.
 Use **at least** the rules enabled in the
 [cicd pyproject.toml](https://github.com/dmyersturnbull/cicd/blob/main/pyproject.toml).
 
-To disable coverage of a line or block, use `# nocov` (not `# pragma: nocov`, etc.).
+To disable counting a line or block in test coverage, use `# nocov` (not `# pragma: nocov`, etc.).

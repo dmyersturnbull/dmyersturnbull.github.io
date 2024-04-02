@@ -13,7 +13,7 @@ nav:
       - Maintainer guide: ref/maintainer-guide.md
       - GitHub labels: ref/github-labels.md
   - Coding conventions:
-      - Intro: style/index.md
+      - Overview: style/index.md
       - Documentation: style/documentation.md
       - APIs: style/apis.md
       - Scripts & build files: style/scripts.md
@@ -21,6 +21,10 @@ nav:
       - Java: style/java.md
       - JavaScript: style/javascript.md
       - SQL: style/sql.md
+  - Specifications:
+      - regex-BNF: spec/regex-bnf.md
+      - query-dsl: spec/query-dsl.md
+      - linky-rest: spec/linky-rest.md
   - Setup guides:
       - Linux setup: guide/linux-setup.md
       - macOS setup: guide/macos-setup.md
@@ -37,7 +41,6 @@ nav:
       - Scientific software tests: post/scientific-software-tests.md
       - Python infrastructure: post/python-infrastructure.md
       - Web stuff: post/web-stuff.md
-      - ABNF hybrid: post/abnf-hybrid.md
 
 # Theme
 theme:

@@ -196,7 +196,7 @@ Look for one of these places to add a line break, in order:
 
 ### Text styles and semantics
 
-!!! summary "Semantic HTML elements"
+??? summary "Semantic HTML elements"
 
     Some semantic HTML elements are result in identical styles (in most browsers).
     This table summarizes how to use them in HTML and in Markdown.
@@ -212,7 +212,6 @@ Look for one of these places to add a line break, in order:
 	| [`code`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code) | monospace | source code | ``` `code` ``` |
 	| [`samp`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp) | monospace | sample output  | ``` `code` ``` |
 	| [`kbd`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd) | monospace | keyboard keys | `<kdb>keys</kbd>` |
-
 
 #### Italics
 
@@ -317,7 +316,7 @@ For example:
 An en dash – in contrast to an em dash – should be used here.
 ```
 
-For _i.e._ and _e.g._, skip the comma (British English) and normally introduce with _;_, not _,_.
+For _i.e._ and _e.g._, skip the comma (British English) and normally introduce with _;_,.
 For example: `say something nice; e.g. “nice boots”.`.
 
 ### Abbreviations
@@ -330,7 +329,7 @@ Omit periods (`.`) for initialisms; e.g. _USA_, not _U.S.A._.
 
 <small>
 † Note that the correct abbreviation for <abbr title="Public Library of Science">PLOS</abbr>
-is _PLOS_, **not** _PLoS_.
+is <i>PLOS</i>, <strong>not</strong> <i>PLoS</i>.
 </small>
 
 ### Admonitions
@@ -351,6 +350,7 @@ Use them for content that either:
     These symbols are easily recognized as indicating footnotes, whereas superscript numbers could be confused
     with reference numbers or even exponents in some places.
     They are more accessible than superscript symbols for people who are vision-impaired.
+    (The pilcrow is excluded because it is too thick/prominent.)
 
 Unless the Markdown flavor handles footnotes in another way, follow this format:
 
@@ -360,8 +360,9 @@ This statement is false.
 <small>† Note that this is a contradictory statement.</small>
 ```
 
-Use these symbols, in order: `†` (dagger), `†` (double dagger), `§` (section mark), `¶` (paragraph mark).
-Note that superscripts are not used.
+Use these symbols, in order: `†` (dagger), `†` (double dagger), `§` (section mark), `♯` (paragraph mark),
+`♯` (musical sharp), `𝄮` (musical neutral), `𝄽` (musical rest).
+Other schemes, such as superscript numbers or letters, may sometimes be acceptable alternatives.
 
 ### Quotations
 
@@ -467,12 +468,14 @@ Examples:
 ### Dates and times
 
 Use [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339).
-For example: `2023-11-02T14:55:00 -08:00`.
+For example: `2023-11-02T14:55:00-08:00`.
 Note that the UTC offset is written with a hyphen, not a minus sign.
 If a timezone is needed, use a recognized IANA timezone such as `America/Los_Angeles`,
 and set it in square brackets.
 The UTC offset must still be included.
 For example: `2023-11-02T14:55:00 -08:00 [America/Los_Angeles]`.
+
+### Durations and intervals
 
 For durations, use, e.g., _8.3 s_.
 `hr`, `min`, and `sec`/`s` are acceptable abbreviations, whereas `M` for minute is not.

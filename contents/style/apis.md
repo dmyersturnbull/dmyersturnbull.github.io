@@ -2,26 +2,24 @@
 
 ## JSON and data representation
 
+Use [JSON Schema](https://json-schema.org/), version 2020-12.
+
 Follow the [Google JSON guide](https://google.github.io/styleguide/jsoncstyleguide.xml).
 Contradicting that guide, property names may follow other conventions if needed to accommodate other needs.
 Avoid periods (`.`) in property names;
-doing so complicates using [JsonPath](https://github.com/json-path/JsonPath),
-[JMESPath](https://jmespath.org/), [jq](https://jqlang.github.io/jq/),
-[YAML](https://yaml.org/), and [TOML](https://toml.io/).
-Avoid allowing multiple types per key or array.
-That means avoiding JSON Schema’s `anyOf` (or `oneOf`) with multiple `type`s.
+doing so complicates using
+[JsonPath](https://github.com/json-path/JsonPath),
+[JMESPath](https://jmespath.org/),
+[jq](https://jqlang.github.io/jq/),
+[YAML](https://yaml.org/), and
+[TOML](https://toml.io/).
+Permit only 1 type for a given key or array.
 
-### Null and missing values
-
-**Do not use JSON `null`**, except in [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396).
-JSON Merge Patch uses it to signal deletion, so using `null` for other purposes effectively prevents HTTP `PATCH`.
-It’s problematic for other reasons; refer to the _rationale_ box.
-Tip: replace any `{"key": null}` with `{}` or (e.g.) `{"status: "error:too_few_samples}"}`.
-If a null value is encountered (e.g. in a received payload), pretend the key–value pair isn’t present.
+### Null and missing values; numerical range and precision
 
 ??? rationale
 
-    Null values:
+    Null values
 
     1. Clash with [JSON Merge Patch / RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396).
        They cannot be expressed because the standard reserves `null` for deletions; and
@@ -32,16 +30,29 @@ If a null value is encountered (e.g. in a received payload), pretend the key–v
     <small>
     About using `null` for missing-but-schema-supported keys:
     This practice is not obvious, wastes bandwidth, is supurfulous to the schema, and breaks if the schema changes.
-    Specifying allowed keys is a schema’s job.
+    Let the schema specify what keys are allowed.
     </small>
+
+**Do not use JSON `null`**, except in [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396).
+JSON Merge Patch uses it to signal deletion, so using `null` for other purposes effectively prevents HTTP `PATCH`.
+It’s problematic for other reasons; refer to the _rationale_ box.
+Tip: replace any `{"key": null}` with `{}` or (e.g.) `{"status: "error:too_few_samples}"}`.
+If a null value is encountered (e.g. in a received payload), pretend it isn’t there.
 
 #### NaN, Inf, and -Inf
 
-JSON floats cannot store `NaN`, `Inf`, or `-Inf`.
-If such values are applicable, encode all those data as strings.
-For example, if values in an array can be a float, `Inf`, or `-Inf`, encode it like this:
+JSON does not support numerical `NaN`, `Inf`, or `-Inf`.
+If NaN or infinite values are applicable for a given key or array, encode them as strings.
+For example, if values in an array can be a float, `Inf`, or `-Inf`, encode them like this:
 `["5.3", "Inf", "6.8", "-Inf"]`.
-Use exactly `NaN`, `Inf`, or `-Inf`, with that capitalization.
+Write literally `NaN`, `Inf`, or `-Inf`, with that capitalization.
+(The minus sign must be U+002D.)
+
+#### Range and precision
+
+Generally, assume that JSON consumers will use IEEE 754 _double_ range and precision.
+When writing numbers that might exceed that range or precision (where that precision is important),
+encode them as strings (as with NaN, Inf, and -Inf).
 
 #### Case study: Representing inconclusive or unknown values
 
@@ -50,44 +61,34 @@ Instead, be explicit about `null`’s meaning.
 
 Consider a sensor measuring electric current.
 The values are then divided by preceeding average to get a ratio, that is,
-
-$$
-R(I_t) = \left. I_t \middle/ \text{Avg}_{i=1}^{t-1} I_i \right.
-$$
-, where $I_t$ is the current on trial (measurement $t$).
+$R(I_t) = \left. I_t \middle/ \text{Avg}_{i=1}^{t-1} I_i \right.$
+,
+where $I_t$ is the current for trial $t$.
 Compare these two representations:
 
-=== "❌ Incorrect"
+=== "❌ Incorrect – using `null`"
 
-    Here,
+    Did the measurement fail? A hardware connection issue?
+    Was the ratio `Inf` (`1/0`), `-Inf` (`-1/0`), or `NaN` (`0/0`)?
 
     ```json
     [
       {"trial": 1, "value": 12.0},
-      {"trial": 2, "value": null},  # (1)!
+      {"trial": 2, "value": null},
     ]
     ```
 
-    1. Did the measurement fail? A hardware connection issue?
-       Was the ratio `Inf` ($1/0$), `-Inf` ($-1/0$), or `NaN` ($0/0$)?
+=== "✅ Correct – modeling explicitly"
 
-=== "✅ Correct"
+    Specify the status values with a JSON Schema `enum`.
+    The simpler alternative `{"success": <boolean>}` could work, too.
 
     ```json
     [
       {"trial": 1, "status": "success", "value": 12.0},
-      {"trial": 2, "status": "err:no_signal"}  # (1)!
+      {"trial": 2, "status": "error:no_signal"}
     ]
     ```
-
-    1. Specify the status values with a JSON Schema `enum`.
-       `{"success": <boolean>}` may be sufficient instead.
-
-### Range and precision
-
-Generally, assume that JSON consumers will use IEEE 754 _double_ range and precision.
-When writing numbers that might exceed that range or precision (where that precision is important),
-encode them as strings (as in the previous section).
 
 ### Encoding specific types
 
@@ -95,7 +96,7 @@ encode them as strings (as in the previous section).
 
 Use [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339), including a UTC offset.
 Note that the UTC offset is written with a hyphen, not a minus sign.
-Use only IANA timezones, encoded separately.
+Use only IANA timezones.
 For example:
 
 ```json
@@ -105,18 +106,7 @@ For example:
 }
 ```
 
-**Note:** A timezone, not just a UTC offset, is necessary to compute the duration between two times.
-
 #### Durations and intervals
-
-Clearly distinguish between **elapsed** and **wall clock** durations,
-either in JSON keys or by associated documentation.
-
-??? details "Explanation"
-
-    $D = T^C_2 - T^C_1$ for times $T_2$ and $T_1$, for a clock $C$, depends on the kind of clock.
-    If $C$ is monotonic system time, or an NTP server time, $D$ is an elapsed duration.
-    If $C$ is an NTP-synced operating system clock, or a system up time: $D$ is **not** an elapsed duration.
 
 A duration may be written as
 (1) a number of days, hours, minutes, seconds, etc.;
@@ -138,7 +128,13 @@ A duration may be written as
     **❌ Not ok** `05:22` (is this min:sec or hour:min?)
 
 **For intervals**, both `{"start": ..., "end": ...}` and ISO 8601 `T1--T2` syntax are acceptable.
-Do not separate times with `/` or use a time/duration pair.
+Do not separate times with `/` or use a start-time/duration pair.
+
+!!! warning
+
+    Be careful when calculating durations.
+    Things like NTP synchronization events can cause $T^C_1 - T^C_2$ for a clock $C$ to not correspond
+    to an elapsed time (or true duration).
 
 ## HTTP APIs
 
@@ -147,100 +143,146 @@ Do not separate times with `/` or use a time/duration pair.
 This section applies to REST-like HTTP APIs.
 Servers should only issue response codes in accordance with the following table.
 
-<b>Importantly:</b>
-404 (Not Found) is reserved for resources that _could_ exist but do not;
-attempts to access an invalid endpoint must always generate a 400 (Bad Request).
-
 <small>
 <b>Note:</b>
 Few services need every response in this table.
 </small>
 
-| code | name                    | methods                       | Body     | use case                             |
-|------|-------------------------|-------------------------------|----------|--------------------------------------|
-| 100  | Continue                | `POST`/`PUT`/`PATCH`          | ∅        | `Expect: 100-continue` ok            |
-| 200  | OK                      | `GET`/`HEAD`/`PATCH`          | resource |                                      |
-| 201  | Created                 | `POST`/`PUT`                  | resource |                                      |
-| 202  | Accepted                | `POST`                        | ∅        |                                      |
-| 204  | No Content              | `DELETE`                      | ∅        | Successful deletion                  |
-| 206  | Partial Content         | `GET`                         | partial  | Range was requested                  |
-| 303  | See Other †             | any                           | ∅        | Removed endpoint has alternative     |
-| 304  | Not Modified ‡          | `GET`/`HEAD`                  | ∅        | `If-None-Match` matches              |
-| 308  | Permanent Redirect †    | any                           | ∅        | Endpoint moved                       |
-| 400  | Bad Request             | any                           | ∅        | Invalid endpoint                     |
-| 401  | Unauthorized            | any                           | ∅        | Not authenticated                    |
-| 403  | Forbidden               | any                           | ∅        | Insufficient privileges              |
-| 404  | Not Found               | `GET`/`DELETE`/`PATCH`        | ∅        | Resource does not exist              |
-| 406  | Not Acceptable          | `GET`/`HEAD`                  | error    | `Accept` headers unsatisfiable       |
-| 409  | Conflict                | `PUT`/`POST`                  | error    | Resource already exists              |
-| 410  | Gone †                  | any                           | error/∅  | Endpoint removed with no alternative |
-| 412  | Precondition Failed ‡   | `POST`/`PUT`/`DELETE`/`PATCH` | error/∅  | Mid-air edit (`If-...`)              |
-| 413  | Content Too Large †     | `POST`/`PUT`/`DELETE`/`PATCH` | ∅        |                                      |
-| 414  | URI Too Long †          | `GET`/`PUT`/`DELETE`/`PATCH`  | ∅        |                                      |
-| 415  | Unsupported Media Type  | `POST`/`PUT`/`PATCH`          | error    | Invalid payload media type           |
-| 416  | Range Not Satisfiable   | `GET`                         | ∅        | Requested range out of bounds        |
-| 417  | Expectation Failed  ‡   | `POST`/`PUT`/`PATCH`          | error    | `Expect: 100-continue` failed        |
-| 422  | Unprocessable Entity    | `POST`/`PUT`/`PATCH`          | error    | Payload references invalid ID, etc.  |
-| 418  | I'm a teapot  §         | any                           | ∅        | Request blocked                      |
-| 428  | Precondition Required ‡ | `POST`/`PUT`/`DELETE`/`PATCH` | ∅        | `If-...` required                    |
-| 429  | Too Many Requests       | any                           | error/∅  | Ratelimit hit                        |
-| 431  | … Fields Too Large      | any                           | error/∅  |                                      |
-| 500  | Server Error            | any                           | error/∅  | General server error                 |
-| 501  | Not Implemented †       | any                           | error    | Optionally in a canary release       |
-| 503  | Service Unavailable     | any                           | error    | Maintenance or overload              |
+| code | name                   | methods                | response | use case                         |
+|------|------------------------|------------------------|----------|----------------------------------|
+| 100  | Continue¹              | `P`/`P`/`P`†           | ∅        | `100-continue` succeeded         |
+| 200  | OK                     | `HEAD`/`GET`/`PATCH`   | resource |                                  |
+| 201  | Created                | `POST`/`PUT`           | uri‡     |                                  |
+| 202  | Accepted               | `P`/`P`/`P`/`D`§       | ∅        |                                  |
+| 204  | No Content             | `DELETE`               | ∅        | Successful deletion              |
+| 206  | Partial Content        | `GET`                  | part     | Range was requested              |
+| 304  | Not Modified           | `HEAD`/`GET`           | ∅        | `If-None-Match` matches          |
+| 308  | Permanent Redirect     | any                    | resource | Point to canonical URI           |
+| 400  | Bad Request²           | any                    | error♯   | Invalid endpoint, body, etc.     |
+| 401  | Unauthorized           | any                    | error    | Not authenticated                |
+| 403  | Forbidden              | any                    | error    | Insufficient privileges          |
+| 404  | Not Found²             | `GET`/`DELETE`/`PATCH` | error    | No such resource (e.g. by id)    |
+| 406  | Not Acceptable³        | `HEAD`/`GET`           | error    | `Accept` headers unsatisfiable   |
+| 409  | Conflict⁴              | `P`/`P`/`P`            | error    | Resource already exists          |
+| 409  | Conflict⁴              | `DELETE`               | error    | Other resources depend on this   |
+| 410  | Gone³                  | `GET`/`DELETE`/`PATCH` | error    | Resource removed                 |
+| 412  | Precondition Failed¹   | `P`/`P`/`P`/`D`        | error    | Mid-air edit (`If-...`)          |
+| 413  | Content Too Large³     | `P`/`P`/`P`            | error    |                                  |
+| 414  | URI Too Long³          | `GET`                  | error    |                                  |
+| 415  | Unsupported Media Type | `P`/`P`/`P`            | error    | Invalid payload media type       |
+| 416  | Range Not Satisfiable  | `GET`                  | error    | Requested range out of bounds    |
+| 417  | Expectation Failed¹    | `P`/`P`/`P`            | error    | `Expect: 100-continue` failed    |
+| 422  | Unprocessable Entity⁴  | `P`/`P`/`P`            | error    | Sematic; invalid reference, etc. |
+| 418  | I'm a teapot⁵          | any                    | error    | Request blocked                  |
+| 428  | Precondition Required¹ | `P`/`P`/`P`/`D`        | error    | `If-...` required                |
+| 431  | … Fields Too Large²    | any                    | error    |                                  |
+| 429  | Too Many Requests      | any                    | error    | Ratelimit hit                    |
+| 500  | Server Error           | any                    | error    | General server error             |
+| 503  | Service Unavailable    | any                    | error    | Maintenance or overload          |
 
-<b>Notes:</b>
-
-<p>
-<small>
-† 400 Bad Request is an acceptable and simpler alternative.
-</small>
-</p>
-<p>
-<small>
-‡ Use these only in APIs that are stateful or use PATCH in a non-idempotent and order-dependent way.
-This will not occur if [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396) is always used.
-</small>
-</p>
-<p>
-<small>
-§ 418 I'm a Teapot is nonstandard but often used to mean
-“I’m ignoring you because I am suspicious of and/or angry with you.”
-The server decided that the current request, or a prior request, was potentially malicious or otherwise problematic.
-</small>
-</p>
-<p>
-<small>
-403 Forbidden is similar, and neither indicates whether the request is otherwise valid.
-However, users may assume a 403 means that obtaining necessary credentials may correct the problem.
-In contrast, 418 I'm a Teapot indicates that the client cannot rectify the problem;
-the server may or may not process a different request, and it may or may not allow the request later.
-</small>
-</p>
-<p>
-<small>
-429 Too Many Requests also differs.
-A single specific request may trigger a 418 I'm a Teapot,
-and the normal rate-limiting headers (see below) are ommitted.
-</small>
-</p>
-
-<b>Response bodies:</b>
-
-`resource`
-
-: `{"uri": "https://domain.tld/api/thing/1"}`.
+<b>Footnotes:</b>
+- † `POST`/`POST`/`PATCH`
+- ‡ A JSON document containing (at least) `uri`; e.g. `{"uri": "https://domain.tld/api/thing/1"}`.
   The value should be the canonical URI for which `GET` returns the resource.
+- § `POST`/`POST`/`PATCH`/`DELETE`
+- ♯  An [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807) JSON payload, as described below
 
-`error`
+`PATCH` should use [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396) (assuming JSON).
 
-: An [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807) JSON payload
+<b>Notes about specific codes:</b>
+- ¹ Useful for certain modifiable resources.
+- ² 404 Not Found is reserved for resources that _could_ exist but do not;
+   attempts to access an invalid endpoint must always generate a 400 (Bad Request).
+   For example, if `id` must be hexadecimal for `/machine/{id}`, then `/machine/zzz` should generate a 400.
+   The response body
+   ([RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail) problem detials)
+   can (and likely should) describe the prbolem; e.g. `{..., "detail": "{id} must match ^[0-9A-F]{16}$"}`.
+- ³ Preferred but optional. A 400 Bad Request may be used instead.
+- ⁴ Use 422 Unprocessable Entity for errors with respect to the model semantics and/or data.
+  For example, in `{"robot: "22-1-44", "action": "sit"}`, a 422 might be sent
+  if robot 22-1-44 does not exist or lacks sit/stand functionality.
+  A 409 Conflict might result if it 22-1-44 cannot accept the command because it is currently handling another.
+  Respond 409 Conflict for conflicting <em>state</em>,
+  most notably to a request to delete a resource that other resources reference.
+- ⁵ 418 I'm a Teapot may optionally be used to communicate with a client that has been locked out
+  for reasons other than ratelimiting.
+  For example, this might be sent if the client previously sent several suspicious queries,
+  is sending a query that appears malicious, or sent an excessive amount of data over the last few minutes.<br />
+  <small>
+  While nonstandard, 418 is sometimes used this way to distinguish these types of situtations from more common ones.
+  A 418 indicates that the client cannot rectify the problem,
+  that the server may or may not be willing to process a different request,
+  and that the server may or may not accept the same request if it is re-sent later.
+  These factors cleanly distinguish 418 from 403 Forbidden, 429 Too Many Requests, etc.
+  Note that simply refusing connections is an alternative but may be more frustrating to users.
+  </small>
+
+### 4xx/5xx error responses
+
+All 4xx and 5xx responses should include a
+[RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail) body
+with media-type `application/problem+json`.
+`title` is required.
+It should be a short, free-form, human-readable statement that ends with a period.
+`detail` should similarly contain free-form, human readable statements (one or more sentences).
+`type` must be in either all or no responses; same for `status`.
+
+`type` must serve `application/json` and `text/html; charset=utf-8` (which RFC 9457 requires).
+`text/x-markdown` is also recommended, preferably identical to the corresponding OpenAPI schema
+[`response.description`](https://spec.openapis.org/oas/v3.1.0#fixed-fields-14).
+
+Always include _extensions_ that a client would likely want to parse.
+For example, specify the incorrect request parameter or header, or the dependent resource for a 409 Conflict.
+Use kebab-case or camelCase according to the convention your overall API uses.
+Occasionally, these extensions will be redundant to headers, such as `Accept` and `RateLimit-Limit`;
+this is ok.
+
+??? example "Examples"
+
+    === "500 Internal Server Error"
+
+      ```json
+      {
+        "title": "Internal server error",
+        "type": "https://domain.tld/help/error/server.internal"
+        "status": "500",
+      }
+      ```
+
+    === "422 Unprocessable Entity"
+
+      ```json
+      {
+        "title": "DSL parse error",
+        "type": "https://domain.tld/help/error/client.dsl-parse"
+        "status": "422",
+        "detail": "Line number 22 contains an unidentified symbol '@' at column 14.",
+        "lineNumber": 22,
+      }
+      ```
+
+    === "400 Bad Request"
+
+      ```json
+      {
+        "title": "Malformed parameter.",
+        "status": "400",
+        "detail": "Parameter 'name' is malformed. It must be a 10-digit hexadecimal string.",
+        "parameter": "name"
+      }
+      ```
+
+### Links
+
+If links per [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) are used, they should be limited to direct connections.
+For example, if a `species` resource links to its `genus`, which links to `family`,
+`species` should **not** link to `family`.
 
 ### Headers
 
 #### Content types
 
-Provide `Accept:` on non-`HEAD` requests – for example, `Content-Type: text/json`.
+Provide `Accept:` on non-`HEAD` requests – for example, `Accept: text/json`.
 Similarly, provide `Content-Type:` on `POST` – for example, `Content-Type: text/json`.
 
 #### Rate-limiting
@@ -250,6 +292,10 @@ Use [draft IETF rate-limiting headers](https://www.ietf.org/archive/id/draft-pol
 These should always be included for 429 (Too Many Requests) responses
 and MAY be included for other responses as well.
 
+#### Location
+
+Always include `Location` for 201 Created responses.
+
 ## Formal grammars
 
 ??? rationale
@@ -257,15 +303,11 @@ and MAY be included for other responses as well.
     `=/` modifies an already-defined rule, which complicates reading.
     `LWSP` is commonly understood to be problematic.
 
-Grammars may be specified in any well-known form.
-However, [ABNF](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form) is preferred.
-See [RFC5234](https://datatracker.ietf.org/doc/html/rfc5234).
-It is sometimes useful to assign uppercase names to rules that would probably be parsed by a lexer.
-Do not use ABNF incremental alternatives notation (`=/`).
-Also avoid these core rules, which are misleading because of their restriction to US-ASCII:
+Grammars may be specified in any well-defined form.
+[ABNF](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
+(see [RFC5234](https://datatracker.ietf.org/doc/html/rfc5234)),
+[XML’s custom meta-grammar](https://www.w3.org/TR/xml/#sec-notation),
+and [regex-BNF](https://dmyersturnbull.github.io/post/regex-bnf) are recommended.
 
-- `CHAR` (“any 7-bit US-ASCII character, excluding NUL”)
-- `LWSP` (“linear white space”)
-- `CTL` (“controls")
-- `VCHAR` (“visible (printing) characters”)
-- `WSP` (“whitespace”)
+With ABNF, do not use the incremental alternatives notation (`=/`),
+and avoid the core rules `CHAR`, `LWSP`, `CTL`, `VCHAR`, and `WSP`.
