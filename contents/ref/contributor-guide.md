@@ -1,4 +1,4 @@
-# Contributing guide
+# Contributor guide
 
 !!! abstract "How to use these docs"
     These docs are meant to be linked to.

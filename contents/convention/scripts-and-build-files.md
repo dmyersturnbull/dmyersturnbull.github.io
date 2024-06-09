@@ -1,4 +1,4 @@
-# Scripts and build file conventions
+# Scripts and build files
 
 ## Command-line tools
 

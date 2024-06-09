@@ -164,7 +164,7 @@ Install [Snappy](https://snappy.computop.org/installing.html#windows), a cross-p
 
 ## Git, SSH, & GPG
 
-**Follow the [Git, SSH, & GPG guide](git-ssh-gpg.md)**.
+**Follow the [Git, SSH, & GPG guide](git-ssh-and-gpg.md)**.
 The SSH key and config instructions work in PowerShell because OpenSSH is installed.
 Note that GitHub CLI was installed via Chocolatey (in the steps above).
 

@@ -3,7 +3,7 @@
 
 ## Practices
 
-Where applicable, follow the [Java guidelines](#Java).
+Where applicable, follow the [Java guidelines](java.md).
 
 Always use strict mode, and generally use `===`, not `==`.
 Use [`for`…`of`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for...of)

@@ -7,23 +7,28 @@ teal { color: Teal }
 purple { color: Purple }
 </style>
 
-# Software testing
+# Software testing strategy guide
 
 !!! warning
     This document is a draft.
 
 ## Layers of tests
 
+### Validation vs. verification
+
 Some literature distinguishes between validation & verification,
 or between [functional](https://en.wikipedia.org/wiki/Functional_testing)
 and [non‐functional](https://en.wikipedia.org/wiki/Non-functional_testing) testing.
 
-| V&V          | F/NF                | Confirms that...                                        |
-|--------------|---------------------|---------------------------------------------------------|
-| verification | functional (F)      | software does what it says (we built it right)          |
-| validation   | non-functional (NF) | software does what it should (we built the right thing) |
+| V&V          | F/NF                  | Confirms that...                                        |
+|--------------|-----------------------|---------------------------------------------------------|
+| verification | functional (*F*)      | software does what it says (we built it right)          |
+| validation   | non-functional (*NF*) | software does what it should (we built the right thing) |
+
+### Testing <em>layers</em>
 
 We can also consider testing in layers.
+(*Warning:* This is [original research](https://en.wikipedia.org/wiki/Wikipedia:No_original_research).)
 
 | Layer           | Type | Purposes                                             | Example types of test            |
 |-----------------|------|------------------------------------------------------|----------------------------------|
@@ -37,6 +42,8 @@ Where does an integration test end and a system test begin?
 It doesn’t matter, as long as you distinguish between the extremes and have both.
 
 ## Layer 0 - Static
+
+**Summary:** TODO
 
 Just because your code compiled doesn’t mean it’s correct.
 A static type system isn’t a replacement for tests.
@@ -66,6 +73,8 @@ These find cases where a function expects one type of input, and you pass anothe
 
 ## Layer 1 - Unit
 
+**Summary:** TODO
+
 Unit tests check a single function or class.
 They should cover every aspect of the **contract** of a function or class.
 **A good unit test doubly serves as documentation** for how to use a class, and its exact behavior.
@@ -77,7 +86,7 @@ The contract for a function or class covers:
 3. Its side effects
 4. Errors it raises and under which conditions
 
-### (i) Input
+### 1 - Input
 
 First, the input is part of the contract. This includes the **types and meanings of parameters**,
 and **invariants that must hold** (ex a matrix is invertible, or the input lengths should match).
@@ -163,6 +172,8 @@ For example, I found a bug affecting only quad‐width Unicode characters
 
 ## Layer 2 - Integration
 
+**Summary:** TODO
+
 Integration tests use multiple classes or functions and make sure that your high‐level
 code uses them correctly in concert.
 You should know the expected output beforehand, and the tests should run under automation.
@@ -194,9 +205,15 @@ Not handling timezones correctly can introduce errors for users outside your reg
 
 ## Layer 3 - System
 
+**Summary:** TODO
+
 ### End-to-end tests
 
-TODO
+End-to-end (E2E) tests simulate real user scenarios to validate the complete flow of an application.
+They test how different parts of the system work together, from the user interface to the backend.
+E2E tests ensure that the integrated system meets requirements and behaves as expected in real-world scenarios.
+
+*Example scenario:* User logs in, updates their profile, and logs out.
 
 ### Sanity checks
 
@@ -228,26 +245,64 @@ They’re actually different: Software should pass a load test can’t exactly _
 Typically, the load is increased until the system fails, and the test makes sure the system
 handles the failure well. For example, without losing data or catching fire.
 
+**Example:**
+- **Scenario:** User logs in, updates their profile, and logs out.
+- **Tools used:** [Cypress](https://www.cypress.io/), [Selenium](https://www.selenium.dev/).
+
+### Recovery
+
+#### Backup and restore
+
+
 ### Security
 
-TODO
+Security testing identifies vulnerabilities in the system to prevent unauthorized access and data breaches.
+It includes security code reviews, penetration testing, and vulnerability scanning.
 
 ### Fault injection
 
-TODO
+Fault injection is an advanced type of testing.
+It assesses the system’s resilience by introducing faults or errors and verifying that they are handled properly.
+This helps ensure the system can gracefully recover from unexpected issues.
 
-### Localization
+**Example:**
+- **Scenario:** Introducing network latency.
+- **Tools used:** [Chaos Monkey](https://netflix.github.io/chaosmonkey/)
+
+### Compatibility and localization
+
+Compatibility tests make sure that the software functions correctly on different platforms (e.g. Linux, Windows, macOS),
+OS versions, processor architectures (e.g. x86, ARM, and RISC-V), endianess, and/or web browsers.
+It is also important to know the hardware requirements, especially available RAM.
+
+Localization tests ensure the software functions correctly in different locales, languages, and regions.
+This includes checking date formats, currency symbols, and translated content.
 
 !!! tip
     Make sure your code uses YY-mm-dd formats and only uses Unicode strings.
 
+**Example:**
+- **Scenario:** Verifying that a web application correctly displays dates, times, and text in various languages.
+- **Tools:** [Globalize.js](https://github.com/globalizejs/globalize).
+
 ### Accessibility
 
-TODO
+Accessibility testing ensures the software is usable by people with disabilities.
+It checks for compliance with accessibility standards such as
+[Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/).
+
+**Example:**
+- **Scenario:** Ensuring a web application is navigable using a screen reader and keyboard.
+- **Tools:** [Wave](https://wave.webaim.org/).
 
 ### Usability
 
-TODO
+Usability testing assesses how easy and intuitive the software is to use.
+It involves real users performing tasks and providing feedback on their experience.
+
+**Example:**
+- **Scenario:** Observing how users navigate a new feature.
+- **Tools:** [Prometheus](https://prometheus.io/)
 
 ## Automation and DevOps
 
@@ -258,7 +313,7 @@ Now for making testing easier.
 Your tests should run on a single command.
 [ScalaTest](https://www.scalatest.org/), [Pytest](https://docs.pytest.org/en/stable/),
 and [JUnit 5](https://junit.org/junit5/) are good choices.
-In Python, also consider something like [tox](https://tox.readthedocs.io/).
+All builds should be isolated.
 
 ### Coverage analysis
 
@@ -307,6 +362,7 @@ This is a collection of various types of tests.
 | mutation        | Injecting errors in code causes the tests to fail  | functional | -      | -       |
 | load            | The system handles a large load                    | acceptance | 4      | no      |
 | stress          | The system fails gracefully                        | acceptance | 4      | no      |
+| recovery        | The system can recover from catastrophic failure   | acceptance | 4      | no      |
 | security        | The software is difficult to exploit               | acceptance | 4      | no      |
 | usability       | The software is easy to use                        | acceptance | 4      | no      |
 | localization    | Locale-specific behavior is correct                | acceptance | 4      | no      |

@@ -162,6 +162,10 @@ Use sentence case for titles and table headers (e.g. _This is a title_).
 Capitalize the first word after a colon only if it begins a complete sentence;
 do not capitalize the first word after a semicolon.
 
+### Terminology
+
+Avoid the terms URL and URN; just use URI instead.
+
 ## Markdown
 
 !!! tip
@@ -186,13 +190,12 @@ Look for one of these places to add a line break, in order:
 5. Before an opening HTML tag (or Markdown equivalent) or after a closing tag
 6. At any other natural place
 
-<small>
 <b>Notes:</b>
 
 - Add line breaks wherever you think they are helpful for items 1–4;
   e.g. before each item of an inline list (i.e. before `(1)`).
 - You may leave a series of very short sentences on one line; e.g. `Be smart. Be fast. Be good.`.
-</small>
+
 
 ### Text styles and semantics
 
@@ -204,7 +207,7 @@ Look for one of these places to add a line break, in order:
 	| element | style   | usages | equivalent Markdown |
 	| ------- | ------- | ------ | ------------------- |
 	| [`em`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em) | italic | emphasis; [stress](https://en.wikipedia.org/wiki/Stress_(linguistics)) | `<em>text</em>` (prefer bold) |
-    | [`i`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i) | italic | technical terms; foreign text; more | `_text_` |
+  | [`i`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i) | italic | technical terms; foreign text; more | `_text_` |
 	| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn) | italic | terms being defined | `_term_` or `<dfn>term</dfn>` |
 	| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var) | italic | variables | `$var$` |
 	| [`strong`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) | bold | strong emphasis | `**text**` |
@@ -327,10 +330,9 @@ HTML tag with the `title` attribute in Markdown.
 For the first appearance, consider writing it out in this format: _Public Library of Science (PLOS)_.
 Omit periods (`.`) for initialisms; e.g. _USA_, not _U.S.A._.
 
-<small>
 † Note that the correct abbreviation for <abbr title="Public Library of Science">PLOS</abbr>
 is <i>PLOS</i>, <strong>not</strong> <i>PLoS</i>.
-</small>
+
 
 ### Admonitions
 

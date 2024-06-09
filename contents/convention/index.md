@@ -31,8 +31,8 @@ the [Ruff formatter](https://docs.astral.sh/ruff/formatter/)
 
 Prettier handles all the formatting for JavaScript, TypeScript, HTML, and CSS,
 and some of the formatting for Markdown and some other languages.
-For Java, Scala, Groovy, and Kotlin, the [IntelliJ formatter settings](intellij-style.xml)
-can handle most of the formatting conventions for those languages.
+For Java and Kotlin, the [IntelliJ formatter settings](intellij-style.xml)
+can handle some of the formatting conventions for those languages.
 
 These auto-formatters are meant to be run via [pre-commit](https://pre-commit.com/) or before each merge.
 This document lists non-formatting guidelines (e.g. accessibility)

@@ -1,4 +1,4 @@
-# Git, SSH, and GPG guide
+# Git, SSH, and GPG
 
 These instructions should work for Linux, macOS, and Windows.
 

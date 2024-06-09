@@ -1,4 +1,3 @@
-
 # Arduino setup
 
 ## Install Arduino

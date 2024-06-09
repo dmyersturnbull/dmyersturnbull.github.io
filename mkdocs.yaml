@@ -3,7 +3,7 @@ docs_dir: "contents"
 site_dir: "docs"
 
 copyright: Copyright 2023, Douglas Myers-Turnbull
-site_description: "Software guides and reference docs."
+site_description: "Software guides, reference docs, and more."
 
 # Navigation menu
 nav:
@@ -11,36 +11,38 @@ nav:
   - Reference docs:
       - Contributor guide: ref/contributor-guide.md
       - Maintainer guide: ref/maintainer-guide.md
-      - GitHub labels: ref/github-labels.md
-  - Coding conventions:
-      - Overview: style/index.md
-      - Documentation: style/documentation.md
-      - APIs: style/apis.md
-      - Scripts & build files: style/scripts.md
-      - Python: style/python.md
-      - Java: style/java.md
-      - JavaScript: style/javascript.md
-      - SQL: style/sql.md
+      - Issue labels: ref/github-labels.md
+  - Conventions:
+      - Overview: convention/index.md
+      - Documentation: convention/documentation.md
+      - APIs: convention/apis.md
+      - Scripts and build files: convention/scripts-and-build-files.md
+      - Python: convention/python.md
+      - Java: convention/java.md
+      - JavaScript: convention/javascript.md
+      - SQL: convention/sql.md
   - Specifications:
-      - regex-BNF: spec/regex-bnf.md
-      - query-dsl: spec/query-dsl.md
-      - linky-rest: spec/linky-rest.md
+      - Advanced BNF with regex: spec/advanced-bnf-with-regex.md
+      - HTTP GET search DSL: spec/http-get-search-dsl.md
+      - HATEOAS `See` header: spec/hateoas-see-header.md
   - Setup guides:
-      - Linux setup: guide/linux-setup.md
-      - macOS setup: guide/macos-setup.md
-      - Windows setup: guide/windows-setup.md
-      - Git+SSH+GPG config: guide/git-ssh-gpg.md
+      - Linux: guide/linux.md
+      - macOS: guide/macos.md
+      - Windows: guide/windows.md
+      - Git, SSH, and GPG: guide/git-ssh-gpg.md
       - Research projects: guide/research-projects.md
-      - MariaDB best practices: guide/mariadb-setup.md
-      - Mamba (Conda) setup: guide/mamba-setup.md
-      - FFmpeg setup: guide/ffmpeg-setup.md
-      - Arduino setup: guide/arduino-setup.md
+      - MariaDB: guide/mariadb.md
+      - Mamba and Conda: guide/mamba-and-conda.md
+      - FFmpeg: guide/ffmpeg.md
+      - Arduino: guide/arduino.md
   - Posts & tutorials:
       - Duck typing is quackery: post/duck-typing-is-quackery.md
-      - Software testing: post/software-testing.md
-      - Scientific software tests: post/scientific-software-tests.md
-      - Python infrastructure: post/python-infrastructure.md
-      - Web stuff: post/web-stuff.md
+      - Software test strategy guide: post/software-testing-strategy-guide.md
+      - Testing scientific software: post/testing-scientific-software.md
+      - Python infrastructure: post/retooling-python-builds.md
+      - Frontends for time-travelers: post/frontends-for-time-travelers.md
+      - Git tips and microscripts: post/git-tips-and-microscripts.md
+      - Wonders of ChatGPT: post/wonders-of-chatgpt.md
 
 # Theme
 theme:

@@ -1,4 +1,4 @@
-# MariaDB setup guide
+# MariaDB setup
 
 This lists some best practices for MariaDB along with scripts.
 They probably work well for MySQL, too.
@@ -294,7 +294,6 @@ Each table is written to one gzipped file, with binary data hex-encoded.
 Having one table per file means that we only lose one table if a file is corrupted.
 Hex-encoding adds more robustness because tools can often fix corrupted gzip and UTF-8 files.
 Since gzip is used, no more storage is needed, and the only downside is reduced write speed.
-
 
 Here is the backup script:
 

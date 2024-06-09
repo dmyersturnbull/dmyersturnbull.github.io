@@ -1,4 +1,6 @@
-# Compiling FFmpeg on Ubuntu
+# FFmpeg setup
+
+## Compiling FFmpeg on Ubuntu
 
 Configure hardware video encoding, if supported by your GPU.
 QuickSync is one option; it should support AV1 eventually on Alder Lake and higher.

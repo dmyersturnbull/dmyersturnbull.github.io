@@ -54,7 +54,7 @@ From that, you can run `brewing` to update Brew and its packages, and fix proble
     eventually need to run it, so it’s not a bad idea to deal with those issues immediately rather than
     to accumulate a daunting stack of issues to fix simultaneously later.
 
-{!guide/_common-setup.md!}
+{!guide/_common.md!}
 
 !!! note "Thanks"
     Thank you to Cole Helsell for drafting this guide with me.

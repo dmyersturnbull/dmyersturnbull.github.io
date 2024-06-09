@@ -37,7 +37,7 @@ From here on, only modify `.commonrc` so that both Bash and ZSH have the same en
 
 ## Git, SSH, and GPG
 
-**See [this guide](git-ssh-gpg.md).**
+**See [this guide](git-ssh-and-gpg.md).**
 
 ## Install Java and Rust
 

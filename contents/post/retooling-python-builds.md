@@ -1,4 +1,4 @@
-# Python infrastructure
+# Retooling Python builds
 
 **The landscape of Python build infrastructure is a mess.**
 I made over 100 commits to get a sensible, elegant, and secure build.

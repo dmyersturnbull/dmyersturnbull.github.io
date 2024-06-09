@@ -16,7 +16,24 @@ These features are banned:
 - labels (e.g. `outer_loop: for ...`)
 - `notify()` and `wait()`
 - `synchronized` methods (synchronize on blocks instead)
-- non-`final` or mutable `static` fields
+- non-`final` or mutable `static` fields (with very limited exceptions as needed)
+
+### Comments
+
+Forgo comments or Javadoc elements that are superfluous or included out of habit or convention.
+Remove any text that is obvious, repetitious, unclear, or wrong.
+
+<b>Examples of good and bad comments:</b>
+
+- ✅ `@return Result; -1 if {@code list} is empty` (**edge case**)
+- ✅ `// skip sort because gatorx sorts incidentally` (**not a mistake**)
+- ✅ `// yes, we really do want to add 1 here` (**not a mistake**)
+- ✅ `// This block is a bit tricky: ...` (**explain difficult code**)
+- 🟨 `// == Algorithm start ==` (**usually better to split the method**)
+- ❌ `@return A String` (**only out of habit/convention**)
+- ❌ `// set x equal to 5` (**obvious**)
+- ❌ `created by Kerri Johnson` (**superfluous to Git**)
+- ❌ `created on 2022-10-27` (**superfluous to Git**)
 
 ### Exceptions
 
@@ -457,177 +474,17 @@ Immutable classes should implement `Comparable` and override `compareTo` as long
 
 ### `switch` and pattern matching
 
-End every `case` block with a `return` or `break` (no fall-through).
-Handle all cases by adding default case if necessary.
+Only use enhanced `switch` statements.
 
 ### Final
 
 `final` for variables, method arguments, `catch` arguments, `try` resources, etc., is optional.
-However, if `final` is present, don’t remove it without cause.
-
-## Formatting
-
-!!! tip
-
-    IntelliJ can do most of this formatting for you.
-    Import the [IntelliJ formatter settings](intellij-style.xml).
-	Unfortunately, it has some bugs (as of February 2024).
-	Specifically, it ignores some wrapping and chopping rules.
-
-### Indentation
-
-Use 4 spaces for indentation and 4 for continuation (block indentation).
-
-### Blank lines
-
-Add one blank line before each top-level declaration, excluding between fields.
-Single blank lines MAY be added in other places for clarity.
-Do not use multiple consecutive line breaks.
-Avoid including blank lines in method bodies:
-If the method is long enough to warrant blank lines, it is probably too long.
-Either break the method up or replace the blank line with a comment.
-
-### Horizontal spacing and alignment
-
-Follow
-[Google’s horizontal whitespace](https://google.github.io/styleguide/javaguide.html#s4.6.2-horizontal-whitespace)
-section, which are generally compatible with the IntelliJ formatter’s default settings.
-Do not horizontally align.
-
-### Braces and line breaks
-
-Use the original Java style guidelines:
-
-1. Put opening braces on the same line
-2. Keep `else` and `else if` on the same line (i.e. `} else {`).
-   Similarly, keep `while` on the same line for do-while loops (i.e. `} while ()`).
-3. Start a line for every annotation, enum member, and record parameter.
-
-You may omit braces for simple, short, and single-statement`if`/`else`/`else if`, `for`, and `while` blocks.
-Place the body on the same line.
-
-??? example
-
-    ```java
-    if (s.isBlank()) throw IllegalArgumentException();
-    ```
-
-### Line length and breaks
-
-Limit lines to 120 characters.
-Break lines, in order of decreasing importance:
-
-1. before `.` in a call chain
-2. before each item in a method parameter list, call argument list, annotation parameter list,
-   exceptions being `catch`-ed, and resources in a try-with-resources (_chopping_)
-
-#### 1. Breaking call chains
-
-Either keep a call chain on one line or chop it with one line per call.
-Use a separate line for the first call if it is logically similar to following lines.
-(E.g. `records\n .map(...)\n .filter(...)`, but `MyClass.getInstance()\n .map(...)\n .filter(...)`.)
-Always do this for long call chains.
-
-??? example "Examples"
-
-    === "Option 1"
-
-        ```java
-        myStream.filter(v -> v > 1.0).map(Integer::toString).limit(10);
-        ```
-
-    === "Option 2"
-
-        ```java
-        myStream
-            .filter(v -> v > 1.0)
-            .map(Integer::toString)
-            .map(someInstance.someFancyLongNamedMethod)
-            .limit(10);
-        ```
-
-#### 2. Chopping lists
-
-Place call arguments, etc.:
-
-1. On the same line as the method name
-2. On a single line after the method name, or
-3. One line per argument (_chopped_)
-
-Chop when necessary to keep the line length within 120.
-You may also chop if it greatly improves clarity.
-
-??? example "Chopping method declarations"
-
-    === "Option 1 – short enough"
-
-        ```java
-        public void calculateQuota(String data) {
-            //
-        }
-        ```
-
-    === "Option 2 – one line"
-
-        ```java
-        public void calculateQuota(
-            String data, int alphaCoefficient, Map<String, Datum> extraFields
-        ) {
-            //
-        }
-        ```
-
-    === "Option 3 – multiple lines"
-
-        ```java
-        public void calculateQuota(
-            String data,
-            Optional<Integer> alphaCoefficient,
-            Map<String, Datum> extraFields,
-            String someOtherLongNamedParameter
-        ) {
-            //
-        }
-        ```
-
-#### Type declarations
-
-Always start a new line before `permits` (for sealed interfaces).
-
-??? example "Chopping type declarations"
-
-    === "Option 1 (preferred)"
-
-    ```java
-    public sealed interface Animal<
-        T extends MotorControl<T>,
-        I super AnimalInput<T, I>,
-        O extends AnimalOutput<T, O>
-    > extends AnimalLike<T, I, O>
-        permits Vertebrate, Invertebrate { // always wrap before `permits`
-    }
-    ```
-
-#### Pattern matching
-
-In patterns (enhanced `switch`), multiple case values can be placed on the same line.
-Do this only if the items are short.
-
-??? example
-
-    ```java
-    public void x(int q) {
-      switch (q) {
-        case 1, 2, 3 -> false
-        case 4, 5, 6 -> true
-        default -> throw new IllegalArgumentException("Unexpected value: " + q);
-      }
-    }
-    ```
+If a `final` was already added, don’t remove it without cause.
 
 ### Optional syntax
 
-In general, omit syntax that has no effect at runtime (excluding comments and annotations).
+In general, omit any syntax elements that are not required.
+This includes any that have no effect at runtime, excluding comments and annotations.
 
 This includes:
 
@@ -637,7 +494,6 @@ This includes:
 - Unnecessary qualifiers, such as `abstract` on interface methods
 - Explicit `.toString()`
 
-
 ### Variable declarations
 
 Declare variables when they are needed, not at the start of a block.
@@ -645,19 +501,25 @@ Use `var` if the type is either obvious or unimportant.
 You may declare multiple variables per line; e.g. `int var1, var2;`.
 In `main` methods, use `String... args`.
 
+### Formatting
+
+Use [prettier-java](https://github.com/jhipster/prettier-java) with:
+- 4 spaces for indentation
+- print width of 120
+
 ### Miscellaneous
 
-#### Comments
+<b>Comments:</b>
 
-Use `//` for multiline comments instead of `/* */`.
+Use `//` for multiline comments instead of `/* */`, unless the comment spans many lines (i.e. more than 20).
 
-#### Encoding
+<b>Encoding:</b>
 
 Write non-ASCII characters without escaping, except characters that are likely to confuse readers.
 
-#### Numbers
+<b>Numbers:</b>
 
-Always add `.0` (e.g. `double x = 2.0 * pi`), and prefix with `0.` (e.g. double x = 0.001).
+Always add `.0` to floats (e.g. `double x = 2.0 * pi`) and prefix with `0.` (e.g. `double x = 0.001`).
 Digit grouping with `_` is optional; use it only for amounts or quantities, not identifiers.
 
 ### Naming
@@ -682,6 +544,7 @@ for example, `calculateAsync()`.
     To set manually, choose the default order and enable “keep getters and setters together”.
 
 Sort members by the following rules.
+Note that these rules are similar to most existing conventions, including IntelliJ’s default.
 
 1. `static final` field
 2. initializer
@@ -693,5 +556,8 @@ Sort members by the following rules.
 8. `equals`, `hashCode`, and `toString` (in order)
 9. `enum`, `interface`, `static class`, `class` (in order)
 
-Within each of the 10 types, always pair associated getters and setters (getter first),
-and sort by decreasing visibility.
+Always pair associated getters and setters (getter first).
+Within each of the 10 types, sort by decreasing visibility.
+_Optionally:_
+Consider subsequently sorting methods so that callers are above callees in a breadth-first manner,
+or by another natural ordering.

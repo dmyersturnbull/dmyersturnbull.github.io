@@ -11,11 +11,14 @@ Do not set `__author__` or similar fields, but do set `mainpkg/__version__`.
 
 ## Formatting
 
-[Black](https://github.com/psf/black) or the [Ruff formatter](https://docs.astral.sh/ruff/formatter/)
-should be used, so don’t worry much about formatting.
+The
+[Ruff formatter](https://docs.astral.sh/ruff/formatter/)
+– which is equivalent to
+[Black](https://github.com/psf/black)
+– should be used, so don’t worry much about formatting.
 Avoid add trailing commas so that Black can decide whether to keep code on one line or to chop it.
 
-Sometimes Black wraps lines in awkwardly, by prioritizing argument lists over call chains.
+Sometimes Ruff/Black wraps lines in awkwardly, by prioritizing argument lists over call chains.
 If this happens, either shorten the lines or break the code into multiple statements.
 For example:
 
@@ -23,7 +26,7 @@ For example:
 
 	```python
 	data = my_long_named_function_that_makes_the_line_too_long(
-		data
+	    data
 	).my_other_long_named_function_being_chained(1)
 	```
 
@@ -40,7 +43,7 @@ For example:
 	data = data.my_other_long_named_function_being_chained(1)
 	```
 
-## Classes
+## Pydantic and dataclasses
 
 Use [pydantic](https://pydantic-docs.helpmanual.io/) or
 [dataclasses](https://docs.python.org/3/library/dataclasses.html).
@@ -103,6 +106,82 @@ Use immutable types unless there’s a compelling reason otherwise.
                 json_loads = from_json
                 json_dumps = to_json
         ```
+
+## Abstract base classes
+
+Inherit directly from abstract base classes in the
+[`collections.abc`](https://docs.python.org/3/library/collections.abc.html)
+module.
+
+```python
+from collections.abc import Sequence, MutableSequence
+from dataclasses import dataclass
+from typing import Literal, Self
+
+
+@dataclass(slots=True, frozen=True)
+class AxisTicks(Sequence[int]):
+
+    orientation: Literal["x"] | Literal["y"]
+    items: Sequence[int]
+
+    def __getitem__(self: Self, i: int) -> int:
+        return self.items[i]
+
+    def __len__(self: Self) -> int:
+        return len(self.items)
+
+
+# Error!
+# dataclasses.FrozenInstanceError: cannot assign to field 'orientation'
+AxisTicks(orientation="x", items=[1, 3, 5])
+a.orientation = "y"
+```
+
+**`list` and `Sequence` are not the same!**
+You should use `Sequence` or `MutableSequence` for typing, not `list`.
+Refer to this hierarchy:
+
+```mermaid
+stateDiagram
+  direction RL
+  classDef abc font-style:italic,stroke:#999,stroke-width:2px,stroke-dasharray: 5 5;
+classDef concrete stroke:#999,stroke-width:2px;
+Container --> Iterable:::abc
+Sized:::abc --> Iterable:::abc
+Collection:::abc --> Iterable:::abc
+Iterator:::abc --> Iterable:::abc
+Reversible:::abc --> Iterable:::abc
+Sequence:::abc --> Reversible:::abc
+Collection:::abc --> Container:::abc
+Callable:::abc --> Container:::abc
+Collection:::abc --> Sized:::abc
+Set:::abc --> Collection:::abc
+Mapping:::abc --> Collection:::abc
+Sequence:::abc --> Collection:::abc
+ByteString:::abc --> Collection:::abc
+MappingView:::abc --> Collection:::abc
+MutableMapping:::abc --> Mapping:::abc
+MutableSequence:::abc --> Sequence:::abc
+MutableSet:::abc --> Set:::abc
+ItemsView:::abc --> MappingView:::abc
+ValuesView:::abc --> MappingView:::abc
+KeysView:::abc --> MappingView:::abc
+MutableSequence:::abc --> Sequence:::abc
+str:::concrete --> Sequence
+tuple:::concrete --> Sequence
+range:::concrete --> Sequence
+list:::concrete --> MutableSequence
+bytearray:::concrete --> MutableSequence
+deque:::concrete --> MutableSequence
+frozenset:::concrete --> Set
+set:::concrete --> MutableSet
+bytes:::concrete --> ByteString
+memoryview:::concrete --> ByteString
+dict:::concrete --> MutableMapping
+defaultdict:::concrete --> MutableMapping
+Counter:::concrete --> MutableMapping
+```
 
 ## Class members
 

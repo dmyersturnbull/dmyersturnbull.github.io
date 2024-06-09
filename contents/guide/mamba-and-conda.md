@@ -1,4 +1,4 @@
-# Micromamba setup
+# Mamba and Conda setup
 
 These instructions should work on Linux, macOS, and Windows.
 
