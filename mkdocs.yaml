@@ -24,7 +24,7 @@ nav:
   - Specifications:
       - Advanced BNF with regex: spec/advanced-bnf-with-regex.md
       - HTTP GET search DSL: spec/http-get-search-dsl.md
-      - HATEOAS `See` header: spec/hateoas-see-header.md
+      - HATEOAS See header: spec/hateoas-see-header.md
   - Setup guides:
       - Linux: guide/linux.md
       - macOS: guide/macos.md

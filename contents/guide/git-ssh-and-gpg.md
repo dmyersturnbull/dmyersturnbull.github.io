@@ -5,9 +5,9 @@ These instructions should work for Linux, macOS, and Windows.
 !!! note
     Install Git, SSH, GPG, and the [GitHub CLI](https://cli.github.com/) before proceeding.
     Follow the
-    [Linux setup guide](macos-setup.md),
-    [macOS setup guide](macos-setup.md),
-    or [Windows setup guide](windows-setup.md).
+    [Linux setup guide](macos.md),
+    [macOS setup guide](macos.md),
+    or [Windows setup guide](windows.md).
 
 ## Configure Git
 

@@ -498,7 +498,6 @@ This includes:
 
 Declare variables when they are needed, not at the start of a block.
 Use `var` if the type is either obvious or unimportant.
-You may declare multiple variables per line; e.g. `int var1, var2;`.
 In `main` methods, use `String... args`.
 
 ### Formatting

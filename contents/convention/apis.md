@@ -92,11 +92,12 @@ Compare these two representations:
 
 ### Encoding specific types
 
-#### Dates and times
+#### Datetimes
 
 Use [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339), including a UTC offset.
-Note that the UTC offset is written with a hyphen, not a minus sign.
+Note that the UTC offset is written with a hyphen (technically a hyphen-minus), not a minus sign.
 Use only IANA timezones.
+Note that OpenAPI uses this format for `date-time` and `date` types.
 For example:
 
 ```json
@@ -106,12 +107,18 @@ For example:
 }
 ```
 
+In some cases, it may be acceptable to append the timezone like this: `{date-time} [{timezone}]`; e.g.
+`2023-11-02T14:55:00 -08:00 [America/Los_Angeles]`.
+This format is generally preferred in documentation.
+
 #### Durations and intervals
 
-A duration may be written as
-(1) a number of days, hours, minutes, seconds, etc.;
-(2) an ISO 8601 duration starting with `PT`; or
-(3) `HH:MM:SS[.iii[iii]]`.
+A duration may be written these three ways:
+
+1. A number of days, hours, minutes, seconds, etc.;
+2. An [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) using only hours, minutes, and seconds
+   and starting with `PT`; or
+3. Hours, minutes and seconds (`HH:MM:SS[.iii[iii]]`).
 
 ??? example "Examples"
 
@@ -123,7 +130,9 @@ A duration may be written as
 
     **❌ Not ok** `P6M2WT45M55S` (ambiguous – months have indeterminate durations)
 
-    **❌ Not ok** `P2S` (unambiguous but does not start with `PT`)
+    **❌ Not ok** `P1D12H` (unambiguous but not limited to hours, minutes, and seconds)
+
+    **❌ Not ok** `P2S` (does not start with `PT`; rewrite as `PT2S`)
 
     **❌ Not ok** `05:22` (is this min:sec or hour:min?)
 
@@ -141,48 +150,72 @@ Do not separate times with `/` or use a start-time/duration pair.
 ### Status codes
 
 This section applies to REST-like HTTP APIs.
-Servers should only use response codes in accordance with this guideline.
-This table includes most non-completely-obvious responses;
-the folded table following this one includes responses that are obvious or specialized.
+Servers may only use response codes in accordance with this guideline.
+The acceptable responses and conditions are listed in two tables below.
+These are exhaustive;
+servers must not use status codes, methods, responses, or conditions not listed here.
 
-| code | name                 | methods                | response | use case                         |
-|------|----------------------|------------------------|----------|----------------------------------|
-| 200  | OK                   | `HEAD`/`GET`/`PATCH`⁁  | resource |                                  |
-| 201  | Created              | `POST`/`PUT`           | uri‡     |                                  |
-| 202  | Accepted             | `P`/`P`/`P`/`DELETE`§  | ∅        |                                  |
-| 204  | No Content           | `DELETE`               | ∅        | Successful deletion              |
-| 308  | Permanent Redirect   | any                    | resource | Point to canonical URI           |
-| 400  | Bad Request          | any                    | error♯   | Invalid endpoint, body, etc.     |
-| 401  | Unauthorized         | any                    | error    | Not authenticated                |
-| 403  | Forbidden            | any                    | error    | Insufficient privileges          |
-| 404  | Not Found            | `GET`/`DELETE`/`PATCH` | error    | No such resource (e.g. by id)    |
-| 409  | Conflict             | `P`/`P`/`P`            | error    | Resource already exists          |
-| 409  | Conflict             | `DELETE`               | error    | Other resources depend on this   |
-| 410  | Gone                 | `GET`/`DELETE`/`PATCH` | error    | Resource removed                 |
-| 422  | Unprocessable Entity | `P`/`P`/`P`            | error    | Sematic; invalid reference, etc. |
-| 429  | Too Many Requests    | any                    | error    | Ratelimit hit                    |
-| 500  | Server Error         | any                    | error    | General server error             |
-| 503  | Service Unavailable  | any                    | error    | Maintenance or overload          |
+<b>General status codes:</b>
 
-<b>Footnotes:</b>
+| Code | Name                            | Methods                   | Response         | Condition(s)                                                                             |
+|------|---------------------------------|---------------------------|------------------|------------------------------------------------------------------------------------------|
+| 200  | OK                              | HEAD, GET, PATCH          | resource         | The requested resource is being returned.                                                |
+| 201  | Created                         | POST, PUT                 | canonical URI    | The resource has been created.                                                           |
+| 202  | Accepted                        | POST, PUT, PATCH¹, DELETE | ∅                | The request will be processed asynchronously.                                            |
+| 204  | No Content                      | DELETE                    | ∅                | The deletion was successful.                                                             |
+| 308  | Permanent Redirect              | any                       | resource         | A non-canonical URI was used, and a permanent redirect is provided to the canonical URI. |
+| 400  | Bad Request                     | any                       | problem details² | The endpoint does not exist, the parameters are wrong, or the body is malformed.         |
+| 401  | Unauthorized                    | any                       | problem details  | Authentication was required but not provided.                                            |
+| 403  | Forbidden                       | any                       | problem details  | The provided authentication carries insufficient privileges.                             |
+| 404  | Not Found                       | GET, PATCH, DELETE        | problem details  | The requested resource does not exist.                                                   |
+| 406  | Not Acceptable                  | HEAD, GET                 | problem details  | The `Accept` headers are unsatisfiable.                                                  |
+| 409  | Conflict                        | POST, PUT, PATCH          | problem details  | The resource already exists.                                                             |
+| 409  | Conflict                        | DELETE                    | problem details  | The resource cannot be deleted because other resources reference it.                     |
+| 410  | Gone                            | GET, PATCH, DELETE        | problem details  | The resource does not exist, although it did before.                                     |
+| 413  | Content Too Large               | POST, PUT, PATCH          | problem details  | The request payload is too large.                                                        |
+| 415  | Unsupported Media Type          | POST, PUT, PATCH          | problem details  | The request payload’s media type is unsupported.                                         |
+| 422  | Unprocessable Entity            | POST, PUT, PATCH          | problem details  | The request was readable but contained semantic errors, such as invalid references.      |
+| 429  | Too Many Requests               | any                       | problem details  | The client has exceeded the rate limit.                                                  |
+| 500  | Server Error                    | any                       | problem details  | The server encountered an internal error.                                                |
+| 503  | Service Unavailable             | any                       | problem details  | The service is overloaded or down for maintenance.                                       |
 
-- † `POST`/`POST`/`PATCH`
-- ⁁ `PATCH` should use [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396) (assuming JSON).
-- ‡ A JSON document containing at least `uri`; e.g. `{"uri": "https://domain.tld/api/thing/1"}`.
-  The value should be the canonical URI for which `GET` returns the resource.
-- § `POST`/`POST`/`PATCH`/`DELETE`
-- ♯  An [RFC 7807](https://datatracker.ietf.org/doc/html/rfc7807) JSON payload
+1. Use [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396) for all PATCH requests;
+   see the [JSON Merge Patch section](#json-merge-patch).
+2. Use [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail) problem details;
+   see the [Problem details section](#problem-details) section.
 
-<b>About 404 Not Found:</b>
+<b>Specialized status codes:</b>
+
+| Code | Name                            | Methods                  | Response        | Use case                                                                           |
+|------|---------------------------------|--------------------------|-----------------|------------------------------------------------------------------------------------|
+| 100  | Continue¹                       | POST, PUT, PATCH         | ∅               | The `100-continue` request has succeeded (rare).                                   |
+| 206  | Partial Content                 | GET                      | part            | A range was requested and is being returned.                                       |
+| 304  | Not Modified                    | HEAD, GET                | ∅               | The `If-None-Match` condition has matched.                                         |
+| 412  | Precondition Failed¹            | POST, PUT, PATCH, DELETE | problem details | A mid-air edit condition (using `If-...` headers) failed.                          |
+| 416  | Range Not Satisfiable           | GET                      | problem details | The requested range is out of bounds.                                              |
+| 417  | Expectation Failed¹             | POST, PUT, PATCH         | problem details | The `Expect: 100-continue` expectation failed.                                     |
+| 418  | I'm a Teapot                    | any                      | problem details | The request is blocked due to suspicious or malicious activity, or excessive data. |
+| 423  | Locked                          | POST, PUT, PATCH, DELETE | problem details | _(discouraged)_ A needed resource is “in use”.                                     |
+| 428  | Precondition Required¹          | POST, PUT, PATCH, DELETE | problem details | A precondition (using `If-...` headers) is required.                               |
+| 431  | Request Header Fields Too Large | any                      | problem details | The headers are too large.                                                         |
+
+<b>†</b> These statuses are only applicable to modifiable resources.
+
+#### 404 Not Found
 
 404 Not Found is reserved for resources that _could_ exist but do not;
 attempts to access an invalid endpoint must always generate a 400 (Bad Request).
 For example, if `id` must be hexadecimal for `/machine/{id}`, then `/machine/zzz` should generate a 400.
 The response body
 ([RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail) problem details)
-can (and likely should) describe the problem; e.g. `{..., "detail": "{id} must match ^[0-9A-F]{16}$"}`.
+should describe the problem; e.g. `{..., "detail": "{id} must match ^[0-9A-F]{16}$"}`.
 
-<b>About 422 Unprocessable Entity:</b>
+Occasionally, the server might know that the resource will exist later.
+For example, if the client PUT a resource, received a 202 Accepted, and then tried to GET the resource too early.
+A 404 is still appropriate for this.
+You can indicate the resource’s status in the problem details (`detail` and/or custom field).
+
+#### 422 Unprocessable Entity and 409 Conflict
 
 Use 422 Unprocessable Entity for errors with respect to the model semantics and/or data.
 For example, in `{"robot: "22-1-44", "action": "sit"}`, a 422 might be sent
@@ -191,61 +224,14 @@ A 409 Conflict might result if it 22-1-44 cannot accept the command because it i
 Respond 409 Conflict for conflicting <em>state</em>,
 most notably to a request to delete a resource that other resources reference.
 
-=== details "Table including obvious and specialized responses"
+### JSON Merge Patch
 
-      Some APIs may need other responses.
-      (Few services need every response in this table.)
+All PATCH endpoints should use [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396), assuming JSON is appropriate.
+If JSON is not appropriate, consider encoding the data in a JSON string to use JSON Merge Patch.
+Alternatively, you can use a multipart request with a JSON Merge Patch.
+Recall that JSON Merge Patch uses `null` to signal deletion, so don’t use `null` for other purposes.
 
-      | code | name                   | methods                | response | use case                         |
-      |------|------------------------|------------------------|----------|----------------------------------|
-      | 100  | Continue¹              | `P`/`P`/`P`            | ∅        | `100-continue` succeeded (rare)  |
-      | 200  | OK                     | `HEAD`/`GET`/`PATCH`   | resource |                                  |
-      | 201  | Created                | `POST`/`PUT`           | uri      |                                  |
-      | 202  | Accepted               | `P`/`P`/`P`/`D`        | ∅        |                                  |
-      | 204  | No Content             | `DELETE`               | ∅        | Successful deletion              |
-      | 206  | Partial Content        | `GET`                  | part     | Range was requested              |
-      | 304  | Not Modified           | `HEAD`/`GET`           | ∅        | `If-None-Match` matches          |
-      | 308  | Permanent Redirect     | any                    | resource | Point to canonical URI           |
-      | 400  | Bad Request            | any                    | error    | Invalid endpoint, body, etc.     |
-      | 401  | Unauthorized           | any                    | error    | Not authenticated                |
-      | 403  | Forbidden              | any                    | error    | Insufficient privileges          |
-      | 404  | Not Found              | `GET`/`DELETE`/`PATCH` | error    | No such resource (e.g. by id)    |
-      | 406  | Not Acceptable         | `HEAD`/`GET`           | error    | `Accept` headers unsatisfiable   |
-      | 409  | Conflict               | `P`/`P`/`P`            | error    | Resource already exists          |
-      | 409  | Conflict               | `DELETE`               | error    | Other resources depend on this   |
-      | 410  | Gone²                  | `GET`/`DELETE`/`PATCH` | error    | Resource removed                 |
-      | 412  | Precondition Failed¹   | `P`/`P`/`P`/`D`        | error    | Mid-air edit (`If-...`)          |
-      | 413  | Content Too Large²     | `P`/`P`/`P`            | error    | Overly long request payloads     |
-      | 414  | URI Too Long²          | `GET`                  | error    |                                  |
-      | 415  | Unsupported Media Type | `P`/`P`/`P`            | error    | Invalid payload media type       |
-      | 416  | Range Not Satisfiable  | `GET`                  | error    | Requested range out of bounds    |
-      | 417  | Expectation Failed¹    | `P`/`P`/`P`            | error    | `Expect: 100-continue` failed    |
-      | 422  | Unprocessable Entity   | `P`/`P`/`P`            | error    | Sematic; invalid reference, etc. |
-      | 418  | I'm a teapot³          | any                    | error    | Request blocked                  |
-      | 428  | Precondition Required¹ | `P`/`P`/`P`/`D`        | error    | `If-...` required                |
-      | 431  | … Fields Too Large²    | any                    | error    | Overly long headers              |
-      | 429  | Too Many Requests      | any                    | error    | Ratelimit hit                    |
-      | 500  | Server Error           | any                    | error    | General server error             |
-      | 503  | Service Unavailable    | any                    | error    | Maintenance or overload          |
-
-??? details "Notes about specific codes"
-
-    - ¹ Only useful for modifiable resources.
-    - ² Preferred but optional. A 400 Bad Request may be used instead.
-    - ³ 418 I'm a Teapot may optionally be used to communicate with a client that has been locked out
-      for reasons other than ratelimiting.
-      For example, this might be sent if the client previously sent several suspicious queries,
-      is sending a query that appears malicious, or sent an excessive amount of data over the last few minutes.<br />
-      <small>
-      While nonstandard, 418 is sometimes used this way to distinguish these types of situtations from more common ones.
-      A 418 indicates that the client cannot rectify the problem,
-      that the server may or may not be willing to process a different request,
-      and that the server may or may not accept the same request if it is re-sent later.
-      These factors cleanly distinguish 418 from 403 Forbidden, 429 Too Many Requests, etc.
-      Note that simply refusing connections is an alternative but may be more frustrating to users.
-      </small>
-
-### Problem details for 4xx/5xx responses
+### Problem details
 
 All 4xx and 5xx responses should include a
 [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail) body
@@ -305,9 +291,11 @@ this is ok.
 If links per [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) are used, they should be limited to direct connections.
 For example, if a `species` resource links to its `genus`, which links to `family`,
 `species` should **not** link to `family`.
-Consider putting links in a custom header to avoid polluting JSON response bodies.
+To avoid polluting JSON response bodies, put the links in
+[`Link` headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)
+or [`See` headers](/spec/hateoas-see-header.md).
 
-### Headers
+### Response headers
 
 #### Content types
 
@@ -319,24 +307,55 @@ Similarly, provide `Content-Type:` on `POST` – for example, `Content-Type: tex
 Use [draft IETF rate-limiting headers](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html):
 `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`.
 These should always be included for 429 (Too Many Requests) responses
-and MAY be included for other responses as well.
+along with a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header.
+`RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` MAY be included for other responses as well.
 
-#### Location
+#### Content-Disposition
 
-Include `Location` for 201 Created responses.
+Include `Content-Disposition: attachment` where it would be useful for browsers,
+even if access via browsers is not expected.
+This should include responses of > 10 MB.
+The filename should include the resource type,
+a resource id (or other value with a 1-1 correspondence with the resource),
+and a filename extension.
+Example: `Content-Disposition: attachment; filename="store-item-5221-3q.parquet"`
 
-## Formal grammars
+#### Other headers
 
-Grammars may be specified in any well-defined form.
-[ABNF](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
-(see [RFC5234](https://datatracker.ietf.org/doc/html/rfc5234)),
-[XML’s custom meta-grammar](https://www.w3.org/TR/xml/#sec-notation),
-and [regex-BNF](https://dmyersturnbull.github.io/post/regex-bnf) are recommended.
+Include:
 
-??? rationale
+- `Content-Length`
+- `Content-Range` for 206 Partial Response responses
+- `Location` for 201 Created responses
+- `ETag` for modifiable resources
+- `Last-Modified` for modifiable resources (optionally)
+- `Vary` (optionally)
+- `Cache-Control` (optionally)
 
-    `=/` modifies an already-defined rule, which complicates reading.
-    `LWSP` is commonly understood to be problematic.
+Omit, ignore, or don’t care about:
 
-With ABNF, do not use the incremental alternatives notation (`=/`),
-and avoid the core rules `CHAR`, `LWSP`, `CTL`, `VCHAR`, and `WSP`.
+- `Date`
+- `Age`
+- `Origin`
+- `Host`
+- `Server`
+- `From`
+
+### 418 I'm a Teapot
+
+418 I'm a Teapot may optionally be used to communicate with a client that has been locked out,
+for reasons other than ratelimiting.
+Although this status is nonstandard, some servers use it for similar reasons.
+
+Clients should respond to these situtations very differently than to other 4xx responses, such as 401, 403, and 429.
+A 418 conveys that:
+
+1. The client cannot rectify the problem;
+2. The server may or may not be willing to process a different request; and
+3. The server may or may not accept the same request if it is re-sent later.
+
+<b>Some use cases:</b>
+
+- **Suspicious queries**: The client has previously sent several suspicious queries.
+- **Clearly malicious query**: The client is currently sending a query that is clearly malicious.
+- **Excessive data**: The client has sent an excessive amount of data over a short period.

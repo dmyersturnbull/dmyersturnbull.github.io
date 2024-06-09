@@ -3,8 +3,8 @@
 A setup guide for programmers, etc., on Windows.
 
 !!! note "See also"
-    [macOS setup guide](macos-setup.md) and
-    [Linux setup guide](linux-setup.md)
+    [macOS setup guide](macos.md) and
+    [Linux setup guide](linux.md)
 
 ## Hardware-specific setup
 
@@ -238,7 +238,7 @@ Install the package without optional packages (unless they’re wanted).
 ## Windows Linux Subsystem
 
 Follow [Microsoft’s instructions](https://learn.microsoft.com/en-us/windows/wsl/install) to install the WLS.
-Then follow the [Linux setup guide](linux-setup.md).
+Then follow the [Linux setup guide](linux.md).
 
 *[WLS]: Windows Linux Subsystem
 

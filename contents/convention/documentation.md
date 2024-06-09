@@ -544,3 +544,19 @@ For example, use `<p>The end.</p>`, **not** `<p>The end.`.
     are complex and better ignored.
 
 Always include these elements.
+
+## Formal grammars
+
+Grammars may be specified in any well-defined form.
+[ABNF](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
+(see [RFC5234](https://datatracker.ietf.org/doc/html/rfc5234)),
+[XML’s custom meta-grammar](https://www.w3.org/TR/xml/#sec-notation),
+and [regex-BNF](https://dmyersturnbull.github.io/post/regex-bnf) are recommended.
+
+??? rationale
+
+    `=/` modifies an already-defined rule, which complicates reading.
+    `LWSP` is commonly understood to be problematic.
+
+With ABNF, do not use the incremental alternatives notation (`=/`),
+and avoid the core rules `CHAR`, `LWSP`, `CTL`, `VCHAR`, and `WSP`.

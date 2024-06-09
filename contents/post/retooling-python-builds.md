@@ -71,7 +71,7 @@ is more clear about dependencies, doesn’t seem to throw false positives, and i
 
 **TL;DR:** Stop using Conda.
 If needed, install [mambaforge](https://github.com/conda-forge/miniforge#mambaforge).
-See [this Mambaforge setup guide](../guide/mamba-setup.md)
+See [this Mambaforge setup guide](/guide/mamba-and-conda.md)
 
 ## A nice build
 

@@ -3,8 +3,8 @@
 A setup guide for programmers, etc., on Windows.
 
 !!! note "See also"
-    [Linux setup guide](linux-setup.md) and
-    [Windows setup guide](windows-setup.md)
+    [Linux setup guide](linux.md) and
+    [Windows setup guide](windows.md)
 
 ## Initial setup
 

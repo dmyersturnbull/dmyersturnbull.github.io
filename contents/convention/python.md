@@ -11,10 +11,8 @@ Do not set `__author__` or similar fields, but do set `mainpkg/__version__`.
 
 ## Formatting
 
-The
-[Ruff formatter](https://docs.astral.sh/ruff/formatter/)
-– which is equivalent to
-[Black](https://github.com/psf/black)
+The [Ruff formatter](https://docs.astral.sh/ruff/formatter/)
+– which is equivalent to [Black](https://github.com/psf/black)
 – should be used, so don’t worry much about formatting.
 Avoid add trailing commas so that Black can decide whether to keep code on one line or to chop it.
 

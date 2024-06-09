@@ -4,8 +4,8 @@ A setup guide for programmers, etc., on Linux and the Windows Linux Subsystem.
 Alternatives for Ubuntu/Debian-like and Fedora/RedHat-like are shown.
 
 !!! note "See also"
-    [macOS setup guide](macos-setup.md) and
-    [Windows setup guide](windows-setup.md)
+    [macOS setup guide](macos.md) and
+    [Windows setup guide](windows.md)
 
 ## Install
 

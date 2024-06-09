@@ -90,10 +90,13 @@ according to [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).
 
 ## Grammar
 
+This includes optional extensions for images.
+
 **Using [regex-bnf](regex-bnf.md):**
 
 ```text
-param          = where | return | sort
+param          = where | return | sort | crop | scale | rotate
+where          = 'where[' INDEX ']=' condition ('|' condition)*
 where          = param-defn condition ('|' condition)*
 param-defn     = 'where[' INDEX ']='
 condition      = key ':' str-verb ':' STR
@@ -108,8 +111,8 @@ condition      = key ':' str-verb ':' STR
                | spec(key-verb) key
 
 spec(verb)     = key ':' verb ':'
-return         = 'get=' key ('/' key)*
-sort           = 'sort=' sort-spec ('/' sort-spec)*
+return         = 'get=' key ('|' key)*
+sort           = 'sort=' sort-spec ('|' sort-spec)*
 sort-spec      = ASCENDING? key
 str-verb       = 'eq' | 'neq' | 'regex'
 int-verb       = 'eq' | 'neq' | 'lt' | 'gt' | 'le' | 'ge'
@@ -120,6 +123,12 @@ contains-verb  = 'contains' | 'does-not-contain'
 size-verb      = 'has-size' | 'has-min-size' | 'has-max-size'
 key-verb       = 'eq-key' | 'neq-key' | 'lt-key' | 'gt-key' | 'le-key' | 'ge-key' | 'in-key'
 key            = KEY-NODE ( '.' KEY-NODE )*
+crop           = 'crop=' ( coordinate=top-left 'x' coordinate=bottom-right
+scale          = 'scale=' ( INT | '1/' INT )
+orientation    = 'orientation=' ( ROTATE | FLIP )
+coordinate     = '(' INT ',' INT ')'
+ROTATE         = 'rotate-90' | 'rotate-180' | 'rotate-270'
+FLIP           = 'flip-horizontal' | 'flip-vertical' | 'flip-top-left' | 'flip-top-right'
 KEY-NODE       = [A-Za-z0-9_-]+
 INDEX          = LITERAL-POSITIVE-INT
 ASCENDING      = '-'
@@ -167,7 +176,6 @@ The DSL has a dual in JSON.
         "value": ".+?apple"
       }
     ]
-  ]
     ```
 
 A cache key can be obtained by converting to JSON, sorting, minifying, computing a hash, and base64url-encoding.
@@ -178,83 +186,49 @@ For example, a pagination cursor/limit pair can be added to the JSON, and the ET
 
 ### `get`
 
-List the fields to return ala GraphQL. Field names are delimited `/`.
+List the fields to return ala GraphQL.
+Field names are delimited `|`.
 
-??? example
+!!! example
 
-    <b>Data:</b>
-
-    ```json
-    [
-      "author": {
-        "name": "Justine Taylor",
-        "email": "justine.taylor@uni.edu.au"
-      },
-      "metadata": {
-        "version": "1.0.0",
-        "creation-timestamp": "2022-11-27T17:57:10Z"
-      }
-    ]
-    ```
-
-    `get=author+metadata.version` requests the JSON object `author` and the string `version` under `metadata`.
-
-    <b>Response:</b>
-
-    ```json
-    [
-      "author": {
-        "name": "Justine Taylor",
-        "email": "justine.taylor@uni.edu.au"
-      },
-      "metadata": {
-        "version": "1.0.0"
-      }
-    ]
-    ```
+    `get=author|metadata.version`
+    requests the JSON object `author` and the string `version` under `metadata`.
 
 ### `sort`
 
-Sort by one or more keys, delimited by `/` and listed from high to low precedence.
+Sort by one or more keys, delimited by `|` and listed from high to low precedence.
 Prepending `-` to a key reverses the sort order.
 For `sort=-author.name|author.email`, `author.name` is in descending order, and `author.email` is used to break ties.
 Note that a total ordering is guaranteed if and only if at least one field is unique for all records.
 
-??? details
+## Images
 
+### `crop`
 
-    ```json
-    {
-      "where": [
-        [
-          {
-            "key": "grams",
-            "verb": "lt",
-            "value": 5
-          },
-          {
-            "key": "type",
-            "verb": "eq",
-            "value": "fruit"
-          }
-        ],
-        [
-          {
-            "key": "name",
-            "verb": "regex",
-            "value": ".+?apple"
-          }
-        ]
-      ],
-      "return": [
-        "name",
-        "order.purchase-count"
-      ],
-      "sort": [
-        {
-          "key": "name",
-          "reverse": false
-        }
-      ]
-    }
-    ```
+Extracts a rectangular subregion of an image, specified in terms of pixels.
+Syntax: `(top,left)x(bottom,right)`
+
+### `scale`
+
+Scales both dimensions by a factor.
+The syntax is `scale=(\d+)` to upscale and `scale=1/(\d+)` to downscale.
+Examples:
+
+- `scale=2` doubles the size.
+- `scale=1/2` halves the size.
+
+### `orientation`
+
+These are allowed.
+Note that there is a 1-1 correspondence between the parameter and the orientation.
+The allowed values cover all 8 possible orientations except for the identity (which is the default).
+
+| parameter                     | effect                        |
+|-------------------------------|-------------------------------|
+| `orientation=rotate-90`       | rotate 90 degrees clockwise   |
+| `orientation=rotate-180`      | rotate 180 degrees clockwise  |
+| `orientation=rotate-270`      | rotate 270 degrees clockwise  |
+| `orientation=flip-horizontal` | flip horizontally             |
+| `orientation=flip-vertical`   | flip vertically               |
+| `orientation=flip-top-left`   | flip top-left to bottom-right |
+| `orientation=flip-top-right`  | flip top-right to bottom-left |
