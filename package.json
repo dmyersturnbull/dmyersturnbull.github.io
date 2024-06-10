@@ -1,0 +1,20 @@
+{
+  "devDependencies": {
+    "@prettier/plugin-xml": "^3.4.0",
+    "prettier-plugin-ini": "^1.2.0",
+    "prettier-plugin-properties": "^0.3.0",
+    "prettier-plugin-sh": "^0.14.0",
+    "prettier-plugin-toml": "^1.0.0",
+    "prettier-plugin-java": "^2.6.0"
+  },
+  "prettier": {
+    "plugins": [
+      "prettier-plugin-toml",
+      "prettier-plugin-ini",
+      "prettier-plugin-properties",
+      "prettier-plugin-sh",
+      "@prettier/plugin-xml"
+    ],
+    "experimentalTernaries": true
+  }
+}

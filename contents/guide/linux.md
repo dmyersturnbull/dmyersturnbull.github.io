@@ -205,29 +205,40 @@ Open a terminal and enter the following commands to install the necessary packag
 
     ```bash
     sudo apt install -y git vim curl wget xz-utils brotli lzma zstd iotop
-    sudo apt install -y eza # (1)!
+    sudo apt install -y eza  # (1)!
     sudo apt install -y libncurses-dev
     sudo apt install -y build-essential cmake
     sudo apt install -y zsh
+    sudo apt install -y gnome-tweaks
+    sudo apt install asdf  # (2)!
+    sudo apt install -y flatpak  # (3)!
     ```
 
     1. `exa` is deprecated; use [`eza`](https://github.com/eza-community/eza) instead.
+    2. [asdf](https://asdf-vm.com/) is a version manager for tools.
+    3. [Flatpak](https://flatpak.org/) is a distro-independent package manager for Linux.
 
 === "Fedora"
 
     ```bash
     sudo dnf update && sudo dnf -y upgrade
     sudo dnf install -y git vim curl wget xz-utils brotli lzma zstd iotop
-    sudo dnf install -y eza # (1)!
+    sudo dnf install -y eza  # (1)!
 	  sudo dnf install -y ncurses-devel
 	  sudo dnf install -y make automake gcc gcc-c++ kernel-devel cmake
     sudo dnf install -y zsh
+    sudo dnf install -y gnome-tweaks
+    sudo dnf install -y asdf  # (2)!
+    sudo dnf install -y flatpak  # (3)!
     ```
 
     1. `exa` is deprecated; use [`eza`](https://github.com/eza-community/eza) instead.
+    2. [asdf](https://asdf-vm.com/) is a version manager for tools.
+    3. [Flatpak](https://flatpak.org/) is a distro-independent package manager for Linux.
 
 Install the GitHub CLI per the
 [official GH Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md).
+After following the instructions, run `gh auth login`.
 
 ## Set up firewall
 
@@ -250,6 +261,13 @@ sudo apt update
 sudo apt install openssh-server
 sudo ufw allow 22
 ```
+
+## Consider using dotfiles
+
+I recommend [chezmoi](https://www.chezmoi.io/) for managing dotfiles
+and installing it via apt/dnf or asdf.
+After installing, follow the [quick start guide](https://www.chezmoi.io/docs/quick-start/).
+Use `~/.commonrc` for all chezmoi commands; e.g. `chezmoi add ~/.commonrc`.
 
 ## Cosmetics/UI
 
@@ -420,7 +438,7 @@ Then, restart Nautilus to apply the settings:
 nautilus -q
 ```
 
-{!guide/_common.md!}
+{% include-markdown "_nix-common.md" %}
 
 !!! note "Thanks"
     Thank you to Cole Helsell for drafting this guide with me.
