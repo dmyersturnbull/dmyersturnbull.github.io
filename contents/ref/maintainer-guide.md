@@ -251,7 +251,7 @@ See the [supplemental labels document](../ref/issue-labels.md) for more informat
 | `state: needs triage`   | N/A            | N/A                 | N/A   | 🚦   | Needs to be triaged             | `444444` |
 | `state: blocked`        | N/A            | N/A                 | N/A   | 🚧   | Blocked by another issue        | `999999` |
 | `state: needs details`  | N/A            | N/A                 | N/A   | 🏷️  | Requires ticket work            | `666666` |
-| `state: discarded`      | N/A            | N/A                 | N/A   | 🗑️  | Will not be worked on           | `eeeeee` |
+| `state: discarded`      | N/A            | N/A                 | N/A   | ✖️   | Will not be worked on           | `eeeeee` |
 | `state: invalid`        | N/A            | N/A                 | N/A   | ➖    | Duplicate, inadvertant, etc.    | `eeeeee` |
 | `effort: 1`             | N/A            | N/A                 | N/A   | 1️⃣  | Easy (t < 1 hr)                 | `300040` |
 | `effort: 2`             | N/A            | N/A                 | N/A   | 2️⃣  | Moderate (1 hr <= t < 4 hr)     | `600040` |
