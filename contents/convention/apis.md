@@ -33,6 +33,8 @@ Permit only 1 type for a given key or array.
     Let the schema specify what keys are allowed.
     </small>
 
+#### null
+
 **Do not use JSON `null`**, except in [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396).
 JSON Merge Patch uses it to signal deletion, so using `null` for other purposes effectively prevents HTTP `PATCH`.
 It’s problematic for other reasons; refer to the _rationale_ box.
@@ -195,7 +197,7 @@ servers must not use status codes, methods, responses, or conditions not listed 
 | 416  | Range Not Satisfiable           | GET                      | problem details | The requested range is out of bounds.                                              |
 | 417  | Expectation Failed¹             | POST, PUT, PATCH         | problem details | The `Expect: 100-continue` expectation failed.                                     |
 | 418  | I'm a Teapot                    | any                      | problem details | The request is blocked due to suspicious or malicious activity, or excessive data. |
-| 423  | Locked                          | POST, PUT, PATCH, DELETE | problem details | _(discouraged)_ A needed resource is “in use”.                                     |
+| 423  | Locked                          | POST, PUT, PATCH, DELETE | problem details | **(strongly discouraged)** A needed resource is “in use”.                          |
 | 428  | Precondition Required¹          | POST, PUT, PATCH, DELETE | problem details | A precondition (using `If-...` headers) is required.                               |
 | 431  | Request Header Fields Too Large | any                      | problem details | The headers are too large.                                                         |
 
@@ -224,32 +226,43 @@ A 409 Conflict might result if it 22-1-44 cannot accept the command because it i
 Respond 409 Conflict for conflicting <em>state</em>,
 most notably to a request to delete a resource that other resources reference.
 
+#### 418 I'm a Teapot
+
+**This is an optional response.**
+418 I'm a Teapot may be used to communicate with a client that has been locked out,
+for reasons other than ratelimiting.
+Although this status is nonstandard, some servers use it for similar reasons.
+
+Clients should respond to these situtations very differently than to other 4xx responses, such as 401, 403, and 429.
+A 418 conveys that:
+
+1. The client cannot rectify the problem;
+2. The server may or may not be willing to process a different request; and
+3. The server may or may not accept the same request if it is re-sent later.
+
+<b>Some use cases:</b>
+
+- **Suspicious queries**: The client has previously sent several suspicious queries.
+- **Clearly malicious query**: The client is currently sending a query that is clearly malicious.
+- **Excessive data**: The client has sent an excessive amount of data over a short period.
+
 ### JSON Merge Patch
 
-All PATCH endpoints should use [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396), assuming JSON is appropriate.
-If JSON is not appropriate, consider encoding the data in a JSON string to use JSON Merge Patch.
-Alternatively, you can use a multipart request with a JSON Merge Patch.
-Recall that JSON Merge Patch uses `null` to signal deletion, so don’t use `null` for other purposes.
+For JSON, all PATCH endpoints must use [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396).
+Because JSON Merge Patch uses `null` to signal deletion, `null` may not be used for any other purpose.
+See the [null section](#null-and-missing-values-numerical-range-and-precision) for more information.
+
+For non-JSON data, there are two options:
+
+1. Use JSON Merge Patch with a JSON string.
+   If the data is binary, encode it as base64.
+2. Use a multipart request with a JSON Merge Patch, with the Merge Patch first.
+   The Merge Patch might choose to reference the additional files by filename.
 
 ### Problem details
 
-All 4xx and 5xx responses should include a
-[RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail) body
-with media-type `application/problem+json`.
-`title` is required.
-It should be a short, free-form, human-readable statement that ends with a period.
-`detail` should similarly contain free-form, human readable statements (one or more sentences).
-`type` must be in either all or no responses; same for `status`.
-
-`type` must serve `application/json` and `text/html; charset=utf-8` (which RFC 9457 requires).
-`text/x-markdown` is also recommended, preferably identical to the corresponding OpenAPI schema
-[`response.description`](https://spec.openapis.org/oas/v3.1.0#fixed-fields-14).
-
-Always include _extensions_ that a client would likely want to parse.
-For example, specify the incorrect request parameter or header, or the dependent resource for a 409 Conflict.
-Use kebab-case or camelCase according to the convention your overall API uses.
-Occasionally, these extensions will be redundant to headers, such as `Accept` and `RateLimit-Limit`;
-this is ok.
+Use [RFC 9457 (“problem details”)](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail).
+All 4xx and 5xx responses must include an RFC 9457 body with media-type `application/problem+json`.
 
 ??? example "Examples"
 
@@ -286,16 +299,52 @@ this is ok.
       }
       ```
 
-### Links
+<b>Keys:</b>
 
-If links per [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) are used, they should be limited to direct connections.
+- `title` (**required**): A short, human-readable title that ends with a period.
+- `detail` (**required** sans 500 Server Error and 418 I'm a Teapot):
+   A human-readable description of the problem in one or more complete sentences.
+- `type` (**optional**; if used, it should be used for all responses):
+  A URI at which the client can find more information about the problem type (see below).
+- `status` (**optional**): The status code (e.g. `400`) shared with the response status code.
+- `instance` (**optional**; if used, it should be used for all responses sans 500 and 418):
+  A URI that identifies the specific occurrence of the problem for this response.
+- extensions: Any additional keys that a client may find useful.
+
+**There must be a 1-1 correspondence between `type` and `title`.**
+It is recommended that the same `type`/`title` only map to one status code.
+
+#### `type`
+
+_Example:_ `https://domain.tld/help/error/client#dsl-parse`
+As shown in the example, a
+[URI fragment](https://en.wikipedia.org/wiki/URI_fragment) is perfectly acceptable.
+The response body must include the problem detail’s `title` alongside a more detailed description.
+
+Multiple representations must be available via content negotiation:
+
+- `text/html; charset=utf-8` (**required** per RFC 9457): Include the title in an `<h1>`, ⋯, `<h6>`.
+- `application/json` (**required**): Include at least the keys `title` and `description`.
+- `text/x-markdown` (**recommended**): Include the title in an `#`, ⋯, `#####`.
+   If OpenAPI is used, use the schema’s [`response.description`](https://spec.openapis.org/oas/v3.1.0#fixed-fields-14).
+
+#### Extensions
+
+Always include extensions that a client would likely want to parse.
+For example, specify the incorrect request parameter or header, or the dependent resource for a 409 Conflict.
+Use kebab-case or camelCase according to the convention your overall API uses.
+These extensions might occasionally be redundant to headers, such as `Accept` and `RateLimit-Limit`; that’s fine.
+
+### Response headers
+
+#### Links
+
+If [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) links are used, they should be limited to direct connections.
 For example, if a `species` resource links to its `genus`, which links to `family`,
 `species` should **not** link to `family`.
 To avoid polluting JSON response bodies, put the links in
 [`Link` headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)
-or [`See` headers](/spec/hateoas-see-header.md).
-
-### Response headers
+or [`See` headers](../spec/hateoas-see-header.md).
 
 #### Content types
 
@@ -320,6 +369,20 @@ a resource id (or other value with a 1-1 correspondence with the resource),
 and a filename extension.
 Example: `Content-Disposition: attachment; filename="store-item-5221-3q.parquet"`
 
+#### Warnings
+
+Use the nonstandard header `Warning` for non-fatal issues.
+The header should follow this format:
+
+```text
+Warning: <description>{; <key>="<value>"}
+```
+
+??? example "Examples"
+
+    - "Warning: deprecated endpoint; use-instead="https://domain.tld/api/v2/endpoint"
+    - "Warning: non-canonical URI; canonical-uri="https://domain.tld/api/v2/search?filter[1]=color:eq:red|name:eq:apple"
+
 #### Other headers
 
 Include:
@@ -332,30 +395,5 @@ Include:
 - `Vary` (optionally)
 - `Cache-Control` (optionally)
 
-Omit, ignore, or don’t care about:
-
-- `Date`
-- `Age`
-- `Origin`
-- `Host`
-- `Server`
-- `From`
-
-### 418 I'm a Teapot
-
-418 I'm a Teapot may optionally be used to communicate with a client that has been locked out,
-for reasons other than ratelimiting.
-Although this status is nonstandard, some servers use it for similar reasons.
-
-Clients should respond to these situtations very differently than to other 4xx responses, such as 401, 403, and 429.
-A 418 conveys that:
-
-1. The client cannot rectify the problem;
-2. The server may or may not be willing to process a different request; and
-3. The server may or may not accept the same request if it is re-sent later.
-
-<b>Some use cases:</b>
-
-- **Suspicious queries**: The client has previously sent several suspicious queries.
-- **Clearly malicious query**: The client is currently sending a query that is clearly malicious.
-- **Excessive data**: The client has sent an excessive amount of data over a short period.
+You can omit `Date`, `Age`, `Origin`, `Host`, `Server`, and `From`.
+If they’re already being sent, that’s also fine.

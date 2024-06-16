@@ -22,7 +22,6 @@ repos:
       - id: fix-byte-order-marker
       - id: fix-encoding-pragma
         args: [--remove]
-      - id: check-illegal-windows-names
       - id: forbid-submodules
       - id: trailing-whitespace
 

@@ -55,11 +55,12 @@ inline-label  = label-1 ([^ ]+)=my-label
                 ; declare an inline rule, which can be used anywhere
 ```
 
+
 ## Grammar
 
-=== "regex-bnf"
+The specification is presented in both itself and in [W3C XML EBNF](https://www.w3.org/TR/REC-xml/#sec-notation).
 
-  The meta-grammar written in itself, probably with mistakes:
+=== "regex-bnf"
 
     ```text
     grammar         = statement+
@@ -132,8 +133,6 @@ inline-label  = label-1 ([^ ]+)=my-label
     ```
 
 === "W3C XML EBNF"
-
-    Using [W3C XML EBNF](https://www.w3.org/TR/REC-xml/#sec-notation):
 
     ```ebnf
     grammar         ::= statement+

@@ -92,7 +92,7 @@ according to [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).
 
 This includes optional extensions for images.
 
-**Using [regex-bnf](regex-bnf.md):**
+**Using [bnf-with-regex](advanced-bnf-with-regex.md):**
 
 ```text
 param          = where | return | sort | crop | scale | rotate

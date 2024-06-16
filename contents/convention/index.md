@@ -1,4 +1,22 @@
-# Coding guidelines & conventions
+# Conventions
+
+Recommendations for code, documentation, etc.
+
+## Contents
+
+[:fontawesome-solid-cloud: **APIs**](../convention/apis.md): REST APIs and data representation
+
+[:fontawesome-solid-book-open: **Documentation**](../convention/documentation.md): Writing and maintaining documentation
+
+[:fontawesome-solid-mug-hot: **Java**](../convention/java.md): Java and Kotlin conventions
+
+[:fontawesome-solid-code: **JavaScript**](../convention/javascript.md): JavaScript and TypeScript conventions
+
+[:fontawesome-solid-dragon: **Python**](../convention/python.md): Python conventions
+
+[:fontawesome-solid-terminal: **Scripts and build files**](../convention/scripts-and-build-files.md): Shell scripts, build files, etc.
+
+[:fontawesome-solid-database: **SQL**](../convention/sql.md): SQL conventions
 
 ## Usage
 

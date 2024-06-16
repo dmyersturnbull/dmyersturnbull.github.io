@@ -551,7 +551,7 @@ Grammars may be specified in any well-defined form.
 [ABNF](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
 (see [RFC5234](https://datatracker.ietf.org/doc/html/rfc5234)),
 [XML’s custom meta-grammar](https://www.w3.org/TR/xml/#sec-notation),
-and [regex-BNF](https://dmyersturnbull.github.io/post/regex-bnf) are recommended.
+and [regex-BNF](../spec/advanced-bnf-with-regex.md) are recommended.
 
 ??? rationale
 

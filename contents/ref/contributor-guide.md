@@ -32,7 +32,7 @@ gh repo fork https://github.com/<org>/<repo> --default-branch-only --clone
 ## Coding & committing
 
 It is best to configure Git to use your GPG keys.
-See the [Git, SSH, and GPG guide](../guide/git-ssh-gpg.md).
+See the [Git, SSH, and GPG guide](../guide/git-ssh-and-gpg.md).
 
 For open source projects, commit using `--signoff`,
 which indicates certifies under the [Developer Certificate of Origin](https://developercertificate.org/)
@@ -87,18 +87,9 @@ You can also refer to the [coding conventions](https://dmyersturnbull.github.io/
 
 ## Commit and issue types
 
-For more details, see the [GitHub labels document](github-labels.md).
+The allowed commit types are:
+`security`, `deprecation`, `feature`, `fix`, `perf`, `build`, `docs`, `test`, `ci`, `refactor`, `style`, and `chore`.
+Note that there is no `revert` type; instead, use the type that reflects the reversion commit.
+This will ordinarily be the same type as the commit being reverted.
 
-| Type        | Label               | Description                         |
-| ----------- | ------------------- | ----------------------------------- |
-| `security:` | `type: security`    | Fix a security issue                |
-| `feat:`     | `type: feature`     | Add or change a feature             |
-| `fix:`      | `type: fix`         | Fix a bug                           |
-| `docs:`     | `type: docs`        | Add or modify docs or examples      |
-| `build:`    | `type: build`       | Modify build, including Docker      |
-| `perf:`     | `type: performance` | Increase speed / decrease resources |
-| `test:`     | `type: test`        | Add or modify tests                 |
-| `refactor:` | `type: refactor`    | Refactor source code                |
-| `style:`    | `type: style`       | Improve style of source code        |
-| `chore:`    | `type: chore`       | Change non-source code              |
-| `ci:`       | `type: ci`          | Modify CI/CD                        |
+See the [supplemental labels document](../ref/issue-labels.md) for complete information.

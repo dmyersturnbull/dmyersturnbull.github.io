@@ -2,16 +2,17 @@ site_name: "Gaslit by a computer"
 docs_dir: "contents"
 site_dir: "docs"
 
-copyright: Copyright 2023, Douglas Myers-Turnbull
+copyright: "Copyright 2024, Douglas Myers-Turnbull"
 site_description: "Software guides, reference docs, and more."
 
 # Navigation menu
 nav:
   - Home: index.md
   - Reference docs:
+      - Overview: ref/index.md
       - Contributor guide: ref/contributor-guide.md
       - Maintainer guide: ref/maintainer-guide.md
-      - Issue labels: ref/github-labels.md
+      - Issue labels: ref/issue-labels.md
   - Conventions:
       - Overview: convention/index.md
       - Documentation: convention/documentation.md
@@ -22,20 +23,23 @@ nav:
       - JavaScript: convention/javascript.md
       - SQL: convention/sql.md
   - Specifications:
+      - Overview: spec/index.md
       - Advanced BNF with regex: spec/advanced-bnf-with-regex.md
       - HTTP GET search DSL: spec/http-get-search-dsl.md
       - HATEOAS See header: spec/hateoas-see-header.md
   - Setup guides:
+      - Overview: guide/index.md
       - Linux: guide/linux.md
       - macOS: guide/macos.md
       - Windows: guide/windows.md
-      - Git, SSH, and GPG: guide/git-ssh-gpg.md
+      - Git, SSH, and GPG: guide/git-ssh-and-gpg.md
       - Research projects: guide/research-projects.md
       - MariaDB: guide/mariadb.md
       - Mamba and Conda: guide/mamba-and-conda.md
       - FFmpeg: guide/ffmpeg.md
       - Arduino: guide/arduino.md
   - Posts & tutorials:
+      - Overview: post/index.md
       - Duck typing is quackery: post/duck-typing-is-quackery.md
       - Software test strategy guide: post/software-testing-strategy-guide.md
       - Testing scientific software: post/testing-scientific-software.md
@@ -61,12 +65,6 @@ theme:
     - tags
     - toc.follow
     - typeset
-  #icon:
-  #  logo: material/thunderstorm
-  #  repo: fontawesome/brands/github
-  #favicon:
-  #  logo: material/thunderstorm
-  #  repo: fontawesome/brands/github
   font:
     text: Noto Sans
     code: Noto Sans Mono
@@ -91,20 +89,16 @@ theme:
         icon: material/brightness-4
         name: Switch to system preference
   # :tyranno: repo_url: ${project.urls.Source}
-  repo_url: https://github.com/dmyersturnbull/cicd
-  extra:
-    consent:
-      title: Cookie consent
-      description: >-
-        This site uses cookies to remember your preferences and to enable analytics.
-        Please indicate your consent.
-      actions: [accept, reject, manager]
+  repo_url: https://github.com/dmyersturnbull/dmyersturnbull.github.io
 
 # Extensions
 markdown_extensions:
   - abbr
   - admonition
   - attr_list
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
   - pymdownx.betterem:
       smart_enable: all
   - codehilite:
@@ -113,6 +107,7 @@ markdown_extensions:
   - footnotes
   - markdown_include.include:
       base_path: contents
+  - md_in_html
   - meta
   - pymdownx.arithmatex:
       generic: true
@@ -137,6 +132,7 @@ markdown_extensions:
       repo: dmyersturnbull.github.io
   - pymdownx.saneheaders
   - pymdownx.smartsymbols
+  - pymdownx.snippets
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid
@@ -144,9 +140,6 @@ markdown_extensions:
           format: !!python/name:pymdownx.superfences.fence_code_format
   - pymdownx.tabbed:
       alternate_style: true
-      #slugify: !!python/object/apply:pymdownx.slugs.slugify
-      #  kwds:
-      #    case: lower
   - pymdownx.tasklist:
       custom_checkbox: true
   - pymdownx.tilde
@@ -157,12 +150,14 @@ markdown_extensions:
 
 extra_css:
   - stylesheets/extra.css
+  #- https://cdn.jsdelivr.net/npm/cookieconsent@3.1.1/build/cookieconsent.min.css
 
 extra_javascript:
-  - javascripts/mathjax.js
+  - js/mathjax.js
   - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
   - https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js
-  - javascripts/tablesort.js
+  - js/tablesort.js
+  - js/fixups.js
 
 plugins:
   - search

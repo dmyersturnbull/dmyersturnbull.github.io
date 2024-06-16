@@ -33,3 +33,10 @@
   -webkit-mask-image: var(--md-admonition-icon--advanced);
   mask-image: var(--md-admonition-icon--advanced);
 }
+
+.index {
+  font-size: x-large;
+  font-weight: 300;
+  margin-top: 9ex;
+  margin-bottom: 3ex;
+}
