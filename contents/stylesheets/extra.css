@@ -40,3 +40,12 @@
   margin-top: 9ex;
   margin-bottom: 3ex;
 }
+
+@keyframes copyAnimation {
+  0% { background-color: transparent; }
+  100% { background-color: lightgreen; }
+}
+
+.copy-animation {
+  animation: copyAnimation 0.5s ease;
+}
