@@ -24,10 +24,9 @@ It specifies:
 ## Development process overview
 
 There should be a 1-1-1-1-1 correspondence between
-issues, feature branches, pull requests, commits to the <i>main</i> branch, and changelog items.
+issues, feature branches, pull requests, commits to the *main* branch, and changelog items.
 This simplifies project management, makes development more transparent,
 and facilitates automation that reduces manual effort and potential human error.
-Complex things are hard; simple things are easy.
 
 ```mermaid
 flowchart LR
@@ -52,14 +51,6 @@ In fact, every entry can be linked to the corresponding issue, PR, and commit.
     - fix: correct return value of /api/v1/calculate-sigma when epsilon is 0
       (fixes [issue #14](https://github.com/org/repo/issues/14)):
       [PR:11](https://github.com/org/repo/pull/11)/[831e229c](https://github.com/org/repo/commit/831e229c)
-
-    ```markdown
-    ### Bug fixes
-
-    - fix: correct return value of /api/v1/calculate-sigma when epsilon is 0
-      (fixes [issue #14](https://github.com/org/repo/issues/14)):
-      [PR:11](https://github.com/org/repo/pull/11)/[831e229c](https://github.com/org/repo/commit/831e229c)
-    ```
 
 ### Branches
 
@@ -97,7 +88,7 @@ These must be in branches named `releases/<version>` (e.g., `releases/v1`).
 
 ### Issues
 
-Issues to be worked on must have exactly 1 `type:` label, and they should have the label `status: ready for dev`.
+Issues to be worked on must have exactly 1 `type:` label, and they should have the label `state: ready for dev`.
 Use `effort:` and `priority:` labels where helpful.
 
 Split large issues into bit-sized pieces and list those in the larger issue’s description.
@@ -114,8 +105,8 @@ Split large issues into bit-sized pieces and list those in the larger issue’s 
 
 ### Handling pull requests
 
-Do not submit a review until the required status checks completed successfully.
-(You can add comments before this.)
+Before required status checks have completed successfully, avoid submitting reviews.
+Instead, just comment.
 
 Squash the commits into one, and ensure the resulting commit message follows the
 [commit message format](#reference) specification.
@@ -146,9 +137,6 @@ Alpha/beta/RC MUST NOT be used out of order (e.g., **not** `alpha1`, `beta1`, `a
 Tags of the form `v<semver>` should result in full deployments.
 Tags of the form `v<major>` should automatically track their most recent semver tags.
 The `latest` tag should always match the main branch.
-
-Deploy off of the main branch or tags.
-Make sure tests passed on the main branch before deploying.
 
 ## Repository contents
 
@@ -194,73 +182,154 @@ Include the license file in the form `LICENSE-<spdx-id>.txt`.
 
 ### Conventional commit messages
 
-Commit messages must follow [Conventional Commits](https://www.conventionalcommits.org/) using the following types.
-The general pattern for the subject is `<type>[(<scope>)][!]: <subject>`,
-where `(<scope>)` is empty, `plugins`, or `i18n`; and `!` denotes a breaking change.
+Commit messages must follow a subset of [Conventional Commits](https://www.conventionalcommits.org/).
 
-!!! example "Example 1"
+- Breaking changes MUST use `!`.
+- The body SHOULD be written as CommonMark.
+  In that case, headings more significant than level 4 (`####`) MUST NOT be used.
+  (Treat the subject as a level 3 (`###`) heading.)
+  Imperative phrasing SHOULD be used.
+- Footers MUST be listed one per line in a single paragraph.
+- For a breaking change, if a body is included, the `BREAKING CHANGE:` footer MUST be present.
+- If a body is included, deprecations SHOULD be indicated by a `Deprecates:` footer
+  of the form `Deprecates: first, second`.
+- Closed issues MUST be listed in a footer of the form `Closes: #10, #22, #33`.
+- A set of allowed Git trailers is defined, and additional trailers SHOULD NOT be used.
+- Footers MUST be ordered as `BREAKING CHANGE:`, `Deprecates:`, `Closes:`, and then Git trailers.
+- If the Git trailer `Signed-off-by:` is used, it SHOULD be last.
+- Each commit type MUST be
+  `drop`, `depr`, `feat`, `security`, `fix`, `perf`, `build`, `docs`, `test`, `ci`, `refactor`, `style`, or `chore`.
+
+??? details "Allowed Git trailers"
+
+    - Acked-by
+    - Reviewed-by
+    - Helped-by
+    - Reported-by
+    - Mentored-by
+    - Suggested-by
+    - CC
+    - Noticed-by
+    - Tested-by
+    - Improved-by
+    - Thanks-to
+    - Based-on-patch-by
+    - Contributions-by
+    - Co-authored-by
+    - Requested-by
+    - Original-patch-by
+    - Inspired-by
+    - Signed-off-by
+
+!!! example "Examples – only message"
+
+    <b>Example 1:</b>
 
     ```text
     feat!: add schema
     ```
 
-!!! example "Example 2"
+    <b>Example 2:</b>
 
     ```text
     doc(i18n): add JP translation
     ```
 
-### Commit bodies and footers
+!!! example "Example – body and footers"
 
-Commit bodies may be be used to explain the change in more detail.
-Footers should follow the format described in the [reference](#reference).
+    ```text
+    feat!: add major new feature
 
-### Commit types
+    Introduce option to set custom template **for paid users only**.
 
-The allowed commit types are:
-`security`, `deprecation`, `feature`, `fix`, `perf`, `build`, `docs`, `test`, `ci`, `refactor`, `style`, and `chore`.
-Note that there is no `revert` type; instead, use the type that reflects the reversion commit.
-This will ordinarily be the same type as the commit being reverted.
+    Define template parameters:
+    - name
+    - status
 
-The following table shows how commit types map to issue labels and changelog sections.
-For completeness, other recommended labels are also shown.
-See the [supplemental labels document](../ref/issue-labels.md) for more information.
+    BREAKING CHANGE: /api/v1/generate-report endpoint
+    Closes: #14
+    Co-authored-by: Amelia Johnson <amelia@dev.com>
+    Co-authored-by: Cecilia Johnson <cecilia@dev.com>
+    Reviewed-by: Kerri Hendrix <kerri@dev.com>
+    Acked-by: Tom Monson <joe@dev.com>
+    Signed-off-by: Sadie Wu <sadie@dev.com>
+    ```
 
-| Label                   | Commit part    | Changelog section   | Bump  | Icon | Description                     | Color    |
-|-------------------------|----------------|---------------------|-------|------|---------------------------------|----------|
-| `breaking`              | `!`            | 💥 Breaking changes | major | 💥   | Breaking change                 | `000000` |
-| `help`                  | N/A            | N/A                 | N/A   | 👋   | Help needed                     | `40f040` |
-| `bookmark`              | N/A            | N/A                 | N/A   | 🔖   | Important for reference         | `ffff44` |
-| `type: security`        | `security:`    | 🗑️ Deprecations    | minor | 🔒️  | Fix a security issue            | `000060` |
-| `type: deprecation`     | `deprecation:` | 🔒️ Security        | minor | 🗑️  | Deprecate something public      | `101030` |
-| `type: feature`         | `feat:`        | ✨ Features          | minor | ✨    | Add or change a feature         | `000060` |
-| `type: fix`             | `fix:`         | 🐛 Bug fixes        | patch | 🐛   | Fix a bug                       | `000060` |
-| `type: docs`            | `docs:`        | 📝 Documentation    | patch | 📝   | Modify docs or examples         | `000060` |
-| `type: build`           | `build:`       | 🔧 Build system     | minor | 🔧   | Modify build or dependencies    | `000060` |
-| `type: performance`     | `perf:`        | ⚡️ Performance      | patch | ⚡️   | Reduce resource usage           | `000060` |
-| `type: test`            | `test:`        | 🍒 Miscellaneous    | none  | 🚨   | Add or modify tests             | `000060` |
-| `type: cicd`            | `ci:`          | 🍒 Miscellaneous    | none  | ⚙️   | Modify CI/CD                    | `000060` |
-| `type: refactor`        | `refactor:`    | 🍒 Miscellaneous    | none  | ♻️   | Refactor source code            | `000060` |
-| `type: style`           | `style:`       | skipped             | none  | 🎨   | Modify code style               | `000060` |
-| `type: chore`           | `chore:`       | skipped             | none  | 🧹   | Misc. change not to source      | `000060` |
-| `priority: critical`    | N/A            | N/A                 | N/A   | 🟥   | Must be fixed ASAP              | `ff6600` |
-| `priority: high`        | N/A            | N/A                 | N/A   | 🟧   | Stalls work; must be fixed soon | `cc9911` |
-| `priority: medium`      | N/A            | N/A                 | N/A   | 🟨   | Not blocking but important      | `ff6600` |
-| `priority: low`         | N/A            | N/A                 | N/A   | 🟩   | No need to rush                 | `99dd00` |
-| `state: ready for dev`  | N/A            | N/A                 | N/A   | 🏁   | Ready for development work      | `cccccc` |
-| `state: needs triage`   | N/A            | N/A                 | N/A   | 🚦   | Needs to be triaged             | `444444` |
-| `state: blocked`        | N/A            | N/A                 | N/A   | 🚧   | Blocked by another issue        | `999999` |
-| `state: needs details`  | N/A            | N/A                 | N/A   | 🏷️  | Requires ticket work            | `666666` |
-| `state: discarded`      | N/A            | N/A                 | N/A   | ✖️   | Will not be worked on           | `eeeeee` |
-| `state: invalid`        | N/A            | N/A                 | N/A   | ➖    | Duplicate, inadvertant, etc.    | `eeeeee` |
-| `effort: 1`             | N/A            | N/A                 | N/A   | 1️⃣  | Easy (t < 1 hr)                 | `300040` |
-| `effort: 2`             | N/A            | N/A                 | N/A   | 2️⃣  | Moderate (1 hr <= t < 4 hr)     | `600040` |
-| `effort: 3`             | N/A            | N/A                 | N/A   | 3️⃣️ | Hard (>= 4 hours)               | `900040` |
-| `effort: multipart`     | N/A            | N/A                 | N/A   | *️⃣  | References multiple issues      | `a00010` |
-| `scope: i18n`           | `(i18n)`       | N/A                 | N/A   | 🌐   | Relates to internationalization | `009000` |
-| `scope: plugins` (e.g.) | `(plugins)`    | N/A                 | N/A   | 🧩   | Relates to plugins              | `000090` |
+**Refer to the [supplemental labels document](../ref/issue-labels.md#table) for details.**
 
-## Reference
+#### Invalid and reverted changes
+
+Note that there is no `invalid` or `state: invalid`:
+Duplicate issues, issues created by mistake, uninterpretable issues, etc., should be
+[deleted](https://docs.github.com/en/issues/tracking-your-work-with-issues/deleting-an-issue).
+
+Also, there is no `revert` type.
+Instead, use the type that reflects the reversion commit.
+This might be `drop:` or the type of the reverted commit.
+**Label both commits with `announce: no`.**
+
+#### Forcibly omitting or including release notes entries
+
+Use `announce: no` and `announce: yes` to override which changes are included in the release notes.
+
+<b>`announce: no`</b> excludes changes that would normally be included (e.g. `feat:`).
+Use it for
+
+- reversions and reverted commits,
+- trivial changes, and
+- `docs:`, `tests:`, `style:`, etc. commits that support a `feat:` commit added in the same release.
+
+<b>`announce: yes`</b> adds changes that would normally be ommitted (e.g. `style`).
+Use it only to acknowledge unusually important `style` and `chore` contributions.
+
+#### Including dependent changes in one commit
+
+It is completely acceptable – and encouraged –
+to add tests and documentation for a new feature inside a `feat:` commit,
+to remove them inside a `drop:` commit,
+and to update them inside a `fix:` or `security:` commit.
+
+If separate commits were made, consider applying `announce: no` to some, as described in the section above.
+
+??? details
+
+    Effectively, some types can be subsumed into others.
+    This diagram details the allowed ways:
+
+    ```mermaid
+    graph TD
+        fix --> feat
+        security --> feat
+        perf --> feat
+        test --> fix
+        test --> feat
+        test --> perf
+        test --> security
+        docs --> feat
+        docs --> fix
+        ci --> build
+        build --> fix
+        refactor --> feat
+        refactor --> fix
+        refactor --> build
+        refactor --> ci
+        refactor --> test
+        refactor --> security
+        s["style"] --> any["*"]
+    ```
+
+### Scopes
+
+Scopes should be defined per project.
+If a scope is defined, it should be applied to all relevant commits,
+at least to those made after the scope’s introduction.
+
+Suggestions:
+
+- `i18n`
+- `plugins`
+
+### Reference
 
 !!! details "Pattern"
 
@@ -269,29 +338,10 @@ See the [supplemental labels document](../ref/issue-labels.md) for more informat
 
     <body>
 
-    [Breaks: <feature, etc.>]
+    [BREAKING CHANGE: <feature, etc.>]
     [Deprecates: <feature, etc.>]
     [Closes: #<issue>]
     [*: <author>]+
-
     Signed-off-by: <author>
     """
-    ```
-
-!!! example
-
-    ```text
-    feat!: add major new feature
-
-    Lots of things changed.
-    Details: ...
-    (This is the body.)
-
-    Breaks: /api/v1/calculate-sigma endpoint
-    Closes: #14
-    Co-authored-by: Amelia Johnson <amelia@dev.com>
-    Co-authored-by: Cecilia Johnson <cecilia@dev.com>
-    Reviewed-by: Kerri Hendrix <kerri@dev.com>
-    Acked-by: Tom Monson <joe@dev.com>
-    Signed-off-by: Sadie Wu <sadie@dev.com>
     ```

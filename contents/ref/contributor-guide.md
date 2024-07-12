@@ -11,17 +11,46 @@
 
     Or just link to individual sections.
 
-Feel free to ask a question on the Discussions tab.
-New issues and pull requests are also welcome.
+Contributions, including feature requests, bug reports, and pull requests, are always welcome.
+
 Contributors are asked to abide by the
 [GitHub community guidelines](https://docs.github.com/en/site-policy/github-terms/github-community-guidelines)
 and the [Contributor Code of Conduct, version 2.0](https://www.contributor-covenant.org/version/2/0/code_of_conduct/).
 
-## Starting work
+We try to keep contributing changes as easy as possible.
+To that end, only maintainers are responsible for final commit messages, coding style, etc.;
+you are free to follow our conventions or not.
 
-Install the [GitHub CLI](https://cli.github.com/) if you haven’t already.
-You may want to discuss with the maintainers before starting any work to avoid wasting any time.
-Please create an issue for this.
+## Contributing changes, step-by-step
+
+### Open an issue and ask
+
+Before writing any code, please **open an issue** to discuss the intended change.
+Please only address one issue per PR, and
+[link the PR to the issue](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue).
+For example, write `Fixes #123` in the PR description.
+
+Feel free to open a PR well before it’s complete; just mark it as a draft until it’s ready for review.
+
+### Setting up
+
+These steps are highly recommended, but they are not required to submit a PR.
+
+1. Configure Git to auto-convert line endings.
+
+   === "Linux and macOS"
+
+       `git config --global core.autocrlf input`
+
+   === "Windows"
+
+       `git config --global core.autocrlf true`
+
+2. Configure Git to use your GPG keys.
+   See the [Git, SSH, and GPG guide](../guide/git-ssh-and-gpg.md).
+
+3. Install [GitHub CLI](https://cli.github.com/).
+   Note that the instructions below use it.
 
 To fork and clone, run
 
@@ -29,67 +58,61 @@ To fork and clone, run
 gh repo fork https://github.com/<org>/<repo> --default-branch-only --clone
 ```
 
-## Coding & committing
+Install or upgrade [pre-commit](https://pre-commit.com/) by running `pip install pre-commit --upgrade`.
+Then, inside the repository, run `pre-commit install` to initialize pre-commit.
 
-It is best to configure Git to use your GPG keys.
-See the [Git, SSH, and GPG guide](../guide/git-ssh-and-gpg.md).
+### Make the changes
 
-For open source projects, commit using `--signoff`,
-which indicates certifies under the [Developer Certificate of Origin](https://developercertificate.org/)
-that you have the right to submit your contributions under this project’s license.
+Don’t worry about code formatting; pre-commit will handle it.
+If you want, you can refer to the
+[coding conventions guide](https://dmyersturnbull.github.io/convention/)
+for conventions beyond simple formatting.
+Note that those rules are extensive and ordinarily the responsibilty of maintainers.
 
-### Python
+Limit changes to those needed to close the issue associated with the PR.
+When your PR gets accepted, your commits get squashed into one commit linked to exactly one issue,
+which is automatically closed.
 
-Always run `hatch run fmt` before committing to auto-format your code.
+!!! warning
 
-To commit, use `hatch run commit --signoff`.
-You can also use `git commit` directly by following [supplemental commit messages](maintainer-guide.md#Reference).
+    Making unnecessary or unrelated changes in your PR is perhaps the only way to get it rejected.
+    The maintainers can reformat code, fix bugs, and rewrite a PR description.
+    However, they have no way to split up your PR.
 
-`--signoff` indicates certifies under the [Developer Certificate of Origin](https://developercertificate.org/)
-that you have the right to submit your contributions under this project’s license.
+### Commit the changes
 
-## Other languages
+!!! info "Developer Certificate of Origin"
 
-Format your code before committing.
-Commit with `git commit --signoff`.
+    For open source projects, commit using `--signoff`,
+    which indicates certifies under the [Developer Certificate of Origin](https://developercertificate.org/)
+    that you have the right to submit your contributions under this project’s license.
 
-## Submitting a pull request
+You do not need to follow any convention for commit messages.
+Write a message that you think is helpful.
 
-!!! tip
-    Feel free to solicit feedback on your changes by opening a draft pull request.
-    After that, `git push` to your fork to update the pull request.
-    To start, run
-
-    ```bash
-    gh pr create --fill --web --draft
-    ```
-
-Consider using `rebase -i` to clean up your commits.
+If your commits are messy (e.g. some are just fixups), consider fixing them `rebase -i`.
 Edit (`e`) commit messages to clarify them and fixup (`f`) any messages that should be excluded.
+
+### Open a PR
 
 To open a pull request, run
 
 ```bash
-gh pr create --fill --title '<type>: <message>' --web
+gh pr create --fill --title '<issue-title>' --web
 ```
 
-(Refer to the table below for the types.)
-When you’re ready, mark your pull request as "ready for review" on github.com or by running
+When you’re ready, mark your PR as "ready for review" on GitHub or by running
 
 ```bash
 gh pr ready <id>
 ```
 
-## Conventions
+!!! tip
 
-Maintainers can fix up your commits.
-You can also refer to the [coding conventions](https://dmyersturnbull.github.io/ref/contributor-guide/).
+    Feel free to solicit feedback on your changes by opening a draft pull request.
+    After that, `git push` to your fork to update the pull request.
+    To start, run
 
-## Commit and issue types
-
-The allowed commit types are:
-`security`, `deprecation`, `feature`, `fix`, `perf`, `build`, `docs`, `test`, `ci`, `refactor`, `style`, and `chore`.
-Note that there is no `revert` type; instead, use the type that reflects the reversion commit.
-This will ordinarily be the same type as the commit being reverted.
-
-See the [supplemental labels document](../ref/issue-labels.md) for complete information.
+        ```bash
+        gh pr create --fill --web --draft
+        ```
