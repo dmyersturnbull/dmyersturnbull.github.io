@@ -1,1 +1,0 @@
-# Git tips and microscripts

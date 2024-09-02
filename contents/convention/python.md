@@ -1,10 +1,14 @@
-
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 # Python conventions
 
 ## Modules
 
 Add all public members to `__all__`, declared immediately after the imports.
-(Note that [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings) requires this.)
+(Note that [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings) requires `__all__`.)
 
 Use `mainpkg/__init__.py` to `import` the most important classes.
 Do not set `__author__` or similar fields, but do set `mainpkg/__version__`.
@@ -45,7 +49,7 @@ For example:
 
 Use [pydantic](https://pydantic-docs.helpmanual.io/) or
 [dataclasses](https://docs.python.org/3/library/dataclasses.html).
-Most libraries should use dataclasses only to avoid a dependency on pydantic.
+Most libraries should use only dataclasses to avoid a dependency on pydantic.
 Use immutable types unless there’s a compelling reason otherwise.
 
 ??? Example
@@ -183,9 +187,12 @@ Counter:::concrete --> MutableMapping
 
 ## Class members
 
-Use `@abstractmethod` in favor of `@staticmethod`;
-`@staticmethod` should only be used in the rare cases where `@abstractmethod` cannot be used.
-As a general rule, prefer using a regular method over an `@abstractmethod`.
+Never use `@staticmethod`, and avoid `@abstractmethod`.
+Replace static factory `@abstractclass` methods with property factories,
+to separate the creation of an object from its API.
+Apply inversion of control.
+
+### Ordering members
 
 Sort class members in the following order.
 

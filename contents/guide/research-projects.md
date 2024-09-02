@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 # Research projects
 
 There are some great resources on good data organization, such as the
@@ -7,13 +12,16 @@ Here, I’ll document the aspects of my protocols that work well.
 ## Main ideas
 
 **✅ DO:**
-Designate data as either _living_ or _frozen_.
+Designate data as either **_living_ or _frozen_**.
 Code should never read from living files and should never write to frozen files.
 
 **✅ DO:**
 Indicate manually curated / edited data as such.
 When ready, make a frozen copy and add a timestamp.
 Let scripts read the frozen copy.
+
+**❌ DO NOT:**
+Have scripts read living data.
 
 **❌ DO NOT:**
 Just organize into `input/` and `output/` directories.
@@ -24,12 +32,12 @@ Reorganize your files if your current structure isn’t working.
 ## Example
 
 ```bash
-├── src
+├── src/
 │   └── pkg/
 │       ├── __init__.py
 │       ├── generate_raw_name_mapping.py
 │       └── analyze.py
-├── data
+├── data/
 │   ├── temp-output/
 │       ├── raw-name-mapping.tsv
 │       └── figures/

@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 # HATEOAS `See` header
 
 !!! tip "Status: ready to use"
@@ -73,7 +78,6 @@ See: <https://api.tld>; rel="delete"; method="DELETE", <https://api.tld?page=2>;
 - This resource: `metadata`, `data`
 - Context: `about`, `history`
 - Other resources: `related`
-
 
 ## Python encoder and decoder
 

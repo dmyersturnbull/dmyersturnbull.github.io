@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 # Contributor guide
 
 !!! abstract "How to use these docs"
@@ -18,18 +23,15 @@ Contributors are asked to abide by the
 and the [Contributor Code of Conduct, version 2.0](https://www.contributor-covenant.org/version/2/0/code_of_conduct/).
 
 We try to keep contributing changes as easy as possible.
-To that end, only maintainers are responsible for final commit messages, coding style, etc.;
-you are free to follow our conventions or not.
+To that end, only maintainers are responsible for final commit messages, code style, etc.;
+you don’t need to follow any conventions.
 
 ## Contributing changes, step-by-step
 
 ### Open an issue and ask
 
 Before writing any code, please **open an issue** to discuss the intended change.
-Please only address one issue per PR, and
-[link the PR to the issue](https://docs.github.com/en/github/managing-your-work-on-github/linking-a-pull-request-to-an-issue).
-For example, write `Fixes #123` in the PR description.
-
+Please only address one issue per PR, and write `Fixes #123` in the description.
 Feel free to open a PR well before it’s complete; just mark it as a draft until it’s ready for review.
 
 ### Setting up
@@ -63,7 +65,7 @@ Then, inside the repository, run `pre-commit install` to initialize pre-commit.
 
 ### Make the changes
 
-Don’t worry about code formatting; pre-commit will handle it.
+Don’t worry about code style: both pre-commit and a GitHub workflow will handle that.
 If you want, you can refer to the
 [coding conventions guide](https://dmyersturnbull.github.io/convention/)
 for conventions beyond simple formatting.
@@ -80,12 +82,6 @@ which is automatically closed.
     However, they have no way to split up your PR.
 
 ### Commit the changes
-
-!!! info "Developer Certificate of Origin"
-
-    For open source projects, commit using `--signoff`,
-    which indicates certifies under the [Developer Certificate of Origin](https://developercertificate.org/)
-    that you have the right to submit your contributions under this project’s license.
 
 You do not need to follow any convention for commit messages.
 Write a message that you think is helpful.

@@ -1,9 +1,16 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 # HTTP GET search DSL
 
 !!! tip "Status: ready to use"
 
-    This specification is legitimately useful and ready to use.
-    Small changes may be needed.
+    This specification is legitimately useful and ready to be used.
+	(It’s currently used in a production environment.)
+	Take it, modify it, use it. (CC-BY-SA)
+	_Note: The image extension is experimental._
 
 ## Idea
 
@@ -26,67 +33,10 @@ would look like as an alternative to GraphQL.
 
 ### † URI safety
 
-The characters `-`, `~`, `.`, `_`, `=`, `?`, `/`, `!`, `$`, `+`, `'`, `(`, `)`, `*`, `+`, and `,`
-do not require percent encoding when used in a URI _query_
-according to [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986).
-
-!!! bug "`urlencode`"
-
-    Many `urlencode` implementations will encode these characters regardless.
-
-!!! note "Note 1"
-
-    This is because the 1994 [RFC 1738](https://datatracker.ietf.org/doc/html/rfc1738) for URLS,
-    which RFC 3986 obsoletes, had this language:
-
-    > Thus, only alphanumerics, the special characters "$-_.+!*'(),",
-      and reserved characters used for their reserved purposes may be used unencoded within a URL.
-
-    RFC 3986 instead says:
-
-    > If data for a URI component would conflict with a reserved character’s purpose as a delimiter,
-      then the conflicting data must be percent-encoded before the URI is formed.
-
-    `urlencode` implementations are not smart enough to understand this.
-    Smart URI `urlencode` implementations could be introduced under new names such as `uriencode`
-    without breaking backwards compatibility.
-    I don’t know why that hasn’t happened.
-
-!!! note "Note 2"
-
-    Technically, RFC 3986 splits reserved characters into two sets, `gen-delims` and `sub-delims`:
-
-    ```abnf
-       gen-delims  = ":" / "/" / "?" / "#" / "[" / "]" / "@"
-       sub-delims  = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
-       unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
-    ```
-
-    It then specificially forbids using `gen-delims` anywhere outside of their reserved meanings,
-    but also says about query strings:
-
-    > The characters slash ("/") and question mark ("?") may represent data within the query component.
-      Beware that some older, erroneous implementations may not handle such data correctly [...]
-
-    So, the full set of allowed characters in URI queries is
-
-    ```abnf
-    unreserved / sub-delims / "/" / "?"`.
-    ```
-
-!!! note "Note 3"
-
-    Ok, fine. RFC 3986 also says:
-
-    > [RFC 3986] excludes portions of RFC 1738 that defined the specific syntax of individual URI schemes;
-      those portions will be updated as separate documents.
-
-    The HTTP-specific part of RFC 1738 states (where `(<searchpart>` means `query`):
-
-    > Within the <path> and <searchpart> components, "/", ";", "?" are reserved.
-      The "/" character may be used within HTTP to designate a hierarchical structure.
-
-    So there is no HTTP-specific ban on our `sub-delims`.
+You only need to escape characters in the regex class `[:/?#[]@]` inside a URI query.
+See
+[URI-safe characters](../post/uri-safe-characters.md)
+for a dive into the URI RFCs.
 
 ## Grammar
 
@@ -94,41 +44,37 @@ This includes optional extensions for images.
 
 **Using [bnf-with-regex](advanced-bnf-with-regex.md):**
 
+### Main grammar
+
 ```text
-param          = where | return | sort | crop | scale | rotate
+param          = where | return | sort
 where          = 'where[' INDEX ']=' condition ('|' condition)*
 where          = param-defn condition ('|' condition)*
-param-defn     = 'where[' INDEX ']='
-condition      = key ':' str-verb ':' STR
-               | spec(str-verb) STR
-               | spec(int-verb) INT
-               | spec(float-verb) FLOAT
-               | spec(boolean-verb) BOOLEAN
-               | spec(datetime-verb) DATETIME
-               | spec(defined-verb) BOOLEAN
-               | spec(contains-verb) (STR | INT | BOOLEAN)
-               | spec(size-verb) LITERAL-NONNEG-INT
-               | spec(key-verb) key
+param-defn     = 'where' '(' INDEX ')' '='
+condition      = key ':' STR-VERB ':' STR
+               | spec(STR-VERB) STR
+               | spec(INT-VERB) INT
+               | spec(FLOAT-VERB) FLOAT
+               | spec(BOOLEAN-VERB) BOOLEAN
+               | spec(DATETIME-VERB) DATETIME
+               | spec(DEFINED-VERB) BOOLEAN
+               | spec(CONTAINS-VERB) (STR | INT | BOOLEAN)
+               | spec(SIZE-VERB) LITERAL-NONNEG-INT
+               | spec(KEY-VERB) key
 
 spec(verb)     = key ':' verb ':'
 return         = 'get=' key ('|' key)*
 sort           = 'sort=' sort-spec ('|' sort-spec)*
 sort-spec      = ASCENDING? key
-str-verb       = 'eq' | 'neq' | 'regex'
-int-verb       = 'eq' | 'neq' | 'lt' | 'gt' | 'le' | 'ge'
-float-verb     = 'lt' | 'gt' | 'le' | 'ge'
-boolean-verb   = 'eq'
-defined-verb   = 'defined'
-contains-verb  = 'contains' | 'does-not-contain'
-size-verb      = 'has-size' | 'has-min-size' | 'has-max-size'
-key-verb       = 'eq-key' | 'neq-key' | 'lt-key' | 'gt-key' | 'le-key' | 'ge-key' | 'in-key'
 key            = KEY-NODE ( '.' KEY-NODE )*
-crop           = 'crop=' ( coordinate=top-left 'x' coordinate=bottom-right
-scale          = 'scale=' ( INT | '1/' INT )
-orientation    = 'orientation=' ( ROTATE | FLIP )
-coordinate     = '(' INT ',' INT ')'
-ROTATE         = 'rotate-90' | 'rotate-180' | 'rotate-270'
-FLIP           = 'flip-horizontal' | 'flip-vertical' | 'flip-top-left' | 'flip-top-right'
+STR-VERB       = 'eq' | 'neq' | 'regex'
+INT-VERB       = 'eq' | 'neq' | 'lt' | 'gt' | 'le' | 'ge'
+FLOAT-VERB     = 'lt' | 'gt' | 'le' | 'ge'
+BOOLEAN-VERB   = 'eq'
+DEFINED-VERB   = 'defined'
+CONTAINS-VERB  = 'has-value' | 'lacks-value'
+SIZE-VERB      = 'has-size' | 'has-min-size' | 'has-max-size'
+KEY-VERB       = 'eq-key' | 'neq-key' | 'lt-key' | 'gt-key' | 'le-key' | 'ge-key' | 'in-key'
 KEY-NODE       = [A-Za-z0-9_-]+
 INDEX          = LITERAL-POSITIVE-INT
 ASCENDING      = '-'
@@ -139,20 +85,57 @@ NORMAL-CHAR    = ALPHANUM | [_.~-]
 SPECIAL-CHAR   = [=!$()*+,/?]
 ```
 
+### Image extension
+
+```text
+param          = where | return | sort | crop | scale | rotate
+
+crop           = 'crop=' ( coordinate=top-left 'x' coordinate=bottom-right )
+scale          = 'scale=' ( INT | '1/' INT )
+rotate         = 'rotate=' ( ROTATE | FLIP )
+coordinate     = '(' INT ',' INT ')'
+ROTATE         = '90' | '180' | '270'
+FLIP           = 'flip-x' | 'flip-y' | 'flip-top-left' | 'flip-top-right'
+```
+
 Although reserved characters are allowed in keys, avoid them where possible.
 Also note that the grammar **restricts queries to conjunctive normal form!**
 
 ## Example
 
 ```http
-GET https://things.tld/food?where[1]=type:eq:fruit|grams:lt:5.0&where[2]=name:regex:.+?apple
+GET https://things.tld/food?where=type:eq:fruit|grams:lt:5.0&where=name:regex:.+?apple
 HTTP/3
 Content-Type: text/json
 ```
 
-## Normalization
+!!! tip
 
-The DSL has a dual in JSON.
+    If you dislike exploded query paramters (i.e. `key=value-1&key=value-2`),
+    consider appending `(n)` to the each key; e.g. `where(1)=...&where(2)=...`.
+    This is differs from the form-field paramter convention of `[]`,
+    but there’s really no need to follow that, and `()` doesn’t need percent-encoding.
+
+## Canonicalization
+
+Canonicalize a URI by these steps:
+
+1. Extract the query arguments (values of the `where` parameters).
+2. Sort the arguments lexigraphically (per the order in Unicode).
+3. Re-number the `where(.)` parameters accordingly.
+4. Stitch the URI back together
+
+!!! example "For the prior example"
+
+    1. Extract `type:eq:fruit|grams:lt:5.0` and `name:regex:.+?apple`.
+    2. Sort. `n` comes before `t`, so the order should be reversed.
+    3. Set `where=name:regex:.+?apple` and `where=type:eq:fruit|grams:lt:5.0`.
+    4. Concatentate to get
+         `https://things.tld/food?where=name:regex:.+?apple&where=type:eq:fruit|grams:lt:5.0`
+
+## JSON dual
+
+The DSL has a JSON array dual:
 
 ??? details "Example"
 
@@ -178,6 +161,8 @@ The DSL has a dual in JSON.
     ]
     ```
 
+Starting at nesting level $L=0$, the operator is _AND_ for even $L$ and _OR_ for odd $L$.
+
 A cache key can be obtained by converting to JSON, sorting, minifying, computing a hash, and base64url-encoding.
 Pagination parameters and request headers such as `If-Match` should be considered.
 For example, a pagination cursor/limit pair can be added to the JSON, and the ETag compared separately.
@@ -187,7 +172,7 @@ For example, a pagination cursor/limit pair can be added to the JSON, and the ET
 ### `get`
 
 List the fields to return ala GraphQL.
-Field names are delimited `|`.
+Field names are delimited by `|`.
 
 !!! example
 
@@ -203,6 +188,11 @@ Note that a total ordering is guaranteed if and only if at least one field is un
 
 ## Images
 
+### format
+
+`/api/image/{id}{suffix}` is recommended, but `format={format}` is acceptable.
+Example: `/api/image/9hfzk2lr-01.avif` and `/api/image/9hfzk2lr-01.webp`.
+
 ### `crop`
 
 Extracts a rectangular subregion of an image, specified in terms of pixels.
@@ -217,18 +207,27 @@ Examples:
 - `scale=2` doubles the size.
 - `scale=1/2` halves the size.
 
-### `orientation`
+!!! rationale
 
-These are allowed.
-Note that there is a 1-1 correspondence between the parameter and the orientation.
-The allowed values cover all 8 possible orientations except for the identity (which is the default).
+    This preserves relative magnitudes.
+    `1/40` reveals the intent more clearly than `0.025`.
 
-| parameter                     | effect                        |
-|-------------------------------|-------------------------------|
-| `orientation=rotate-90`       | rotate 90 degrees clockwise   |
-| `orientation=rotate-180`      | rotate 180 degrees clockwise  |
-| `orientation=rotate-270`      | rotate 270 degrees clockwise  |
-| `orientation=flip-horizontal` | flip horizontally             |
-| `orientation=flip-vertical`   | flip vertically               |
-| `orientation=flip-top-left`   | flip top-left to bottom-right |
-| `orientation=flip-top-right`  | flip top-right to bottom-left |
+### `rotate`
+
+Rotations and reflections are supported by a single parameter, `rotate`, an enum of 7 values.
+
+I couldn’t think of a good name for this parameter.
+
+Yes, `rotate` isn’t exactly correct here.
+`orient` is a reasonable alternative, though it seems too vague.
+
+| `rotate=` (recommended) | `orient=`           | effect                        |
+|-------------------------|---------------------|-------------------------------|
+| ``                      | ``                  | none / identity               |
+| `90`                    | `rotate-90`         | rotate 90 degrees clockwise   |
+| `180`                   | `rotate-180`        | rotate 180 degrees clockwise  |
+| `270`                   | `rotate-270`        | rotate 270 degrees clockwise  |
+| `flip-x`                | `flip-x`            | flip horizontally             |
+| `flip-y`                | `flip-y`            | flip vertically               |
+| `flip-top-left`         | `flip-top-left`     | flip top-left to bottom-right |
+| `flip-top-right`        | `flip-bottom-right` | flip top-right to bottom-left |

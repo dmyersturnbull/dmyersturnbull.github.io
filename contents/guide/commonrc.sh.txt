@@ -1,0 +1,407 @@
+#######################################################################################################################
+#                                       Set PATH and other env vars
+#######################################################################################################################
+
+export PATH
+PATH=/opt/jdk22/bin:$PATH
+PATH=/opt/maven-3.9/bin:$PATH
+PATH=/opt/idea/bin:$PATH
+
+export JAVA_HOME=/opt/jdk22
+
+# ARE YOU KIDDING ME, UBUNTU?
+alias python=python3
+alias pip=pip3
+
+
+
+#######################################################################################################################
+#                                                   Self-aliases
+#######################################################################################################################
+
+# Prevent `chown -R xx . /`.
+# The same goes for chmod and chgrp
+alias chown='chown --preserve-root'
+alias chmod='chmod --preserve-root'
+alias chgrp='chgrp --preserve-root'
+
+# These are colorful/nice variants of commands
+alias grep='grep --color=auto'
+alias egrep='egrep --color=auto'
+alias fgrep='fgrep --color=auto'
+
+
+
+#######################################################################################################################
+#                                               Eza and ls
+#######################################################################################################################
+
+e() {
+  eza \
+    --all \                         # Show all files, including hidden
+    --sort=name \                   # Sort by name
+    --group-directories-first \     # List directories before other files
+    --icons \                       # Display icons
+    --created \                     # Show creation time
+    --modified \                    # Show modification time
+    --git                           # Show git status
+}
+
+ee() {
+  eza \
+    --all \                         # Show all files, including hidden
+    --sort=name \                   # Sort by name
+    --group-directories-first \     # List directories before other files
+    --icons \                       # Display icons
+    --created \                     # Show creation time
+    --modified \                    # Show modification time
+    --git \                         # Show git status
+    --long                          # Use long listing format
+}
+
+eeg() {
+  eza \
+    --all \                         # Show all files, including hidden
+    --sort=name \                   # Sort by name
+    --group-directories-first \     # List directories before other files
+    --icons \                       # Display icons
+    --created \                     # Show creation time
+    --modified \                    # Show modification time
+    --git \                         # Show git status
+    --long \                        # Use long listing format
+    --grid                          # Display in grid format
+}
+
+
+
+
+#######################################################################################################################
+#                                                Convenience utils
+#######################################################################################################################
+
+# These are nice as navigation shorthands
+alias ..='cd ..'
+alias ...='cd ../../../'
+alias ....='cd ../../../../'
+alias .....='cd ../../../../'
+
+# 'cd', but make it if it doesn't exist
+cdd() {
+    mkdir "$1" && cd "$1"
+}
+cdd.() {
+    mkdir "../$1" && cd "../$1"
+}
+
+gitroot() {
+    z=$(git rev-parse --show-toplevel 2>/dev/null) && echo "${z}" || { >&2 echo "Not in a Git repo"; return 1; }
+}
+
+vpy() {
+    repo_path=$(gitroot) || return 1
+    venv_path="${repo_path}/venv/bin/python"
+    [[ -x "${venv_path}" ]] && "${venv_path}" "$@" || { >&2 echo "No venv at ${venv_path}"; return 1; }
+}
+
+vpip() {
+    repo_path=$(gitroot) || return 1
+    venv_path="${repo_path}/venv/bin/pip"
+    [[ -x "${venv_path}" ]] && "${venv_path}" "$@" || { >&2 echo "No venv at ${venv_path}"; return 1; }
+}
+
+# Run chown recursively
+grab() {
+    sudo chown -R ${USER}:${USER} ${1:-.}
+}
+
+# Replacement for 'cp' that is secretly rsync
+copy () {
+  rsync \
+    --preserve-permissions \ # Preserve permissions
+    --owner \                # Preserve owner
+    --group \                # Preserve group
+    --backup \               # Make backups of existing files
+    --relative \             # Use relative path names
+    --human-readable \       # Output numbers in a human-readable format (short option)
+    --human-readable \       # Output numbers in a human-readable format (long option)
+    --progress               # Show progress during transfer
+}
+
+# Extract any archive type
+# Modified from https://serverfault.com/questions/3743/what-useful-things-can-one-add-to-ones-bashrc
+extract () {
+   if [[ ! -f "$1" ]] ; then
+       >&2 echo "'$1' is not a file"
+       exit 2
+   fi
+   case "$1" in
+       *.tar.bz2)   tar xvjf "$1"    ;;
+       *.tar.gz)    tar xvzf "$1"    ;;
+       *.bz2)       bunzip2 "$1"     ;;
+       *.rar)       unrar x "$1"     ;;
+       *.gz)        gunzip "$1"      ;;
+       *.tar)       tar xvf "$1"     ;;
+       *.tbz2)      tar xvjf "$1"    ;;
+       *.tgz)       tar xvzf "$1"    ;;
+       *.zip)       unzip "$1"       ;;
+       *.Z)         uncompress "$1"  ;;
+       *.snappy)    snunzip "$1"     ;;
+       *.sz)        snunzip "$1"     ;;
+       *.br)        brotli -d "$1"   ;;
+       *.xz)        unxz "$1"        ;;
+       *.lz4)       unlz4 "$1"       ;;
+       *.lzma)      unlzma  "$1"     ;;
+       *.zst)       unzstd "$1"      ;;
+       *.7z)        7z x "$1"        ;;
+       *)           >&2 echo "I don't know how to extract '$1'"; exit 1 ;;
+   esac
+ }
+
+
+
+#######################################################################################################################
+#                                                Git utils
+#######################################################################################################################
+
+setup_git_aliases() {
+
+  # 'stat' alias -- Show working tree status in short format with branch info
+  # Arguments:
+  #   status                 # Show the working tree status
+  #   --short                # Output in the short-format
+  #   --branch               # Show branch information
+  git config \
+    --global \
+    alias.stat \
+    '
+    status
+      --short
+      --branch
+    '
+
+  # 'lg' alias -- Show commit logs in a condensed single line per commit
+  # Arguments:
+  #   --oneline             # Condense each commit to a single line
+  git config \
+    --global \
+    alias.lg \
+    '
+    log
+      --oneline
+    '
+
+  # 'graph' alias -- Show commit logs with an ASCII graph of branch and merge history
+  # Arguments:
+  #   --graph               # Display an ASCII graph of the branch and merge history
+  git config \
+    --global \
+    alias.graph \
+    '
+    log
+      --graph
+    '
+
+  # 'graphh' alias -- Show commit logs with a compact summary and ASCII graph of branch and merge history
+  # Arguments:
+  #   --graph               # Display an ASCII graph of the branch and merge history
+  #   --compact-summary     # Display a compact summary of the commit log
+  git config \
+    --global \
+    alias.graphh \
+    '
+    log
+      --graph
+      --compact-summary
+    '
+
+  # 'graphhh' alias -- Show commit logs with cumulative counts, compact summary, and ASCII graph of branch and merge history
+  # Arguments:
+  #   --graph               # Display an ASCII graph of the branch and merge history
+  #   --compact-summary     # Display a compact summary of the commit log
+  #   --cumulative          # Display cumulative commit counts
+  git config \
+    --global \
+    alias.graphhh \
+    '
+    log
+      --graph
+      --compact-summary
+      --cumulative
+    '
+
+  # 'logdiff' alias -- Show commit logs with full diff and various diff options
+  # Arguments:
+  #   --full-diff                  # Display full diff
+  #   --unified=1                  # Show diff with one line of context
+  #   --color=always               # Always show colored diff
+  #   --ignore-blank-lines         # Ignore changes whose lines are all blank
+  #   --ignore-space-at-eol        # Ignore changes in whitespace at EOL
+  #   --diff-algorithm=histogram   # Use histogram diff algorithm
+  #   --find-renames=50            # Detect renames with a threshold of 50%
+  #   --find-copies=50             # Detect copies with a threshold of 50%
+  #   --color-moved=zebra          # Highlight moved lines in a "zebra" pattern
+  #   --color-moved-ws             # Highlight moved whitespace
+  git config \
+    --global \
+    alias.logdiff \
+    '
+    log
+      --full-diff
+      --unified=1
+      --color=always
+      --ignore-blank-lines
+      --ignore-space-at-eol
+      --diff-algorithm=histogram
+      --find-renames=50
+      --find-copies=50
+      --color-moved=zebra
+      --color-moved-ws
+    '
+
+}
+
+# Run the setup function if git is available
+if command -v git >/dev/null 2>&1; then
+  setup_git_aliases
+else
+  >&2 echo "Git is not installed or not found in PATH"
+fi
+
+
+
+#######################################################################################################################
+#                                          Aliases for processes, ports, etc.
+#######################################################################################################################
+
+# Other useful commands: 'dig' and 'lsof'
+
+# This will show open ports in a compact form
+ports() {
+  netstat \
+    --tcp \        # Show TCP connections
+    --udp \        # Show UDP connections
+    --listening \  # Show only listening sockets
+    --numeric \    # Show numerical addresses
+    --programs     # Show the program name for each connection
+}
+
+# List open file handles for this shell
+handles() {
+  ls \
+    --long \       # Long listing format
+    --all \        # Do not ignore entries starting with .
+    /proc/$$/fd    # File descriptors for the current shell process
+}
+
+fre() {
+  free \
+    --human        # Show human-readable output
+}
+
+usg() {
+  vmstat \
+    --active       # Show active virtual memory
+}
+
+iousg() {
+  sudo iotop \
+    --only \       # Only show processes or threads actually doing I/O
+    --batch        # Suppress interactive prompts
+}
+
+resolvedns() {
+  resolvectl \
+    dns  # Show DNS configuration
+}
+
+threads() {
+  ps \
+    --all \          # Show all processes
+    --full \         # Full format listing
+    --long \         # Long format
+    --threads \      # Show threads
+    --sort=y \       # Sort by controlling terminal
+    --headers        # Print header lines
+}
+
+lssockets() {
+  sudo ss \
+    --listening \  # Show listening sockets
+    --processes    # Show process using the socket
+}
+
+lstcp() {
+  sudo ss \
+    --listening \  # Show listening sockets
+    --processes \  # Show process using the socket
+    --tcp          # Show only TCP sockets
+}
+
+lsudp() {
+  sudo ss \
+    --listening \  # Show listening sockets
+    --processes \  # Show process using the socket
+    --udp          # Show only UDP sockets
+}
+
+
+
+
+#######################################################################################################################
+#                                                Misc utils
+#######################################################################################################################
+
+# Function to search for TODO comments
+findtodos() {
+    local directory=$1
+    local suffix='*.java'
+
+    # Parse optional parameters using a while loop
+    shift  # Skip the first argument
+    while (( $# > 0 )); do
+        case "$1" in
+            --suffix)
+                suffix="$2"
+                shift 2
+                ;;
+            --) # End of all options
+                shift
+                break
+                ;;
+            *)  # Default case: No more options, so break out of the loop
+                break
+                ;;
+        esac
+    done
+
+    # Start the Markdown table
+    local fmt="%-20s | %-4s | %-90s\n"
+    printf "${fmt}" "File" "Line" "Comment"
+    echo "| -------------------- | ---- | --------------------------------------------------------------------------- |"
+
+    # Grep to find TODO comments
+    grep \
+      --binary-files=without-match \
+      --recursive \
+      --line-number \
+      --include="$suffix" \
+      'TODO' \
+      "${directory}" | awk -F':' '
+        {
+            # Remove "TODO" or "TODO:" from the beginning of the comment
+            comment = substr($0, index($0, $3));
+            sub(/^[ \t]*TODO[:]?[ \t]*/, "", comment);
+            printf "'"${fmt}"'" "$1" "$2" "${comment}"
+        }
+    '
+}
+
+update() {
+    sudo apt update
+    sudo apt upgrade
+    sudo apt dist-upgrade
+    sudo snap refresh
+}
+
+# Yes, the file is supposed to end here. (Keep this line.)
+#######################################################################################################################

@@ -1,6 +1,8 @@
-# SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to CICD
-# SPDX-PackageHomePage: https://github.com/dmyersturnbull/cicd
+# SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to Tyrannosaurus
+# SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
 # SPDX-License-Identifier: Apache-2.0
+#
+# Modifications were made from the original source.
 
 # Check out https://pre-commit.com/ for documentation
 minimum_pre_commit_version: 3.7.0
@@ -12,7 +14,7 @@ repos:
       - id: check-merge-conflict
       - id: check-toml
       - id: check-json
-      - id: check-shebang-scripts-are-executable
+      #- id: check-shebang-scripts-are-executable
       - id: check-symlinks
       - id: check-yaml
         exclude: ^recipes/.*
@@ -24,13 +26,6 @@ repos:
         args: [--remove]
       - id: forbid-submodules
       - id: trailing-whitespace
-
-  # --- Commit msg checks ---
-  - hooks:
-      - id: commitizen
-        stages: ["commit-msg"]
-    repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.27.0
 
   # --- Linters ---
   - repo: https://github.com/astral-sh/ruff-pre-commit

@@ -1,4 +1,4 @@
-# Unicode symbol snatcher
+# Click-to-copy symbols
 
 This is here because I sometimes used Windows and don’t know the shortcuts.
 

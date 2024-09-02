@@ -1,4 +1,3 @@
-
 function copyToClipboard(symbol, element) {
   navigator.clipboard.writeText(symbol)
     .then(

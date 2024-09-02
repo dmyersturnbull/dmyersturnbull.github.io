@@ -1,3 +1,8 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 # Maintainer guide
 
 !!! abstract "How to use these docs"
@@ -35,13 +40,12 @@ flowchart LR
 
 ## Changelog generation
 
-A very prominent automation this enables is automatic generation of actually useful changelogs.
+This enables generation of changelogs that are actually useful.
 It allows
-[commitizen](https://github.com/commitizen-tools/commitizen),
-[GitHub’s automatically generated release notes feature](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes),
+[GitHub’s automatically generated release notes feature](https://docs.github.com/en/repositories/releasing-projects-on-github/automatically-generated-release-notes)
 and other tools to produce well-organized changelogs that cover every significant change
-but exclude unimportant ones (e.g. with commit type `style`).
-The changelog entries can be linked, too.
+but exclude unimportant ones (e.g. `style`).
+Changelog entries can be linked, too.
 In fact, every entry can be linked to the corresponding issue, PR, and commit.
 
 ??? example
@@ -56,15 +60,15 @@ In fact, every entry can be linked to the corresponding issue, PR, and commit.
 
 Use
 [trunk-based development](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development).
-In that terminology, a <i>feature branch</i> is a branch to be merged into <i>main</i>.
+In that terminology, a _feature branch_ is a branch to be merged into <i>main</i>.
 All development should happen in feature branches, and short-lived feature branches are preferred.
 Name feature branches `<type>/<issue>-<description>--<author-initials>`, where `<type>` is the issue type
 (see the [section on commit types](#commit-types)),
 `<issue>` is the issue number, `<description>` is a short description of the issue,
 Example: `doc/14-japanese-translation--sw`.
 
-Each feature branch must be tied to exactly 1 issue and result in 1 merge to <i>main</i>.
-Feature branches should be squash-merged.
+Each feature branch must be tied to exactly 1 issue and result in 1 commit to <i>main</i>.
+That means that branches must be squash-merged.
 
 !!! example
 
@@ -84,13 +88,12 @@ Feature branches should be squash-merged.
     ```
 
 In some situations, earlier versions need to be maintained, such as for security fixes.
-These must be in branches named `releases/<version>` (e.g., `releases/v1`).
+Name these branches by `releases/<version>` (e.g., `releases/v1`).
 
 ### Issues
 
-Issues to be worked on must have exactly 1 `type:` label, and they should have the label `state: ready for dev`.
-Use `effort:` and `priority:` labels where helpful.
-
+Issues must have exactly 1 `type:` label.
+Use `effort:` and `priority:` labels if they are helpful.
 Split large issues into bit-sized pieces and list those in the larger issue’s description.
 
 !!! example
@@ -129,8 +132,9 @@ If the contributor abandoned the PR, instead use `gh pr checkout <number>`.
 ### Versioning
 
 Versioning is a subset of [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-Pre-releases are permitted only in the forms `alpha<int>`, `beta<int>`, and `rc<int>`, where `<int>` starts at 0.
-Alpha/beta/RC MUST NOT be used out of order (e.g., **not** `alpha1`, `beta1`, `alpha2`).
+Pre-releases are permitted only in the forms `alpha<int>`, `beta<int>`, `preview<int>`, and `rc<int>`,
+where `<int>` starts at 0.
+Alpha/beta/preview/RC MUST NOT be used out of order (e.g., **not** `alpha1`, `beta1`, `alpha2`).
 
 ### Tags and deployment
 
@@ -142,14 +146,11 @@ The `latest` tag should always match the main branch.
 
 ### File types
 
-- _Prefer open standards:_
-  Choose AVIF or WEBP over other image formats, OGG and FLAC over other audio formats;
-  choose AV1 over other video formats;
-  and choose webm over (non-webm) MKV.
-- _Use simpler formats:_
-  Use Markdown
-- _Use modern compression:_
-  Prefer modern algorithms like [LZ4](https://github.com/lz4/lz4) (`.lz4`)
+- Prefer open standards like AVIF, WEBP, OGGm FLAC, and AV1.
+  (Choose webm over the more general MKV.)
+- Use simpler formats, like Markdown instead of ReST.
+- Prefer modern compression algorithms like
+  [LZ4](https://github.com/lz4/lz4) (`.lz4`)
   and [ZSTD](https://github.com/facebook/zstd) (`.zst`).
 
 ### Source headers
@@ -164,19 +165,40 @@ SPDX-License-Identifier: <spdx-id>
 
 !!! example
 
-    For [Tyranno](https://github.com/dmyersturnbull/tyrannosaurus), this is:
+    For [Tyrannosaurus](https://github.com/dmyersturnbull/tyrannosaurus), this is:
 
     ```text
-    SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to CICD
-    SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyranno
+    SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to Tyrannosaurus
+    SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
     SPDX-License-Identifier: Apache-2.0
     ```
 
 ### 3rd-party code
 
 Use SPDX headers in the aforementioned form.
+
 Include a section in `NOTICE.txt` mentioning the source file(s), license, and external source.
 Include the license file in the form `LICENSE-<spdx-id>.txt`.
+
+If you are modifying the file, you need 2 sets of SPDX headers, which should be visually separated.
+Follow those headers with a plain-language statement that you have modified the file.
+
+!!! "example"
+
+    Example from
+    [rcsb/rcsb-chem-search pyproject.toml](https://github.com/rcsb/rcsb-chem-search/blob/master/pyproject.toml):
+
+    ```python
+    # SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to Tyrannosaurus
+    # SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
+    # SPDX-License-Identifier: Apache-2.0
+    #
+    # SPDX-FileCopyrightText: Copyright 2024, Contributors to rcsb-chem-search
+    # SPDX-PackageHomePage: https://github.com/rcsb/rcsb-chem-search
+    # SPDX-License-Identifier: BSD-3-Clause
+    #
+    # Adapted from Tyrannosaurus <https://github.com/dmyersturnbull/tyrannosaurus>.
+    ```
 
 ## Commit messages
 
@@ -193,14 +215,18 @@ Commit messages must follow a subset of [Conventional Commits](https://www.conve
 - For a breaking change, if a body is included, the `BREAKING CHANGE:` footer MUST be present.
 - If a body is included, deprecations SHOULD be indicated by a `Deprecates:` footer
   of the form `Deprecates: first, second`.
-- Closed issues MUST be listed in a footer of the form `Closes: #10, #22, #33`.
-- A set of allowed Git trailers is defined, and additional trailers SHOULD NOT be used.
-- Footers MUST be ordered as `BREAKING CHANGE:`, `Deprecates:`, `Closes:`, and then Git trailers.
-- If the Git trailer `Signed-off-by:` is used, it SHOULD be last.
+- Closed issues SHOULD be listed in a footer of the form `Closes: #10, #22, #33`.
+  (_Note_: This guideline requires exactly 1 issue.)
+- Commits MUST NOT use footers that have not defined.
+  The footers that are defined in this document are
+  `BREAKING CHANGE`, `Deprecates`, `Closes`, and the attribution trailers listed below.
+- Projects MAY define their own additional footers;
+  any such footer MUST be designed to facilitate automation or computational analysis.
+- Trailers MUST be ordered as: `BREAKING CHANGE:`, `Deprecates:`, `Closes:`, attribution(s).
 - Each commit type MUST be
-  `drop`, `depr`, `feat`, `security`, `fix`, `perf`, `build`, `docs`, `test`, `ci`, `refactor`, `style`, or `chore`.
+  `drop`, `depr`, `feat`, `security`, `fix`, `perf`, `build`, `docs`, `test`, `ci`, `refactor`, or `style`.
 
-??? details "Allowed Git trailers"
+??? details "Allowed attribution trailers"
 
     - Acked-by
     - Reviewed-by
@@ -266,21 +292,21 @@ Duplicate issues, issues created by mistake, uninterpretable issues, etc., shoul
 Also, there is no `revert` type.
 Instead, use the type that reflects the reversion commit.
 This might be `drop:` or the type of the reverted commit.
-**Label both commits with `announce: no`.**
+**Label both commits with `changelog: exclude`.**
 
 #### Forcibly omitting or including release notes entries
 
-Use `announce: no` and `announce: yes` to override which changes are included in the release notes.
+Use `changelog: exclude` and `changelog: exclude` to override which changes are included in the release notes.
 
-<b>`announce: no`</b> excludes changes that would normally be included (e.g. `feat:`).
+<b>`changelog: exclude`</b> excludes changes that would normally be included (e.g. `feat:`).
 Use it for
 
 - reversions and reverted commits,
 - trivial changes, and
 - `docs:`, `tests:`, `style:`, etc. commits that support a `feat:` commit added in the same release.
 
-<b>`announce: yes`</b> adds changes that would normally be ommitted (e.g. `style`).
-Use it only to acknowledge unusually important `style` and `chore` contributions.
+<b>`changelog: include`</b> adds changes that would normally be ommitted (e.g. `style`).
+Use it only to acknowledge unusually important `style` contributions.
 
 #### Including dependent changes in one commit
 
@@ -289,7 +315,7 @@ to add tests and documentation for a new feature inside a `feat:` commit,
 to remove them inside a `drop:` commit,
 and to update them inside a `fix:` or `security:` commit.
 
-If separate commits were made, consider applying `announce: no` to some, as described in the section above.
+If separate commits were made, consider applying `changelog: exclude` to some, as described in the section above.
 
 ??? details
 
@@ -341,7 +367,6 @@ Suggestions:
     [BREAKING CHANGE: <feature, etc.>]
     [Deprecates: <feature, etc.>]
     [Closes: #<issue>]
-    [*: <author>]+
-    Signed-off-by: <author>
+    [*: <author>]*
     """
     ```
