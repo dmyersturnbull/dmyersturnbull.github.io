@@ -109,13 +109,13 @@ For example:
 
 ```json
 {
-  "date-time": "2023-11-02T14:55:00 -08:00",
+  "date-time": "2023-11-02T14:55:00-08:00",
   "timezone": "America/Los_Angeles"
 }
 ```
 
 In some cases, it may be acceptable to append the timezone like this: `{date-time} [{timezone}]`; e.g.
-`2023-11-02T14:55:00 -08:00 [America/Los_Angeles]`.
+`2023-11-02T14:55:00-08:00 [America/Los_Angeles]`.
 This format is generally preferred in documentation.
 
 #### Durations and intervals
@@ -123,28 +123,98 @@ This format is generally preferred in documentation.
 A duration may be written these three ways:
 
 1. A number of days, hours, minutes, seconds, etc.;
-2. An [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) using only hours, minutes, and seconds
+2. An [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
+   using only hours, minutes, and seconds
    and starting with `PT`; or
 3. Hours, minutes and seconds (`HH:MM:SS[.iii[iii]]`).
+
+??? details "regex"
+
+    For ISO 8601:
+
+    ```regex
+    ^\
+    PT\
+    (?:(\d)H)??\
+    (?:(\d++)M)??\
+    (?:(\d++(?:\.\d{1,6}++)?+)S)?+\
+    $
+
+    For HH:MM:SS:
+
+    ```regex
+    ^\
+    (\d{2,}+)\
+    :([0-5]\d)\
+    :([0-5]\d)\
+    (?:\.(\d{3}|\d{6}))?+\
+    $
+    ```
+
+!!! rationale
+
+    ISO 8601 is a convoluted mess of excessive complexity, confusing syntax, and ambiguity.
+    Unfortunately, its duration format is already in use.
+
+    _Year_ and _month_ are ambiguous.
+    Months have variable numbers of days,
+    and _year_ could be 365 days, mean solar year (365.24217 solar days), or a specific solar year.
+    Days could be defined as exactly 24 hours, but `PT<h>H[<m>M[<s>S]]` is easier to parse and convert to `hh:mm:ss`.
 
 ??? example "Examples"
 
     **✅ ok** `35.2` for a key `duration_sec`
 
-    **✅ ok** `PT23H55M55S`
+    **✅ ok** `PT23H45M55.8S` (per the spec, `8S` means 8 milliseconds)
 
-    **✅ ok** `23:45:55`
+    **✅ ok** `23:45:55.800` (800 milliseconds)
 
-    **❌ Not ok** `P6M2WT45M55S` (ambiguous – months have indeterminate durations)
+    **✅ ok** `23:45:55.800200` (800 milliseconds and 200 microseconds)
 
-    **❌ Not ok** `P1D12H` (unambiguous but not limited to hours, minutes, and seconds)
+    **❌ not ok** `23:45:55.2` – ambiguous: is `.8` 8 milliseconds or `800`?
 
-    **❌ Not ok** `P2S` (does not start with `PT`; rewrite as `PT2S`)
+    **❌ not ok** `P6M2WT45M55S` – ambiguous because months have indeterminate durations
 
-    **❌ Not ok** `05:22` (is this min:sec or hour:min?)
+    **❌ not ok** `P1D12H` – unambiguous but not limited to hours, minutes, and seconds
+
+    **❌ not ok** `P2S` – does not start with `PT`; rewrite as `PT2S`
+
+    **❌ not ok** `05:22` – is this `min:sec` or `hour:min`?
 
 **For intervals**, both `{"start": ..., "end": ...}` and ISO 8601 `T1--T2` syntax are acceptable.
 Do not separate times with `/` or use a start-time/duration pair.
+
+??? tip "OpenAPI"
+
+    In OpenAPI, you can use these _schema object_ definitions:
+
+    ```yaml
+
+    timepoint:
+      oneOf:
+        - $ref: '#/components/schemas/iso-duration'
+        - $ref: '#/components/schemas/hhmmss-duration'
+
+    iso-duration:
+      type: string
+      pattern: >-
+        ^\
+        PT\
+        (?:(\d)H)??\
+        (?:(\d++)M)??\
+        (?:(\d++(?:\.\d{1,6}++)?+)S)?+\
+        $
+
+    hhmmss-duration:
+      type: string
+      pattern: >-
+        ^\
+        (\d{2,}+)\
+        :([0-5]\d)\
+        :([0-5]\d)\
+        (?:\.(\d{3}|\d{6}))?+\
+        $
+    ```
 
 !!! warning
 
@@ -189,7 +259,7 @@ servers must not use status codes, methods, responses, or conditions not listed 
 1. Use [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396) for all PATCH requests;
    see the [JSON Merge Patch section](#json-merge-patch).
 2. Use [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail) problem details;
-   see the [Problem details section](#problem-details) section.
+   see the [problem details section](#problem-details).
 
 <b>Specialized status codes:</b>
 
@@ -328,10 +398,14 @@ The response body must include the problem detail’s `title` alongside a more d
 
 Multiple representations must be available via content negotiation:
 
-- `text/html; charset=utf-8` (**required** per RFC 9457): Include the title in an `<h1>`, ⋯, `<h6>`.
-- `application/json` (**required**): Include at least the keys `title` and `description`.
-- `text/x-markdown` (**recommended**): Include the title in an `#`, ⋯, `#####`.
-   If OpenAPI is used, use the schema’s [`response.description`](https://spec.openapis.org/oas/v3.1.0#fixed-fields-14).
+- `text/html; charset=utf-8` (**required** per RFC 9457):
+   Include the title in an `<h1>`, ⋯, `<h6>`.
+- `application/json` (**required**):
+   Include at least the keys `title` and `description`.
+- `text/x-markdown` (**recommended**):
+   Include the title in an `#`, ⋯, `#####`.
+   If OpenAPI is used, use the schema’s
+   [`response.description`](https://spec.openapis.org/oas/v3.1.0#fixed-fields-14).
 
 #### Extensions
 
