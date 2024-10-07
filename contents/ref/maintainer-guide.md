@@ -114,7 +114,7 @@ Instead, just comment.
 Squash the commits into one, and ensure the resulting commit message follows the
 [commit message format](#reference) specification.
 
-!!! tip "GitHub squash and merge
+!!! tip "GitHub squash and merge"
 
     GitHub has a "Squash and merge" button, but there is nowhere to add a commit body or footer.
     However, you can work around this in the repository settings:
@@ -183,7 +183,7 @@ Include the license file in the form `LICENSE-<spdx-id>.txt`.
 If you are modifying the file, you need 2 sets of SPDX headers, which should be visually separated.
 Follow those headers with a plain-language statement that you have modified the file.
 
-!!! "example"
+!!! example
 
     Example from
     [rcsb/rcsb-chem-search pyproject.toml](https://github.com/rcsb/rcsb-chem-search/blob/master/pyproject.toml):
@@ -350,10 +350,7 @@ Scopes should be defined per project.
 If a scope is defined, it should be applied to all relevant commits,
 at least to those made after the scope’s introduction.
 
-Suggestions:
-
-- `i18n`
-- `plugins`
+Suggestions: `i18n`, `plugins`
 
 ### Reference
 
@@ -368,5 +365,4 @@ Suggestions:
     [Deprecates: <feature, etc.>]
     [Closes: #<issue>]
     [*: <author>]*
-    """
     ```

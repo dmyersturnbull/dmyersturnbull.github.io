@@ -38,15 +38,9 @@ Feel free to open a PR well before it’s complete; just mark it as a draft unti
 
 These steps are highly recommended, but they are not required to submit a PR.
 
-1. Configure Git to auto-convert line endings.
-
-   === "Linux and macOS"
-
-       `git config --global core.autocrlf input`
-
-   === "Windows"
-
-       `git config --global core.autocrlf true`
+1. Configure Git to auto-convert line endings:
+   On Linux and macOS: `git config --global core.autocrlf input`.
+   On Windows: `git config --global core.autocrlf true`.
 
 2. Configure Git to use your GPG keys.
    See the [Git, SSH, and GPG guide](../guide/git-ssh-and-gpg.md).
@@ -107,8 +101,4 @@ gh pr ready <id>
 
     Feel free to solicit feedback on your changes by opening a draft pull request.
     After that, `git push` to your fork to update the pull request.
-    To start, run
-
-        ```bash
-        gh pr create --fill --web --draft
-        ```
+    To start, run `gh pr create --fill --web --draft`.

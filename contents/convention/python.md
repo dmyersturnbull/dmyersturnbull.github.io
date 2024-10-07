@@ -187,14 +187,41 @@ Counter:::concrete --> MutableMapping
 
 ## Class members
 
-Never use `@staticmethod`, and avoid `@abstractmethod`.
+### IoC
+
+**Apply inversion of control, and do so ruthlessly.**
+
+### `@staticmethod` and `@abstractmethod`
+
+Use `@staticmethod` and `@abstractmethod` only for utilities that are specific to their class.
 Replace static factory `@abstractclass` methods with property factories,
 to separate the creation of an object from its API.
-Apply inversion of control.
+
+Never create utility classes with static (`@staticmethod` or `@abstractmethod`) methods;
+use valid OOP instead.
+
+=== "❌ Bad design"
+
+    ```python
+    class Utils:
+        @abstractmethod
+        def method(cls):
+            ...
+    ```
+
+=== "✅ Fixed design"
+
+    ```python
+    class Utils:
+        def method(self):
+            ...
+    utils = Utils()  # wherever it's needed
+    ```
 
 ### Ordering members
 
 Sort class members in the following order.
+(These rules are copied from semi-official sources.)
 
 1. `ClassVar`
 2. attributes

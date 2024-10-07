@@ -204,22 +204,22 @@ Look for one of these places to add a line break, in order:
 
 ### Text styles and semantics
 
-??? summary "Semantic HTML elements"
+#### Semantic HTML elements
 
-    Some semantic HTML elements are result in identical styles (in most browsers).
-    This table summarizes how to use them in HTML and in Markdown.
+  Some semantic HTML elements are result in identical styles (in most browsers).
+  This table summarizes how to use them in HTML and in Markdown.
 
-	| element | style   | usages | equivalent Markdown |
-	| ------- | ------- | ------ | ------------------- |
-	| [`em`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em) | italic | emphasis; [stress](https://en.wikipedia.org/wiki/Stress_(linguistics)) | `<em>text</em>` (prefer bold) |
-  | [`i`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i) | italic | technical terms; foreign text; more | `_text_` |
-	| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn) | italic | terms being defined | `_term_` or `<dfn>term</dfn>` |
-	| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var) | italic | variables | `$var$` |
-	| [`strong`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) | bold | strong emphasis | `**text**` |
-	| [`b`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b) | bold | keywords, miscellaneous | `<b>text</b>` |
-	| [`code`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code) | monospace | source code | ``` `code` ``` |
-	| [`samp`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp) | monospace | sample output  | ``` `code` ``` |
-	| [`kbd`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd) | monospace | keyboard keys | `<kdb>keys</kbd>` |
+| element                                                                      | style     | usages                                                                 | equivalent Markdown           |
+|------------------------------------------------------------------------------|-----------|------------------------------------------------------------------------|-------------------------------|
+| [`em`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em)         | italic    | emphasis; [stress](https://en.wikipedia.org/wiki/Stress_(linguistics)) | `<em>text</em>` (prefer bold) |
+| [`i`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i)           | italic    | technical terms; foreign text; more                                    | `_text_`                      |
+| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn)       | italic    | terms being defined                                                    | `_term_` or `<dfn>term</dfn>` |
+| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var)       | italic    | variables                                                              | `$var$`                       |
+| [`strong`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) | bold      | strong emphasis                                                        | `**text**`                    |
+| [`b`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b)           | bold      | keywords, miscellaneous                                                | `<b>text</b>`                 |
+| [`code`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code)     | monospace | source code                                                            | ``` `code` ```                |
+| [`samp`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp)     | monospace | sample output                                                          | ``` `code` ```                |
+| [`kbd`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd)       | monospace | keyboard keys                                                          | `<kdb>keys</kbd>`             |
 
 #### Italics
 
@@ -241,13 +241,13 @@ Take `_`/`_` (and `*`/`*`) as semantically equivalent to the
   `I (specifically) will go there.`
   Keep in mind that screen readers may not announce the italicization.
 
-**`<em>`:**
+**Alternative: `<em>`:**
 
 Italics are _occasionally_ helpful for emphasis or stress.
 If needed, use an explicit [`<em>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/);
 e.g. `I will go <em>there</em>`.
 
-**`<dfn>`**
+**Alternative: `<dfn>`**
 Using the [`dfn` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/)
 in Markdown is good practice.
 `_`/`_` is an acceptable substitute.
@@ -273,8 +273,7 @@ For example, you might write `<b>Score:</b> 55.3%`.
 
 Use backticks for code, `<kbd>`/`</kdb>` for keyboard keys,
 and LaTeX (`$`/`$`) for variables and mathematical expressions.
-To describe menu navigation, use [`➤`](https://www.compart.com/en/unicode/U+27A4) without markup; e.g.
-File ➤ Export ➤ Export as Text.
+To describe menu navigation, use [`➤`](https://www.compart.com/en/unicode/U+27A4) without markup; e.g.: File ➤ Export ➤ Export as Text.
 
 ### Encoding
 
@@ -491,7 +490,6 @@ For durations, use, e.g., _8.3 s_.
 ### Paths and filesystem trees
 
 Always use `/` as a path separator in documentation, and denote directories with a trailing `/`.
-
 For filesystem trees, use Unicode box-drawing characters.
 Refer to the
 [research projects guide](https://dmyersturnbull.github.io/guide/research-projects/#example)
@@ -501,9 +499,9 @@ for an example.
 
 Use descriptive titles for link titles.
 
-**❌** `Click [here](documentation.md) for conding conventions.`
+**❌ Bad** `Click [here](documentation.md) for coding conventions.`
 
-**✅** `Refer to the [documentation conventions](documentation.md).`
+**✅ Good** `Refer to the [documentation conventions](documentation.md).`
 
 ## HTML
 
@@ -557,6 +555,7 @@ Grammars may be specified in any well-defined form.
 (see [RFC5234](https://datatracker.ietf.org/doc/html/rfc5234)),
 [XML’s custom meta-grammar](https://www.w3.org/TR/xml/#sec-notation),
 and [regex-BNF](../spec/advanced-bnf-with-regex.md) are recommended.
+Bear in mind that ABNF has an uncommon and non-intuitive syntax for zero-or-one, one-or-more, and zero-or-more.
 
 ??? rationale
 
