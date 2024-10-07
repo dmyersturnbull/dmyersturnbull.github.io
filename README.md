@@ -10,6 +10,6 @@ is licensed under the terms of the
 Where stated, some original (not copied or derived) source code files may be available under alternative license terms.
 These are provided **in addition** to CC-BY-SA-4.0.
 Refer to comments in those files.
-This is to circumvent some possible incompabilities between standard open source licenses and the CC-BY-SA,
+This is to circumvent some possible incompatibilities between standard open source licenses and the CC-BY-SA,
 which is not intended or recommended for software.
 Let me know if you need an additional license for a file.
