@@ -1,8 +1,15 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Git, SSH, and GPG
 
 These instructions should work for Linux, macOS, and Windows.
 
-!!! note
+!!! important
+
     Install Git, SSH, GPG, and the [GitHub CLI](https://cli.github.com/) before proceeding.
     Follow the
     [Linux setup guide](macos.md),
@@ -25,6 +32,7 @@ Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu or `dnf install curl-deve
 ## Set up SSH keys
 
 !!! abstract "What you’ll be doing"
+
     SSH keys provide asymmetric cryptography for securing your
     connections. In asymmetric cryptography, there are two keys: a public one and a private one.
     The public key encrypt messages, while the private one is needed to decrypt them.
@@ -33,12 +41,15 @@ Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu or `dnf install curl-deve
     For historical reasons, SSH, OpenSSL, and GPG provide independent mechanisms, but they’re similar.
 
 ### [Generate a new SSH key](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#generating-a-new-ssh-key)
+
 ### [Add it to the ssh-agent](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/generating-a-new-ssh-key-and-adding-it-to-the-ssh-agent#adding-your-ssh-key-to-the-ssh-agent)
+
 ### [Add it to GitHub](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/adding-a-new-ssh-key-to-your-github-account)
 
 ### Configure SSH
 
 !!! abstract "About these steps"
+
     Disable SSH agent forwarding, [which](https://security.stackexchange.com/questions/101783/are-there-any-risks-associated-with-ssh-agent-forwarding)
     [is](https://en.wikipedia.org/wiki/Ssh-agent#Security_issues)
     [very](https://github.com/microsoft/vscode-remote-release/issues/1222)
@@ -67,15 +78,16 @@ User kelly@gmail.com
 ```
 
 !!! tip
+
     If needed, fix permissions with this snippet:
 
     ```bash
     chmod 600 "~/.ssh/*"
     chmod 700 "~/.ssh/"
-	[[ -e "~/.ssh/config" ]] && chmod 700 "~/.ssh/config"
-	[[ -e "~/.ssh/known_hosts" ]] && chmod 700 "~/.ssh/known_hosts"
+    [[ -e "~/.ssh/config" ]] && chmod 700 "~/.ssh/config"
+    [[ -e "~/.ssh/known_hosts" ]] && chmod 700 "~/.ssh/known_hosts"
     chmod 644 "~/.ssh/*.pub"
-	[[ -e "~/.ssh/authorized_keys" ]] && chmod 644 "~/.ssh/authorized_keys"
+    [[ -e "~/.ssh/authorized_keys" ]] && chmod 644 "~/.ssh/authorized_keys"
 
     ```
 
@@ -91,7 +103,8 @@ User kelly
 IdentityFile ~/.ssh/id_ed25519
 ```
 
-!!! note
+!!! bug "Servers lacking EdDSA support"
+
     Some servers might not support EdDSA yet.
     If this is the case, generate another pair of keys:
     ```bash
@@ -134,7 +147,6 @@ You will need to install and configure the SSH server.
 
     Enable "OpenSSH server" under Optional Features.
 
-
 ### _Alternative to GPG:_ Sign with SSH
 
 As of August 2022, GitHub supports
@@ -161,10 +173,10 @@ However, this has no significant advantages, is more limited, and may be less se
 Also see
 [GitHub’s guide](https://docs.github.com/en/authentication/managing-commit-signature-verification/generating-a-new-gpg-key)
 to generating GPG keys.
-You may consider using an  [`@users.noreply` email address](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address)
+You may consider using an [`@users.noreply` email address](https://docs.github.com/en/account-and-profile/setting-up-and-managing-your-personal-account-on-github/managing-email-preferences/setting-your-commit-email-address)
 per their suggestion.
 
-1. Install GPG:
+1.  Install GPG:
 
     === "Ubuntu"
 
@@ -182,12 +194,13 @@ per their suggestion.
 
         `choco install gnupg` (as an administrator)
 
-2. Launch gpg-agent by running
+2.  Launch gpg-agent by running
+
     ```bash
     gpg-connect-agent reloadagent /bye
     ```
 
-3. Then, generate a key pair by running
+3.  Then, generate a key pair by running
 
     ```bash
     gpg --full-generate-key -t ed25519
@@ -251,6 +264,7 @@ Delete the `key.private.gpg` file when done.
 ### _Optional:_ Publicize your public key
 
 !!! note
+
     This assumes that you used a real email address, not a `@users.noreply.github.com` address.
 
 To list your public keys, run
@@ -271,7 +285,8 @@ sub   cv25519 2023-11-04 [E] [expires: 2025-11-03]
 1. Check the type: `pub` is public; `sec` is your private key. **Here, we want `pub`.**
 2. This is your key ID. (Note: There may be a prefix, using `/` as a seperator.)
 
-!!! warning
+!!! danger
+
     Make sure you are using your public (`pub`) key, not your private key (`sec`).
 
 Using your public key ID, run the following to get a key file called `kerri-johnson.pub.asc`:
@@ -286,4 +301,5 @@ gpg\
 You can make this file available publicly, such as on your website.
 
 !!! note "Thanks"
+
     Thank you to Cole Helsell for drafting this guide with me.

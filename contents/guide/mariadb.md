@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # MariaDB setup
 
 This lists some best practices for MariaDB along with scripts.
@@ -16,7 +22,7 @@ Global installation is recommended, unless you do not have sudo / administrator 
         --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
     sudo add-apt-repository '\
         deb [arch=amd64]\
-        https://mariadb.mirror.liquidtelecom.com/repo/${mariadb_version}/ubuntu
+        https://mariadb.mirror.liquidtelecom.com/repo/$mariadb_version/ubuntu
         focal main\
      '
     sudo apt install -y mariadb-server mariadb-client
@@ -84,36 +90,36 @@ Here’s the script:
     ```bash
     #!/usr/bin/env bash
     # safe options
-    set -euo pipefail
+    set -o errexit -o nounset -o pipefail
     IFS=$'\n\t'
-    _usage="Usage: ${0} [version=${default_mariadb_vr}]"
+    _usage="Usage: $0 [version=$default_mariadb_vr]"
     default_mariadb_vr="10.11.0"  # latest LTS release
 
-    if (( $# == 1 )) && [[ "${1}" == "--help" ]]; then
-      >&2 echo "${_usage}"
+    if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
+      >&2 echo "$_usage"
       >&2 echo "Sets up a local installation of MariaDB without root access."
       exit 0
     fi
 
     if (( $# > 1 )); then
-      >&2 echo "${_usage}"
+      >&2 echo "$_usage"
       exit 2
     fi
 
-    vr="${default_mariadb_vr}"
+    vr="$default_mariadb_vr"
     if (( $# == 1)); then
-      vr="${1}"
+      vr="$1"
     fi
 
     pushd ~
 
     # download mariadb
     _base_url="https://downloads.mariadb.org/f"
-    _dir="/mariadb-${vr}/bintar-linux-x86_64"
-    _file="/mariadb-${vr}-linux-x86_64.tar.gz"
-    curl -O -J -L "${_base_url}${_dir}${_file}?serve"
-    gunzip < "mariadb-${vr}-linux-x86_64.tar.gz" | tar xf -
-    mv "mariadb-${vr}-linux-x86_64" mysql
+    _dir="/mariadb-$vr/bintar-linux-x86_64"
+    _file="/mariadb-$vr-linux-x86_64.tar.gz"
+    curl -O -J -L "$_base_url$_dir$_file?serve"
+    gunzip < "mariadb-$vr-linux-x86_64.tar.gz" | tar xf -
+    mv "mariadb-$vr-linux-x86_64" mysql
 
     # create a local defaults file
     touch ~/.my.cnf
@@ -150,7 +156,7 @@ Here’s the script:
 
 Note that `~/bin/` must be on your `PATH`.
 You can start the server with `nohup mysql_start &`
-And log in as an admin user: `mysql --user=${USER}`
+And log in as an admin user: `mysql --user=$USER`
 
 ## Hardening
 
@@ -302,36 +308,36 @@ Here is the backup script:
 set -euo pipefail
 IFS=$'\n\t'
 default_path_="/bak/mariadb/dbname/nightly"
-_usage="Usage: ${0} [<path=${default_path_}>]"
+_usage="Usage: $0 [<path=$default_path_>]"
 
-if (( $# == 1 )) && [[ "${1}" == "--help" ]]; then
-	>&2 echo "${_usage}"
+if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
+	>&2 echo "$_usage"
 	>&2 echo "Exports all the data in a database as one gzipped sql file per table."
 	>&2 echo "Requires environment vars DB_NAME, DB_USER, and DB_PASSWORD"
 	exit 0
 fi
 
 if (( $# > 1 )); then
-	>&2 echo "${_usage}"
+	>&2 echo "$_usage"
 	exit 2
 fi
 
 # Modify this
 db_port_="3306"
-db_name_="${DB_NAME}"  # (1)!
-db_user_="${DB_USER}"
-db_password_="${DB_PASWORD}"
-loc_="${default_path_}"
+db_name_="$DB_NAME"  # (1)!
+db_user_="$DB_USER"
+db_password_="$DB_PASWORD"
+loc_="$default_path_"
 
 if (( $# > 0 )); then
-	loc="${1}"
+	loc="$1"
 fi
 
 tables=$(\
   mysql -NBA \
-  -u "${db_user_}" \
-  -P="${db_password_}" \
-  -D "${db_name_}" \
+  -u "$db_user_" \
+  -P="$db_password_" \
+  -D "$db_name_" \
   -e 'show tables'\
 );
 for t in $tables do
@@ -341,14 +347,14 @@ for t in $tables do
     --single-transaction \
     --hex-blob \
     --max_allowed_packet=2147483648 \
-    --port="${db_port_}" \
-    --user="${db_user_}" \
-    --password="${db_password_}" \
-    "${db_name_}" \
-    "${t}" | gzip > "${loc_}/${t}.sql.gz"
+    --port="$db_port_" \
+    --user="$db_user_" \
+    --password="$db_password_" \
+    "$db_name_" \
+    "$t" | gzip > "$loc_/$t.sql.gz"
 done
 
->&2 echo "Backed up to ${loc_}"
+>&2 echo "Backed up to $loc_"
 ```
 
 1. Set these environment variables before running.
@@ -361,56 +367,56 @@ Here’s a script to write the schema in a nice way.
 #!/usr/bin/env bash
 set -euo pipefail
 IFS=$'\n\t'
-_usage="Usage: ${0}"
+_usage="Usage: $0"
 
-if (( $# == 1 )) && [[ "${1}" == "--help" ]]; then
-	>&2 echo "${_usage}"
+if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
+	>&2 echo "$_usage"
 	>&2 echo "Dumps the schema to schema.sql."
 	>&2 echo "Requires environment vars DB_NAME, DB_USER, and DB_PASSWORD"
 	exit 0
 fi
 
-db_name_="${DB_NAME}"  # (1)!
-if [ -v "${DB_SOCKET}" ]; then
-    db_socket_="${DB_SOCKET}"  # (2)!
+db_name_="$DB_NAME"  # (1)!
+if [ -v "$DB_SOCKET" ]; then
+    db_socket_="$DB_SOCKET"  # (2)!
 else
     db_socket_=""
     db_port_="3306"
-    db_user_="${DB_USER}"          # (3)!
-    db_password_="${DB_PASSWORD}"
+    db_user_="$DB_USER"          # (3)!
+    db_password_="$DB_PASSWORD"
 fi
 
 if (( $# > 0 )); then
-	>&2 echo "${_usage}"
+	>&2 echo "$_usage"
 	exit 2
 fi
 
-out_file="schema-${db_name_}.sql"
+out_file="schema-$db_name_.sql"
 
-if "${db_socket_}"; then
+if "$db_socket_"; then
     mysqldump \
         --protocol=socket \
-        --socket="${db_socket_}" \
+        --socket="$db_socket_" \
         --skip-add-drop-table \
         --single-transaction \
         --no-data \
-        "${db_name_}" \
-        > "${out_file}"
+        "$db_name_" \
+        > "$out_file"
 else
     mysqldump \
         --host=127.0.0.1 \
-        --port="${db_port_}" \
-        --user="${db_user_}" \
-        --password="${db_password_}" \
+        --port="$db_port_" \
+        --user="$db_user_" \
+        --password="$db_password_" \
         --skip-add-drop-table \
         --single-transaction \
         --no-data \
-        "${db_name_}" \
-        > "${out_file}"
+        "$db_name_" \
+        > "$out_file"
 
 # remove the auto_increment -- we don't care
-sed -r -i -e 's/auto_increment=[0-9]+ //g' "${out_file}"
->&2 echo "Wrote to ${out_file}"
+sed -r -i -e 's/auto_increment=[0-9]+ //g' "$out_file"
+>&2 echo "Wrote to $out_file"
 ```
 
 1. Set `DB_NAME` to the database before running.

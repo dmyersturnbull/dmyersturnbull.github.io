@@ -1,0 +1,33 @@
+# SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+# SPDX-PackageHomePage: https://dmyersturnbull.github.io
+# SPDX-License-Identifier: CC-BY-SA-4.0
+
+[build-system]
+build-backend = "hatchling.build"
+requires = ["hatchling~=1.25"]
+
+[project]
+name = "dmyersturnbull.github.io"
+version = "0.0.1-alpha0"
+requires-python = "~=3.13"
+readme = { file = "README.md", content-type = "text/markdown" }
+description = "GitHub Pages https://dmyersturnbull.github.io"
+maintainers = [ { name = "Douglas Myers-Turnbull", email = " dmyersturnbull@gmail.com" } ]
+authors = [ { name = "Douglas Myers-Turnbull", email = " dmyersturnbull@gmail.com" } ]
+license = { text = "Apache-2.0" }
+dependencies = [
+  "markdown-include >=0.8",
+  "mkdocs >=1.6",
+  "mkdocs-macros-plugin >=1.3",
+  "mkdocs-material >=9.5",
+  "mkdocs-minify-plugin >=0.8",
+  "mkdocs-table-reader-plugin >=3.1",
+  "mkdocstrings[python] >=0.27"
+]
+
+[tool.hatch.build.targets.wheel]
+packages = ["contents"]
+
+[tool.ruff]
+line-length = 120
+include = ["pyproject.toml", ]

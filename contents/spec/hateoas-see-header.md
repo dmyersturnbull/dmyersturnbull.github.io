@@ -1,9 +1,13 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # HATEOAS `See` header
 
-!!! tip "Status: ready to use"
-
-    This specification is legitimately useful and ready to go.
-    No changes are anticipated to be needed.
+<b>Spec status: Useful and ready to go.</b>
+Take it, modify it, use it. (CC-BY-SA)
 
 [HAL/HAL-JSON](https://stateless.group/hal_specification.html),
 [JSON-LD](https://json-ld.org/), and
@@ -24,17 +28,20 @@ In the spirit of [XKCD #927](https://xkcd.com/927/), here is a new proposal.
 
 To avoid polluting your JSON response payloads, the links should be encoded in an HTTP header.
 This nonstandard header is called `Link`.
-<small>
-Note: the `X-` prefix convention [is deprecated](https://datatracker.ietf.org/doc/html/rfc6648).
-</small>
 
-Example:
+!!! note
+
+    The `X-` prefix convention [is deprecated](https://datatracker.ietf.org/doc/html/rfc6648).
+
+<b>Example:</b>
 
 ```text
 See: <https://api.tld>; rel="delete"; method="DELETE", <https://api.tld?page=2>; rel="next"; method="GET"
 ```
 
-??? "ABNF"
+## Formal grammar
+
+=== "ABNF"
 
     Refer to the [ABNF (RFC5234)](https://datatracker.ietf.org/doc/html/rfc5234) docs.
 
@@ -50,7 +57,7 @@ See: <https://api.tld>; rel="delete"; method="DELETE", <https://api.tld?page=2>;
                / "^" / "_" / "`" / "|" / "~" / DIGIT / ALPHA
     ```
 
-??? "XML meta-grammar"
+=== "XML meta-grammar"
 
     Refer to [XML’s custom meta-grammar](https://www.w3.org/TR/xml/#sec-notation).
 
@@ -73,7 +80,6 @@ See: <https://api.tld>; rel="delete"; method="DELETE", <https://api.tld?page=2>;
 - This resource: `metadata`, `data`
 - Context: `about`, `history`
 - Other resources: `related`
-
 
 ## Python encoder and decoder
 

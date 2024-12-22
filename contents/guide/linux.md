@@ -1,9 +1,16 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Linux setup
 
 A setup guide for programmers, etc., on Linux and the Windows Linux Subsystem.
 Alternatives for Ubuntu/Debian-like and Fedora/RedHat-like are shown.
 
-!!! note "See also"
+!!! related
+
     [macOS setup guide](macos.md) and
     [Windows setup guide](windows.md)
 
@@ -20,7 +27,7 @@ I have not tested it.
 
 ??? bug "UEFI troubleshooting"
 
-	If you get an error installing GRUB, try these steps:
+    If you get an error installing GRUB, try these steps:
 
     - Disable Fast Boot.
     - Disable Secure Boot. Also, check to see if CSM/Legacy options is disabled.
@@ -30,6 +37,7 @@ I have not tested it.
 ### Choose a partition scheme
 
 #### Use Btrfs.
+
 Btrfs is a copy-on-write option and is now much more robust than ext4.
 See the [btrfs documentation](https://btrfs.readthedocs.io/en/latest).
 
@@ -110,13 +118,13 @@ If mounted as separate partitions, mount with `noexec`.
 
     ```bash
     sudo apt update && reboot
-	  ```
+      ```
 
 === "Fedora"
 
     ```bash
     sudo dnf update && reboot
-	  ```
+      ```
 
 ## Enable kernel modules
 
@@ -150,8 +158,8 @@ Here are my recommendations:
 
 !!! bug
 
-    Sometimes filesystems cannot be mounted with `compress`,
-    presumably for any number of reasons.
+    Sometimes filesystems cannot be mounted with `compress`.
+    There are probably many likely reasons.
 
 !!! warning
 
@@ -224,8 +232,8 @@ Open a terminal and enter the following commands to install the necessary packag
     sudo dnf update && sudo dnf -y upgrade
     sudo dnf install -y git vim curl wget xz-utils brotli lzma zstd iotop
     sudo dnf install -y eza  # (1)!
-	  sudo dnf install -y ncurses-devel
-	  sudo dnf install -y make automake gcc gcc-c++ kernel-devel cmake
+      sudo dnf install -y ncurses-devel
+      sudo dnf install -y make automake gcc gcc-c++ kernel-devel cmake
     sudo dnf install -y zsh
     sudo dnf install -y gnome-tweaks
     sudo dnf install -y asdf  # (2)!
@@ -298,20 +306,20 @@ eza --icons
 
 ### Gnome extensions and date/time
 
-In GNOME’s settings, set the time format to 24-hour and make sure <i>Automatic Data and Time</i> is selected.
+In GNOME’s settings, set the time format to 24-hour and make sure _Automatic Data and Time_ is selected.
 Also install extensions:
 
 === "Ubuntu"
 
     ```bash
-	sudo apt install gnome-browser-connector
-	```
+    sudo apt install gnome-browser-connector
+    ```
 
 === "Fedora"
 
     ```bash
-	sudo dnf install gnome-browser-connector
-	```
+    sudo dnf install gnome-browser-connector
+    ```
 
 Then open https://extensions.gnome.org/ and install the browser extension.
 I recommend installing:
@@ -386,53 +394,9 @@ enabled=False
 The following script will add bookmarks (though you can also do this in Nautilus).
 Example usage: `~/bin/add-bookmarks.sh data=/data/ docs=/docs/`
 
-??? details
+[`add-bookmarks.sh` :fontawesome-solid-code:](add-bookmarks.sh){ .md-button }
 
-    ```bash
-    #!/usr/bin/env bash
-    set -euo pipefail
-
-    bookmark_file="${HOME}/.config/gtk-3.0/bookmarks"
-    _desc="Add Nautilus bookmarks."
-    _usage="Usage: $0 <name1>=<path1> [...]"
-
-    bookmarks::help() {
-        printf "${_desc}\n${_usage}\n"
-        exit 0
-    }
-
-    bookmarks::usage() {
-      >&2 printf "${_desc}\n${_usage}\n"
-      exit 2
-    }
-
-    # Function to add a bookmark
-    bookmarks::add() {
-        local path="$1"
-        local name="$2"
-        local bookmark_entry="file://${path} ${name}"
-
-        # Add only if it doesn't already exist
-        if ! grep -q "${bookmark_entry}" "${bookmark_file}"; then
-            echo "${bookmark_entry}" >> "${bookmark_file}"
-            >&2 echo "Added bookmark ${name} → ${path}."
-        else
-            >&2 echo "Bookmark ${name} → ${path} already exists."
-        fi
-    }
-
-    (( $# == 1 )) && [[ "$1" == "--help" ]] && bookmarks::help
-    (( $# == 0 )) && bookmarks::usage
-
-    for arg in "$@"; do
-        IFS='=' read -r name path <<< "${arg}"
-        [[ -z "${name}" || -z "${path}" ]] && bookmarks::usage
-        bookmarks::add "${name}" "${path}"
-    done
-    >&2 echo "Finished adding bookmarks."
-    ```
-
-Then, restart Nautilus to apply the settings:
+After running it, restart Nautilus to apply the settings:
 
 ```bash
 nautilus -q
@@ -464,15 +428,34 @@ You should now have a colorful shell, complete with a plugin for Git.
 
 ## `.commonrc` file
 
-To keep the config for ZSH and Bash consistent, add a file called `.commonrc` in your home directory:
+To keep the config for ZSH and Bash consistent, add a file called `.commonrc` in your home directory.
+After that, only modify `.commonrc` so that both Bash and ZSH have the same environment.
 
-```bash
-echo 'export PATH=/usr/local/sbin:$PATH\n' > ~/.commonrc
-echo 'source ~/.commonrc\n' >> ~/.zshrc
-echo 'source ~/.commonrc\n' >> ~/.bashrc
-```
+=== "Better way"
 
-From here on, only modify `.commonrc` so that both Bash and ZSH have the same environment.
+    [`commonrc-config.sh`](commonrc-config.sh)
+    provides tiny functions that create `.commonrc` if needed, add exactly 1 `source` line, etc.
+    The following will download it, create `.commonrc`, and add 1 line each to `.zshrc` and `.bashrc`.
+
+    ```bash
+    mkdir -p ~/bin
+    wget https://dmyersturnbull.github.io/guide/commonrc-config.sh -O ~/bin/commonrc-config.sh
+    source ~/bin/commonrc-config.sh
+    commonrc::initialize
+    commonrc::add_to_rc bashrc
+    commonrc::add_to_rc zshrc
+    commonrc::add_line 'source ~/bin/commonrc-config.sh'
+    ```
+
+=== "The other way"
+
+    As long as you haven’t done this before, you can run
+
+    ```bash
+    touch -a ~/.commonrc
+    printf 'source ~/.commonrc\n' >> ~/.zshrc
+    printf 'source ~/.commonrc\n' >> ~/.bashrc
+    ```
 
 ## Git, SSH, and GPG
 
@@ -482,9 +465,10 @@ From here on, only modify `.commonrc` so that both Bash and ZSH have the same en
 
 First, [Install the Rust toolchain](https://rustup.rs/).
 
-Then, download [JDK 21 from Temurin](https://adoptium.net/temurin/releases/).
-Do not use Java 8, java.com, or OpenJDK.
-Make sure it’s on your `$PATH` by running `java --version` in a new shell.
+Then, download [JDK 21 LTS from Temurin](https://adoptium.net/temurin/releases/)
+(or a newer non-LTS version if preferred).
+Do **not** use Java 8, java.com, or OpenJDK.
+Make sure it’s on your `$PATH` by checking the version via `java --version` in a new shell.
 
 ## Generate a certificate
 
@@ -504,7 +488,9 @@ usermod -aG sudo $USER
 
 1. This will require you to enter the root password.
 
-See this [sudoers guide](https://www.cyberciti.biz/faq/how-to-sudo-without-password-on-centos-linux/) for more info.
+See this
+[sudoers guide](https://www.cyberciti.biz/faq/how-to-sudo-without-password-on-centos-linux/)
+for more info.
 
 ## Dotfiles
 
@@ -517,204 +503,13 @@ mkdir ~/bin && echo 'export PATH=$HOME/bin:$PATH' >> ~/.commonrc
 Consider grabbing some Bash scripts from
 [awesome-dotfiles](https://github.com/webpro/awesome-dotfiles).
 Clone your chosen dotfiles repo into `~/bin`.
+I put some aliases and functions directly in my `.commonrc`:
 
-I put some aliases and functions directly in `.commonrc`:
+[`add-bookmarks.sh` :fontawesome-solid-code:](commonrc.sh){ .md-button }
 
-```bash
-# Set the PATH environment variable to include various directories
-export PATH
-PATH=/opt/jdk22/bin:$PATH
-PATH=/opt/maven-3.9/bin:$PATH
-PATH=/opt/idea/bin:$PATH
-export JAVA_HOME=/opt/jdk22
-
-# Alias xdg-open to open on macOS for compatibility with scripts
-if [[ $OSTYPE == 'darwin'* ]]; then
-    alias xdg-open=open
-fi
-
-# Safety aliases to prevent accidental recursive operations on the root directory
-alias chown='chown --preserve-root'
-alias chmod='chmod --preserve-root'
-alias chgrp='chgrp --preserve-root'
-
-# Aliases for grep with color highlighting
-alias grep='grep --color=auto'
-alias egrep='egrep --color=auto'
-alias fgrep='fgrep --color=auto'
-
-# Alias to show open ports in a compact form using ss
-# -t: TCP
-# -u: UDP
-# -l: listening
-# -n: numeric
-alias ports='ss -tuln'
-
-# Alias to list open file handles for the current shell
-# -l: long listing
-# -a: all files
-alias handles='ls -la /proc/$$/fd'
-
-# Aliases for various system monitoring tools
-# --human: human-readable memory usage
-alias fre='free --human'
-# --active: display active/inactive memory
-alias usg='vmstat --active'
-# --only: only show processes with I/O
-# --batch: run in batch mode
-alias iousg='sudo iotop --only --batch'
-
-# Alias to set DNS servers using resolvectl
-alias resolvedns='resolvectl dns'
-
-# Alias to list threads of all processes
-# -A: all processes
-# -f: full format
-# -L: threads
-# -l: long format
-# -y: resident set size
-# --headers: repeat header
-alias threads='ps -A -f -L -l -y -S --headers'
-
-# Aliases to list sockets with process information
-alias lssockets='sudo ss --listening --processes'
-alias lstcp='sudo ss --listening --processes --tcp'  # TCP only
-alias lsudp='sudo ss --listening --processes --udp'  # UDP only
-
-# Aliases for the exa command, a modern replacement for ls
-# --all: all files
-# --sort=name: (obvious)
-# --group-directories-first: (obvious)
-# --icons: show icons
-# --created: show creation time
-# --modified: show modified time
-# --git: show Git status
-alias e='exa --all --sort=name --group-directories-first --icons --created --modified --git'
-# --long: long format
-alias ee='exa --all --sort=name --group-directories-first --icons --created --modified --git --long'
-# --grid: grid format
-alias eeg='exa --all --sort=name --group-directories-first --icons --created --modified --git --long --grid'
-
-# Aliases for quick directory navigation
-alias cd..='cd ..'  # cd ..
-alias ..='cd ..'  # cd .. 2 times
-alias ...='cd ../../../'  # cd .. 3 times
-alias ....='cd ../../../../'  # cd .. 4 times
-alias .....='cd ../../../../../'  # cd .. 5 times
-
-# Alias for git pull with fast-forward only
-alias ff='git pull -ff-only'
-
-# Git configuration aliases for status and log
-
-# Show short status with branch
-git config --global alias.stat 'status --short --branch'
-# Show log in one line per commit
-git config --global alias.lg 'log --oneline'
-# Show log as a graph
-git config --global alias.graph 'log --graph'
-# Show log graph with compact summary
-git config --global alias.graphh 'log --graph --compact-summary'
-# Show log graph with cumulative summary
-git config --global alias.graphhh 'log --graph --compact-summary --cumulative'
-# Show log with detailed diff
-git config --global alias.logdiff 'log --full-diff --unified=1 --color=always --ignore-blank-lines --ignore-space-at-eol --diff-algorithm=histogram --find-renames=50 --find-copies=50 --color-moved=zebra --color-moved-ws'
-
-# Function to create a directory and cd into it
-cdd() {
-    mkdir "$1" && cd "$1"
-}
-
-# Function to create the parent directory and cd into it
-cdd.() {
-    mkdir "../$1" && cd "../$1"
-}
-
-# Function to change ownership recursively
-grab() {
-    sudo chown -R ${USER}:${USER} ${1:-.}
-}
-
-# Function to extract various archive formats
-extract () {
-   if [[ ! -f "$1" ]] ; then
-       >&2 echo "'$1' is not a file"
-       return 2 # exit status 2: Missing file
-   fi
-   case "$1" in
-       *.gz)        gunzip "$1"      ;;  # Gzip
-       *.tar)       tar xvf "$1"     ;;  # TAR
-       *.tar.bz2)   tar xvjf "$1"    ;;  # Bzip2-ed tar
-       *.tbz2)      tar xvjf "$1"    ;;  # Bzip2-ed tar
-       *.tar.gz)    tar xvzf "$1"    ;;  # Gzip-ed tar
-       *.tgz)       tar xvzf "$1"    ;;  # Gzip-ed tar
-       *.lzma)      unlzma  "$1"     ;;  # LZMA
-       *.7z)        7z x "$1"        ;;  # LZMA 7-zip
-       *.xz)        unxz "$1"        ;;  # XZ (AKA LZMA2)
-       *.zip)       unzip "$1"       ;;  # ZIP
-       *.Z)         uncompress "$1"  ;;  # ZIP
-       *.bz2)       bunzip2 "$1"     ;;  # Bzip2
-       *.rar)       unrar x "$1"     ;;  # RAR (proprietary)
-       *.snappy)    snunzip "$1"     ;;  # Snappy
-       *.sz)        snunzip "$1"     ;;  # Snappy
-       *.br)        brotli -d "$1"   ;;  # Brotli
-       *.lz4)       unlz4 "$1"       ;;  # Lempel-Ziv 4
-       *.zst)       unzstd "$1"      ;;  # Zstandard
-       *)           >&2 echo "I don't know how to extract '$1'"; return 1 ;; # exit status 1: Unknown file type
-   esac
-}
-
-# Function to search for TODO comments in Java files
-findtodos() {
-    local directory=$1
-    local suffix='*.java'
-
-    # Parse optional parameters
-    shift  # Skip the first argument
-    while [ "$#" -gt 0 ]; do
-        case "$1" in
-            --suffix)
-                suffix="$2"
-                shift 2  # Shift to skip the parameter and its value
-                ;;
-            --)  # End of all options
-                shift
-                break
-                ;;
-            *)  # No more options
-                break
-                ;;
-        esac
-    done
-
-    # Start the Markdown table
-    echo "| File | Line | Comment |"
-    echo "|------|------|---------|"
-
-    # Grep to find TODO comments
-    grep -rn --include="$suffix" 'TODO' "$directory" | awk -F':' '
-        {
-            # Remove "TODO" or "TODO:" from the beginning of the comment
-            comment = substr($0, index($0, $3));
-            sub(/^[ \t]*TODO[:]?[ \t]*/, "", comment);
-
-            # Print as a Markdown table row
-            print "| " $1 " | " $2 " | " comment " |";
-        }
-    '
-}
-
-# Function to update system packages
-update() {
-    sudo apt update  # Update the package list
-    sudo apt upgrade  # Upgrade all installed packages
-    sudo apt dist-upgrade  # Perform a distribution upgrade
-
-```
-
-*[LTS]: Long-Term Support
-*[UEFI]: Unified Extensible Firmware Interface
-*[JDK]: Java Development Kit
+_[LTS]: Long-Term Support
+_[UEFI]: Unified Extensible Firmware Interface \*[JDK]: Java Development Kit
 
 !!! note "Thanks"
+
     Thank you to Cole Helsell for drafting this guide with me.

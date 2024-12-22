@@ -1,22 +1,37 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Conventions
 
-Recommendations for code, documentation, etc.
+---
 
-## Contents
+<strong class="index">Contents</strong>
 
-[:fontawesome-solid-cloud: **APIs**](../convention/apis.md): REST APIs and data representation
+[:fontawesome-solid-cloud: **APIs**](apis.md):
+REST APIs and data representation
 
-[:fontawesome-solid-book-open: **Documentation**](../convention/documentation.md): Writing and maintaining documentation
+[:fontawesome-solid-book-open: **Documentation**](documentation.md):
+Writing and maintaining documentation
 
-[:fontawesome-solid-mug-hot: **Java**](../convention/java.md): Java and Kotlin conventions
+[:fontawesome-solid-mug-hot: **Java**](java.md):
+Java and Kotlin conventions
 
-[:fontawesome-solid-code: **JavaScript**](../convention/javascript.md): JavaScript and TypeScript conventions
+[:fontawesome-solid-code: **JavaScript**](javascript.md):
+JavaScript and TypeScript conventions
 
-[:fontawesome-solid-dragon: **Python**](../convention/python.md): Python conventions
+[:fontawesome-solid-dragon: **Python**](python.md):
+Python conventions
 
-[:fontawesome-solid-terminal: **Scripts and build files**](../convention/scripts-and-build-files.md): Shell scripts, build files, etc.
+[:fontawesome-solid-terminal: **Scripts and build files**](scripts-and-build-files.md):
+Conventions for shell scripts, build files, etc.
 
-[:fontawesome-solid-database: **SQL**](../convention/sql.md): SQL conventions
+[:fontawesome-solid-database: **SQL**](sql.md):
+SQL conventions
+
+---
 
 ## Usage
 
@@ -42,18 +57,28 @@ Include a link in your project’s readme or `CONTRIBUTING.md` file.
 
 ## Auto-formatters
 
-Use the auto-formatter setup in [dmyersturnbull/cicd](https://github.com/dmyersturnbull/cicd).
-This includes `.editorconfig`, [Prettier](https://prettier.io/), and
+Use the auto-formatter setup in
+[dmyersturnbull/cicd](https://github.com/dmyersturnbull/cicd).
+This includes `.editorconfig`,
+[Prettier](https://prettier.io/), and
 the [Ruff formatter](https://docs.astral.sh/ruff/formatter/)
 (which is equivalent to [Black](https://github.com/psf/black)).
 
 Prettier handles all the formatting for JavaScript, TypeScript, HTML, and CSS,
 and some of the formatting for Markdown and some other languages.
-For Java and Kotlin, the [IntelliJ formatter settings](intellij-style.xml)
+For Java and Kotlin, the
+[IntelliJ formatter settings](intellij-style.xml)
 can handle some of the formatting conventions for those languages.
 
-These auto-formatters are meant to be run via [pre-commit](https://pre-commit.com/) or before each merge.
+These auto-formatters are meant to be run via
+[pre-commit](https://pre-commit.com/)
+or before each merge.
 This document lists non-formatting guidelines (e.g. accessibility)
 and formatting conventions that auto-formatters do not handle.
 
-## History
+## Principles
+
+Auto-formatters generally remove unnecessary syntax elements.
+Default options for linters tend to do the same.
+For example, unnecessary parentheses are stripped out.
+In these guidelines, I mimic that wherever possible (and reasonable).

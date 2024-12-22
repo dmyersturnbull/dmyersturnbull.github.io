@@ -1,18 +1,26 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Issue labels
 
-This is a list of issue labels intended to complement the [contributor guide](contributor-guide.md).
+This is a set of issue labels intended to complement the [contributor guide](contributor-guide.md).
 They are used in the [CICD repo](https://github.com/dmyersturnbull/cicd).
 
 !!! info "To use in your projects"
 
     Link to https://dmyersturnbull.github.io/ref/contributor-guide/.
     Refer to that guide for information.
-    To add these to GitHub programmatically, refer to [CICD](https://github.com/dmyersturnbull/cicd) or see below.
+    To add these to GitHub programmatically, refer to [CICD](https://github.com/dmyersturnbull/cicd).
 
 !!! info "Another way to use"
 
-    Please feel free to use some or all of these in your projects or guidelines.
-    No need to credit.
+    Feel free to use some or all of these labels in your project.
+    No need to credit me for that.
+    (If you’re writing your own recommendations for other projects to use
+    (e.g. on your blog), please do credit.)
 
 There are 6 groups:
 
@@ -22,10 +30,11 @@ There are 6 groups:
 - `effort`: How much work it requires
 - `scope`: The component (matches commit scopes)
 - `breaking`: Whether breaking changes are required (for issues) or made (for PRs)
-- miscellaneous: `help needed` (to request help),
-  `bookmark` (for issues that contain important information),
+- changelog overrides:
   `changelog: include` (always list in the changelog under _🍒 Miscellaneous_),
   and `changelog: exclude` (never list in the changelog)
+- optional miscellaneous labels: `help needed` (to request help)
+  and `bookmark` (for issues that contain important information)
 
 `type` is required for both issues and PRs.
 The `type` of a PR should match its commit type when squashed.
@@ -33,251 +42,57 @@ The `type` of a PR should match its commit type when squashed.
 
 ## Table
 
-| Label                   | Commit part | Changelog section   | Bump  | Icon | Description                     | Color    |
-|-------------------------|-------------|---------------------|-------|------|---------------------------------|----------|
-| `breaking`              | `!`         | 💥 Breaking changes | major | 💥   | Breaking change                 | `000000` |
-| `help needed`           | N/A         | N/A                 | N/A   | 👋   | Help needed                     | `40f040` |
-| `bookmark`              | N/A         | N/A                 | N/A   | 🔖   | Important for reference         | `ffff44` |
-| `changelog: include`    | N/A         | N/A                 | N/A   | 🔔   | Always include in changelog     | `ffe6e6` |
-| `changelog: exclude`    | N/A         | N/A                 | N/A   | 🔕   | Always omit from changelog      | `eeeeee` |
-| `type: drop`            | `drop:`     | 💥 Breaking changes | major | ❌    | Drop a feature                  | `440000` |
-| `type: security`        | `security:` | 🔒️ Security        | minor | 🔒️  | Fix a security issue            | `000060` |
-| `type: deprecation`     | `depr:`     | 🗑️ Deprecations    | minor | 🗑️  | Deprecate something public      | `101030` |
-| `type: feature`         | `feat:`     | ✨ Features          | minor | ✨    | Add or change a feature         | `000060` |
-| `type: fix`             | `fix:`      | 🐛 Bug fixes        | patch | 🐛   | Fix a bug                       | `000060` |
-| `type: docs`            | `docs:`     | 📝 Documentation    | patch | 📝   | Modify docs or examples         | `000060` |
-| `type: build`           | `build:`    | 🔧 Build system     | minor | 🔧   | Modify build or dependencies    | `000060` |
-| `type: performance`     | `perf:`     | ⚡️ Performance      | patch | ⚡️   | Reduce resource usage           | `000060` |
-| `type: test`            | `test:`     | 🍒 Miscellaneous    | none  | 🚨   | Add or modify tests             | `000060` |
-| `type: cicd`            | `ci:`       | 🍒 Miscellaneous    | none  | ⚙️   | Modify CI/CD                    | `000060` |
-| `type: refactor`        | `refactor:` | 🍒 Miscellaneous    | none  | ♻️   | Refactor source code            | `000060` |
-| `type: style`           | `style:`    | skipped             | none  | 🎨   | Modify code style               | `000060` |
-| `type: chore`           | `chore:`    | skipped             | none  | 🧹   | Other type of change            | `000060` |
-| N/A                     | `release:`  | skipped             | N/A   | ✉️   | Bump the version and deploy     | `000000` |
-| `priority: critical`    | N/A         | N/A                 | N/A   | 🟥   | Must be fixed ASAP              | `ff6600` |
-| `priority: high`        | N/A         | N/A                 | N/A   | 🟧   | Stalls work; must be fixed soon | `cc9911` |
-| `priority: medium`      | N/A         | N/A                 | N/A   | 🟨   | Not blocking but important      | `ff6600` |
-| `priority: low`         | N/A         | N/A                 | N/A   | 🟩   | No need to rush                 | `99dd00` |
-| `state: ready for dev`  | N/A         | N/A                 | N/A   | 🏁   | Ready for development work      | `cccccc` |
-| `state: needs triage`   | N/A         | N/A                 | N/A   | 🚦   | Needs to be triaged             | `444444` |
-| `state: blocked`        | N/A         | N/A                 | N/A   | 🚧   | Blocked by another issue        | `999999` |
-| `state: needs details`  | N/A         | N/A                 | N/A   | 🏷️  | Requires ticket work            | `666666` |
-| `state: rejected`       | N/A         | N/A                 | N/A   | ✖️   | Will not be worked on           | `eeeeee` |
-| `effort: 1`             | N/A         | N/A                 | N/A   | 1️⃣  | Easy (t < 1 hr)                 | `300040` |
-| `effort: 2`             | N/A         | N/A                 | N/A   | 2️⃣  | Moderate (1 hr <= t < 4 hr)     | `600040` |
-| `effort: 3`             | N/A         | N/A                 | N/A   | 3️⃣️ | Hard (>= 4 hours)               | `900040` |
-| `effort: multipart`     | N/A         | N/A                 | N/A   | *️⃣  | References multiple issues      | `a00010` |
-| `scope: i18n`           | `(i18n)`    | N/A                 | N/A   | 🌐   | Relates to internationalization | `009000` |
-| `scope: plugins` (e.g.) | `(plugins)` | N/A                 | N/A   | 🧩   | Relates to plugins              | `000090` |
+| Label                    | Commit part | Changelog section   | Bump  | Icon | Description                     | Color     |
+| ------------------------ | ----------- | ------------------- | ----- | ---- | ------------------------------- | --------- |
+| `bookmark` (optional)    | N/A         | N/A                 | N/A   | 🔖   | Important for reference         | `ffff44`  |
+| `breaking`               | `!`         | 💥 Breaking changes | major | 💥   | Breaking change                 | `000000`  |
+| `changelog: exclude`     | N/A         | N/A                 | N/A   | 🔕   | Always omit from changelog      | `f2e9e9`  |
+| `changelog: include`     | N/A         | N/A                 | N/A   | 🔔   | Always include in changelog     | `f9e6e6`  |
+| `effort: 1-easy`         | N/A         | N/A                 | N/A   | 1️⃣   | Easy (t < 1 hr)                 | `50b0ff`  |
+| `effort: 2-moderate`     | N/A         | N/A                 | N/A   | 2️⃣   | Moderate (1 hr <= t < 4 hr)     | `90e0fff` |
+| `effort: 3-difficult`    | N/A         | N/A                 | N/A   | 3️⃣️  | Hard (>= 4 hours)               | `8670ff`  |
+| `effort: 4-multipart`    | N/A         | N/A                 | N/A   | #️⃣   | References multiple issues      | `c050ff`  |
+| `help needed` (optional) | N/A         | N/A                 | N/A   | 👋   | Help needed                     | `50ff50`  |
+| `priority: 1-low`        | N/A         | N/A                 | N/A   | 🟩   | No need to rush                 | `99dd00`  |
+| `priority: 2-medium`     | N/A         | N/A                 | N/A   | 🟨   | Not blocking but important      | `d0cc11`  |
+| `priority: 3-high`       | N/A         | N/A                 | N/A   | 🟧   | Blocks a release                | `e09911`  |
+| `priority: 4-critical`   | N/A         | N/A                 | N/A   | 🟥   | Must be fixed ASAP              | `ff6600`  |
+| `scope: i18n` (e.g.)     | `(i18n)`    | N/A                 | N/A   | 🌐   | Relates to internationalization | `009000`  |
+| `scope: plugins` (e.g.)  | `(plugins)` | N/A                 | N/A   | 🧩   | Relates to plugins              | `000090`  |
+| `state: awaiting triage` | N/A         | N/A                 | N/A   | 🚦   | Awaiting triage                 | `f0f0f0`  |
+| `state: blocked`         | N/A         | N/A                 | N/A   | 🚧   | Blocked by another issue        | `e0e0e0`  |
+| `state: needs details`   | N/A         | N/A                 | N/A   | 🏷️   | Needs more details              | `f0f0f0`  |
+| `state: ready for dev`   | N/A         | N/A                 | N/A   | 🏁   | Ready for work                  | `e0e0e0`  |
+| `state: rejected`        | N/A         | N/A                 | N/A   | ✖️   | Will not be worked on           | `ffffff`  |
+| `type: build`            | `build:`    | 🔧 Build system     | minor | 🔧   | Modify build or dependencies    | `90e0ff`  |
+| `type: cicd`             | `ci:`       | 🍒 Miscellaneous    | none  | ⚙️   | Modify CI/CD                    | `90e0ff`  |
+| `type: deprecation`      | `depr:`     | 🗑️ Deprecations     | minor | 🗑️   | Deprecate something public      | `90e0ff`  |
+| `type: docs`             | `docs:`     | 📝 Documentation    | patch | 📝   | Modify docs or examples         | `90e0ff`  |
+| `type: drop`             | `drop:`     | 💥 Breaking changes | major | ❌   | Remove a feature                | `90e0ff`  |
+| `type: feature`          | `feat:`     | ✨ Features         | minor | ✨   | Add or modify a feature         | `90e0ff`  |
+| `type: fix`              | `fix:`      | 🐛 Bug fixes        | patch | 🐛   | Fix a bug                       | `90e0ff`  |
+| `type: performance`      | `perf:`     | ⚡️ Performance     | patch | ⚡️  | Reduce resource usage           | `90e0ff`  |
+| `type: refactor`         | `refactor:` | 🍒 Miscellaneous    | none  | ♻️   | Refactor source code            | `90e0ff`  |
+| `type: security`         | `security:` | 🔒️ Security        | minor | 🔒️  | Fix vulnerability or harden     | `90e0ff`  |
+| `type: style`            | `style:`    | skipped             | none  | 🎨   | Modify code style               | `90e0ff`  |
+| `type: test`             | `test:`     | 🍒 Miscellaneous    | none  | 🚨   | Add or modify tests             | `90e0ff`  |
+| N/A                      | `release:`  | skipped             | N/A   | ✉️   | Bump the version and deploy     | N/A       |
 
-??? details "Add programmatically"
+!!! rationale
 
-    These scripts script should add the labels.
-    They will not remove existing labels; you will have to do that yourself.
-    They may fail if you have existing labels with the same names.
+    This meets my two requirements:
 
-    === "Bash"
+    - It’s compatible with up-to-date
+      [Angular commit types](https://github.com/angular/angular/blob/main/CONTRIBUTING.md).
+    - Commit messages can be used to generate useful, complete, and obvious changelog.
 
-        ```bash
-        org="my_github_user_or_org"
-        repo="my_github_repo"
-        labels=$(cat <<-EOF
-        {
-          "labels": [
-            {
-              "name": "breaking",
-              "description": "💥 Breaking change",
-              "color": "#000000"
-            },
-            {
-              "name": "help needed",
-              "description": "👋 Help needed",
-              "color": "#40f040"
-            },
-            {
-              "name": "bookmark",
-              "description": "🔖 Important for reference",
-              "color": "#ffff44"
-            },
-            {
-              "name": "changelog: include",
-              "description": "🔔 Always include in the changelog",
-              "color": "#ffe6e6"
-            },
-            {
-              "name": "changelog: exclude",
-              "description": "🔕 Always omit from the changelog",
-              "color": "#eeeeee"
-            },
-            {
-              "name": "type: drop",
-              "description": "❌ Removal of a feature",
-              "color": "#440000"
-            },
-            {
-              "name": "type: feature",
-              "description": "✨ Addition or modification of a feature",
-              "color": "#000060"
-            },
-            {
-              "name": "type: security",
-              "description": "🔒️ Vulnerability fix/mitigation or hardening",
-              "color": "#000060"
-            },
-            {
-              "name": "type: deprecation",
-              "description": "🗑️ Deprecation of a feature or component",
-              "color": "#000000"
-            },
-            {
-              "name": "type: fix",
-              "description": "🐛 Bug fix, excluding security vulnerabilities",
-              "color": "#000060"
-            },
-            {
-              "name": "type: performance",
-              "description": "⚡️ Code change that improves performance",
-              "color": "#000060"
-            },
-            {
-              "name": "type: build",
-              "description": "🔧 Change to the build system or external dependencies",
-              "color": "#000060"
-            },
-            {
-              "name": "type: docs",
-              "description": "📝 Change to documentation only",
-              "color": "#000060"
-            },
-            {
-              "name": "type: refactor",
-              "description": "♻️ Code change that neither fixes a bug nor adds or modifies a feature",
-              "color": "#000060"
-            },
-            {
-              "name": "type: test",
-              "description": "🚨 Addition or modification of tests",
-              "color": "#000060"
-            },
-            {
-              "name": "type: cicd",
-              "description": "⚙️ Change to continuous integration and deployment (CI/CD)",
-              "color": "#000060"
-            },
-            {
-              "name": "type: style",
-              "description": "🎨 Code change that does not affect the meaning of the code",
-              "color": "#000060"
-            },
-            {
-              "name": "type: chore",
-              "description": "️🧹 Other type of change",
-              "color": "#000060"
-            },
-            {
-              "name": "priority: critical",
-              "description": "🟥 Must be fixed ASAP",
-              "color": "#ff6600"
-            },
-            {
-              "name": "priority: high",
-              "description": "🟧 Stalls work on the project or its dependents",
-              "color": "#cc9911"
-            },
-            {
-              "name": " priority: medium",
-              "description": "🟨 Does not block release/milestone but should be prioritized",
-              "color": "#cccc11"
-            },
-            {
-              "name": "priority: low",
-              "description": "🟩 Does not block release/milestone and can be done at any time",
-              "color": "#99dd00"
-            },
-            {
-              "name": "state: ready for dev",
-              "description": "🏁 Ready for work",
-              "color": "#cccccc"
-            },
-            {
-              "name": "state: blocked",
-              "description": "🚧 Blocked by another issue",
-              "color": "#999999"
-            },
-            {
-              "name": "state: needs details",
-              "description": "🏷️ Needs more details before work can begin",
-              "color": "#666666"
-            },
-            {
-              "name": "state: rejected",
-              "description": "✖️ Will not be worked on",
-              "color": "#eeeeee"
-            },
-            {
-              "name": "state: awaiting triage",
-              "description": "🚦 Awaiting triage",
-              "color": "#444444"
-            },
-            {
-              "name": "effort: 1",
-              "description": "1️⃣ Easy (t < 1 hr)",
-              "color": "#300040"
-            },
-            {
-              "name": "effort: 2",
-              "description": "2️⃣ Moderate (1 hr ≤ t < 4 hr)",
-              "color": "#600040"
-            },
-            {
-              "name": "effort: 3",
-              "description": "3️⃣️ Hard (≥ 4 hours)",
-              "color": "#900040"
-            },
-            {
-              "name": "effort: multipart",
-              "description": "*️⃣ Organizes multiple sub-issues",
-              "color": "#900040"
-            },
-            {
-              "name": "scope: plugin",
-              "description": "🧩 Plugins",
-              "color": "#009000"
-            },
-            {
-              "name": "scope: i18n",
-              "description": "🌐 Internationalization",
-              "color": "#009000"
-            }
-          ]
-        }
-            EOF
-        )
+    And has some nice-to-have features:
 
-        jq -c '.[]' <<< "${labels}" | while read label; do
-          curl -L \
-            -X POST \
-            -H "Accept: application/vnd.github+json" \
-            -H "Authorization: Bearer ${token}" \
-            -H "X-GitHub-Api-Version: 2022-11-28" \
-            https://api.github.com/repos/${org}/${repo}/labels \
-            -d '${label}'
-        done
-        ```
-
-    === "PowerShell"
-
-      TODO
-
-!!! info "Motivation"
-
-    - Compatible with the [Angular commit types](https://github.com/angular/angular/blob/main/CONTRIBUTING.md)
-      and map naturally to changelog headings
-    - Easy to type and obviously named
-    - Reuse types that are common in the wild, such as _effort_ and _priority_
-    - Try to avoid names and emojis that conflict with well-known types (e.g., gitmoji).
-    - Not include chat/question types (which Conversations should be used for)
-      or states that occur post-triage, which Projects and issue actions should be used for (e.g., "state: completed")
+    - It is consistent with [Gitmoji](https://gitmoji.dev/).
+      (_Exception:_ Gitmoji uses 🔊 and 🔇 for commits that modify logs.)
+    - It prefers terms that are commonly used in the wild, such as _effort_ and _priority_.
+    - Labels are grouped in an obvious way.
+    - Labels have obvious names and are easy to type.
 
     **References:**
 

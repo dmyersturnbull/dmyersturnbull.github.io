@@ -1,3 +1,6 @@
 /recipes/*.yaml
 /recipes/*.yml
 **/*.svg
+/contents/post/uri-safe-characters.md
+/contents/post/iso-8601-problems.md
+/contents/convention/apis.md

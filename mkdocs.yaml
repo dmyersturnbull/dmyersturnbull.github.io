@@ -1,6 +1,6 @@
 site_name: "Gaslit by a computer"
 docs_dir: "contents"
-site_dir: "docs"
+site_dir: "~docs"
 
 copyright: "Copyright 2024, Douglas Myers-Turnbull"
 site_description: "Software guides, reference docs, and more."
@@ -8,27 +8,8 @@ site_description: "Software guides, reference docs, and more."
 # Navigation menu
 nav:
   - Home: index.md
-  - Reference docs:
-      - Overview: ref/index.md
-      - Contributor guide: ref/contributor-guide.md
-      - Maintainer guide: ref/maintainer-guide.md
-      - Issue labels: ref/issue-labels.md
-  - Conventions:
-      - Overview: convention/index.md
-      - Documentation: convention/documentation.md
-      - APIs: convention/apis.md
-      - Scripts and build files: convention/scripts-and-build-files.md
-      - Python: convention/python.md
-      - Java: convention/java.md
-      - JavaScript: convention/javascript.md
-      - SQL: convention/sql.md
-  - Specifications:
-      - Overview: spec/index.md
-      - Advanced BNF with regex: spec/advanced-bnf-with-regex.md
-      - HTTP GET search DSL: spec/http-get-search-dsl.md
-      - HATEOAS See header: spec/hateoas-see-header.md
   - Setup guides:
-      - Overview: guide/index.md
+      - ⟨index⟩: guide/index.md
       - Linux: guide/linux.md
       - macOS: guide/macos.md
       - Windows: guide/windows.md
@@ -38,16 +19,41 @@ nav:
       - Mamba and Conda: guide/mamba-and-conda.md
       - FFmpeg: guide/ffmpeg.md
       - Arduino: guide/arduino.md
+  - Cheatsheets and tools:
+      - ⟨index⟩: cheatsheet/index.md
+      - Click-to-copy symbols: cheatsheet/click-to-copy-symbols.md
+  - Reference docs:
+      - ⟨index⟩: ref/index.md
+      - Contributor guide: ref/contributor-guide.md
+      - Maintainer guide: ref/maintainer-guide.md
+      - Issue labels: ref/issue-labels.md
+  - Conventions:
+      - ⟨index⟩: convention/index.md
+      - Documentation: convention/documentation.md
+      - APIs: convention/apis.md
+      - Scripts and build files: convention/scripts-and-build-files.md
+      - Python: convention/python.md
+      - Java: convention/java.md
+      - JavaScript: convention/javascript.md
+      - SQL: convention/sql.md
+  - Specifications:
+      - ⟨index⟩: spec/index.md
+      - Advanced BNF with regex: spec/advanced-bnf-with-regex.md
+      - HTTP GET search DSL: spec/http-get-search-dsl.md
+      - HATEOAS See header: spec/hateoas-see-header.md
+      - Restricted ISO 8601: spec/restricted-iso-8601.md
   - Posts & tutorials:
-      - Overview: post/index.md
+      - ⟨index⟩: post/index.md
+      - ISO 8601 problems: post/iso-8601-problems.md
+      - Calculating durations: post/calculating-durations.md
+      - URI-safe characters: post/uri-safe-characters.md
       - Duck typing is quackery: post/duck-typing-is-quackery.md
+      - Correct exception handling: post/correct-exception-handling.md
       - Software test strategy guide: post/software-testing-strategy-guide.md
       - Testing scientific software: post/testing-scientific-software.md
       - Python infrastructure: post/retooling-python-builds.md
       - Frontends for time-travelers: post/frontends-for-time-travelers.md
-      - Git tips and microscripts: post/git-tips-and-microscripts.md
       - Wonders of ChatGPT: post/wonders-of-chatgpt.md
-      - Unicode symbol snatcher: post/unicode-symbol-snatcher.md
 
 # Theme
 theme:
@@ -112,12 +118,17 @@ markdown_extensions:
   - meta
   - pymdownx.arithmatex:
       generic: true
+  - pymdownx.blocks.caption:
+      auto_level: 2
   - pymdownx.caret
   - pymdownx.details
   - pymdownx.highlight:
       guess_lang: false
+      anchor_linenums: true
       linenums_style: pymdownx-inline
       use_pygments: true
+      pygments_lang_class: true
+      line_spans: __span
   - pymdownx.inlinehilite
   - pymdownx.mark
   - pymdownx.magiclink:
@@ -161,6 +172,7 @@ extra_javascript:
   - js/fixups.js
 
 plugins:
+  - macros
   - search
   - table-reader
   - mkdocstrings:

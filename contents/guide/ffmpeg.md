@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # FFmpeg setup
 
 ## Compiling FFmpeg on Ubuntu
@@ -38,13 +44,13 @@ sudo apt install \
   yasm \
   xz-utils
 
-export LD_LIBRARY_PATH="${LD_LIBRARY_PATH}:/usr/local/lib"
-export PKG_CONFIG_PATH="${PKG_CONFIG_PATH}:/usr/local/lib/pkgconfig"
+export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
+export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig"
 
-curl -L -s https://ffmpeg.org/releases/ffmpeg-${ffmpeg_vr}.tar.xz \
+curl -L -s https://ffmpeg.org/releases/ffmpeg-$ffmpeg_vr.tar.xz \
     | tar -xf \
-    > "ffmpeg-${ffmpeg_vr}"
-cd "ffmpeg-${ffmpeg_vr}"
+    > "ffmpeg-$ffmpeg_vr"
+cd "ffmpeg-$ffmpeg_vr"
 
 # Need to configure SSH keys with GitLab
 git clone --depth=1 https://gitlab.com/AOMediaCodec/SVT-AV1.git
@@ -78,4 +84,5 @@ fi
 1. Set this to the most recent version
 
 !!! note "Thanks"
+
     Thank you to Cole Helsell for drafting this guide with me.

@@ -1,8 +1,15 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Windows setup
 
 A setup guide for programmers, etc., on Windows.
 
-!!! note "See also"
+!!! related
+
     [macOS setup guide](macos.md) and
     [Linux setup guide](linux.md)
 
@@ -12,18 +19,19 @@ A setup guide for programmers, etc., on Windows.
 
 I used these steps on 6 Intel+NVIDIA workstation builds.
 
-1. Download  drivers from the [NVIDIA driver page](https://www.geforce.com/drivers).
+1. Download drivers from the [NVIDIA driver page](https://www.geforce.com/drivers).
 
 2. Download and install the
    [Intel Extreme Tuning Utility](https://downloadcenter.intel.com/download/24075/Intel-Extreme-Tuning-Utility-Intel-XTU-).
    Open it and view the system info and temperatures.
 
 3. Overclock:
-     - Restart your computer, enter the BIOS, and open the overclocking settings.
-       In general, you’ll want to overclock the memory to the XMP profile.
-       This might mean a change from 2400 MHz to 3600 MHz.
-     - Overclock the CPU and cache frequencies a little bit at a time.
-       After each change, run the Intel tuning utility: Run multiple "benchmarks" and watch the temperature.
+
+   - Restart your computer, enter the BIOS, and open the overclocking settings.
+     In general, you’ll want to overclock the memory to the XMP profile.
+     This might mean a change from 2400 MHz to 3600 MHz.
+   - Overclock the CPU and cache frequencies a little bit at a time.
+     After each change, run the Intel tuning utility: Run multiple "benchmarks" and watch the temperature.
 
 4. Install the [CUDA toolkit](https://developer.nvidia.com/cuda-downloads).
 
@@ -49,9 +57,10 @@ Disable unnecessary Optional Features---which is most of them,
 including the Telnet Client, Windows Media Player, and PowerShell 2.0.
 Uninstall Notepad and Wordpad.
 
-!!! tip
+??? info "Optional Features"
 
-    Your Optional Features list might eventually look like this:
+    Your list might have some differences.
+    Mine eventually looked like this:
 
     | Feature                                         | On? |
     |-------------------------------------------------|-----|
@@ -108,6 +117,7 @@ Set powershell-core as your default shell.
 Check the PowerShell version using: `Get-Host | Select-Object Version`. Make sure it’s 7+.
 
 !!! tip
+
     Although I’m used to shell scripting Linux, Powershell is actually quite good.
     Instead of needing to parse text from stdout when piping between commands, the data structures
     passed around in PowerShell are _tables_. It’s a much better approach, and I recommend
@@ -117,12 +127,7 @@ Check the PowerShell version using: `Get-Host | Select-Object Version`. Make sur
 Install some essential packages by running
 
 ```powershell
-choco install -Y \
-    poshgit \
-    gh \
-    libressl \
-    gnupg \
-    rsync
+choco install -Y poshgit gh libressl gnupg  rsync
 ```
 
 ??? tip "Other packages"
@@ -171,9 +176,12 @@ Note that GitHub CLI was installed via Chocolatey (in the steps above).
 ## Language tools
 
 [Install the Rust toolchain](https://rustup.rs/).
-Then, check <i>Add or Remove Programs</i> for _Java_. Uninstall any versions you have installed.
-**Download [Temurin JDK 21](https://adoptium.net/temurin/releases/).**
-**Do _not_ use Java 8, java.com, or OpenJDK.**
+
+Check <i>Add or Remove Programs</i> for _Java_. Uninstall any versions you have installed.
+Then, download [JDK 21 LTS from Temurin](https://adoptium.net/temurin/releases/)
+(or a newer non-LTS version if preferred).
+Do **not** use Java 8, java.com, or OpenJDK.
+Make sure it’s on your `$PATH` by checking the version via `java --version` in a new shell.
 
 !!! tip "Pro-tip"
 
@@ -227,7 +235,8 @@ Install the [Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-c
 **This is not the same as the "redistributable" package.**
 Install the package without optional packages (unless they’re wanted).
 
-!!! info "Compiling Python packages"
+!!! bug "Troubleshooting / compiling packages"
+
     Some packages do not publish wheels for Windows.
     Pip and Poetry will fall back to compiling on Windows if suitable wheels are not found.
     You may need to install older versions of the Visual C++ Build Tools for this to work (as well as the latest).
@@ -240,7 +249,8 @@ Install the package without optional packages (unless they’re wanted).
 Follow [Microsoft’s instructions](https://learn.microsoft.com/en-us/windows/wsl/install) to install the WLS.
 Then follow the [Linux setup guide](linux.md).
 
-*[WLS]: Windows Linux Subsystem
+\*[WLS]: Windows Linux Subsystem
 
 !!! note "Thanks"
+
     Thank you to Cole Helsell for drafting this guide with me.

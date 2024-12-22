@@ -1,10 +1,15 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 
 # Python conventions
 
 ## Modules
 
 Add all public members to `__all__`, declared immediately after the imports.
-(Note that [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings) requires this.)
+(Note that [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings) requires `__all__`.)
 
 Use `mainpkg/__init__.py` to `import` the most important classes.
 Do not set `__author__` or similar fields, but do set `mainpkg/__version__`.
@@ -22,30 +27,30 @@ For example:
 
 === "❌ Incorrect"
 
-	```python
-	data = my_long_named_function_that_makes_the_line_too_long(
-	    data
-	).my_other_long_named_function_being_chained(1)
-	```
+    ```python
+    data = my_long_named_function_that_makes_the_line_too_long(
+        data
+    ).my_other_long_named_function_being_chained(1)
+    ```
 
 === "✅ Correct – shorten function names"
 
-	```python
-	data = my_shorter_function(data).my_other_shorter_function(1)
-	```
+    ```python
+    data = my_shorter_function(data).my_other_shorter_function(1)
+    ```
 
 === "✅ Also Correct – split up statements"
 
-	```python
-	data = my_long_named_function_that_makes_the_line_too_long(data)
-	data = data.my_other_long_named_function_being_chained(1)
-	```
+    ```python
+    data = my_long_named_function_that_makes_the_line_too_long(data)
+    data = data.my_other_long_named_function_being_chained(1)
+    ```
 
 ## Pydantic and dataclasses
 
 Use [pydantic](https://pydantic-docs.helpmanual.io/) or
 [dataclasses](https://docs.python.org/3/library/dataclasses.html).
-Most libraries should use dataclasses only to avoid a dependency on pydantic.
+Most libraries should use only dataclasses to avoid a dependency on pydantic.
 Use immutable types unless there’s a compelling reason otherwise.
 
 ??? Example
@@ -183,11 +188,41 @@ Counter:::concrete --> MutableMapping
 
 ## Class members
 
-Use `@abstractmethod` in favor of `@staticmethod`;
-`@staticmethod` should only be used in the rare cases where `@abstractmethod` cannot be used.
-As a general rule, prefer using a regular method over an `@abstractmethod`.
+### IoC
+
+**Apply inversion of control, and do so ruthlessly.**
+
+### `@staticmethod` and `@abstractmethod`
+
+Use `@staticmethod` and `@abstractmethod` only for utilities that are specific to their class.
+Replace static factory `@abstractclass` methods with property factories,
+to separate the creation of an object from its API.
+
+Never create utility classes with static (`@staticmethod` or `@abstractmethod`) methods;
+use valid OOP instead.
+
+=== "❌ Bad design"
+
+    ```python
+    class Utils:
+        @abstractmethod
+        def method(cls):
+            ...
+    ```
+
+=== "✅ Fixed design"
+
+    ```python
+    class Utils:
+        def method(self):
+            ...
+    utils = Utils()  # wherever it's needed
+    ```
+
+### Ordering members
 
 Sort class members in the following order.
+(These rules are copied from semi-official sources.)
 
 1. `ClassVar`
 2. attributes
@@ -235,7 +270,7 @@ Annotate all module-level variables, class attributes, and functions.
 Annotate both return types and parameters.
 Annotate `self`, `cls`, `*args`, and `**kwargs` parameters.
 
-??? Example
+??? example
 
     ```python
     from dataclasses import dataclass
@@ -271,5 +306,4 @@ as [mkdocstrings supports](https://mkdocstrings.github.io/griffe/docstrings/#goo
 Use [Ruff](https://docs.astral.sh/ruff/) to catch potential problems and bad practices.
 Use **at least** the rules enabled in the
 [cicd pyproject.toml](https://github.com/dmyersturnbull/cicd/blob/main/pyproject.toml).
-
 To disable counting a line or block in test coverage, use `# nocov` (not `# pragma: nocov`, etc.).

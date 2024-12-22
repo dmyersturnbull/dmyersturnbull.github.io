@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Wonders of ChatGPT
 
 A collection of ChatGPT responses that were useful, great, strange, strange, or just unparsable nonsense.
@@ -14,20 +20,20 @@ ChatGPT 4 saw through my scheme.
 
 <b>ChatGPT 3.5:</b>
 
->> I have 6 apples today. I ate 4 apples yesterday. How many apples do I have today?
+> > I have 6 apples today. I ate 4 apples yesterday. How many apples do I have today?
 
 > If you had 6 apples today and you ate 4 apples yesterday, then you would have:
 > 6 apples (today) - 4 apples (ate yesterday) = 2 apples
 > So, you would have 2 apples today.
 
->> That's wrong.
+> > That's wrong.
 
->> Apologies for the mistake. Let me correct it.
->> If you had 6 apples today and you ate 4 apples yesterday, then you would have:
->> 6 apples (today) - 4 apples (ate yesterday) = 2 apples
->> So, you would have 2 apples today.
+> > Apologies for the mistake. Let me correct it.
+> > If you had 6 apples today and you ate 4 apples yesterday, then you would have:
+> > 6 apples (today) - 4 apples (ate yesterday) = 2 apples
+> > So, you would have 2 apples today.
 
->> Am I an apple?
+> > Am I an apple?
 
 > No, you're not an apple.
 > You're a person.
@@ -37,6 +43,6 @@ ChatGPT 4 saw through my scheme.
 
 <b>ChatGPT 4:</b>
 
->> I have 6 apples today. I ate 4 apples yesterday. How many apples do I have today?
+> > I have 6 apples today. I ate 4 apples yesterday. How many apples do I have today?
 
 > You still have 4 apples today. Eating the apples yesterday doesn't change the number of apples you have today.

@@ -1,7 +1,14 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Frontends for time travelers
 
 !!! warning
-    This document is not finished.
+
+    This document is extremely incomplete.
 
 I had a few jobs doing web development circa 12–15 years ago.
 HTML 4, CSS 2, pre‐ECMAScript 4 JavaScript, and PHP, Python, or ASP.

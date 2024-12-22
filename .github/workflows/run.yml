@@ -1,11 +1,21 @@
+# SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+# SPDX-PackageHomePage: https://dmyersturnbull.github.io
+# SPDX-License-Identifier: CC-BY-SA-4.0
+
+# See:
+# https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#creating-a-custom-github-actions-workflow-to-publish-your-site
+# https://github.com/actions/upload-pages-artifact
+# https://github.com/actions/configure-pages
+# https://github.com/actions/deploy-pages
+
 name: Deploy to GitHub Pages
 on:
   push:
-    branches: [main]
+    branches:
+      - main
 
 permissions:
   contents: read
-  pages: write
   id-token: write
 
 concurrency:
@@ -13,29 +23,34 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
-  build-deploy:
+  build:
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-python@v4
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v4
         with:
-          python-version: "3.11"
-      - name: Build
+          python-version: "3.13"
+      - name: Install dependencies
         run: |
-          pip install mkdocs\
-            mkdocs-material\
-            mkdocs-minify-plugin\
-            'mkdocstrings[python]'\
-            'mkdocs-table-reader-plugin'\
-            markdown-include
-          mkdocs build
-      - name: Setup pages
-        uses: actions/configure-pages@v3
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v2
+          uv sync --no-install-project
+      - name: Build docs
+        run: |
+          uv run mkdocs build
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
         with:
-          path: docs
+          path: ~docs
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write # to deploy to Pages
+      id-token: write # to verify deployment origin
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v4

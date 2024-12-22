@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Testing scientific software
 
 This article is a plea for scientists who write code to test their software.
@@ -8,6 +14,7 @@ Tests are just as required in scientific software as in all other software.
 _If you’re already convinced, skip this section._
 
 !!! quote
+
     > Researchers are spending more and more time writing computer software to model biological structures,
     > simulate the early evolution of the Universe and analyse past climate data, among other topics.
     > But **programming experts have little faith that most scientists are up to the task.**”

@@ -1,24 +1,34 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 
 # Java conventions
 
 Refer to [Google’s Java style guide](https://google.github.io/styleguide/javaguide.html)
 for additional recommendations.
 
-## Practices
+## Banned features
 
-### Banned features
-
-These features are banned:
+These features are **totally** banned:
 
 - `clone()` and `Cloneable`
 - `finalize()`
 - `System.gc()`
 - labels (e.g. `outer_loop: for ...`)
 - `notify()` and `wait()`
-- `synchronized` methods (synchronize on blocks instead)
-- non-`final` or mutable `static` fields (with very limited exceptions as needed)
 
-### Comments
+These features are **partly** banned:
+
+- non-`final` or mutable `static` fields
+- Arrays (use collections instead)
+
+### Collections and arrays
+
+Prefer collections to arrays unless doing so causes significant performance issues.
+
+## Comments
 
 Forgo comments or Javadoc elements that are superfluous or included out of habit or convention.
 Remove any text that is obvious, repetitious, unclear, or wrong.
@@ -35,20 +45,20 @@ Remove any text that is obvious, repetitious, unclear, or wrong.
 - ❌ `created by Kerri Johnson` (**superfluous to Git**)
 - ❌ `created on 2022-10-27` (**superfluous to Git**)
 
-### Exceptions
+## Exceptions
 
 Both checked and unchecked exceptions are fine.
 Avoid throwing general types like `RuntimeException`.
 
-### Constructors
+## Constructors
 
 As a general guideline, constructors should map arguments transparently to fields.
 If more complex functionality needs to happen to construct the object,
 move it to a factory, builder, or static factory method.
 
-### Optional types
+## Optional types
 
-??? rationale
+!!! rationale
 
     Although the Java developers may not have originally intended such widespread usage,
     it makes code **much** more clear and much more robust.
@@ -56,11 +66,7 @@ move it to a factory, builder, or static factory method.
 Don’t return `null` or accept `null` as an argument in public methods; use `Optional<>` instead.
 `null` is permitted in non-public code to improve performance.
 
-### Collections
-
-Prefer collections to arrays unless doing so causes significant performance issues.
-
-### Immutability and records
+## Immutability and records
 
 Prefer immutable types, and use records for data-carrier-like classes.
 In general:
@@ -68,7 +74,7 @@ Immutable classes must have only `final` fields and should not allow modificatio
 constructors should make defensive copies, and getters should return defensive copies or views.
 This may not always be the appropriate choice, such as in places where performance is paramount.
 
-### Getters, setters, and builder methods
+## Getters, setters, and builder methods
 
 Use `getXx()`/`setXx()` for mutable types but `Xx()` for immutable types:
 
@@ -77,7 +83,7 @@ Use `getXx()`/`setXx()` for mutable types but `Xx()` for immutable types:
 
 Builder methods should follow the immutable convention (i.e. `angle()`).
 
-### `toString`
+### Overriding `toString`
 
 !!! tip
 
@@ -107,7 +113,12 @@ public class Claz {
 }
 ```
 
-### `hashCode`
+## Overriding `compareTo`
+
+Immutable classes should implement `Comparable` and override `compareTo` as long as it is reasonable.
+`compareTo` should be marked `final`.
+
+## Overriding `hashCode`
 
 !!! tip
 
@@ -126,7 +137,7 @@ public class Claz {
 }
 ```
 
-### `equals`
+## Overriding `equals`
 
 !!! tip
 
@@ -147,7 +158,7 @@ Use `getClass()` to check type compatibility, **not** `instanceof`.
 (For universal equality, only `getClass()` makes sense – and for multiversal equality, there is no difference.)
 Additionally, subclasses of classes defining `equals()` should never add data or state.
 
-#### Universal equality
+### Universal equality
 
 For universal equality, use this template:
 
@@ -300,7 +311,7 @@ public class Claz {
     }
     ```
 
-#### Multiversal equality
+### Multiversal equality
 
 For multiversal equality, use this template:
 
@@ -467,19 +478,51 @@ public class Claz {
     }
     ```
 
-### `compareTo`
+## Naming
 
-Immutable classes should implement `Comparable` and override `compareTo` as long as it is reasonable.
-`compareTo` should be marked `final`.
+Follow [Google’s Java naming conventions](https://google.github.io/styleguide/javaguide.html#s5-naming).
+Notably, treat acronyms as words – for example, `CobolError`, **not** `COBOLError`.
+You may alter this practice if needed to maintain consistency with an extant convention;
+in particular, for `IO` (e.g. in `IOException`).
+Name asynchronous methods (those that return a `CompletableFuture`) with the suffix `Async`;
+for example, `calculateAsync()`.
 
-### `switch` and pattern matching
+## Member ordering
 
-Only use enhanced `switch` statements.
+!!! tip
 
-### Final
+    IntelliJ can do this for you.
+    Import the [IntelliJ formatter settings](intellij-style.xml).
+    To set manually, choose the default order and enable “keep getters and setters together”.
 
-`final` for variables, method arguments, `catch` arguments, `try` resources, etc., is optional.
-If a `final` was already added, don’t remove it without cause.
+Sort members by the following rules.
+Note that these rules are similar to most existing conventions, including IntelliJ’s default.
+I don’t recommend sorting members retroactively because it can result in large diffs.
+
+??? info "Exact sorting rules"
+
+    1. `static final` field
+    2. initializer
+    3. field
+    4. constructor
+    5. `static` method
+    6. method
+    7. getter/setter
+    8. `equals`, `hashCode`, and `toString` (in order)
+    9. `enum`, `interface`, `static class`, `class` (in order)
+
+Always pair associated getters and setters (getter first).
+Within each of the 10 types, sort by decreasing visibility.
+_Optionally:_
+Consider subsequently sorting methods so that callers are above callees in a breadth-first manner,
+or by another natural ordering.
+
+## Style and formatting
+
+Use [prettier-java](https://github.com/jhipster/prettier-java) with:
+
+- 4 spaces for indentation
+- print width of 120
 
 ### Optional syntax
 
@@ -500,63 +543,23 @@ Declare variables when they are needed, not at the start of a block.
 Use `var` if the type is either obvious or unimportant.
 In `main` methods, use `String... args`.
 
-### Formatting
+### The `final` keyword
 
-Use [prettier-java](https://github.com/jhipster/prettier-java) with:
-- 4 spaces for indentation
-- print width of 120
+`final` for variables, method arguments, `catch` arguments, `try` resources, etc., is optional.
+If a `final` was already added, don’t remove it without cause.
 
-### Miscellaneous
+### Other formatting
 
-<b>Comments:</b>
-
-Use `//` for multiline comments instead of `/* */`, unless the comment spans many lines (i.e. more than 20).
-
-<b>Encoding:</b>
+#### Encoding
 
 Write non-ASCII characters without escaping, except characters that are likely to confuse readers.
 
-<b>Numbers:</b>
+#### Comments
+
+Use `//` for multiline comments instead of `/* */`, unless the comment spans many lines (i.e. more than 20).
+Prefer [Markdown Documentation Comments](https://openjdk.org/jeps/467) if available.
+
+#### Literals
 
 Always add `.0` to floats (e.g. `double x = 2.0 * pi`) and prefix with `0.` (e.g. `double x = 0.001`).
 Digit grouping with `_` is optional; use it only for amounts or quantities, not identifiers.
-
-### Naming
-
-Follow [Google’s Java naming conventions](https://google.github.io/styleguide/javaguide.html#s5-naming).
-Notably, treat acronyms as words – for example, `CobolError`, **not** `COBOLError`.
-You may alter this practice if needed to maintain consistency with an extant convention;
-in particular, for `IO` (e.g. in `IOException`).
-Name asynchronous methods (those that return a `CompletableFuture`) with the suffix `Async`;
-for example, `calculateAsync()`.
-
-### Member ordering
-
-!!! note
-
-    I don’t recommend sorting members retroactively because it can result in large diffs.
-
-!!! tip
-
-    IntelliJ can do this for you.
-    Import the [IntelliJ formatter settings](intellij-style.xml).
-    To set manually, choose the default order and enable “keep getters and setters together”.
-
-Sort members by the following rules.
-Note that these rules are similar to most existing conventions, including IntelliJ’s default.
-
-1. `static final` field
-2. initializer
-3. field
-4. constructor
-5. `static` method
-6. method
-7. getter/setter
-8. `equals`, `hashCode`, and `toString` (in order)
-9. `enum`, `interface`, `static class`, `class` (in order)
-
-Always pair associated getters and setters (getter first).
-Within each of the 10 types, sort by decreasing visibility.
-_Optionally:_
-Consider subsequently sorting methods so that callers are above callees in a breadth-first manner,
-or by another natural ordering.

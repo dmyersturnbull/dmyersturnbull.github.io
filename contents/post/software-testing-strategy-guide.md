@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 <style>
 red { color: Red }
 orange { color: Orange }
@@ -9,8 +15,7 @@ purple { color: Purple }
 
 # Software testing strategy guide
 
-!!! warning
-    This document is a draft.
+_<b>Note:</b> This document is a draft._
 
 ## Layers of tests
 
@@ -21,17 +26,17 @@ or between [functional](https://en.wikipedia.org/wiki/Functional_testing)
 and [non‐functional](https://en.wikipedia.org/wiki/Non-functional_testing) testing.
 
 | V&V          | F/NF                  | Confirms that...                                        |
-|--------------|-----------------------|---------------------------------------------------------|
-| verification | functional (*F*)      | software does what it says (we built it right)          |
-| validation   | non-functional (*NF*) | software does what it should (we built the right thing) |
+| ------------ | --------------------- | ------------------------------------------------------- |
+| verification | functional (_F_)      | software does what it says (we built it right)          |
+| validation   | non-functional (_NF_) | software does what it should (we built the right thing) |
 
 ### Testing <em>layers</em>
 
 We can also consider testing in layers.
-(*Warning:* This is [original research](https://en.wikipedia.org/wiki/Wikipedia:No_original_research).)
+(_Warning:_ This is [original research](https://en.wikipedia.org/wiki/Wikipedia:No_original_research).)
 
 | Layer           | Type | Purposes                                             | Example types of test            |
-|-----------------|------|------------------------------------------------------|----------------------------------|
+| --------------- | ---- | ---------------------------------------------------- | -------------------------------- |
 | 0 - Static      | F    | Constrain test surface                               | compilation, type checking       |
 | 1 - Unit        | F    | Verify components work in isolation; localize issues | unit                             |
 | 2 - Integration | F    | Verify components work together                      | integration                      |
@@ -61,6 +66,7 @@ They have configurable _inspections_ that can detect potential bugs and bad codi
 They can make your coding experience much easier too, via Git integration and refactoring tools.
 
 !!! tip
+
     You can use [Python’s typing package](https://docs.python.org/3/library/typing.html) to declare
     types, which also improves documentation (in Sphinx autodoc and mkdocs).
 
@@ -180,7 +186,8 @@ You should know the expected output beforehand, and the tests should run under a
 While they can’t reasonably test everything in most cases, they should check the _full output_
 for specific, known cases. Include tests on edge‐case inputs.
 
-!!! note
+!!! tip
+
     You can use property tests in integration tests, too.
 
 ### Concurrency
@@ -213,7 +220,7 @@ End-to-end (E2E) tests simulate real user scenarios to validate the complete flo
 They test how different parts of the system work together, from the user interface to the backend.
 E2E tests ensure that the integrated system meets requirements and behaves as expected in real-world scenarios.
 
-*Example scenario:* User logs in, updates their profile, and logs out.
+_Example scenario:_ User logs in, updates their profile, and logs out.
 
 ### Sanity checks
 
@@ -246,13 +253,13 @@ Typically, the load is increased until the system fails, and the test makes sure
 handles the failure well. For example, without losing data or catching fire.
 
 **Example:**
+
 - **Scenario:** User logs in, updates their profile, and logs out.
 - **Tools used:** [Cypress](https://www.cypress.io/), [Selenium](https://www.selenium.dev/).
 
 ### Recovery
 
 #### Backup and restore
-
 
 ### Security
 
@@ -266,6 +273,7 @@ It assesses the system’s resilience by introducing faults or errors and verify
 This helps ensure the system can gracefully recover from unexpected issues.
 
 **Example:**
+
 - **Scenario:** Introducing network latency.
 - **Tools used:** [Chaos Monkey](https://netflix.github.io/chaosmonkey/)
 
@@ -279,9 +287,11 @@ Localization tests ensure the software functions correctly in different locales,
 This includes checking date formats, currency symbols, and translated content.
 
 !!! tip
+
     Make sure your code uses YY-mm-dd formats and only uses Unicode strings.
 
 **Example:**
+
 - **Scenario:** Verifying that a web application correctly displays dates, times, and text in various languages.
 - **Tools:** [Globalize.js](https://github.com/globalizejs/globalize).
 
@@ -292,6 +302,7 @@ It checks for compliance with accessibility standards such as
 [Web Content Accessibility Guidelines (WCAG)](https://www.w3.org/WAI/standards-guidelines/wcag/).
 
 **Example:**
+
 - **Scenario:** Ensuring a web application is navigable using a screen reader and keyboard.
 - **Tools:** [Wave](https://wave.webaim.org/).
 
@@ -301,6 +312,7 @@ Usability testing assesses how easy and intuitive the software is to use.
 It involves real users performing tasks and providing feedback on their experience.
 
 **Example:**
+
 - **Scenario:** Observing how users navigate a new feature.
 - **Tools:** [Prometheus](https://prometheus.io/)
 
@@ -347,7 +359,7 @@ can be useful too. Good code is usually on the shorter side.
 This is a collection of various types of tests.
 
 | test type       | when it passes                                     | type       | layers | general |
-|-----------------|----------------------------------------------------|------------|--------|---------|
+| --------------- | -------------------------------------------------- | ---------- | ------ | ------- |
 | unit            | Components behave correctly, esp. for edge cases   | functional | 1      | yes     |
 | integration     | 2 or more components behave correctly in concert   | functional | 2      | yes     |
 | property        | Invariants hold for generated data                 | functional | 1–3    | yes     |

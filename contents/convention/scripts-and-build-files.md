@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Scripts and build files
 
 ## Command-line tools
@@ -34,13 +40,23 @@ Use standard option names:
 
 ## Bash
 
-Use [bertvv’s Bash guidelines](https://bertvv.github.io/cheat-sheets/Bash.html) alongside the following rules.
+Use [bertvv’s Bash guidelines](https://bertvv.github.io/cheat-sheets/Bash.html)
+alongside the following rules and exceptions.
+
+1. As the only exception: `$var` is preferred over `${var}` where either would work.
+
+!!! note
+
+    I recently (2024-08) changed my mind on this: previously.
+    I previously followed [bertvv](https://github.com/bertvv)’s advice and used forced `${}`.
+    That adds clarity, but it contradicts my
+    [less &gt; more principle](https://dmyersturnbull.github.io/convention/#principles).
 
 1. Use `#!/usr/bin/env bash`.
 2. Read stdin where applicable, and reserve stdout for machine-readable output.
    _For usage errors:_ write the usage to stderr; `exit 2`.
    _For `--help`_: write the usage and program description to stdout; `exit 0`.
-3. Use `my_fn() {}`, **not** `function my_fn {}`, and definitely **not** `function my_fn() {}`.
+3. Use `my_fn() {}`, **not** `function my_fn {}`, and **definitely not** `function my_fn() {}`.
 4. Always explicitly `exit`.
 
 ??? rationale
@@ -63,27 +79,27 @@ Use [bertvv’s Bash guidelines](https://bertvv.github.io/cheat-sheets/Bash.html
 set -euo pipefail # (1)!
 
 declare -r -i default_min=2
-_usage="Usage: ${0} in-dir [min-hits=${default_min}]"
+_usage="Usage: $0 in-dir [min-hits=$default_min]"
 _desc="Computes gamma if in-dir contains < min-hits results."
 
-if (( $# == 1 )) && [[ "${1}" == "--help" ]]; then
-	printf "${_desc}\n${_usage}"
+if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
+	printf "$_desc\n$_usage"
 	exit 0
 fi
 if (( $# == 0 )) || (( $# > 2 )); then
-  >&2 echo "Invalid usage.\n${_usage}"  # (2)!
+  >&2 echo "Invalid usage.\n$_usage"  # (2)!
   exit 2  # (3)!
 fi
-declare -r in_dir="${1}"
-declare -r -i min_hits=$(( "${2:-}" || ${default_min} ))
+declare -r in_dir="$1"
+declare -r -i min_hits=$(( "${2:-}" || $default_min ))
 
 gamma::fail() {  # (4)!
-	>&2 printf "[FATAL] ${1}"; exit 1  # (5)!
+	>&2 printf "[FATAL] $1"; exit 1  # (5)!
 }
 
 gamma::must_compute() {
-  _count=$(( ls -l -- "${in_dir}" | wc -l ))
-  return (( ${_count} < ${min_hits} ))
+  _count=$(( ls -l -- "$in_dir" | wc -l ))
+  return (( $_count < $min_hits ))
 }
 
 gamma::compute() {

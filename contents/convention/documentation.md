@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Documentation conventions
 
 ### Summary points / highlights
@@ -61,7 +67,7 @@ Comments must be maintained like all other elements of code.
 Avoid unnecessary comments, such as those added out of habit or ritual.
 Forgo comments that are obvious or otherwise unhelpful.
 
-??? example
+??? example "Examples"
 
     === "❌ Incorrect"
 
@@ -89,7 +95,7 @@ Forgo comments that are obvious or otherwise unhelpful.
                 return self._items[key]
         ```
 
-        1. This docstring serves no function.
+        1. The docstring argument list and return description serve no function.
 
     === "✅ Correct"
 
@@ -147,7 +153,7 @@ Keep things simple and direct.
 
 ### Spelling
 
-??? rationale
+!!! rationale
 
     American English is the [most widespread dialect](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5969760/),
     and it generally has more phonetic and shorter spellings.
@@ -174,7 +180,7 @@ Avoid the terms URL and URN; just use URI instead.
 
 ### Line breaks
 
-??? rationale
+!!! rationale
 
     Keeping each sentence on its own line dramatically improves diffs.
 
@@ -184,7 +190,7 @@ If needed to prevent a line from exceeding 120 characters, add line breaks elsew
 Look for one of these places to add a line break, in order:
 
 1. before a Markdown link
-2. After a colon, semicolon, or dash (` – `)
+2. After a colon, semicolon, or dash (`–`)
 3. After a comma that begins an independent clause
 4. After any other punctuation
 5. Before an opening HTML tag (or Markdown equivalent) or after a closing tag
@@ -196,25 +202,22 @@ Look for one of these places to add a line break, in order:
   e.g. before each item of an inline list (i.e. before `(1)`).
 - You may leave a series of very short sentences on one line; e.g. `Be smart. Be fast. Be good.`.
 
-
 ### Text styles and semantics
 
-??? summary "Semantic HTML elements"
+Some semantic HTML elements are result in identical styles (in most browsers).
+This table summarizes how to use them in HTML and in Markdown.
 
-    Some semantic HTML elements are result in identical styles (in most browsers).
-    This table summarizes how to use them in HTML and in Markdown.
-
-	| element | style   | usages | equivalent Markdown |
-	| ------- | ------- | ------ | ------------------- |
-	| [`em`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em) | italic | emphasis; [stress](https://en.wikipedia.org/wiki/Stress_(linguistics)) | `<em>text</em>` (prefer bold) |
-  | [`i`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i) | italic | technical terms; foreign text; more | `_text_` |
-	| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn) | italic | terms being defined | `_term_` or `<dfn>term</dfn>` |
-	| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var) | italic | variables | `$var$` |
-	| [`strong`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) | bold | strong emphasis | `**text**` |
-	| [`b`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b) | bold | keywords, miscellaneous | `<b>text</b>` |
-	| [`code`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code) | monospace | source code | ``` `code` ``` |
-	| [`samp`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp) | monospace | sample output  | ``` `code` ``` |
-	| [`kbd`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd) | monospace | keyboard keys | `<kdb>keys</kbd>` |
+| element                                                                      | style     | usages                                                                   | equivalent Markdown           |
+| ---------------------------------------------------------------------------- | --------- | ------------------------------------------------------------------------ | ----------------------------- |
+| [`em`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em)         | italic    | emphasis; [stress](<https://en.wikipedia.org/wiki/Stress_(linguistics)>) | `<em>text</em>` (prefer bold) |
+| [`i`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i)           | italic    | technical terms; foreign text; more                                      | `_text_`                      |
+| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/dfn)       | italic    | terms being defined                                                      | `_term_` or `<dfn>term</dfn>` |
+| [`var`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/var)       | italic    | variables                                                                | `$var$`                       |
+| [`strong`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/strong) | bold      | strong emphasis                                                          | `**text**`                    |
+| [`b`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/b)           | bold      | keywords, miscellaneous                                                  | `<b>text</b>`                 |
+| [`code`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/code)     | monospace | source code                                                              | `` `code` ``                  |
+| [`samp`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/samp)     | monospace | sample output                                                            | `` `code` ``                  |
+| [`kbd`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/kbd)       | monospace | keyboard keys                                                            | `<kdb>keys</kbd>`             |
 
 #### Italics
 
@@ -236,13 +239,13 @@ Take `_`/`_` (and `*`/`*`) as semantically equivalent to the
   `I (specifically) will go there.`
   Keep in mind that screen readers may not announce the italicization.
 
-**`<em>`:**
+**Alternative: `<em>`:**
 
 Italics are _occasionally_ helpful for emphasis or stress.
 If needed, use an explicit [`<em>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/);
 e.g. `I will go <em>there</em>`.
 
-**`<dfn>`**
+**Alternative: `<dfn>`**
 Using the [`dfn` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/)
 in Markdown is good practice.
 `_`/`_` is an acceptable substitute.
@@ -312,7 +315,7 @@ Use the correct Unicode characters for punctuation.
 
 ### Punctuation (prescriptive grammar)
 
-Use an en dash surrounded by spaces (` – `) to mark breaks in thoughts, **not** an em dash.
+Use an en dash surrounded by spaces (`–`) to mark breaks in thoughts, **not** an em dash.
 For example:
 
 ```markdown
@@ -327,12 +330,15 @@ For example: `say something nice; e.g. “nice boots”.`.
 Use the
 [`<abbr>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/abbr)
 HTML tag with the `title` attribute in Markdown.
-For the first appearance, consider writing it out in this format: _Public Library of Science (PLOS)_.
+For the first appearance, consider writing it out in this format: _Public Library of Science (PLOS)_ †.
 Omit periods (`.`) for initialisms; e.g. _USA_, not _U.S.A._.
 
-† Note that the correct abbreviation for <abbr title="Public Library of Science">PLOS</abbr>
-is <i>PLOS</i>, <strong>not</strong> <i>PLoS</i>.
-
+<small>
+<b>†</b> Note that the correct abbreviation for <abbr title="Public Library of Science">PLOS</abbr> is
+<a href="https://theplosblog.plos.org/2012/07/new-plos-look/">
+<i>PLOS</i>, <strong>not</strong> <i>PL<b>o</b>S</i>.
+</a>
+</small>
 
 ### Admonitions
 
@@ -352,7 +358,9 @@ Use them for content that either:
     These symbols are easily recognized as indicating footnotes, whereas superscript numbers could be confused
     with reference numbers or even exponents in some places.
     They are more accessible than superscript symbols for people who are vision-impaired.
-    (The pilcrow is excluded because it is too thick/prominent.)
+    The asterisk is excluded because it has other common meanings (such as multiplication),
+    and because it is inconvenient to use in Markdown.
+    The pilcrow is excluded because it is too thick/prominent.
 
 Unless the Markdown flavor handles footnotes in another way, follow this format:
 
@@ -365,6 +373,7 @@ This statement is false.
 Use these symbols, in order: `†` (dagger), `†` (double dagger), `§` (section mark), `♯` (paragraph mark),
 `♯` (musical sharp), `𝄮` (musical neutral), `𝄽` (musical rest).
 Other schemes, such as superscript numbers or letters, may sometimes be acceptable alternatives.
+Some fonts lack glyphs for _musical neutral_ and _musical rest_.
 
 ### Quotations
 
@@ -372,7 +381,6 @@ Other schemes, such as superscript numbers or letters, may sometimes be acceptab
 
     This preserves the semantic difference between punctuation _inside_ and _outside_ of quotations.
     This rule is always followed when using code in backticks, anyway.
-    A colon is a visual signal that the prose goes with its following code block, reducing refactoring mistakes.
 
 Place punctuation outside of quotation marks (British-style rules).
 For example:
@@ -420,12 +428,13 @@ For inline lists, follow this format:
 
 ### Quantities
 
-??? rationale
+!!! rationale
 
     This is the format that
     [IEEE recommends](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/conferences/style_references_manual.pdf).
 
-- A period (`.`) as the decimal marker
+- A period (`.`) as the
+  [decimal separator](https://en.wikipedia.org/wiki/Decimal_separator)
 - A narrow no break space, ` ` (NNBSP / U+002D / `&#x202f;`) as the thousands separator
 - A full space (` `) to separate magnitude and units
 
@@ -508,7 +517,7 @@ Follow the applicable guidelines from the Markdown section.
 
 Use kebab-case for `id` and `name` values and for `data` keys and values.
 
-Skip the `type` attribute  for scripts and stylesheets.
+Skip the `type` attribute for scripts and stylesheets.
 Instead, use `<link rel="stylesheet" href="..." />` for stylesheets
 and `<script src="..." />` for scripts.
 
@@ -527,7 +536,7 @@ Use [Prettier](https://prettier.io/) with default options except for line length
 
 #### Closing tags
 
-??? rationale
+!!! rationale
 
     Requiring closing tags (and trailing slashes, which Prettier will add)
     improves readability and simplifies parsing.
@@ -548,15 +557,13 @@ Always include these elements.
 ## Formal grammars
 
 Grammars may be specified in any well-defined form.
-[ABNF](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
-(see [RFC5234](https://datatracker.ietf.org/doc/html/rfc5234)),
-[XML’s custom meta-grammar](https://www.w3.org/TR/xml/#sec-notation),
+The IETF’s [ABNF](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
+(see [RFC 5234](https://datatracker.ietf.org/doc/rfc5234/),
+The [meta-grammar defined in the XML spec](https://www.w3.org/TR/xml/#sec-notation),
 and [regex-BNF](../spec/advanced-bnf-with-regex.md) are recommended.
 
-??? rationale
-
-    `=/` modifies an already-defined rule, which complicates reading.
-    `LWSP` is commonly understood to be problematic.
+!!! rationale
 
 With ABNF, do not use the incremental alternatives notation (`=/`),
-and avoid the core rules `CHAR`, `LWSP`, `CTL`, `VCHAR`, and `WSP`.
+which modifies an already-defined rule, complicating reading.
+Avoid the core rules `CHAR`, `LWSP`, `CTL`, `VCHAR`, and `WSP`.

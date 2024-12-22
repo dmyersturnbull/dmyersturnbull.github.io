@@ -1,14 +1,15 @@
-# Unicode symbol snatcher
+# Click-to-copy symbols
 
 This is here because I sometimes used Windows and don’t know the shortcuts.
 
-*Click on a symbol to copy it.*
+_Click on a symbol to copy it._
 
 ## Punctuation
 
 - em dash: <span onclick="copyToClipboard('—', this)" style="cursor: pointer;">`—`</span>
 - en dash: <span onclick="copyToClipboard('–', this)" style="cursor: pointer;">`–`</span>
 - figure dash: <span onclick="copyToClipboard('‒', this)" style="cursor: pointer;">`‒`</span>
+- horizontal bar: <span onclick="copyToClipboard('―', this)" style="cursor: pointer;">`―`</span>
 - apostrophe: <span onclick="copyToClipboard('’', this)" style="cursor: pointer;">`’`</span>
 - single opening quotation mark: <span onclick="copyToClipboard('‘', this)" style="cursor: pointer;">`‘`</span>
 - single closing quotation mark: <span onclick="copyToClipboard('’', this)" style="cursor: pointer;">`’`</span>

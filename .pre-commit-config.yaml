@@ -1,41 +1,55 @@
-# SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to CICD
-# SPDX-PackageHomePage: https://github.com/dmyersturnbull/cicd
+# SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to Tyrannosaurus
+# SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
 # SPDX-License-Identifier: Apache-2.0
+#
+# SPDX-FileCopyrightText: Copyright 2024, Contributors to dmyersturnbull.github.io
+# SPDX-PackageHomePage: https://github.com/dmyersturnbull.github.io
+# SPDX-License-Identifier: Apache-2.0
+#
+# Adapted from Tyrannosaurus <https://github.com/dmyersturnbull/tyrannosaurus>
 
 # Check out https://pre-commit.com/ for documentation
-minimum_pre_commit_version: 3.7.0
+minimum_pre_commit_version: 4.0.1
 repos:
+  # Standard hooks (`pre-commit-hooks`)
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.6.0
+    rev: v5.0.0
     hooks:
-      - id: check-case-conflict
-      - id: check-merge-conflict
-      - id: check-toml
-      - id: check-json
+      - id: forbid-submodules # ban Git submodules
+      - id: check-case-conflict # ban ABC and abc both existing
+      - id: check-illegal-windows-names # ban filenames that are illegal on Windows
+      - id: check-merge-conflict # ban merge conflict markers
       - id: check-shebang-scripts-are-executable
-      - id: check-symlinks
-      - id: check-yaml
-        exclude: ^recipes/.*
-        args:
-          - --unsafe
-      - id: end-of-file-fixer
-      - id: fix-byte-order-marker
-      - id: fix-encoding-pragma
-        args: [--remove]
-      - id: forbid-submodules
-      - id: trailing-whitespace
+      - id: check-executables-have-shebangs
+      - id: check-symlinks # ban *broken* symlinks
+      - id: end-of-file-fixer # auto-add final \n
+      - id: fix-byte-order-marker # auto-remove BOMs
+      - id: trailing-whitespace # auto-remove end-of-line whitespace
 
-  # --- Commit msg checks ---
-  - hooks:
-      - id: commitizen
-        stages: ["commit-msg"]
-    repo: https://github.com/commitizen-tools/commitizen
-    rev: v3.27.0
-
-  # --- Linters ---
+  # Format and lint Python with Ruff
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.4.8
+    rev: v0.8.4
     hooks:
       - id: ruff
-        args: [--fix-only]
-        types_or: [python, pyi, jupyter]
+        args:
+          - "--fix-only"
+      - id: ruff-format
+
+  # Format various languages with Prettier
+  - repo: local
+    hooks:
+      - id: prettier
+        name: prettier
+        description: "Auto-format using Prettier"
+        language: node
+        entry: prettier
+        args:
+          - --write
+          - --experimental-ternaries # will be the default soon
+        types:
+          - text
+        # IMPORTANT: Add to this list as needed.
+        files: '\.(md|json|yaml|ts|js|css)$'
+        require_serial: false
+        additional_dependencies:
+          - prettier

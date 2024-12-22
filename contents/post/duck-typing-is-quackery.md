@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Duck typing is quackery
 
 _Apologies for the pun, and to [Phil Haack](https://haacked.com/archive/2014/01/04/duck-typing/), who beat me to it._
@@ -67,7 +73,6 @@ and outputs a matrix.
 
 For the Python code, you realize that `matrix_a` isn’t clear to users.
 You don’t want them passing in lists of lists, so you add some documentation:
-
 
 ```python
 class MyAlgorithm:
@@ -170,7 +175,7 @@ class GooborToBreezeMatrixAdapter extends Matrix {
 }
 ```
 
-??? note "Scala structural typing"
+??? note "Note – Scala structural typing"
 
     Scala supports true compile-time structural typing.
     You could easily rewrite `calculate` like this:
@@ -255,6 +260,7 @@ Knowing (or suspecting) that it’s a duck is not enough; you need to know how t
 As Alex Martelli (the author of Python in a Nutshell) wrote in an email thread:
 
 !!! quote
+
     Amen, hallelujah. You don’t really care for IS-A -- you really only care for BEHAVES-LIKE-A- [...],
     so, if you do test, this behaviour is what you should be testing for
     **--- [Alex Martelli](https://groups.google.com/g/comp.lang.python/c/CCs2oJdyuzc/m/NYjla5HKMOIJ)**

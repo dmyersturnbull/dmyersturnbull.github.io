@@ -1,8 +1,15 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Arduino setup
 
 ## Install Arduino
 
 !!! note
+
     You need [GitHub CLI](https://github.com/cli/cli) (`gh`).
 
 Download and install [Arduino](https://www.arduino.cc/).

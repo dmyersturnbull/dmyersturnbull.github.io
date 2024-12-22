@@ -1,13 +1,64 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # API conventions
 
 ## JSON and data representation
 
-Use [JSON Schema](https://json-schema.org/), version 2020-12.
-
+Use the newest [JSON Schema](https://json-schema.org/) (version 2020-12 as of 2024-12).
 Follow the [Google JSON guide](https://google.github.io/styleguide/jsoncstyleguide.xml).
 Contradicting that guide, property names may follow other conventions if needed to accommodate other needs.
-Avoid periods (`.`) in property names;
-doing so complicates using
+
+### Property definitions
+
+Don’t try to anticipate lookup needs or pretend your JSON is an index.
+Let consumers build indices for fast lookup if they need to.
+
+=== "❌ Incorrect – using arbitrary names as keys"
+
+    ```json
+    {
+      "authorEmails": {
+        "John Kerry": "john.kerry@state.gov",
+        "Madeleine Albright": "albright@state.gov"
+      }
+    ```
+
+=== "✅ Correct – leaving the names as values"
+
+    ```json
+    {
+      "people": [
+        {
+          "name": "John Kerry",
+          "email": "john.kerry@state.gov"
+        }
+      ]
+    ```
+
+??? rationale
+
+    A consumer may want to search by a different key; e.g. by `email` in the above example.
+    Ignoring lookup needs when designing the schema simplifies the design process,
+    creates more understandable and obvious schemas,
+    and increases flexibility (e.g. `age` can be added to `people`).
+    Finally, it avoids needing problematic property names, as discussed next.
+
+### Property names
+
+Restrict keys to one of these patterns:
+
+- `^[a-z0-9][a-z0-9+-]*$` – kebab-case; general, and allowing `+` to mean _and_
+- `^[a-z][a-z0-9-]*$` – kebab-case; trivial interoperability with Python
+- `^[a-z][A-Za-z0-9]*$` – camelCase; JavaScript/Java-compatible
+  (in practice, avoid consecutive `[A-Z]`; i.e. prefer `^[a-z]([A-Z]?[a-z0-9]+)*[A-Z]?$`.)
+- `^[a-z][a-z_]*$` – snake_case; Python-compatible
+- another pattern that disallows **at least** `` ./:|{}*?#/"'`<>`` and non-printable characters
+
+Doing this simplifies using
 [JsonPath](https://github.com/json-path/JsonPath),
 [JMESPath](https://jmespath.org/),
 [jq](https://jqlang.github.io/jq/),
@@ -21,7 +72,8 @@ Permit only 1 type for a given key or array.
 
     Null values
 
-    1. Clash with [JSON Merge Patch / RFC 7396](https://datatracker.ietf.org/doc/html/rfc7396).
+    1. Clash with
+       [JSON Merge Patch / RFC 7396](https://datatracker.ietf.org/doc/rfc7396/).
        They cannot be expressed because the standard reserves `null` for deletions; and
     2. Have no agreed-upon or obvious meaning.
        They could signal an invalid value, a truly missing value (i.e. never found/added),
@@ -33,15 +85,16 @@ Permit only 1 type for a given key or array.
     Let the schema specify what keys are allowed.
     </small>
 
-#### null
+#### Null values (JSON `null`):
 
-**Do not use JSON `null`**, except in [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396).
+**Do not use JSON `null`**, except in
+[JSON Merge Patch](hhttps://datatracker.ietf.org/doc/rfc7396/).
 JSON Merge Patch uses it to signal deletion, so using `null` for other purposes effectively prevents HTTP `PATCH`.
 It’s problematic for other reasons; refer to the _rationale_ box.
 Tip: replace any `{"key": null}` with `{}` or (e.g.) `{"status: "error:too_few_samples}"}`.
 If a null value is encountered (e.g. in a received payload), pretend it isn’t there.
 
-#### NaN, Inf, and -Inf
+#### NaN, Inf, and -Inf:
 
 JSON does not support numerical `NaN`, `Inf`, or `-Inf`.
 If NaN or infinite values are applicable for a given key or array, encode them as strings.
@@ -60,18 +113,17 @@ encode them as strings (as with NaN, Inf, and -Inf).
 
 Null values are often used to encode types like `string | null` and `int | null`.
 Instead, be explicit about `null`’s meaning.
-
 Consider a sensor measuring electric current.
-The values are then divided by preceeding average to get a ratio, that is,
-$R(I_t) = \left. I_t \middle/ \text{Avg}_{i=1}^{t-1} I_i \right.$
-,
+The values are then divided by preceding average to get a ratio, that is,
+$R(I_t) = \left. I_t \middle/ \text{Avg}_{i=1}^{t-1} I_i \right.$,
 where $I_t$ is the current for trial $t$.
 Compare these two representations:
 
 === "❌ Incorrect – using `null`"
 
-    Did the measurement fail? A hardware connection issue?
-    Was the ratio `Inf` (`1/0`), `-Inf` (`-1/0`), or `NaN` (`0/0`)?
+    **This is a bad design.**
+    Did the measurement fail? For example, was there a hardware connection issue?
+    Or was the ratio `Inf` (`1/0`) or `-Inf` (`-1/0`)? Or `NaN` (`0/0`)?
 
     ```json
     [
@@ -82,6 +134,7 @@ Compare these two representations:
 
 === "✅ Correct – modeling explicitly"
 
+    **This is a good design.**
     Specify the status values with a JSON Schema `enum`.
     The simpler alternative `{"success": <boolean>}` could work, too.
 
@@ -94,9 +147,9 @@ Compare these two representations:
 
 ### Encoding specific types
 
-#### Datetimes
+#### Date-times
 
-Use [RFC 3339](https://www.rfc-editor.org/rfc/rfc3339), including a UTC offset.
+Use [RFC 3339](https://datatracker.ietf.org/doc/rfc3339/), including a UTC offset.
 Note that the UTC offset is written with a hyphen (technically a hyphen-minus), not a minus sign.
 Use only IANA timezones.
 Note that OpenAPI uses this format for `date-time` and `date` types.
@@ -104,48 +157,48 @@ For example:
 
 ```json
 {
-  "date-time": "2023-11-02T14:55:00 -08:00",
+  "date-time": "2023-11-02T14:55:00-08:00",
   "timezone": "America/Los_Angeles"
 }
 ```
 
-In some cases, it may be acceptable to append the timezone like this: `{date-time} [{timezone}]`; e.g.
-`2023-11-02T14:55:00 -08:00 [America/Los_Angeles]`.
-This format is generally preferred in documentation.
+You can append a timezone name per
+[RFC 9557](https://datatracker.ietf.org/doc/html/rfc9557);
+see [_affixing timezone names_](../post/iso-8601-problems.md#affixing-timezone-names).
+Example:
+
+```
+2023-11-02T14:55:00-08:00[America/Los_Angeles]
+```
 
 #### Durations and intervals
+
+
+**See [_duration _](../post/iso-8601-problems.md#durations).
+
+??? rationale
+
+    ISO 8601’s duration format is quite bad but already widespread.
+    See [_ISO 8601 problems: durations_](../post/iso-8601-problems.md#durations).
 
 A duration may be written these three ways:
 
 1. A number of days, hours, minutes, seconds, etc.;
-2. An [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations) using only hours, minutes, and seconds
-   and starting with `PT`; or
-3. Hours, minutes and seconds (`HH:MM:SS[.iii[iii]]`).
+2. An [ISO 8601 duration](https://en.wikipedia.org/wiki/ISO_8601#Durations)
+   using only integral hours, minutes, and seconds and starting with `PT`; or
+3. Hours, minutes and seconds; i.e. `HH:MM:SS[.iii[iii]]` (also defined by ISO 8601).
 
-??? example "Examples"
-
-    **✅ ok** `35.2` for a key `duration_sec`
-
-    **✅ ok** `PT23H55M55S`
-
-    **✅ ok** `23:45:55`
-
-    **❌ Not ok** `P6M2WT45M55S` (ambiguous – months have indeterminate durations)
-
-    **❌ Not ok** `P1D12H` (unambiguous but not limited to hours, minutes, and seconds)
-
-    **❌ Not ok** `P2S` (does not start with `PT`; rewrite as `PT2S`)
-
-    **❌ Not ok** `05:22` (is this min:sec or hour:min?)
+**See [duration specification](../spec/restricted-iso-8601.md)
 
 **For intervals**, both `{"start": ..., "end": ...}` and ISO 8601 `T1--T2` syntax are acceptable.
 Do not separate times with `/` or use a start-time/duration pair.
 
-!!! warning
+!!! warning "Warning – calculating durations"
 
     Be careful when calculating durations.
     Things like NTP synchronization events can cause $T^C_1 - T^C_2$ for a clock $C$ to not correspond
     to an elapsed time (or true duration).
+    See [_calculating durations_](../post/calculating-durations.md).
 
 ## HTTP APIs
 
@@ -157,7 +210,7 @@ The acceptable responses and conditions are listed in two tables below.
 These are exhaustive;
 servers must not use status codes, methods, responses, or conditions not listed here.
 
-<b>General status codes:</b>
+#### General status codes
 
 | Code | Name                            | Methods                   | Response         | Condition(s)                                                                             |
 |------|---------------------------------|---------------------------|------------------|------------------------------------------------------------------------------------------|
@@ -181,12 +234,12 @@ servers must not use status codes, methods, responses, or conditions not listed 
 | 500  | Server Error                    | any                       | problem details  | The server encountered an internal error.                                                |
 | 503  | Service Unavailable             | any                       | problem details  | The service is overloaded or down for maintenance.                                       |
 
-1. Use [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396) for all PATCH requests;
+1. Use [JSON Merge Patch](https://datatracker.ietf.org/doc/rfc7396/) for all PATCH requests;
    see the [JSON Merge Patch section](#json-merge-patch).
-2. Use [RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail) problem details;
-   see the [Problem details section](#problem-details) section.
+2. Use [RFC 9457](https://datatracker.ietf.org/doc/rfc9457/#name-members-of-a-problem-detail) problem details;
+   see the [problem details section](#problem-details).
 
-<b>Specialized status codes:</b>
+#### Specialized status codes
 
 | Code | Name                            | Methods                  | Response        | Use case                                                                           |
 |------|---------------------------------|--------------------------|-----------------|------------------------------------------------------------------------------------|
@@ -201,7 +254,9 @@ servers must not use status codes, methods, responses, or conditions not listed 
 | 428  | Precondition Required¹          | POST, PUT, PATCH, DELETE | problem details | A precondition (using `If-...` headers) is required.                               |
 | 431  | Request Header Fields Too Large | any                      | problem details | The headers are too large.                                                         |
 
+<small>
 <b>†</b> These statuses are only applicable to modifiable resources.
+</small>
 
 #### 404 Not Found
 
@@ -209,7 +264,7 @@ servers must not use status codes, methods, responses, or conditions not listed 
 attempts to access an invalid endpoint must always generate a 400 (Bad Request).
 For example, if `id` must be hexadecimal for `/machine/{id}`, then `/machine/zzz` should generate a 400.
 The response body
-([RFC 9457](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail) problem details)
+([RFC 9457](https://datatracker.ietf.org/doc/rfc9457/#name-members-of-a-problem-detail) problem details)
 should describe the problem; e.g. `{..., "detail": "{id} must match ^[0-9A-F]{16}$"}`.
 
 Occasionally, the server might know that the resource will exist later.
@@ -233,22 +288,22 @@ most notably to a request to delete a resource that other resources reference.
 for reasons other than ratelimiting.
 Although this status is nonstandard, some servers use it for similar reasons.
 
-Clients should respond to these situtations very differently than to other 4xx responses, such as 401, 403, and 429.
+Clients should respond to these situations very differently than to other 4xx responses, such as 401, 403, and 429.
 A 418 conveys that:
 
 1. The client cannot rectify the problem;
 2. The server may or may not be willing to process a different request; and
 3. The server may or may not accept the same request if it is re-sent later.
 
-<b>Some use cases:</b>
+Use cases:
 
-- **Suspicious queries**: The client has previously sent several suspicious queries.
-- **Clearly malicious query**: The client is currently sending a query that is clearly malicious.
-- **Excessive data**: The client has sent an excessive amount of data over a short period.
+- Suspicious queries: The client has previously sent several suspicious queries.
+- Clearly malicious query: The client is currently sending a query that is clearly malicious.
+- Excessive data: The client has sent an excessive amount of data over a short period.
 
 ### JSON Merge Patch
 
-For JSON, all PATCH endpoints must use [JSON Merge Patch](https://datatracker.ietf.org/doc/html/rfc7396).
+For JSON, all PATCH endpoints must use [JSON Merge Patch](https://datatracker.ietf.org/doc/rfc7396/).
 Because JSON Merge Patch uses `null` to signal deletion, `null` may not be used for any other purpose.
 See the [null section](#null-and-missing-values-numerical-range-and-precision) for more information.
 
@@ -259,9 +314,9 @@ For non-JSON data, there are two options:
 2. Use a multipart request with a JSON Merge Patch, with the Merge Patch first.
    The Merge Patch might choose to reference the additional files by filename.
 
-### Problem details
+## Problem details
 
-Use [RFC 9457 (“problem details”)](https://datatracker.ietf.org/doc/html/rfc9457#name-members-of-a-problem-detail).
+Use [RFC 9457 (“problem details”)](https://datatracker.ietf.org/doc/rfc9457/).
 All 4xx and 5xx responses must include an RFC 9457 body with media-type `application/problem+json`.
 
 ??? example "Examples"
@@ -314,7 +369,7 @@ All 4xx and 5xx responses must include an RFC 9457 body with media-type `applica
 **There must be a 1-1 correspondence between `type` and `title`.**
 It is recommended that the same `type`/`title` only map to one status code.
 
-#### `type`
+#### RFC 9457 `type` key
 
 _Example:_ `https://domain.tld/help/error/client#dsl-parse`
 As shown in the example, a
@@ -323,12 +378,16 @@ The response body must include the problem detail’s `title` alongside a more d
 
 Multiple representations must be available via content negotiation:
 
-- `text/html; charset=utf-8` (**required** per RFC 9457): Include the title in an `<h1>`, ⋯, `<h6>`.
-- `application/json` (**required**): Include at least the keys `title` and `description`.
-- `text/x-markdown` (**recommended**): Include the title in an `#`, ⋯, `#####`.
-   If OpenAPI is used, use the schema’s [`response.description`](https://spec.openapis.org/oas/v3.1.0#fixed-fields-14).
+- `text/html; charset=utf-8` (**required** per RFC 9457):
+   Include the title in an `<h1>`, ⋯, `<h6>`.
+- `application/json` (**required**):
+   Include at least the keys `title` and `description`.
+- `text/x-markdown` (**recommended**):
+   Include the title in an `#`, ⋯, `#####`.
+   If OpenAPI is used, use the schema’s
+   [`response.description`](https://spec.openapis.org/oas/v3.1.0#fixed-fields-14).
 
-#### Extensions
+#### RFC 9457 extensions
 
 Always include extensions that a client would likely want to parse.
 For example, specify the incorrect request parameter or header, or the dependent resource for a 409 Conflict.
@@ -367,7 +426,11 @@ This should include responses of > 10 MB.
 The filename should include the resource type,
 a resource id (or other value with a 1-1 correspondence with the resource),
 and a filename extension.
-Example: `Content-Disposition: attachment; filename="store-item-5221-3q.parquet"`
+Example:
+
+```text
+Content-Disposition: attachment; filename="store-item-5221-3q.parquet"
+```
 
 #### Warnings
 
@@ -380,8 +443,8 @@ Warning: <description>{; <key>="<value>"}
 
 ??? example "Examples"
 
-    - "Warning: deprecated endpoint; use-instead="https://domain.tld/api/v2/endpoint"
-    - "Warning: non-canonical URI; canonical-uri="https://domain.tld/api/v2/search?filter[1]=color:eq:red|name:eq:apple"
+    - `"Warning: deprecated endpoint; use-instead="https://domain.tld/api/v2/endpoint"`
+    - `"Warning: non-canonical URI; canonical-uri="https://domain.tld/api/v2/search?filter[1]=color:eq:red|name:eq:apple"`
 
 #### Other headers
 

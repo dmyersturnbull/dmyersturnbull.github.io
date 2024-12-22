@@ -1,9 +1,21 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Retooling Python builds
 
-**The landscape of Python build infrastructure is a mess.**
+The landscape of Python build infrastructure is a mess.
 I made over 100 commits to get a sensible, elegant, and secure build.
+It took too long, but here’s the result:
+
+[template repository :fontawesome-solid-code:](https://github.com/dmyersturnbull/cicd){ .md-button }
+
+<!--
 The result is a template project and tool called
 [Tyrannosaurus](https://github.com/dmyersturnbull/tyrannosaurus).
+-->
 
 ## Compared to other languages
 
@@ -77,34 +89,27 @@ See [this Mambaforge setup guide](../guide/mamba-and-conda.md)
 
 It took me an unacceptable number of hours and commits.
 I’d change, push, wait for CI failures, and repeat.
-To help others avoid that build hell, I set up a [template repository](https://github.com/dmyersturnbull/tyrannosaurus).
+I made the repo public to be used as a template, so that others can avoid that special level of hell.
 
-!!! warning
-
-    Tyrannosaurus/Tyranno is undergoing an overhaul, so these instructions might be out of sync in September 2023.
-    Tyrannosaurus used to use [Poetry](https://python-poetry.org/),
-    which is also quite good. I switched to Hatch to use [PEP 621](https://peps.python.org/pep-0621/)
-    and to drop [Tox](https://tox.readthedocs.io/).
-
-It heavily uses [Hatch](https://hatch.pypa.io/),
-[GitHub actions](https://help.github.com/en/actions), and adds a package that syncs metadata (tyrannosaurus).
+It uses [Hatch](https://hatch.pypa.io/),
+[uv](https://docs.astral.sh/uv/),
+and
+[GitHub actions](https://help.github.com/en/actions).
 It doesn’t contain a `setup.py` or `setup.cfg`.
+
+When you push, it builds wheels, sdists, and a Docker image, and runs tests.
+It lints on commit using [pre-commit](https://pre-commit.com/).
+When you tag on GitHub, it publishes to PyPi and Docker Hub.
+
+<!--
+TODO: Re-add documentation on Tyrannosaurus.
+
 In fact, `pyproject.toml` is the only file that contains metadata to edit.
 When you commit, metadata is copied from `pyproject.toml` to other files,
 such as  `__init__.py`, `CITATION.cff`, and `environment.yml`.
 So if you add a contributor, keyword, or dependency, it will be reflected everywhere.
 It also formats all of your files.
 
-When you push, it builds wheels, sdists, and a Docker image, and runs tests.
-It lints on commit using [pre-commit](https://pre-commit.com/).
-When you tag on GitHub, it publishes to PyPi and Docker Hub.
-
-!!! info
-
-    If you need your package published to [Conda-Forge](https://conda-forge.org/) as well, you can.
-    That takes [a few manual steps](https://tyrannosaurus.readthedocs.io/en/latest/usage.html#anaconda-recipes).
-
-Run `pip install tyrannosaurus` and create a new project with `tyranno new`. Then
-[check these steps](https://tyrannosaurus.readthedocs.io/en/latest/guide.html#to-do-list-for-new-projects) to finalize.
-
-See [Tyrannosaurus here](https://github.com/dmyersturnbull/tyrannosaurus).
+If you need your package published to [Conda-Forge](https://conda-forge.org/) as well, you can.
+That takes [a few manual steps](https://tyrannosaurus.readthedocs.io/en/latest/usage.html#anaconda-recipes).
+-->

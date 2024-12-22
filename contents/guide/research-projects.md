@@ -1,3 +1,9 @@
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 # Research projects
 
 There are some great resources on good data organization, such as the
@@ -7,7 +13,7 @@ Here, I’ll document the aspects of my protocols that work well.
 ## Main ideas
 
 **✅ DO:**
-Designate data as either _living_ or _frozen_.
+Designate data as either **_living_ or _frozen_**.
 Code should never read from living files and should never write to frozen files.
 
 **✅ DO:**
@@ -16,7 +22,14 @@ When ready, make a frozen copy and add a timestamp.
 Let scripts read the frozen copy.
 
 **❌ DO NOT:**
+Have scripts read living data.
+
+**❌ DO NOT:**
 Just organize into `input/` and `output/` directories.
+
+**✅ DO:**
+Store basic machine-readable metadata alongside the data.
+(Don’t store information that can change, such as comments, project names, or people’s names.)
 
 **✅ DO:**
 Reorganize your files if your current structure isn’t working.
@@ -24,12 +37,12 @@ Reorganize your files if your current structure isn’t working.
 ## Example
 
 ```bash
-├── src
+├── src/
 │   └── pkg/
 │       ├── __init__.py
 │       ├── generate_raw_name_mapping.py
 │       └── analyze.py
-├── data
+├── data/
 │   ├── temp-output/
 │       ├── raw-name-mapping.tsv
 │       └── figures/
@@ -40,6 +53,9 @@ Reorganize your files if your current structure isn’t working.
 │   └── frozen/
 │       ├── name-mapping-2022-01-14.tsv
 │       ├── microscopy/
+│       │   └── 20220615T164555.confocal3
+│       │       ├── 20220615T164555.confocal3.tif
+│       │       └── 20220615T164555.confocal3.json
 │       └── reference/
 │           └── weird-sample-analysis-2022-01-24.ipynb
 │           └── weird-samples-2022-01-24.pdf
@@ -49,6 +65,8 @@ Reorganize your files if your current structure isn’t working.
 Here, `temp-output/` and `living/` both contain living data.
 `temp-output/` can be overwritten any time, while `living/` contains manually curated files.
 You should probably avoid checking `output/` into a repository.
+
+### How the layout is used
 
 `src/pkg/generate_raw_name_mapping.py` outputs `data/temp-output/raw-name-mapping.tsv`.
 Maybe it maps microscope filenames to sample names, but that mapping can’t be fully automated.
@@ -61,6 +79,29 @@ Or maybe we combine several figure panels into full figures.
 We want to keep this exact analysis, so we copy it to `data/frozen/reference/`.
 And we write a script to generate that figure (in this case, a Jupyter notebook).
 The script writes to `data/temp-output/` (**not** `data/frozen`).
+
+### JSON metdata
+
+What's in `20220615T164555.confocal3.json`?
+
+```json
+{
+  "id": "20220615T164555.confocal3",
+  "instrument": "confocal3",
+  "instrument-type": "microscope",
+  "datetime": "2022-06-15T16:45:55",
+  "duration-ms": 185.225075,
+  "roi": {
+    "type": "rectangle",
+    "values": {
+      "top": 4101,
+      "bottom": 4358,
+      "left": 528,
+      "right": 744
+    }
+  }
+}
+```
 
 ## Further information
 
