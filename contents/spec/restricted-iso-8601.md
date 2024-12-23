@@ -1,5 +1,10 @@
 ## Restricted ISO 8601
 
+!!! related
+
+    - [Problems with ISO 8601 durations](../post/iso-8601-problems.md#durations)
+    - [API conventions](../convention/apis.md#durations-and-intervals)
+
 ## Date-times and intervals
 
 Use [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339).
@@ -59,11 +64,6 @@ ISO 8601’s duration format is quite bad but already widespread.
 I fixed it by restricting the syntax.
 Years, months, and days were removed, along with fractional components (e.g. `PT1.5H`).
 The result is `PT<h>H[<m>M[<s>S]]`, which is trivial parse and convert to `hh:mm:ss`.
-
-!!! related
-
-    - [Problems with ISO 8601 durations](../post/iso-8601-problems.md#durations)
-    - [API conventions](../convention/apis.md#durations-and-intervals)
 
 === "`PT` syntax"
 

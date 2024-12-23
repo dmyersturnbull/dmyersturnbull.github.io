@@ -91,7 +91,8 @@ This is an unnecessary definition, and it’s non-obvious.
 
 !!! related
 
-    See [calculating durations](calculating-durations.md).
+    - [calculating durations](calculating-durations.md)
+    - [API conventions](../convention/apis.md#durations-and-intervals)
 
 Unfortunately, this duration format is already widespread: `P4M28DT19H42M15S`.
 The syntax is (using spaces for clarity):

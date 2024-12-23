@@ -174,9 +174,9 @@ Example:
 #### Durations and intervals
 
 
-**See [_duration _](../post/iso-8601-problems.md#durations).
+**See [_duration _](../post/iso-8601-problems.md#durations).**
 
-??? rationale
+??? rationalehttps://dmyersturnbull.github.io/post/iso-8601-problems/#it-supports-week-dates
 
     ISO 8601’s duration format is quite bad but already widespread.
     See [_ISO 8601 problems: durations_](../post/iso-8601-problems.md#durations).
@@ -188,7 +188,7 @@ A duration may be written these three ways:
    using only integral hours, minutes, and seconds and starting with `PT`; or
 3. Hours, minutes and seconds; i.e. `HH:MM:SS[.iii[iii]]` (also defined by ISO 8601).
 
-**See [duration specification](../spec/restricted-iso-8601.md)
+**See [restricted ISO-8601 specification](../spec/restricted-iso-8601.md)**
 
 **For intervals**, both `{"start": ..., "end": ...}` and ISO 8601 `T1--T2` syntax are acceptable.
 Do not separate times with `/` or use a start-time/duration pair.
