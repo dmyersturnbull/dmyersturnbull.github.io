@@ -17,9 +17,9 @@ Then, compile ffmpeg with required options:
 set -euo pipefail
 IFS=$'\n\t'
 
-ffmpeg_vr="6.0"  # (1)!
+ffmpeg_vr="7.1"  # (1)!
 
-sudo apt install \
+sudo apt-get install --yes \
   autoconf \
   automake \
   build-essential \
@@ -48,8 +48,8 @@ export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig"
 
 curl -L -s https://ffmpeg.org/releases/ffmpeg-$ffmpeg_vr.tar.xz \
-    | tar -xf \
-    > "ffmpeg-$ffmpeg_vr"
+  | tar -xf \
+  > "ffmpeg-$ffmpeg_vr"
 cd "ffmpeg-$ffmpeg_vr"
 
 # Need to configure SSH keys with GitLab

@@ -13,6 +13,7 @@ nav:
       - Linux: guide/linux.md
       - macOS: guide/macos.md
       - Windows: guide/windows.md
+      - Nix shells: guide/nix-shells.md
       - Git, SSH, and GPG: guide/git-ssh-and-gpg.md
       - Research projects: guide/research-projects.md
       - MariaDB: guide/mariadb.md

@@ -156,7 +156,7 @@ Here are my recommendations:
 - `compression=lzo` for SATA-connected SSDs
 - `compression=zstd:3` for SATA-connected HDDs and USB-connected SSDs or HHDs
 
-!!! bug
+!!! bug "Compression failures"
 
     Sometimes filesystems cannot be mounted with `compress`.
     There are probably many likely reasons.
@@ -232,8 +232,8 @@ Open a terminal and enter the following commands to install the necessary packag
     sudo dnf update && sudo dnf -y upgrade
     sudo dnf install -y git vim curl wget xz-utils brotli lzma zstd iotop
     sudo dnf install -y eza  # (1)!
-      sudo dnf install -y ncurses-devel
-      sudo dnf install -y make automake gcc gcc-c++ kernel-devel cmake
+    sudo dnf install -y ncurses-devel
+    sudo dnf install -y make automake gcc gcc-c++ kernel-devel cmake
     sudo dnf install -y zsh
     sudo dnf install -y gnome-tweaks
     sudo dnf install -y asdf  # (2)!
@@ -265,21 +265,14 @@ After following the instructions, run `gh auth login`.
 Install ssh to allow for remote logins.
 
 ```
-sudo apt update
-sudo apt install openssh-server
+sudo apt -y update
+sudo apt -y install openssh-server
 sudo ufw allow 22
 ```
 
-## Consider using dotfiles
-
-I recommend [chezmoi](https://www.chezmoi.io/) for managing dotfiles
-and installing it via apt/dnf or asdf.
-After installing, follow the [quick start guide](https://www.chezmoi.io/docs/quick-start/).
-Use `~/.commonrc` for all chezmoi commands; e.g. `chezmoi add ~/.commonrc`.
-
 ## Cosmetics/UI
 
-### Eza and Nerd fonts
+### Eza icons and Nerd fonts
 
 Download one or more [Nerd fonts](https://www.nerdfonts.com/font-downloads).
 Then run
@@ -324,12 +317,10 @@ Also install extensions:
 Then open https://extensions.gnome.org/ and install the browser extension.
 I recommend installing:
 
-- <i>Force Quit</i>
-- <i>Panel Date Format</i>
-  After installing, run
-  ```bash
-  dconf write /org/gnome/shell/extensions/panel-date-format/format "'%Y-%m-%d %H:%M'"
-  ```
+- _Force Quit_
+- _Panel Date Format_
+  (After installing, run
+  `dconf write /org/gnome/shell/extensions/panel-date-format/format "'%Y-%m-%d %H:%M'"`.)
 
 ### Nautilus favorites
 
@@ -402,73 +393,33 @@ After running it, restart Nautilus to apply the settings:
 nautilus -q
 ```
 
-## Install [Oh My Zsh](https://ohmyz.sh/)
+## Configure your shell
 
-You’ll thank me later. (You’ll need ZSH installed for this to work.)
+**Follow this guide:**
 
-```bash
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
-```
-
-You should be prompted to change your shell.
-If you are not, run
-
-```bash
-chsh -s $(which zsh)
-```
-
-Make sure it is set by running
-
-```bash
-sudo cat /etc/passwd | grep ${USER}
-```
-
-You may need to reboot for the change to your login shell to take effect.
-You should now have a colorful shell, complete with a plugin for Git.
-
-## `.commonrc` file
-
-To keep the config for ZSH and Bash consistent, add a file called `.commonrc` in your home directory.
-After that, only modify `.commonrc` so that both Bash and ZSH have the same environment.
-
-=== "Better way"
-
-    [`commonrc-config.sh`](commonrc-config.sh)
-    provides tiny functions that create `.commonrc` if needed, add exactly 1 `source` line, etc.
-    The following will download it, create `.commonrc`, and add 1 line each to `.zshrc` and `.bashrc`.
-
-    ```bash
-    mkdir -p ~/bin
-    wget https://dmyersturnbull.github.io/guide/commonrc-config.sh -O ~/bin/commonrc-config.sh
-    source ~/bin/commonrc-config.sh
-    commonrc::initialize
-    commonrc::add_to_rc bashrc
-    commonrc::add_to_rc zshrc
-    commonrc::add_line 'source ~/bin/commonrc-config.sh'
-    ```
-
-=== "The other way"
-
-    As long as you haven’t done this before, you can run
-
-    ```bash
-    touch -a ~/.commonrc
-    printf 'source ~/.commonrc\n' >> ~/.zshrc
-    printf 'source ~/.commonrc\n' >> ~/.bashrc
-    ```
+[Shell setup :fontawesome-solid-terminal:](nix-shells.md){ .md-button }
 
 ## Git, SSH, and GPG
 
-**See [this guide](git-ssh-and-gpg.md).**
+**Follow this guide:**
 
-## Install Java and Rust
+[Shell setup :fontawesome-shield-halved:](git-ssh-and-gpg.md){ .md-button }
 
-First, [Install the Rust toolchain](https://rustup.rs/).
+## Java, Rust, and Python
 
-Then, download [JDK 21 LTS from Temurin](https://adoptium.net/temurin/releases/)
+For Rust, just [install the Rust toolchain](https://rustup.rs/).
+
+For Java, download [JDK 21 LTS from Temurin](https://adoptium.net/temurin/releases/)
 (or a newer non-LTS version if preferred).
 Do **not** use Java 8, java.com, or OpenJDK.
 Make sure it’s on your `$PATH` by checking the version via `java --version` in a new shell.
+
+For Python, install and use [uv](https://docs.astral.sh/uv/).
+You don’t need anything else – and you **really shouldn’t use anything else**.
+Make your life easier:
+(1) Leave your system Python alone,
+(2) don’t install Python via a package manager,
+and (3) install and use Conda/Mamba only if necessary.
 
 ## Generate a certificate
 

@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -o errexit -o nounset -o pipefail
 
 commonrc::initialize() {
   # Creates a ~/.commonrc if it doesn't already exist.

@@ -24,8 +24,11 @@ Security, settings, Brew, ZSH, …
 [:fontawesome-solid-laptop-code: **Windows**](windows.md):
 Package managers, services, updates, drivers, utils, WLS, …
 
+[:fontawesome-solid-laptop-code: **Nix shells**](nix-shells.md):
+ZSH, shell config, and dot files _(referenced by other guides)_
+
 [:fontawesome-solid-laptop-code: **Git, SSH, and GPG**](git-ssh-and-gpg.md):
-Git, GitHub, SSH, GPG, and signed commits
+Git, GitHub, SSH, GPG, and signed commits _(referenced by other guides)_
 
 ---
 
@@ -65,6 +68,5 @@ Suggestions for organizing computational research projects
 [:fontawesome-solid-code: **`commonrc.sh`**](commonrc.sh):
 Miscellaneous useful Bash functions and aliases I use
 
-[:fontawesome-solid-code: **`venv-utils.sh`**](venv-utils.sh):
-Utilities to manage Python venvs
-_(deprecated: use [uv](https://docs.astral.sh/uv/) instead)_.
+[:fontawesome-solid-code: **`todos.sh`**](todos.sh):
+Script that finds `TODO` and `FIXME` comments.

@@ -50,7 +50,7 @@ alongside the following rules and exceptions.
     I recently (2024-08) changed my mind on this: previously.
     I previously followed [bertvv](https://github.com/bertvv)’s advice and used forced `${}`.
     That adds clarity, but it contradicts my
-    [less &gt; more principle](https://dmyersturnbull.github.io/convention/#principles).
+    [less > more principle](https://dmyersturnbull.github.io/convention/#principles).
 
 1. Use `#!/usr/bin/env bash`.
 2. Read stdin where applicable, and reserve stdout for machine-readable output.
@@ -76,18 +76,18 @@ alongside the following rules and exceptions.
 # SPDX-FileCopyrightText: Copyright 2024, Contributors to the gamma package
 # SPDX-PackageHomePage: https://github.com/the-gamma-people/gamma
 # SPDX-License-Identifier: MIT
-set -euo pipefail # (1)!
+set -o errexit -o nounset -o pipefail # (1)!
 
 declare -r -i default_min=2
 _usage="Usage: $0 in-dir [min-hits=$default_min]"
 _desc="Computes gamma if in-dir contains < min-hits results."
 
 if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
-	printf "$_desc\n$_usage"
+	printf '%s\n%s\n' "$_desc" "$_usage"
 	exit 0
 fi
 if (( $# == 0 )) || (( $# > 2 )); then
-  >&2 echo "Invalid usage.\n$_usage"  # (2)!
+  >&2 printf '%s\n%s\n' "Invalid usage." "$_usage"  # (2)!
   exit 2  # (3)!
 fi
 declare -r in_dir="$1"
@@ -117,12 +117,34 @@ exit 0  # (6)!
 
 1. [Set](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
    `nounset`, `errexit`, and `pipefail`.
+   These options are sometimes called
+   [Bash Strict Mode](http://redsymbol.net/articles/unofficial-bash-strict-mode/).
 2. Always log to stderr.
 3. `exit 2` for usage errors.
 4. Omit `function`. Using a package prefix (e.g. `gamma::`) can be helpful.
 5. `exit` with 1 or 3–125.
    See [`sysexits.h`](https://manpages.ubuntu.com/manpages/lunar/man3/sysexits.h.3head.html) (ignoring `EX_USAGE`).
 6. Without this line, the script returns `1` if `gamma::must_compute` returns `1`.
+   If using `must_compute`’s exit code is desired, use `exit $?`.
+
+!!! warning "Don’t rely on Strict Mode"
+
+    Even if you set `noset`, `errexit`, and `pipefail`, write the code as though they’re not enabled.
+    Having to switch between strict and nonstrict styles is difficult, and you’re likely to make a mistake.
+    Practicing the robust way only reinforces it in your memory (and helps others reading it, too).
+    And code that relies on these options are brittle when moved or copied to a script (or shell) that doesn’t set them.
+    They can even get unset midway through a script; e.g. when `source`ing another script.
+
+### Parsing command-line arguments
+
+Either keep it simple as in the above example, or use a `case` statement.
+See [`todos.sh`](../guide/todos.sh) for a `case` example.
+
+!!! rationale
+
+    `getopts`, as well the variant of `getopt` on BSD, cannot parse --long-style options.
+    `getopt` has other differences between distributions, as well.
+    This makes `case` statements a substantially better choice.
 
 ## Docker
 

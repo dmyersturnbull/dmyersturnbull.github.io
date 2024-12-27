@@ -2,7 +2,7 @@
 ###################################################################################################
 #                                   Set environment variables
 ###################################################################################################
-export JAVA_HOME=/opt/jdk22
+export JAVA_HOME=/opt/temurin21
 
 export PATH
 PATH="$PATH:/usr/sbin:/usr/local/sbin:$HOME/bin:$JAVA_HOME/bin"
@@ -379,52 +379,6 @@ fi
 ###################################################################################################
 #                                                Misc utils
 ###################################################################################################
-
-# Function to search for T/O/D/O comments (without the /)
-find-todos() {
-  local _directory=.
-  local _files='*.*'
-  local _todo=TODO
-
-  # Parse optional parameters using a while loop
-  while (( $# > 0 )); do
-    case "$1" in
-      --files) _files="$1" ; shift 2 ;;
-      --dir)   _dir="$1"   ; shift 2 ;;
-      --todo)  _todo="$1"  ; shift 2 ;;
-      --)      shift       ; break   ;;
-      *)       >&2 echo "Unknown arg $1" ; return 1 ;;
-    esac
-  done
-
-  # Start the Markdown table
-  # https://stackoverflow.com/questions/4409399/padding-characters-in-printf
-  local fmt='%-20s | %-4s | %-90s\n'
-  # shellcheck disable=SC2059
-  printf '%s%s | %s | %s |\n' \
-    "$( printf "$fmt" File Line Comment )" \
-    "$( printf '%0.1s' "-"{1..20} )" \
-    "----" \
-    "$( printf '%0.1s' "-"{1..90} )"
-
-  # Grep to find T/O/D/O comments
-  grep \
-    --binary-files=without-match \
-    --recursive \
-    --line-number \
-    --include="$_files" \
-    "$_todo" \
-    "$_directory" \
-    | awk -F':' -v fmt="$fmt" '
-      {
-        # Extract filename, line number, and comment
-        comment = substr($0, index($0, $3));
-        sub(/^[ \t]*TODO[:]?[ \t]*/, "", comment);
-        printf fmt, $1, $2, comment;
-      }
-  '
-  exit $?
-}
 
 update-system() {
   # assume arguments like --quiet and --yes are being delegated

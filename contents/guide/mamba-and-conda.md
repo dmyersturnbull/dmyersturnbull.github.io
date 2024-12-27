@@ -74,7 +74,7 @@ conda create \
 conda activate ds
 ```
 
-!!! bug
+!!! bug "pywin32 and pywinutils problems"
 
     If you are on Windows, add `pywin32` and `pywinutils`.
     Some versions of [pywin32 have issues](https://github.com/mhammond/pywin32/issues/1431),
