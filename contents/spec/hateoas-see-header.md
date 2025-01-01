@@ -22,7 +22,7 @@ and existing APIs can’t be made conformant without breaking changes.
 - HAL uses `_embedded` and requires clients to understand CURIEs.
 - HTTP methods can’t be included using any of the three standards.
 
-In the spirit of [XKCD #927](https://xkcd.com/927/), here is a new proposal.
+**In the spirit of [XKCD #927](https://xkcd.com/927/), here is a new proposal.**
 
 ## HTTP `See` header specification
 
@@ -36,7 +36,8 @@ This nonstandard header is called `Link`.
 <b>Example:</b>
 
 ```text
-See: <https://api.tld>; rel="delete"; method="DELETE", <https://api.tld?page=2>; rel="next"; method="GET"
+See: <https://api.tld>; rel="delete"; method="DELETE"
+See: <https://api.tld?page=2>; rel="next"; method="GET"
 ```
 
 ## Formal grammar

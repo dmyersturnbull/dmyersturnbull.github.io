@@ -67,7 +67,7 @@ commonrc::add_to_rc ~/.config/fish/config.fish
 
     ```bash
     printf 'source ~/.commonrc\n' | tee -a ~/.bashrc >> ~/.zshrc
-    printf 'export PATH="$PATH:/usr/sbin:/usr/local/sbin:$HOME/bin"' >> ~/.commonrc
+    printf 'export PATH="$PATH:/usr/sbin:/usr/local/sbin:$HOME/bin"\n' >> ~/.commonrc
     ```
 
 ## Sudoers
@@ -88,7 +88,7 @@ See this [sudoers guide](https://www.cyberciti.biz/faq/how-to-sudo-without-passw
 Make a `~/bin` directory and add it to your `$PATH` in `.commonrc`:
 
 ```bash
-mkdir ~/bin && echo 'export PATH=$HOME/bin:$PATH' >> ~/.commonrc
+mkdir ~/bin && printf 'export PATH=$HOME/bin:$PATH\n' >> ~/.commonrc
 ```
 
 Consider using a dotfile manager like [chezmoi](https://www.chezmoi.io/).
@@ -98,6 +98,5 @@ Grab useful Bash scripts from
 [awesome-dotfiles](https://github.com/webpro/awesome-dotfiles):
 Clone your chosen dotfiles repo into `~/bin`.
 
-I put some aliases and functions directly in my `.commonrc`:
-
-[`add-bookmarks.sh` :fontawesome-solid-code:](commonrc.sh){ .md-button }
+I put some aliases and functions directly in
+[my `.commonrc`](commonrc.sh).

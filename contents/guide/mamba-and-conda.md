@@ -46,7 +46,7 @@ conda create \
   --name build \
   --force \
   --yes \
-  python=3.11
+  python=3.13
 
 conda activate build
 pip install poetry hatch tox pytest pytest-cov

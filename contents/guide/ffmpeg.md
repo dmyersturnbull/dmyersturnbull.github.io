@@ -77,12 +77,12 @@ sudo make install
 
 # Make sure this shows libsvtav1
 if ! $( ffmpeg -version | grep libsvtav1 ) ; then
-    >&2 echo "No libsvtav1"
+    >&2 printf "No libsvtav1\n"
 fi
 ```
 
 1. Set this to the most recent version
 
-!!! note "Thanks"
+!!! thanks
 
     Thank you to Cole Helsell for drafting this guide with me.

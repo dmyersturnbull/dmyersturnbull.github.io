@@ -25,38 +25,62 @@ T(?P<hour>[1-9]|1\d|2[0-3])
 $
 ```
 
+### Timezone names
+
+[RFC 9557](https://datatracker.ietf.org/doc/html/rfc9557) supports
+[affixing a timezone](../post/iso-8601-problems.md#affixing-timezone-names)
+or other information to a timezone.
+You MAY include a timezone name in the form `[America/Los_Angeles]`.
+The prefix `!` (meaning _critical_) MUST NOT be used.
+
+Timezone names:
+
+- MUST be recognized by [IANA](https://www.iana.org/time-zones);
+- SHOULD be marked Canonical (not Link);
+- SHOULD NOT be `Factory`; and
+- SHOULD NOT start with `Etc/`, except for `Etc/UTC`.
+- SHOULD NOT use `Etc/UTC` in place of `Europe/London`.
+
+??? example "Example – RFC 9557"
+
+    ```json
+    {
+      "local-date-time": "2023-11-02T06:20:45-08:00[America/Los_Angeles]",
+      "utc-date-time": "2023-11-02T014:20:45Z",
+      "source": "0.amazon.pool.ntp.org"
+    }
+    ```
+
+??? example "Example – explicit"
+
+    ```json
+    {
+      "utc-date-time": "2023-11-02T14:20:45Z",
+      "local-offset": "-08:00",
+      "local-zone": "America/Los_Angeles",
+      "source": "0.amazon.pool.ntp.org"
+    }
+    ```
+
+### Intervals
+
 Write intervals using 2 RFC 3339 date-times, separated by `--`.
 ISO 8601 permits `--` instead of `/`, which is problematic in URIs and filesystem paths.
 
-### JSON Schema
+I [advise against repeating intervals](../post/iso-8601-problems.md#intervals),
+and they are not part of this spec.
+Represent them explicitly instead.
 
-```yaml
-date-time:
-  type: string
-  pattern: >-
-    (?P<year>\d{4})\
-    -(?P<month>0[1-9]|1[012])\
-    -(?P<day>0[1-9]|[1-2]\d|3[01])\
-    T(?P<hour>[1-9]|1\d|2[0-3])\
-    :(?P<minute>[1-9]|[1-5]\d)\
-    :(?P<second>[1-9]|[1-5]\d(?:\.\d{6})?+)
-    (?P<offset>Z|[+-]\d{2}:\d{2})
+??? example "Example – recurring events"
 
-interval:
-  type: string
-  pattern: >-
-    (?P<start>\
-    \d{4}(0[1-9]|1[012])(0[1-9]|[1-2]\d|3[01])\
-    T([1-9]|1\d|2[0-3]):([1-9]|[1-5]\d):([1-9]|[1-5]\d)\
-    (Z|[+-]\d{2}:\d{2})\
-    )\
-    --
-    (?P<end>\
-    \d{4}(0[1-9]|1[012])(0[1-9]|[1-2]\d|3[01])\
-    T([1-9]|1\d|2[0-3]):([1-9]|[1-5]\d):([1-9]|[1-5]\d)\
-    (Z|[+-]\d{2}:\d{2})\
-    )
-```
+    ```json
+    {
+      "start": "2024-01-01T09:15:00[-08:00]",
+      "end": "2024-01-01T10:00:00[-08:00]",
+      "repeat-every": "PT24H",
+      "n-events": 7
+    }
+    ```
 
 ## Durations
 
@@ -71,9 +95,12 @@ The result is `PT<h>H[<m>M[<s>S]]`, which is trivial parse and convert to `hh:mm
     (?
     ^
     PT
-    (?:(?P<hours>\d)H)??
-    (?:(?P<minutes>\d++)M)??
-    (?:(?P<seconds>\d++(?:\.(?:\d{3}|\d{6}|\d{9}))?+)S)?+
+    (?:(?P<hour>\d)H)??
+    (?:(?P<minute>\d++)M)??
+    (?:
+    (?P<second>\d++S)?+
+    (?:\.(?P<microsecond>\d{1,6}++)?+
+    )
     $
     )
     ```
@@ -82,38 +109,90 @@ The result is `PT<h>H[<m>M[<s>S]]`, which is trivial parse and convert to `hh:mm
 
     ```regexp
     (?
-    ^\
-    (?P<hours>\d{2,}+)
-    :(?P<minutes>[0-5]\d)
-    :(?P<seconds>[0-5]\d)
-    (?:\.(\d{3}|\d{6}|\d{9}))?+
+    ^
+    (?P<hour>\d{2,}+)
+    :(?P<minute>[0-5]\d)
+    :(?P<second>[0-5]\d)
+    (?:\.(?P<microsecond>\d{6}))?+
     $
     )
     ```
 
-### Examples
+???+ example "Examples"
 
-**✅ ok** `35.2` for a key `duration_sec`
+    **✅ ok** `PT23H45M55.8S` (per the spec, `0.8S` means 8 milliseconds)
 
-**✅ ok** `PT23H45M55.8S` (per the spec, `8S` means 8 milliseconds)
+    **✅ ok** `23:45:55`
 
-**✅ ok** `23:45:55.800` (800 milliseconds)
+    **✅ ok** `23:45:55.800200` (800 milliseconds and 200 microseconds)
 
-**✅ ok** `23:45:55.800200` (800 milliseconds and 200 microseconds)
+    **❌ not ok** `23:45:55.2` – unclear: is `0.8` 8 or 800 milliseconds?
 
-**❌ not ok** `23:45:55.2` – ambiguous: is `.8` 8 milliseconds or `800`?
+    **❌ not ok** `23:45:55.800` – use exactly 0 or 6 decimal digits
 
-**❌ not ok** `P6M2WT45M55S` – ambiguous because months have indeterminate durations
+    **❌ not ok** `P6M2WT45M55S` – ambiguous because months have indeterminate durations
 
-**❌ not ok** `P1D12H` – unambiguous but not limited to hours, minutes, and seconds
+    **❌ not ok** `P1D12H` – unambiguous but not limited to hours, minutes, and seconds
 
-**❌ not ok** `P2S` – does not start with `PT`; rewrite as `PT2S`
+    **❌ not ok** `P2S` – does not start with `PT`; rewrite as `PT2S`
 
-**❌ not ok** `05:22` – is this `min:sec` or `hour:min`?
+    **❌ not ok** `05:22` – is this `min:sec` or `hour:min`?
 
-### JSON Schema
+    **🟨 not in spec** `35.2 s` – unambiguous; not in spec but good in documentation
+
+## JSON Schema
+
+This is the full specification.
 
 ```yaml
+date-time:
+  type: string
+  pattern: >-
+    (?P<year>\d{4})
+    -(?P<month>0[1-9]|1[012])
+    -(?P<day>0[1-9]|[1-2]\d|3[01])
+    T(?P<hour>[1-9]|1\d|2[0-3])
+    :(?P<minute>[1-9]|[1-5]\d)
+    :(?:
+    (?P<second>[1-9]|[1-5]\d)
+    (?P<microsecond>\.\d{6})?+
+    )
+    (?P<offset>Z|[+-]\d{2}:\d{2})
+    (?:
+    \[
+    (?P<zone>
+    (?:[A-Z][A-Za-z0-9]*+(?:[_+-][A-Za-z0-9]++)))
+    (?:/[A-Z][A-Za-z0-9]*+(?:[_+-][A-Za-z0-9]++)){0,3}+
+    )
+    \]
+    )?+
+
+interval:
+  type: object
+  required:
+    - start
+    - end
+  properties:
+    start:
+      $ref: "#/date-time"
+    end:
+      $ref: "#/date-time"
+
+interval-string:
+  type: string
+  pattern: >-
+    (?P<start>
+    \d{4}(0[1-9]|1[012])(0[1-9]|[1-2]\d|3[01])
+    T([1-9]|1\d|2[0-3]):([1-9]|[1-5]\d):([1-9]|[1-5]\d)(\.\d{6})?+
+    (Z|[+-]\d{2}:\d{2})
+    )
+    --
+    (?P<end>
+    \d{4}(0[1-9]|1[012])(0[1-9]|[1-2]\d|3[01])
+    T([1-9]|1\d|2[0-3]):([1-9]|[1-5]\d):([1-9]|[1-5]\d)(\.\d{6})?+
+    (Z|[+-]\d{2}:\d{2})
+    )
+
 duration:
   oneOf:
     - $ref: "#/components/schemas/pt-duration"
@@ -122,20 +201,23 @@ duration:
 pt-duration:
   type: string
   pattern: >-
-    ^\
-    PT\
-    (?:(\d)H)??\
-    (?:(\d++)M)??\
-    (?:(\d++(?:\.\d{1,6}+)?+)S)?+\
+    ^
+    PT
+    (?:(?P<hour>\d)H)??
+    (?:(?P<minute>\d++)M)??
+    (?:
+    (?P<second>\d++S)?+
+    (?:\.(?P<microsecond>\d{1,6}++)?+)
+    )
     $
 
 hhmmss-duration:
   type: string
   pattern: >-
-    ^\
-    (\d{2,}+)\
-    :([0-5]\d)\
-    :([0-5]\d)\
-    (?:\.(\d{3}|\d{6}))?+\
+    ^
+    (?P<hour>\d{2,}+)
+    :(?P<minute>[0-5]\d)
+    :(?P<second>[0-5]\d)
+    (?:\.(?P<microsecond>\d{6}))?+
     $
 ```

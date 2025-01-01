@@ -111,10 +111,10 @@ markdown_extensions:
       smart_enable: all
   - codehilite:
       guess_lang: false
-  - def_list
+  #- def_list
   - footnotes
-  - markdown_include.include:
-      base_path: contents
+  #- markdown_include.include:
+  #    base_path: contents
   - md_in_html
   - meta
   - pymdownx.arithmatex:
@@ -173,7 +173,8 @@ extra_javascript:
   - js/fixups.js
 
 plugins:
-  - macros
+  #- macros
+  - include-markdown
   - search
   - table-reader
   - mkdocstrings:

@@ -9,8 +9,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 The landscape of Python build infrastructure is a mess.
 I made over 100 commits to get a sensible, elegant, and secure build.
 It took too long, but here’s the result:
-
-[template repository :fontawesome-solid-code:](https://github.com/dmyersturnbull/cicd){ .md-button }
+**[template repository :fontawesome-solid-code:](https://github.com/dmyersturnbull/cicd)**
 
 <!--
 The result is a template project and tool called

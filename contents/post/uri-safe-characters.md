@@ -70,16 +70,13 @@ sub-delims  = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
 unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ```
 
-`General delimiters`
-
-:   Separate components or subcomponents (_userinfo_, _host_, _port_).
-    They must be encoded in components where their reserved meanings would apply.
-    For example, `:` must be encoded in _authority_ but not _query_; e.g. `https://api.tld/a:b:c` is valid.
-
-`Sub-delimiters`
-
-:   Are used reserved within one or more components but are not general delimiters.
-    Whether they must be encoded depends on the component and the scheme.
+- `General delimiters`:
+   Separate components or subcomponents (_userinfo_, _host_, _port_).
+   They must be encoded in components where their reserved meanings would apply.
+   For example, `:` must be encoded in _authority_ but not _query_; e.g. `https://api.tld/a:b:c` is valid.
+- `Sub-delimiters`:
+   Are used reserved within one or more components but are not general delimiters.
+   Whether they must be encoded depends on the component and the scheme.
 
 !!! important
 

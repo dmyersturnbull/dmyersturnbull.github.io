@@ -223,7 +223,9 @@ LOWER-HEXDIG               = [0-9a-f]
 ALPHANUM                   = ALPHA | DIGIT
 SQUOTE                     = "'"
 DQUOTE                     = '"'
-RFC-3339-DATETIME          = `20\d\d-(12|11|[1-9])-(\d|[12]\d|3[01])T([01]\d|2[0-3])(:([0-5]\d|60)){2}(\.{3}|\.{6})?Z`
+RFC-3339-DATETIME          = `20\d\d-(12|11|[1-9])-(\d|[12]\d|3[01])\
+                              T([01]\d|2[0-3])(:([0-5]\d|60)){2}\
+                              (\.{3}|\.{6})?Z`
 E-NOTATION-FLOAT           = LITERAL-FLOAT ('E' LITERAL-FLOAT)?
 E-NOTATION-NONNEG-FLOAT    = LITERAL-NONNEG-FLOAT ('E' LITERAL-FLOAT)?
 E-NOTATION-POSITIVE-FLOAT  = LITERAL-POSITIVE-FLOAT ('E' LITERAL-FLOAT)?

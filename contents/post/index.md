@@ -12,9 +12,6 @@ Ideas, summaries, recommendations, notes, etc.
 
 <strong class="index">Contents</strong>
 
-[:fontawesome-solid-panorama: **Wonders of ChatGPT**](wonders-of-chatgpt.md):
-Wrong, absurd, and wondrous things from ChatGPT
-
 [:fontawesome-solid-calendar-days: **ISO 8601 problems**](iso-8601-problems.md):
 Why to use RFC 3339 and restrict ISO 8601 durations, etc.
 
@@ -38,3 +35,6 @@ How to replace terrible Python build tools
 
 [:fontawesome-solid-fill-drip: **Frontends for time travelers**](frontends-for-time-travelers.md):
 Frontend development for those traveling from 2005
+
+[:fontawesome-solid-panorama: **Wonders of ChatGPT**](wonders-of-chatgpt.md):
+Wrong, absurd, and wondrous things from ChatGPT

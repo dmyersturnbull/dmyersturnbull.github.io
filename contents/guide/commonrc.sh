@@ -249,11 +249,11 @@ copy() {
 # Modified from https://serverfault.com/questions/3743/what-useful-things-can-one-add-to-ones-bashrc
 extract() {
   if (( $# != 1 )); then
-    >&2 echo "Usage: extract <archive-file>"
+    >&2 printf "Usage: extract <archive-file>\n"
     return 2
   fi
   if [[ ! -f "$1" ]]; then
-    >&2 echo "'$1' is not a file or does not exist"
+    >&2 printf "'%s' is not a file or does not exist\n" "$1"
     return 1
   fi
   case "$1" in
@@ -275,7 +275,7 @@ extract() {
     *.lzma)      unlzma  "$1"    ; return $? ;;
     *.zst)       unzstd "$1"     ; return $? ;;
     *.7z)        7z x "$1"       ; return $? ;;
-    *)           >&2 echo "Unknown format: $1" ; return 1 ;;
+    *)           >&2 printf 'Unknown format: %s' "$1" ; return 1 ;;
   esac
 }
 
@@ -372,7 +372,7 @@ set_up_git_aliases() {
 if command -v git >/dev/null 2>&1; then
   set_up_git_aliases # don't exit on error
 else
-  >&2 echo "Git is not installed or not found in PATH"
+  >&2 printf "Git is not installed or not found in PATH\n"
 fi
 
 

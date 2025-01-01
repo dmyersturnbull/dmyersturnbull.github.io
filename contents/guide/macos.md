@@ -44,9 +44,9 @@ And a couple of small things:
 Run this to add a `brew-refill` command:
 
 ```bash
-printf 'alias brew-refill="%s && %s && %s; %s"\n' \
-  "brew update" "brew upgrade" "brew cleanup" "brew doctor" \
-  >> ~/.commonrc
+printf '
+alias brew-refill="brew update; brew upgrade; brew cleanup; brew doctor"
+' >> ~/.commonrc
 ```
 
 From that, you can run `brew-refill` to update Brew and its packages, and to fix problems.
@@ -72,23 +72,14 @@ brew install gnupg gh
 
 **Next, follow this guide:**
 
-[Shell setup :fontawesome-shield-halved:](git-ssh-and-gpg.md){ .md-button }
+[Shell setup :fontawesome-solid-shield-halved:](git-ssh-and-gpg.md){ .md-button }
 
-## Java, Rust, and Python
+<!-- Toolkits; e.g. Java and Rust -->
 
-For Rust, just [install the Rust toolchain](https://rustup.rs/).
-
-For Java, download [JDK 21 LTS from Temurin](https://adoptium.net/temurin/releases/)
-(or a newer non-LTS version if preferred).
-Do **not** use Java 8, java.com, or OpenJDK.
-Make sure it’s on your `$PATH` by checking the version via `java --version` in a new shell.
-
-For Python, install and use [uv](https://docs.astral.sh/uv/).
-You don’t need anything else – and you **really shouldn’t use anything else**.
-Make your life easier:
-(1) Leave your system Python alone,
-(2) don’t install Python via a package manager,
-and (3) install and use Conda/Mamba only if necessary.
+{%
+    include-markdown './_toolkits.md'
+    heading-offset=1
+%}
 
 ## Generate a certificate
 
@@ -98,8 +89,8 @@ Then follow the instructions exactly, including the “Automating renewal” sec
 This may not work through some company and university firewalls.
 
 _[LTS]: Long-Term Support
-_[UEFI]: Unified Extensible Firmware Interface \*[JDK]: Java Development Kit
+_[JDK]: Java Development Kit
 
-!!! note "Thanks"
+!!! thanks
 
     Thank you to Cole Helsell for drafting this guide with me.

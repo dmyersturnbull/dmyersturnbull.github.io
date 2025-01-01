@@ -42,24 +42,26 @@ In the security settings, enable Core Isolation and Trusted Platform Module in s
 Restart your computer.
 If appropriate, enable BitLocker and restart again.
 
+### Built-in apps
+
 Purge Windows’s horrifically unnecessary built‐in apps.
 In an unmistakably irresponsible choice, Windows comes with Candy Crush.
 Err on the side of assuming they’re useless and shouldn’t be there.
 [Kill it with fire](https://tvtropes.org/pmwiki/pmwiki.php/Main/KillItWithFire)
 ([1](https://www.wired.com/2013/10/why-kill-it-with-fire-is-a-terrible-terrible-idea/)).
 
-Then install the Windows Developer Mode.
+### Features
+
+Install the Windows Developer Mode.
 Go to the start menu and type _features_.
 Navigate to
 `Apps and Features → Manage optional features → add feature → Windows Developer Mode → install`.
-Enable OpenSSH.
-Disable unnecessary Optional Features---which is most of them,
-including the Telnet Client, Windows Media Player, and PowerShell 2.0.
-Uninstall Notepad and Wordpad.
 
-??? info "Optional Features"
+Also enable OpenSSH, uninstall Notepad and Wordpad, and disable other unnecessary Optional Features -- which is most of them.
+These include the Telnet Client, Windows Media Player, and PowerShell 2.0.
 
-    Your list might have some differences.
+??? info "Example Optional Features"
+
     Mine eventually looked like this:
 
     | Feature                                         | On? |
@@ -89,6 +91,16 @@ Uninstall Notepad and Wordpad.
     | Windows TIFF IFilter                            |     |
     | Work Folders Client                             |     |
 
+### Services and startup apps.
+
+Disable unnecessary startup apps.
+These are under `Settings → Apps → Startup`.
+
+Next, open the Services app.
+Disable unnecessary services (set them to _Manual_ start).
+However, set Windows Time Service to _Automatic_ to force an NTP sync every startup.
+Otherwise, your system clock can drift seconds or even minutes after a small number of restarts.
+
 ## Power & update settings
 
 In the power settings, disable hibernation, automatic sleep mode, and USB connection suspending.
@@ -107,7 +119,7 @@ Plus, eventually you can’t postpone further.
 To update Windows, first open Win Update Stop and enable updates.
 Disable them again when you’re done.
 
-## Chocolatey
+## Chocolatey and Powershell Core
 
 Install [Chocolatey](https://chocolatey.org/), a fantastic package manager.
 After installing, run `choco upgrade all -Y`.
@@ -127,7 +139,7 @@ Check the PowerShell version using: `Get-Host | Select-Object Version`. Make sur
 Install some essential packages by running
 
 ```powershell
-choco install -Y poshgit gh libressl gnupg  rsync
+choco install -Y poshgit gh libressl gnupg rsync
 ```
 
 ??? tip "Other packages"
@@ -137,26 +149,17 @@ choco install -Y poshgit gh libressl gnupg  rsync
 
     ```powershell
     choco install -Y \
-        adobereader \
-        googlechrome \
-        firefox \
-        chocolatey-core.extension \
-        teamviewer \
-        7zip \
-        vlc \
-        notepadplusplus \
-        sysinternals \
-        awscli \
-        zoom \
-        ffmpeg \
-        pandoc \
-        treesizefree \
-        docker-desktop \
+      chocolatey-core.extension \
+      sysinternal notepadplusplus 7zip \
+      googlechrome firefox teamviewer \
+      vlc ffmpeg pandoc treesizefree
     ```
 
 Keep packages up-to-date by occasionally running `choco upgrade all`.
 
 ## Snappy & Scoop
+
+Install [Snappy](https://snappy.computop.org/installing.html#windows), a cross-platform package manager.
 
 Install [Scoop](https://scoop.sh/), which is great for software used for development:
 
@@ -164,8 +167,6 @@ Install [Scoop](https://scoop.sh/), which is great for software used for develop
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 irm get.scoop.sh | iex
 ```
-
-Install [Snappy](https://snappy.computop.org/installing.html#windows), a cross-platform package manager.
 
 ## Git, SSH, & GPG
 
@@ -175,17 +176,21 @@ Note that GitHub CLI was installed via Chocolatey (in the steps above).
 
 ## Language tools
 
-[Install the Rust toolchain](https://rustup.rs/).
+!!! warning
 
-Check <i>Add or Remove Programs</i> for _Java_. Uninstall any versions you have installed.
-Then, download [JDK 21 LTS from Temurin](https://adoptium.net/temurin/releases/)
-(or a newer non-LTS version if preferred).
-Do **not** use Java 8, java.com, or OpenJDK.
-Make sure it’s on your `$PATH` by checking the version via `java --version` in a new shell.
+First, check <i>Add or Remove Programs</i> for _Java_.
+Uninstall any versions you have installed.
 
-!!! tip "Pro-tip"
+<!-- Toolkits; e.g. Java and Rust -->
 
-    Install both via
+{%
+include-markdown './_toolkits.md'
+heading-offset=1
+%}
+
+!!! tip "Installing Rust and Java using a package manager"
+
+    Install Rust and Java via either Scoop or Chocolatey:
 
     === "Scoop"
 
@@ -198,7 +203,7 @@ Make sure it’s on your `$PATH` by checking the version via `java --version` in
     === "Chocolatey"
 
         ```powershell
-        choco install -Y temurin rust python
+        choco install -Y temurin rust
         ```
 
 ??? bug "If the JDK is not on your `$PATH`"
@@ -208,19 +213,19 @@ Make sure it’s on your `$PATH` by checking the version via `java --version` in
     In an administrator console, run this:
 
     ```powershell
-    [Environment]::SetEnvironmentVariable(\
-        "Path",\
-        [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine)\
-            + ";C:\Program Files\Java\jdk-21",\
-        [EnvironmentVariableTarget]::Machine\
+    [Environment]::SetEnvironmentVariable( \
+      "Path", \
+      [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) \
+      + ";C:\Program Files\Java\jdk-21", \
+      [EnvironmentVariableTarget]::Machine \
     )
     ```
 
-Install Node.js and Python:
+Install Node.js:
 
 ```powershell
 scoop bucket add main
-scoop install nodejs python
+scoop install nodejs
 ```
 
 Finally, install [pnpm](https://pnpm.io/), a faster alternative to npm:
@@ -238,9 +243,9 @@ Install the package without optional packages (unless they’re wanted).
 !!! bug "Troubleshooting / compiling packages"
 
     Some packages do not publish wheels for Windows.
-    Pip and Poetry will fall back to compiling on Windows if suitable wheels are not found.
+    Uv, as well as Pip and Poetry, will fall back to compiling on Windows if suitable wheels are not found.
     You may need to install older versions of the Visual C++ Build Tools for this to work (as well as the latest).
-    However, also take a look at
+    Also take a look at
     [Christopher Golhlke’s wheel archive](https://www.lfd.uci.edu/~gohlke/pythonlibs/).
     It often has Windows wheels for the latest Python versions much earlier than the packages officially release them.
 
@@ -251,6 +256,6 @@ Then follow the [Linux setup guide](linux.md).
 
 \*[WLS]: Windows Linux Subsystem
 
-!!! note "Thanks"
+!!! thanks
 
     Thank you to Cole Helsell for drafting this guide with me.

@@ -239,7 +239,12 @@ The square brackets can contain an
 [IANA zone name](https://data.iana.org/time-zones/tz-link.html),
 but zone names like `Etc/GMT-8` are discouraged (except `Etc/UTC`).
 You can also us offset; e.g. `[-08:00]`.
-(You cannot use both; `[-08:00][America/Los_Angeles]` is **invalid**.)
+
+!!! note
+   You cannot use both; `[-08:00][America/Los_Angeles]` is **invalid**.
+   You could use a custom “experimental” key prefixed with `_`;
+   e.g. `[-08:00][_tz=America/Los_Angeles]`.
+   However, this requires agreement and would probably lead to confusion.
 
 !!! note
 

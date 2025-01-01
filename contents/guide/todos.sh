@@ -6,8 +6,8 @@ set -o errexit -o nounset -o pipefail
 
 # Function to search for T/O/D/O comments (without the /)
 
-declare -r prog_name
-prog_name=$(basename "$0")
+__z=$(basename "$0")
+declare -r prog_name=$__z
 declare -r prog_vr=v0.1
 
 # arguments
@@ -38,8 +38,6 @@ Options:
 "
 declare -r example="Example: $prog_name --dir src/ --files '*.java' --todo FIXME:"
 declare -r info="\
-$prog_name $prog_vr
-
 Finds 'TODO' in files.
 
 Reads text files (per --dir and --files), finding strings like TODO or FIXME (per --todo and --regex). \
@@ -69,7 +67,8 @@ while (( $# > 0 ));  do
     --regex)         regex=true                                                      ;;
     --literal)       regex=false                                                     ;;
     -R|--recursive)  recurse=true                                                    ;;
-    -h|--help)       printf '%s\n%s\n%s\n' "$info" "$usage" "$example"      ; exit 0 ;;
+    -h|--help)       printf '%s %s\n\n%s\n\n%s\n\n%s\n' \
+                       "$prog_name" "$prog_vr" "$info" "$usage" "$example"  ; exit 0 ;;
     -v|--version)    printf '%s\n' "$prog_vr"                               ; exit 0 ;;
     --)                                                                       break  ;;
     *)               >&2 printf "Unknown option: '%s'\n%s\n" "$1" "$usage"  ; exit 2 ;;

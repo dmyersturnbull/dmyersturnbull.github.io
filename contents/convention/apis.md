@@ -173,13 +173,10 @@ Example:
 
 #### Durations and intervals
 
-
-**See [_duration _](../post/iso-8601-problems.md#durations).**
-
-??? rationalehttps://dmyersturnbull.github.io/post/iso-8601-problems/#it-supports-week-dates
+??? rationale
 
     ISO 8601’s duration format is quite bad but already widespread.
-    See [_ISO 8601 problems: durations_](../post/iso-8601-problems.md#durations).
+    **See [problems with ISO 8601 durations](../post/iso-8601-problems.md#durations).**
 
 A duration may be written these three ways:
 

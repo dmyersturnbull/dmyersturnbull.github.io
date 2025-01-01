@@ -94,7 +94,7 @@ declare -r in_dir="$1"
 declare -r -i min_hits=$(( "${2:-}" || $default_min ))
 
 gamma::fail() {  # (4)!
-	>&2 printf "[FATAL] $1"; exit 1  # (5)!
+	>&2 printf '[FATAL] %s\n' "$1"; exit 1  # (5)!
 }
 
 gamma::must_compute() {
@@ -107,7 +107,7 @@ gamma::compute() {
 }
 
 gamma::main() {
-  >&2 echo "[INFO] Initializing..."
+  >&2 printf '%s\n' "[INFO] Initializing..."
   gamma::must_compute && gamma::compute
 }
 

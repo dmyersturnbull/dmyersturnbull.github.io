@@ -432,6 +432,9 @@ For inline lists, follow this format:
 
     This is the format that
     [IEEE recommends](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/conferences/style_references_manual.pdf).
+    Also see [NIST note](https://www.nist.gov/pml/nist-technical-note-1297)
+    and the [Guides in Metrology](https://www.bipm.org/en/committees/jc/jcgm/publications)
+    for extended information on writing uncertainties in measurements.
 
 - A period (`.`) as the
   [decimal separator](https://en.wikipedia.org/wiki/Decimal_separator)
@@ -460,21 +463,17 @@ Preferably, use [siunitx](https://ctan.org/pkg/siunitx) with
 
 ### Uncertainty measurements
 
-State whether the values refer to standard error or standard deviation.
+State whether a value means standard error or standard deviation.
+Do **not** write `5.0 ±0.1` – that’s ambiguous.
+Use the abbreviations _standard error (SE)_, _standard deviation (SD)_, and _confidence interval (CI)_.
+Use one of these formats:
 
-<b>Abbreviations:</b>
-
-- _SE_: standard error
-- _SD_: standard deviation
-
-Examples:
-
-- > 7.65 (4.0–12.5, 95% confidence interval)
-- > 7.65 ±1.2 (SE)
-
-**❌ Do not** just write the uncertainty without explanation, e.g. `5.0 ±0.1` – it is ambiguous.
-
-**✅ Do** describe how the uncertainty was estimated (i.e. a statistical test).
+- Standard error: _7.65 ±1.2 (SE)_
+- Standard deviation: _7.65 ±0.54 (SD)_
+- Confidence interval: _7.65 (4.0–12.5, 95% CI)_
+- SE/SD with units: _(7.65 ±0.54) J·m⁻² (SD)_
+- CI with units: _7.65 (4.0–12.5, 95% CI) J·m⁻²_
+- CI with units (alt): _7.65 J·m⁻² (4.0–12.5, 95% CI)_
 
 ### Dates and times
 
@@ -496,9 +495,10 @@ For durations, use, e.g., _8.3 s_.
 
 Always use `/` as a path separator in documentation, and denote directories with a trailing `/`.
 
-For filesystem trees, use Unicode box-drawing characters.
+For filesystem trees, use
+[Unicode box-drawing characters](https://www.w3.org/TR/xml-entity-names/025.html).
 Refer to the
-[research projects guide](https://dmyersturnbull.github.io/guide/research-projects/#example)
+[research projects guide](../guide/research-projects.md/#example)
 for an example.
 
 ### Accessibility

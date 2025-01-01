@@ -88,7 +88,6 @@ User kelly@gmail.com
     [[ -e "~/.ssh/known_hosts" ]] && chmod 700 "~/.ssh/known_hosts"
     chmod 644 "~/.ssh/*.pub"
     [[ -e "~/.ssh/authorized_keys" ]] && chmod 644 "~/.ssh/authorized_keys"
-
     ```
 
 ### _Optional:_ Connect to another server
@@ -300,6 +299,6 @@ gpg\
 
 You can make this file available publicly, such as on your website.
 
-!!! note "Thanks"
+!!! thanks
 
     Thank you to Cole Helsell for drafting this guide with me.

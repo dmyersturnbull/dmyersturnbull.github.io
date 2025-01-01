@@ -15,152 +15,133 @@ Global installation is recommended, unless you do not have sudo / administrator 
 
 === "Ubuntu"
 
+    Follow the [
+    MariaDB installation instructions](https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/).
+    Use the _MariaDB Repository Configuration Tool_ and run:
+
     ```bash
-    mariadb_version="10.11" #(1)!
-    sudo apt install software-properties-common
-    sudo apt-key adv\
-        --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
-    sudo add-apt-repository '\
-        deb [arch=amd64]\
-        https://mariadb.mirror.liquidtelecom.com/repo/$mariadb_version/ubuntu
-        focal main\
-     '
-    sudo apt install -y mariadb-server mariadb-client
-    sudo systemctl start mariadb
-    sudo systemctl enable mariadb  #(2)!
-    sudo mysql_secure_installation
+    sudo apt-get install -y mariadb-server mariadb-client mariadb-backup
     ```
 
-    1. 10.11 is the latest LTS version as of August 2023.
-    2. Run this to have MariaDB start on startup
+    To have the MariaDB server dameon run at startup, run
+
+    ```bash
+    sudo systemctl enable mariadb
+    ```
 
 === "Fedora"
 
+    The _MariaDB Repository Configuration Tool_ does not support Feodra (as of 2024-12),
+    but you can configure the repository semi-manually.
+    URIs, architecture names, etc., unfortunately sometimes change, so you might need to tweak this script.
+
     ```bash
-    fedora_version=$(( cat /etc/fedora-release )) #(1)!
-    mariadb_version="10.11" #(2)!
-    sudo tee /etc/yum.repos.d/mariad.repo<<EOF
+    mariadb_vr=11.rc #(1)!
+    # DNF .repo files can use a few variables, which are listed:
+    # /etc/dnf/vars/
+    #   ├── arch        example: x86_64
+    #   ├── basearch    example: x86_64
+    #   └── releasever  example: 40
+    # A valid repo URI like this:
+    # https://mirror.mariadb.org/yum/11.rc/fedora40-amd64/
+    # /yum/$mariadb_vr/fedora\$releasever-$fixed_arch/
+    #      ^ Bash            ^^ DNF       ^ Bash (x86_64 -> amd64)
+    fixed_arch=$(cat /etc/dnf/vars/arch) # or $(uname --machine)
+    [[ "$fixed_arch" == x86_64 ]] && fixed_arch=amd64
+    repo_url="https://mirror.mariadb.org/yum/$mariadb_vr/fedora${fedora_vr}-${arch}/"
+    sudo cat > /etc/yum.repos.d/mariadb.repo << EOF
     [mariadb]
-    name = MariaDB
-    baseurl = https://rpm.mariadb.org/10./rhel/$releasever/$basearch
-    gpgkey= https://rpm.mariadb.org/RPM-GPG-KEY-MariaDB
+    name=MariaDB
+    baseurl=https://rpm.mariadb.org/$mariadb_vr/fedora\$releasever-$fixed_arch
+    gpgkey=https://rpm.mariadb.org/RPM-GPG-KEY-MariaDB
     gpgcheck=1
     EOF
-    sudo dnf -y install MariaDB-server MariaDB-client
+    sudo dnf install -y mariadb-server mariadb-client mariadb-backup
     sudo systemctl start mariadb
-    sudo systemctl enable mariadb  #(3)!
     sudo mysql_secure_installation
     ```
 
-    1. This should get the current Fedora version.
-    2. 10.11 is the latest LTS version as of August 2023.
-    3. Run this to have MariaDB start on startup
+    1. Change to `11.rolling` for a non-LTS release.
+
+    To have the MariaDB server dameon run at startup, run
+
+    ```bash
+    sudo systemctl enable mariadb
+    ```
+
+=== "Ubuntu (alt)"
+
+    If the MariaDB Repository Configuration Tool failed, you can configure the repository semi-manually.
+    URIs, architecture names, etc., unfortunately sometimes change, so you might need to tweak this script.
+
+    ```bash
+    mariadb_vr="11.rc" #(1)!
+    sudo apt-get install -y software-properties-common
+    sudo apt-key adv --fetch-keys 'https://mariadb.org/mariadb_release_signing_key.asc'
+    sudo add-apt-repository -y '\
+    deb [arch=amd64]\
+    https://mariadb.mirror.liquidtelecom.com/repo/$mariadb_vr/ubuntu
+    focal main\
+    '
+    sudo apt-get update -y -q
+    sudo apt-get install -y -q mariadb-server mariadb-client mariadb-backup
+    sudo systemctl start mariadb
+    sudo mysql_secure_installation
+    ```
+
+    1. Change to `11.rolling` for a non-LTS release.
+
+    To have the MariaDB server dameon run at startup, run
+
+    ```bash
+    sudo systemctl enable mariadb
+    ```
 
 === "macOS"
 
     ```bash
+    brew update
     brew install mariadb
     brew services start mariadb
     ```
 
-    You can then enable it to run on startup.
-
-=== "Windows/Chocolatey"
+=== "Windows – Chocolatey"
 
     `choco install mariadb` (as an administrator)
 
-    You can then enable it to run on startup.
-
-=== "Windows/Scoop"
+=== "Windows – Scoop"
 
     `scoop install main/mariadb`
-
-    You can then enable it to run on startup.
 
 ## Local install
 
 This describes how to install and configure MariaDB on Linux without sudo.
 We tried these
-[mariadb non-sudo install instructions](https://mariadb.com/kb/en/installing-mariadb-binary-tarballs/#installing-mariadb-as-not-root-in-any-directory)
-and had to make several changes.
-Here’s the script:
+[MariaDB non-sudo install instructions](https://mariadb.com/kb/en/installing-mariadb-binary-tarballs/#installing-mariadb-as-not-root-in-any-directory)
+but had to make many changes.
 
-??? info "Script"
+[`install-mariadb-non-root.sh` :fontawesome-solid-code:](install-mariadb-non-root.sh){ .md-button }
 
-    ```bash
-    #!/usr/bin/env bash
-    # safe options
-    set -o errexit -o nounset -o pipefail
-    IFS=$'\n\t'
-    _usage="Usage: $0 [version=$default_mariadb_vr]"
-    default_mariadb_vr="10.11.0"  # latest LTS release
+### `$MYSQL_HOME` and `~/mysql/bin/`
 
-    if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
-      >&2 echo "$_usage"
-      >&2 echo "Sets up a local installation of MariaDB without root access."
-      exit 0
-    fi
+Set `$MYSQL_HOME` to `~/mysql/`, and add `~/mysql/bin/` to your PATH.
 
-    if (( $# > 1 )); then
-      >&2 echo "$_usage"
-      exit 2
-    fi
+If you have [`~/.commonrc`](nix-shells.md#commonrc-file), run
 
-    vr="$default_mariadb_vr"
-    if (( $# == 1)); then
-      vr="$1"
-    fi
+```bash
+commonrc::add_line "PATH=\$PATH:$HOME/mysql/bin/"
+commonrc::add_line "MYSQL_HOME=\$HOME/mysql/bin/"
+```
 
-    pushd ~
+### Usage
 
-    # download mariadb
-    _base_url="https://downloads.mariadb.org/f"
-    _dir="/mariadb-$vr/bintar-linux-x86_64"
-    _file="/mariadb-$vr-linux-x86_64.tar.gz"
-    curl -O -J -L "$_base_url$_dir$_file?serve"
-    gunzip < "mariadb-$vr-linux-x86_64.tar.gz" | tar xf -
-    mv "mariadb-$vr-linux-x86_64" mysql
-
-    # create a local defaults file
-    touch ~/.my.cnf
-
-    # install MariaDB
-    chmod u+x mysql/scripts/mariadb-install-db
-    mysql/scripts/mariadb-install-db  --defaults-file=~/.my.cnf
-
-    # optional: declare a specific, local socket
-    cat >> ~/.my.cnf <<- EOM
-    [mysqld]
-    socket = ~/mysql/socket
-    [mysql]
-    socket = ~/mysql/socket
-    EOM
-
-    # add a script 'mysqlstart' to start the server with the right defaults file
-    mkdir -p ~/bin
-    cat >> ~/bin/mysqlstart <<- EOM
-    nohup ~/mysql/bin/mysqld_safe --defaults-file=~/.my.cnf &
-    EOM
-
-    # add symlinks to other commands
-    # (you could also add ~/mysql/bin to your PATH)
-    ln -s ~/mysql/bin/mysql_safe ~/bin/mysqlstart
-    ln -s ~/mysql/bin/mysqldump ~/bin/mysqldump
-    ln -s ~/mysql/bin/mysqladmin ~/bin/mysqladmin
-    ln -s ~/mysql/bin/mysqlimport ~/bin/mysqlimport
-    ln -s ~/mysql/bin/mysqlcheck ~/bin/mysqlcheck
-    ln -s ~/mysql/bin/mysql ~/bin/mysql
-
-    popd
-    ```
-
-Note that `~/bin/` must be on your `PATH`.
 You can start the server with `nohup mysql_start &`
-And log in as an admin user: `mysql --user=$USER`
+And log in as an admin user: `mysql --user=$USER`.
 
 ## Hardening
 
-To improve security, I recommend following **[dedicated security guides](https://www.google.com/search?q=mysql+security+best+practices)**.
+To improve security, I recommend following
+**[dedicated security guides](https://www.google.com/search?q=mysql+security+best+practices)**.
 _Note: your config file might be `my.cnf` or `.my.cnf` (with a dot)._
 Basic steps might include:
 
@@ -311,14 +292,14 @@ default_path_="/bak/mariadb/dbname/nightly"
 _usage="Usage: $0 [<path=$default_path_>]"
 
 if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
-	>&2 echo "$_usage"
-	>&2 echo "Exports all the data in a database as one gzipped sql file per table."
-	>&2 echo "Requires environment vars DB_NAME, DB_USER, and DB_PASSWORD"
+	>&2 printf '%s\n' "$_usage"
+	>&2 printf "Exports all the data in a database as one gzipped sql file per table.\n"
+	>&2 printf "Requires environment vars DB_NAME, DB_USER, and DB_PASSWORD\n"
 	exit 0
 fi
 
 if (( $# > 1 )); then
-	>&2 echo "$_usage"
+	>&2 printf '%s\n' "$_usage"
 	exit 2
 fi
 
@@ -341,7 +322,7 @@ tables=$(\
   -e 'show tables'\
 );
 for t in $tables do
-	echo "Backing up $t..."
+	printf 'Backing up %s...\n' "$t"
 	# 2147483648 is the max
 	mysqldump \
     --single-transaction \
@@ -354,7 +335,7 @@ for t in $tables do
     "$t" | gzip > "$loc_/$t.sql.gz"
 done
 
->&2 echo "Backed up to $loc_"
+>&2 printf 'Backed up to %s\n' "$loc_"
 ```
 
 1. Set these environment variables before running.
@@ -370,53 +351,53 @@ IFS=$'\n\t'
 _usage="Usage: $0"
 
 if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
-	>&2 echo "$_usage"
-	>&2 echo "Dumps the schema to schema.sql."
-	>&2 echo "Requires environment vars DB_NAME, DB_USER, and DB_PASSWORD"
+	>&2 printf '%s\n' "$_usage"
+	>&2 printf "Dumps the schema to schema.sql.\n"
+	>&2 printf "Requires environment vars DB_NAME, DB_USER, and DB_PASSWORD\n"
 	exit 0
 fi
 
 db_name_="$DB_NAME"  # (1)!
-if [ -v "$DB_SOCKET" ]; then
-    db_socket_="$DB_SOCKET"  # (2)!
+if [[ -v "$DB_SOCKET" ]]; then
+  db_socket_="$DB_SOCKET" # (2)!
 else
-    db_socket_=""
-    db_port_="3306"
-    db_user_="$DB_USER"          # (3)!
-    db_password_="$DB_PASSWORD"
+  db_socket_=""
+  db_port_="3306"
+  db_user_="$DB_USER" # (3)!
+  db_password_="$DB_PASSWORD"
 fi
 
 if (( $# > 0 )); then
-	>&2 echo "$_usage"
+	>&2 printf '%s\n' "$_usage"
 	exit 2
 fi
 
 out_file="schema-$db_name_.sql"
 
 if "$db_socket_"; then
-    mysqldump \
-        --protocol=socket \
-        --socket="$db_socket_" \
-        --skip-add-drop-table \
-        --single-transaction \
-        --no-data \
-        "$db_name_" \
-        > "$out_file"
+  mysqldump \
+    --protocol=socket \
+    --socket="$db_socket_" \
+    --skip-add-drop-table \
+    --single-transaction \
+    --no-data \
+    "$db_name_" \
+    > "$out_file"
 else
-    mysqldump \
-        --host=127.0.0.1 \
-        --port="$db_port_" \
-        --user="$db_user_" \
-        --password="$db_password_" \
-        --skip-add-drop-table \
-        --single-transaction \
-        --no-data \
-        "$db_name_" \
-        > "$out_file"
+  mysqldump \
+    --host=127.0.0.1 \
+    --port="$db_port_" \
+    --user="$db_user_" \
+    --password="$db_password_" \
+    --skip-add-drop-table \
+    --single-transaction \
+    --no-data \
+    "$db_name_" \
+    > "$out_file"
 
 # remove the auto_increment -- we don't care
 sed -r -i -e 's/auto_increment=[0-9]+ //g' "$out_file"
->&2 echo "Wrote to $out_file"
+>&2 printf "Wrote to '%s'\n" "$out_file"
 ```
 
 1. Set `DB_NAME` to the database before running.
@@ -427,10 +408,14 @@ sed -r -i -e 's/auto_increment=[0-9]+ //g' "$out_file"
 
 [This script by Andrea Agili](https://gist.github.com/agea/6591881)
 will generate an [ERD](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model) from a database connection.
-It will write a [GraphML](https://en.wikipedia.org/wiki/GraphML) file, which you can open in a tool like [yEd](https://www.yworks.com/products/yed) to apply a layout algorithm
+It will write a [GraphML](https://en.wikipedia.org/wiki/GraphML) file,
+which you can open in a tool like
+[yEd](https://www.yworks.com/products/yed)
+to apply a layout algorithm
 and [crow’s foot notation](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model#Crow's_foot_notation).
 After generating an SVG from yEd, you can modify the SVG code to add an
-[<a> element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/a) links to per-table anchors in a schema file.
+[<a> element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/a)
+links to per-table anchors in a schema file.
 
 After downloading the script, also download [the MySQL Connector](https://dev.mysql.com/downloads/connector/j/).
 Extract the JAR alongside.

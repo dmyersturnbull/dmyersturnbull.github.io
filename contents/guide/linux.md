@@ -14,7 +14,7 @@ Alternatives for Ubuntu/Debian-like and Fedora/RedHat-like are shown.
     [macOS setup guide](macos.md) and
     [Windows setup guide](windows.md)
 
-## Install
+## Start installation
 
 Follow the instructions that show up to install.
 In Ubuntu, select “Default installation”
@@ -34,14 +34,14 @@ I have not tested it.
     - Manually install the bootloader (not recommended).
     - Read about [Linux and UEFI](https://www.rodsbooks.com/linux-uefi/) for more troubleshooting.
 
-### Choose a partition scheme
+## Choose a partition scheme
 
-#### Use Btrfs.
+### Use Btrfs.
 
 Btrfs is a copy-on-write option and is now much more robust than ext4.
 See the [btrfs documentation](https://btrfs.readthedocs.io/en/latest).
 
-#### Use a swap partition the same size as your RAM.
+### Use a swap partition the same size as your RAM.
 
 There’s an adage that it’s important for emergency memory – in case your main memory runs out.
 Meanwhile, mavericks insist on skipping it altogether,
@@ -49,18 +49,18 @@ pointing out that using it for emergency memory would render a system excessivel
 Linux uses swap space as a _complement_ to memory by swapping out infrequently used pages.
 You should definitely use it, but it probably doesn’t need to fit more than your memory.
 
-#### For single-user systems, skip `/home` in favor of `/files`.
+### For single-user systems, skip `/home` in favor of `/files`.
 
 `/home` will probably fill with miscellaneous configuration
 and even temp data that doesn’t need to be backed up.
 It’s probably even best to discard such files when upgrading or installing a new distro.
 So, leave `/home` in the root partition and use another mount point like `/data` or `/files` instead.
 
-#### Skip the `/boot` partition.
+### Skip the `/boot` partition.
 
 It’s not needed on a modern UEFI system.
 
-#### For workstations, consider separate `/tmp` and `/var/tmp`.
+### For workstations, consider separate `/tmp` and `/var/tmp`.
 
 Things like an inefficient SQL query can quickly take hundreds of gigabytes in `/tmp`.
 If `/tmp` is in your root partition, this can brick your system,
@@ -112,23 +112,23 @@ If mounted as separate partitions, mount with `noexec`.
     | sdc2     | `/bak/lake`  | 2 048     | btrfs  | Backups of `/home`    |
     | sdc3     | `/bak/home`  | 2 048     | btrfs  | Backups of `/lake`    |
 
-## Update and reboot
+### Enable kernel modules
+
+First, update and reboot:
 
 === "Ubuntu"
 
     ```bash
     sudo apt update && reboot
-      ```
+    ```
 
 === "Fedora"
 
     ```bash
     sudo dnf update && reboot
-      ```
+    ```
 
-## Enable kernel modules
-
-Run
+Then, run
 
 ```bash
 sudo modprobe sha256
@@ -143,7 +143,7 @@ sudo modprobe sha256
   There’s probably no performance gain to disable ACL, but you almost definitely don’t need it.
 - Add `noexec`, `nodev`, and `nosuid` to `/tmp` and `/var/tmp` (if they exist).
 
-### Consider compression.
+#### Consider compression.
 
 btrfs can compress data at rest and in transit.
 Whether to use lzo, zstd, or no compression depends primarily on the (uncompressed) throughput:
@@ -199,19 +199,16 @@ Then reboot and see the results by running
 cat /etc/mtab
 ```
 
-## Install packages
+## Post-installation
+
+### Install packages
 
 Open a terminal and enter the following commands to install the necessary packages:
 
 === "Ubuntu"
 
-    First, enable the Universe repository:
-
     ```bash
     sudo add-apt-repository universe -y
-    ```
-
-    ```bash
     sudo apt install -y git vim curl wget xz-utils brotli lzma zstd iotop
     sudo apt install -y eza  # (1)!
     sudo apt install -y libncurses-dev
@@ -248,7 +245,7 @@ Install the GitHub CLI per the
 [official GH Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md).
 After following the instructions, run `gh auth login`.
 
-## Set up firewall
+### Configure firewall
 
 === "Ubuntu"
 
@@ -260,17 +257,68 @@ After following the instructions, run `gh auth login`.
 
     Fedora should come with `firewalld` installed and enabled by default.
 
-## Allow SSH login
+### Enable SSH logins
 
 Install ssh to allow for remote logins.
 
-```
+```bash
 sudo apt -y update
 sudo apt -y install openssh-server
 sudo ufw allow 22
 ```
 
-## Cosmetics/UI
+### Sudoers
+
+The easiest way is to run
+
+```bash
+su  #(1)!
+usermod -aG sudo $USER
+```
+
+1. This will require you to enter the root password.
+
+See this
+[sudoers guide](https://www.cyberciti.biz/faq/how-to-sudo-without-password-on-centos-linux/)
+for more info.
+
+### Configure your shell
+
+**Follow: [Shell setup :fontawesome-solid-terminal:](nix-shells.md).**
+
+### Git, SSH, and GPG
+
+**Follow: [Shell setup :fontawesome-solid-shield-halved:](git-ssh-and-gpg.md).**
+
+<!-- Toolkits; e.g. Java and Rust -->
+
+{%
+include-markdown './_toolkits.md'
+heading-offset=2
+%}
+
+### Generate a certificate (if needed)
+
+If you need a certificate, set a static IP address and generate a certificate with
+[certbot](https://certbot.eff.org/). Choose “None of the above” for Software.
+Then follow the instructions exactly, including the “Automating renewal” section.
+This may not work through some company and university firewalls.
+
+### `~/bin/` and dotfiles
+
+Make a `~/bin` directory and add it to your `$PATH` in `.commonrc`:
+
+```bash
+mkdir ~/bin && printf 'export PATH=$HOME/bin:$PATH\n' >> ~/.commonrc
+```
+
+Consider grabbing some Bash scripts from
+[awesome-dotfiles](https://github.com/webpro/awesome-dotfiles).
+Clone your chosen dotfiles repo into `~/bin`.
+I put some aliases and functions directly in
+[my (simplified) `.commonrc`](commonrc.sh).
+
+## Cosmetics and UI
 
 ### Eza icons and Nerd fonts
 
@@ -317,150 +365,83 @@ Also install extensions:
 Then open https://extensions.gnome.org/ and install the browser extension.
 I recommend installing:
 
-- _Force Quit_
-- _Panel Date Format_
-  (After installing, run
-  `dconf write /org/gnome/shell/extensions/panel-date-format/format "'%Y-%m-%d %H:%M'"`.)
+- **Force Quit**
+- **Panel Date Format**;
+  After installing, run
+
+  ```bash
+  dconf write \
+    /org/gnome/shell/extensions/panel-date-format/format \
+    "'%Y-%m-%d %H:%M'"
+  ```
 
 ### Nautilus favorites
 
 To remove the favorites for Videos, Music, etc. that Nautilus forces on you, run this script:
 
-```bash
-echo '
-# This file was created manually.
+???+ info "Script to remove built-in bookmarks"
 
-# Keep these:
-XDG_DESKTOP_DIR="$HOME/Desktop"
-XDG_DOWNLOAD_DIR="$HOME/Desktop" # (1)!
+    ```bash
+    printf '%s\n' "
+    # This file was created manually.
 
-# Exclude these:
-#XDG_DOCUMENTS_DIR="$HOME/Documents"
-#XDG_TEMPLATES_DIR="$HOME/Templates"
-#XDG_PUBLICSHARE_DIR="$HOME/Public"
-#XDG_MUSIC_DIR="$HOME/Music"
-#XDG_PICTURES_DIR="$HOME/Pictures"
-#XDG_VIDEOS_DIR="$HOME/Videos"
-' > ~/.config/user-dirs.dirs
+    # Keep these:
+    XDG_DESKTOP_DIR="$HOME/Desktop"
+    XDG_DOWNLOAD_DIR="$HOME/Downloads"
 
-# Create a user-dirs.conf file to prevent automatic updates
-echo '
-# We created ~/.config/user-dirs.dirs manually
-# Prevent xdg-user-dirs-update from overwriting it
-enabled=False
-' > ~/.config/user-dirs.conf
-```
+    # Exclude these:
+    #XDG_DOCUMENTS_DIR="$HOME/Documents"
+    #XDG_TEMPLATES_DIR="$HOME/Templates"
+    #XDG_PUBLICSHARE_DIR="$HOME/Public"
+    #XDG_MUSIC_DIR="$HOME/Music"
+    #XDG_PICTURES_DIR="$HOME/Pictures"
+    #XDG_VIDEOS_DIR="$HOME/Videos"
+    " > ~/.config/user-dirs.dirs
 
-1. Change back to `XDG_DOWNLOAD_DIR="$HOME/Downloads"` if you want downloads separate.
+    # Create a user-dirs.conf file to prevent automatic updates
+    printf '%s\n' "
+    # We created ~/.config/user-dirs.dirs manually
+    # Prevent xdg-user-dirs-update from overwriting it
+    enabled=False
+    " > ~/.config/user-dirs.conf
+    ```
 
 ??? bug "Workaround if this doesn’t work."
 
     This **might** work instead.
 
     ```bash
-    echo '
+    printf '%s\n' "
     # This file was created manually.
 
     # Keep these:
     XDG_DESKTOP_DIR="$HOME/Desktop"
-    XDG_DOWNLOAD_DIR="$HOME/Desktop"
+    XDG_DOWNLOAD_DIR="$HOME/Downloads"
 
     # Exclude these:
-    XDG_DOCUMENTS_DIR="$HOME/.junk/Documents"
-    XDG_TEMPLATES_DIR="$HOME/.junk/Templates"
-    XDG_PUBLICSHARE_DIR="$HOME/.junk/Public"
-    XDG_MUSIC_DIR="$HOME/.junk/Music"
-    XDG_PICTURES_DIR="$HOME/.junk/Pictures"
-    XDG_VIDEOS_DIR="$HOME/.junk/Videos"
-    ' > ~/.config/user-dirs.dirs
+    #XDG_DOCUMENTS_DIR="$HOME/.junk/Documents"
+    #XDG_TEMPLATES_DIR="$HOME/.junk/Templates"
+    #XDG_PUBLICSHARE_DIR="$HOME/.junk/Public"
+    #XDG_MUSIC_DIR="$HOME/.junk/Music"
+    #XDG_PICTURES_DIR="$HOME/.junk/Pictures"
+    #XDG_VIDEOS_DIR="$HOME/.junk/Videos"
+    " > ~/.config/user-dirs.dirs
 
     # Create a user-dirs.conf file to prevent automatic updates
-    echo '
+    printf '
     # We created ~/.config/user-dirs.dirs manually
     # Prevent xdg-user-dirs-update from overwriting it
     enabled=False
     ' > ~/.config/user-dirs.conf
     ```
 
-The following script will add bookmarks (though you can also do this in Nautilus).
-Example usage: `~/bin/add-bookmarks.sh data=/data/ docs=/docs/`
+For convenience, use
+[`add-bookmarks.sh`](add-bookmarks.sh)
+to add bookmarks.
+Example: `~/bin/add-bookmarks.sh data=/data/ docs=/docs/`
 
-[`add-bookmarks.sh` :fontawesome-solid-code:](add-bookmarks.sh){ .md-button }
-
-After running it, restart Nautilus to apply the settings:
-
-```bash
-nautilus -q
-```
-
-## Configure your shell
-
-**Follow this guide:**
-
-[Shell setup :fontawesome-solid-terminal:](nix-shells.md){ .md-button }
-
-## Git, SSH, and GPG
-
-**Follow this guide:**
-
-[Shell setup :fontawesome-shield-halved:](git-ssh-and-gpg.md){ .md-button }
-
-## Java, Rust, and Python
-
-For Rust, just [install the Rust toolchain](https://rustup.rs/).
-
-For Java, download [JDK 21 LTS from Temurin](https://adoptium.net/temurin/releases/)
-(or a newer non-LTS version if preferred).
-Do **not** use Java 8, java.com, or OpenJDK.
-Make sure it’s on your `$PATH` by checking the version via `java --version` in a new shell.
-
-For Python, install and use [uv](https://docs.astral.sh/uv/).
-You don’t need anything else – and you **really shouldn’t use anything else**.
-Make your life easier:
-(1) Leave your system Python alone,
-(2) don’t install Python via a package manager,
-and (3) install and use Conda/Mamba only if necessary.
-
-## Generate a certificate
-
-If you need a certificate, set a static IP address and generate a certificate with
-[certbot](https://certbot.eff.org/). Choose “None of the above” for Software.
-Then follow the instructions exactly, including the “Automating renewal” section.
-This may not work through some company and university firewalls.
-
-## Sudoers
-
-The easiest way is to run
-
-```bash
-su  #(1)!
-usermod -aG sudo $USER
-```
-
-1. This will require you to enter the root password.
-
-See this
-[sudoers guide](https://www.cyberciti.biz/faq/how-to-sudo-without-password-on-centos-linux/)
-for more info.
-
-## Dotfiles
-
-Make a `~/bin` directory and add it to your `$PATH` in `.commonrc`:
-
-```bash
-mkdir ~/bin && echo 'export PATH=$HOME/bin:$PATH' >> ~/.commonrc
-```
-
-Consider grabbing some Bash scripts from
-[awesome-dotfiles](https://github.com/webpro/awesome-dotfiles).
-Clone your chosen dotfiles repo into `~/bin`.
-I put some aliases and functions directly in my `.commonrc`:
-
-[`add-bookmarks.sh` :fontawesome-solid-code:](commonrc.sh){ .md-button }
+After running it, restart Nautilus to apply the settings by running
+`nautilus -q`.
 
 _[LTS]: Long-Term Support
 _[UEFI]: Unified Extensible Firmware Interface \*[JDK]: Java Development Kit
-
-!!! note "Thanks"
-
-    Thank you to Cole Helsell for drafting this guide with me.
