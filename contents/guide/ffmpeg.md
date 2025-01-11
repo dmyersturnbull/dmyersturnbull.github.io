@@ -1,10 +1,10 @@
+# FFmpeg setup
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# FFmpeg setup
 
 ## Compiling FFmpeg on Ubuntu
 
@@ -14,8 +14,7 @@ QuickSync is one option; it should support AV1 eventually on Alder Lake and high
 Then, compile ffmpeg with required options:
 
 ```bash
-set -euo pipefail
-IFS=$'\n\t'
+set -o errexit -o nounset -o pipefail
 
 ffmpeg_vr="7.1"  # (1)!
 
@@ -47,16 +46,41 @@ sudo apt-get install --yes \
 export LD_LIBRARY_PATH="$LD_LIBRARY_PATH:/usr/local/lib"
 export PKG_CONFIG_PATH="$PKG_CONFIG_PATH:/usr/local/lib/pkgconfig"
 
-curl -L -s https://ffmpeg.org/releases/ffmpeg-$ffmpeg_vr.tar.xz \
-  | tar -xf \
+declare -r dist_url="https://ffmpeg.org/releases/ffmpeg-$ffmpeg_vr.tar.xz"
+declare -r repo_url=https://gitlab.com/AOMediaCodec/SVT-AV1.git
+declare -r work_dir="ffmpeg-$ffmpeg_vr"
+declare -r repo_dir="$work_dir/SVT-AV1"
+curl ---location --max-redirs 3 --fail --no-progress-meter "$dist_url" \
+  | tar -x -f \
   > "ffmpeg-$ffmpeg_vr"
-cd "ffmpeg-$ffmpeg_vr"
+  || exit $?
 
-# Need to configure SSH keys with GitLab
-git clone --depth=1 https://gitlab.com/AOMediaCodec/SVT-AV1.git
-cd SVT-AV1
-git fetch --tags
-git checkout $( git describe --tags $( git rev-list --tags --max-count=1 ) )
+# Note: Must configure SSH keys with GitLab
+# https://stackoverflow.com/a/12704727/4024340
+declare -r repo_url=https://gitlab.com/AOMediaCodec/SVT-AV1.git
+declare -r work_dir="ffmpeg-$ffmpeg_vr"
+declare -r repo_dir="$work_dir/SVT-AV1"
+tag_line=$(
+  git -c 'versionsort.suffix=-' \
+    ls-remote --exit-code --refs --sort='version:refname' --tags "$repo_url" '*.*.*' \
+    | tail --lines=1 \
+) || exit $?
+
+latest_hash=$(echo "$tag_line" | awk '{print $1}')
+latest_tag=$(echo "$tag_line" | cut -d '/' -f 3)
+
+# get latest_hash and latest_tag
+git clone --depth 1 "$repo_url" "$latest_hash" "$repo_dir"
+>&2 printf 'Using latest tag %s (%s)\n' "$latest_tag" "${latest_hash:0:12}"
+
+# Previous solution:
+# git clone --depth=1 "$repo_url" "$repo_dir" || exit $?
+# git -C "$repo_dir" fetch --tags || exit $?
+# latest_hash="$( git -C "$repo_dir" rev-list --tags --max-count=1 )" || exit $?
+# latest_tag="$( git -C "$repo_dir" describe --tags "$latest_hash" )" || exit $?
+# >&2 printf 'Using latest tag %s (%s)\n' "$latest_tag" "${latest_hash:0:12}"\
+# git -C "$ switch --detach "$"
+
 cd Build
 cmake .. -G"Unix Makefiles" -DCMAKE_BUILD_TYPE=Release
 make -j $(( $(nproc) -1 ))

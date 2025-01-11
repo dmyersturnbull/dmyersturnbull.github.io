@@ -1,10 +1,10 @@
+# Java conventions
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Java conventions
 
 Refer to [Google’s Java style guide](https://google.github.io/styleguide/javaguide.html)
 for additional recommendations.

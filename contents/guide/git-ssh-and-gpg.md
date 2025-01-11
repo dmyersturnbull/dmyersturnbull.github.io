@@ -1,10 +1,10 @@
+# Git, SSH, and GPG
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Git, SSH, and GPG
 
 These instructions should work for Linux, macOS, and Windows.
 
@@ -231,12 +231,9 @@ If you have multiple keys, make sure to select the one you want.
 Using your secret key ID, run:
 
 ```bash
-git config --global\
-  --unset gpg.format
-git config --global\
-  commit.gpgsign true
-git config --global\
-  user.signingkey 983C8320158FBB03818D3910C01A28311C1501SH
+git config --global --unset gpg.format
+git config --global commit.gpgsign true
+git config --global user.signingkey 983C8320158FBB03818D3910C01A28311C1501SH
 ```
 
 ### Upload the GPG key to GitHub
@@ -245,9 +242,7 @@ Using your secret key ID, run
 
 ```bash
 gpg \
-  --armor\
-  --export 983C8320158FBB03818D3910C01A28311C1501SH\
-  --output key.private.gpg
+  --armor --export 983C8320158FBB03818D3910C01A28311C1501SH --output key.private.gpg
 ```
 
 Then upload to GitHub by running the following.
@@ -291,10 +286,7 @@ sub   cv25519 2023-11-04 [E] [expires: 2025-11-03]
 Using your public key ID, run the following to get a key file called `kerri-johnson.pub.asc`:
 
 ```bash
-gpg\
-  --armor\
-  --export AC03281HD01A83C8DD50A9BEAA130FA03599207C\
-  --output kerri-johnson.asc
+gpg --armor --export AC03281HD01A83C8DD50A9BEAA130FA03599207C --output kerri-johnson.asc
 ```
 
 You can make this file available publicly, such as on your website.

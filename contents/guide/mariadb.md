@@ -1,10 +1,10 @@
+# MariaDB setup
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# MariaDB setup
 
 This lists some best practices for MariaDB along with scripts.
 They probably work well for MySQL, too.
@@ -46,7 +46,7 @@ Global installation is recommended, unless you do not have sudo / administrator 
     # https://mirror.mariadb.org/yum/11.rc/fedora40-amd64/
     # /yum/$mariadb_vr/fedora\$releasever-$fixed_arch/
     #      ^ Bash            ^^ DNF       ^ Bash (x86_64 -> amd64)
-    fixed_arch=$(cat /etc/dnf/vars/arch) # or $(uname --machine)
+    fixed_arch=$(cat /etc/dnf/vars/arch) # or $(uname -m)
     [[ "$fixed_arch" == x86_64 ]] && fixed_arch=amd64
     repo_url="https://mirror.mariadb.org/yum/$mariadb_vr/fedora${fedora_vr}-${arch}/"
     sudo cat > /etc/yum.repos.d/mariadb.repo << EOF
@@ -120,7 +120,7 @@ We tried these
 [MariaDB non-sudo install instructions](https://mariadb.com/kb/en/installing-mariadb-binary-tarballs/#installing-mariadb-as-not-root-in-any-directory)
 but had to make many changes.
 
-[`install-mariadb-non-root.sh` :fontawesome-solid-code:](install-mariadb-non-root.sh){ .md-button }
+[`install-mariadb-non-root.sh` :fontawesome-solid-code:](files/install-mariadb-non-root.sh){ .md-button }
 
 ### `$MYSQL_HOME` and `~/mysql/bin/`
 
@@ -277,132 +277,30 @@ such as nightly snapshots.
 ### Gzipped SQL backups
 
 This script will generate robust backups.
-Each table is written to one gzipped file, with binary data hex-encoded.
+Each table is written to one ZSTD-compressed file, with binary data hex-encoded.
 Having one table per file means that we only lose one table if a file is corrupted.
-Hex-encoding adds more robustness because tools can often fix corrupted gzip and UTF-8 files.
-Since gzip is used, no more storage is needed, and the only downside is reduced write speed.
+Hex-encoding adds more robustness because tools can often fix corrupted compressed UTF-8 files.
+Since compression is used, no additional storage is needed; the only downside is reduced write speed.
 
 Here is the backup script:
+**[`back-up-mariadb.sh`](files/back-up-mariadb.sh)**.
 
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-IFS=$'\n\t'
-default_path_="/bak/mariadb/dbname/nightly"
-_usage="Usage: $0 [<path=$default_path_>]"
+It uses these environment variables:
 
-if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
-	>&2 printf '%s\n' "$_usage"
-	>&2 printf "Exports all the data in a database as one gzipped sql file per table.\n"
-	>&2 printf "Requires environment vars DB_NAME, DB_USER, and DB_PASSWORD\n"
-	exit 0
-fi
-
-if (( $# > 1 )); then
-	>&2 printf '%s\n' "$_usage"
-	exit 2
-fi
-
-# Modify this
-db_port_="3306"
-db_name_="$DB_NAME"  # (1)!
-db_user_="$DB_USER"
-db_password_="$DB_PASWORD"
-loc_="$default_path_"
-
-if (( $# > 0 )); then
-	loc="$1"
-fi
-
-tables=$(\
-  mysql -NBA \
-  -u "$db_user_" \
-  -P="$db_password_" \
-  -D "$db_name_" \
-  -e 'show tables'\
-);
-for t in $tables do
-	printf 'Backing up %s...\n' "$t"
-	# 2147483648 is the max
-	mysqldump \
-    --single-transaction \
-    --hex-blob \
-    --max_allowed_packet=2147483648 \
-    --port="$db_port_" \
-    --user="$db_user_" \
-    --password="$db_password_" \
-    "$db_name_" \
-    "$t" | gzip > "$loc_/$t.sql.gz"
-done
-
->&2 printf 'Backed up to %s\n' "$loc_"
-```
-
-1. Set these environment variables before running.
+1. `DB_NAME` (required)
+2. either `DB_SOCKET` or `DB_USER` and `DB_PASSWORD` (required)
+3. `DB_BACKUP_DIR` (defaults to `/bak/mariadb/$DB_NAME/`)
+4. `ZSTD_LEVEL` (defaults to 2) and `ZSTD_THREADS` (defaults to 1)
 
 ## Schema files
 
-Here’s a script to write the schema in a nice way.
+Here’s a script to write the schema in a nice way:
+**[`write-mariadb-schema.sh`](files/write-mariadb-schema.sh)**.
 
-```bash
-#!/usr/bin/env bash
-set -euo pipefail
-IFS=$'\n\t'
-_usage="Usage: $0"
+It uses these environment variables:
 
-if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
-	>&2 printf '%s\n' "$_usage"
-	>&2 printf "Dumps the schema to schema.sql.\n"
-	>&2 printf "Requires environment vars DB_NAME, DB_USER, and DB_PASSWORD\n"
-	exit 0
-fi
-
-db_name_="$DB_NAME"  # (1)!
-if [[ -v "$DB_SOCKET" ]]; then
-  db_socket_="$DB_SOCKET" # (2)!
-else
-  db_socket_=""
-  db_port_="3306"
-  db_user_="$DB_USER" # (3)!
-  db_password_="$DB_PASSWORD"
-fi
-
-if (( $# > 0 )); then
-	>&2 printf '%s\n' "$_usage"
-	exit 2
-fi
-
-out_file="schema-$db_name_.sql"
-
-if "$db_socket_"; then
-  mysqldump \
-    --protocol=socket \
-    --socket="$db_socket_" \
-    --skip-add-drop-table \
-    --single-transaction \
-    --no-data \
-    "$db_name_" \
-    > "$out_file"
-else
-  mysqldump \
-    --host=127.0.0.1 \
-    --port="$db_port_" \
-    --user="$db_user_" \
-    --password="$db_password_" \
-    --skip-add-drop-table \
-    --single-transaction \
-    --no-data \
-    "$db_name_" \
-    > "$out_file"
-
-# remove the auto_increment -- we don't care
-sed -r -i -e 's/auto_increment=[0-9]+ //g' "$out_file"
->&2 printf "Wrote to '%s'\n" "$out_file"
-```
-
-1. Set `DB_NAME` to the database before running.
-2. Option 1: Set `DB_SOCKET`
-3. Option 2: Set `DB_USER` and `DB_PASSWORD`
+1. `DB_NAME` (required)
+2. either `DB_SOCKET` or `DB_USER` and `DB_PASSWORD` (required)
 
 ## ERDs
 

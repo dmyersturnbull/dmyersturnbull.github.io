@@ -1,10 +1,10 @@
+# ISO 8601 problems
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# ISO 8601 has problems
 
 The two main standards for date-times and related concepts both have some issues.
 [RFC 3339](https://datatracker.ietf.org/doc/rfc3339/)
@@ -14,7 +14,7 @@ has a **lot** of problems.
 
 !!! related
 
-    - [Duration specification](../spec/restricted-iso-8601.md)
+    - [Duration specification](../spec/fixed-iso-8601.md)
     - [API conventions](../convention/apis.md#durations-and-intervals)
 
 ## ISO 8601
@@ -50,7 +50,7 @@ Sadly, `"14:30:55.250" != "14:30:55,250"`.
 <small>
 <b>†</b>
 `.` is preferred in international contexts.
-See [_documentation: quantities_](https://dmyersturnbull.github.io/convention/documentation/#quantities).
+See [_documentation: quantities_](../convention/documentation.md#quantities).
 </small>
 
 It allows `14:30:00.1`, `14:30:00.10`, and `14:30:00.100`,

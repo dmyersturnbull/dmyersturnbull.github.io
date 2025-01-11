@@ -1,10 +1,10 @@
+# Linux setup
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Linux setup
 
 A setup guide for programmers, etc., on Linux and the Windows Linux Subsystem.
 Alternatives for Ubuntu/Debian-like and Fedora/RedHat-like are shown.
@@ -163,7 +163,7 @@ Here are my recommendations:
 
 !!! warning
 
-    Make sure to follow the steps below to verify that your `fstab` is valid and useable.
+    Make sure to follow the steps below to verify that your `fstab` is valid and usable.
 
 ### Edit `fstab`
 
@@ -272,7 +272,7 @@ sudo ufw allow 22
 The easiest way is to run
 
 ```bash
-su  #(1)!
+su #(1)!
 usermod -aG sudo $USER
 ```
 
@@ -284,17 +284,17 @@ for more info.
 
 ### Configure your shell
 
-**Follow: [Shell setup :fontawesome-solid-terminal:](nix-shells.md).**
+**Follow: _[Shell setup :fontawesome-solid-terminal:](nix-shells.md)_.**
 
 ### Git, SSH, and GPG
 
-**Follow: [Shell setup :fontawesome-solid-shield-halved:](git-ssh-and-gpg.md).**
+**Follow: _[Shell setup :fontawesome-solid-shield-halved:](git-ssh-and-gpg.md)_.**
 
 <!-- Toolkits; e.g. Java and Rust -->
 
 {%
-include-markdown './_toolkits.md'
-heading-offset=2
+  include-markdown './files/_toolkits.md'
+  heading-offset=2
 %}
 
 ### Generate a certificate (if needed)
@@ -303,20 +303,6 @@ If you need a certificate, set a static IP address and generate a certificate wi
 [certbot](https://certbot.eff.org/). Choose “None of the above” for Software.
 Then follow the instructions exactly, including the “Automating renewal” section.
 This may not work through some company and university firewalls.
-
-### `~/bin/` and dotfiles
-
-Make a `~/bin` directory and add it to your `$PATH` in `.commonrc`:
-
-```bash
-mkdir ~/bin && printf 'export PATH=$HOME/bin:$PATH\n' >> ~/.commonrc
-```
-
-Consider grabbing some Bash scripts from
-[awesome-dotfiles](https://github.com/webpro/awesome-dotfiles).
-Clone your chosen dotfiles repo into `~/bin`.
-I put some aliases and functions directly in
-[my (simplified) `.commonrc`](commonrc.sh).
 
 ## Cosmetics and UI
 
@@ -436,7 +422,7 @@ To remove the favorites for Videos, Music, etc. that Nautilus forces on you, run
     ```
 
 For convenience, use
-[`add-bookmarks.sh`](add-bookmarks.sh)
+[`add-bookmarks.sh`](files/add-bookmarks.sh)
 to add bookmarks.
 Example: `~/bin/add-bookmarks.sh data=/data/ docs=/docs/`
 

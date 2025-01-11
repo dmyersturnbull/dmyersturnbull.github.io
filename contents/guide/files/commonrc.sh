@@ -1,3 +1,10 @@
+# SPDX-FileCopyrightText: Copyright 2024, Contributors to the dmyersturnbull.github.io
+# SPDX-PackageHomePage: https://github.com/dmyersturnbull/dmyersturnbull.github.io
+# SPDX-License-Identifier: MIT
+
+# Note: Not using 'set -o errexit -o nounset -o pipefail'
+# That's because this is file is only sourced.
+# That's also why there's no shebang.
 
 ###################################################################################################
 #                                   Set environment variables
@@ -5,9 +12,8 @@
 export JAVA_HOME=/opt/temurin21
 
 export PATH
-PATH="$PATH:/usr/sbin:/usr/local/sbin:$HOME/bin:$JAVA_HOME/bin"
-
-
+PATH="$PATH:/usr/sbin:/usr/local/sbin:$HOME/bin"
+PATH="$PATH:$JAVA_HOME/bin"
 
 ###################################################################################################
 #                                            Self-aliases
@@ -28,7 +34,6 @@ alias chgrp='chgrp --preserve-root'
 alias grep='grep --color=auto'
 alias egrep='egrep --color=auto'
 alias fgrep='fgrep --color=auto'
-
 
 ###################################################################################################
 #                                          Aliases for processes, ports, etc.
@@ -199,13 +204,6 @@ eep() {
   return $?
 }
 
-git-root() {
-  git rev-parse --show-toplevel
-  return $?
-}
-
-
-
 ###################################################################################################
 #                                        Convenience utils
 ###################################################################################################
@@ -248,41 +246,132 @@ copy() {
 # Extract any archive type
 # Modified from https://serverfault.com/questions/3743/what-useful-things-can-one-add-to-ones-bashrc
 extract() {
-  if (( $# != 1 )); then
-    >&2 printf "Usage: extract <archive-file>\n"
+  if (($# != 1)); then
+    printf >&2 "Usage: extract <archive-file>\n"
     return 2
   fi
   if [[ ! -f "$1" ]]; then
-    >&2 printf "'%s' is not a file or does not exist\n" "$1"
+    printf >&2 "'%s' is not a file or does not exist\n" "$1"
     return 1
   fi
   case "$1" in
-    *.tar.bz2)   tar xvjf "$1"   ; return $? ;;
-    *.tar.gz)    tar xvzf "$1"   ; return $? ;;
-    *.bz2)       bunzip2 "$1"    ; return $? ;;
-    *.rar)       unrar x "$1"    ; return $? ;;
-    *.gz)        gunzip "$1"     ; return $? ;;
-    *.tar)       tar xvf "$1"    ; return $? ;;
-    *.tbz2)      tar xvjf "$1"   ; return $? ;;
-    *.tgz)       tar xvzf "$1"   ; return $? ;;
-    *.zip)       unzip "$1".     ; return $? ;;
-    *.Z)         uncompress "$1" ; return $? ;;
-    *.snappy)    snunzip "$1"    ; return $? ;;
-    *.sz)        snunzip "$1"    ; return $? ;;
-    *.br)        brotli -d "$1"  ; return $? ;;
-    *.xz)        unxz "$1"       ; return $? ;;
-    *.lz4)       unlz4 "$1"      ; return $? ;;
-    *.lzma)      unlzma  "$1"    ; return $? ;;
-    *.zst)       unzstd "$1"     ; return $? ;;
-    *.7z)        7z x "$1"       ; return $? ;;
-    *)           >&2 printf 'Unknown format: %s' "$1" ; return 1 ;;
+    *.tar.bz2)
+      tar xvjf "$1"
+      return $?
+      ;;
+    *.tar.gz)
+      tar xvzf "$1"
+      return $?
+      ;;
+    *.bz2)
+      bunzip2 "$1"
+      return $?
+      ;;
+    *.rar)
+      unrar x "$1"
+      return $?
+      ;;
+    *.gz)
+      gunzip "$1"
+      return $?
+      ;;
+    *.tar)
+      tar xvf "$1"
+      return $?
+      ;;
+    *.tbz2)
+      tar xvjf "$1"
+      return $?
+      ;;
+    *.tgz)
+      tar xvzf "$1"
+      return $?
+      ;;
+    *.zip)
+      unzip "$1".
+      return $?
+      ;;
+    *.Z)
+      uncompress "$1"
+      return $?
+      ;;
+    *.snappy)
+      snunzip "$1"
+      return $?
+      ;;
+    *.sz)
+      snunzip "$1"
+      return $?
+      ;;
+    *.br)
+      brotli -d "$1"
+      return $?
+      ;;
+    *.xz)
+      unxz "$1"
+      return $?
+      ;;
+    *.lz4)
+      unlz4 "$1"
+      return $?
+      ;;
+    *.lzma)
+      unlzma "$1"
+      return $?
+      ;;
+    *.zst)
+      unzstd "$1"
+      return $?
+      ;;
+    *.7z)
+      7z x "$1"
+      return $?
+      ;;
+    *)
+      printf >&2 'Unknown format: %s' "$1"
+      return 1
+      ;;
   esac
 }
-
 
 ###################################################################################################
 #                                                Git utils
 ###################################################################################################
+
+git-root() {
+  git rev-parse --show-toplevel
+  return $?
+}
+
+gh-log() {
+  local prog_name=gh-log
+  local prog_vr=v0.1.0
+  if (($# != 2)); then
+    printf >&2 '%s %s\n' "$prog_name" "$prog_vr"
+    printf >&2 '%s\n\nUsage:\n  %s\n' \
+      "Prints a colorful, dense, multiline git log with GitHub commit URL." \
+      "$prog_name <owner> <repo>"
+    printf >&2 'Example:\n  > %s\n. %s\n  %s\n  %s\n  [BLANK]\n  %s\n  [...]\n' \
+      "$prog_name microsoft vscode" \
+      "<https://github.com/microsoft/vscode/commit/924c6d0f>" \
+      "2024-12-14T18:49:11-05:00  --Kerri Johnson" \
+      "fix: correct post-vc delta gen to use upstream v2" \
+      "<https://github.com/microsoft/vscode/commit/81c9a34d>"
+  fi
+  url="https://github.com/$1/$2/commit"
+  # shellcheck disable=SC2116
+  format=$(
+    echo \
+      '%C(bold)%C(green)' \
+      "<$url/%h>" \
+      '%C(italic)%(decorate:prefix=  ,suffix=,pointer=→)' '%n' \
+      '%C(bold)%C(cyan)' \
+      '%aI' \
+      '%C(italic)  --%an' '%n' \
+      '%C(dim)%s' '%n'
+  )
+  git log --pretty=tformat:"$format" || exit $?
+}
 
 set_up_git_aliases() {
 
@@ -291,8 +380,7 @@ set_up_git_aliases() {
   #   status                 # Show the working tree status
   #   --short                # Output in the short-format
   #   --branch               # Show branch information
-  git config \
-    --global \
+  git config --global \
     alias.stat \
     '
     status
@@ -303,8 +391,7 @@ set_up_git_aliases() {
   # 'lg' alias -- Show commit logs in a condensed single line per commit
   # Arguments:
   #   --oneline             # Condense each commit to a single line
-  git config \
-    --global \
+  git config --global \
     alias.lg \
     '
     log
@@ -314,8 +401,7 @@ set_up_git_aliases() {
   # 'graph' alias -- Show commit logs with an ASCII graph of branch and merge history
   # Arguments:
   #   --graph               # Display an ASCII graph of the branch and merge history
-  git config \
-    --global \
+  git config --global \
     alias.graph \
     '
     log
@@ -327,8 +413,7 @@ set_up_git_aliases() {
   #   --graph               # Display an ASCII graph of the branch and merge history
   #   --compact-summary     # Display a compact summary of the commit log
   #   --cumulative          # Display cumulative commit counts
-  git config \
-    --global \
+  git config --global \
     alias.long-graph \
     '
     log
@@ -349,8 +434,7 @@ set_up_git_aliases() {
   #   --find-copies=50             # Detect copies with a threshold of 50%
   #   --color-moved=zebra          # Highlight moved lines in a "zebra" pattern
   #   --color-moved-ws             # Highlight moved whitespace
-  git config \
-    --global \
+  git config --global \
     alias.log-diff \
     '
     log
@@ -366,15 +450,20 @@ set_up_git_aliases() {
       --color-moved-ws
     '
 
+  git config --global \
+    alias.cute-log \
+    '
+    log --pretty=tformat:"%C(bold)%C(green)<%h>%C(italic)%(decorate:prefix=  ,suffix=,pointer=→)%n%C(bold)%C(cyan)%aI  %C(italic)--%an%n%C(dim)%s%n"
+    '
+
 }
 
 # Run the setup function if git is available
-if command -v git >/dev/null 2>&1; then
+if command -v git > /dev/null 2>&1; then
   set_up_git_aliases # don't exit on error
 else
-  >&2 printf "Git is not installed or not found in PATH\n"
+  printf >&2 "Git is not installed or not found in PATH\n"
 fi
-
 
 ###################################################################################################
 #                                                Misc utils

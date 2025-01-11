@@ -5,56 +5,8 @@ site_dir: "~docs"
 copyright: "Copyright 2024, Douglas Myers-Turnbull"
 site_description: "Software guides, reference docs, and more."
 
-# Navigation menu
-nav:
-  - Home: index.md
-  - Setup guides:
-      - ⟨index⟩: guide/index.md
-      - Linux: guide/linux.md
-      - macOS: guide/macos.md
-      - Windows: guide/windows.md
-      - Nix shells: guide/nix-shells.md
-      - Git, SSH, and GPG: guide/git-ssh-and-gpg.md
-      - Research projects: guide/research-projects.md
-      - MariaDB: guide/mariadb.md
-      - Mamba and Conda: guide/mamba-and-conda.md
-      - FFmpeg: guide/ffmpeg.md
-      - Arduino: guide/arduino.md
-  - Cheatsheets and tools:
-      - ⟨index⟩: cheatsheet/index.md
-      - Click-to-copy symbols: cheatsheet/click-to-copy-symbols.md
-  - Reference docs:
-      - ⟨index⟩: ref/index.md
-      - Contributor guide: ref/contributor-guide.md
-      - Maintainer guide: ref/maintainer-guide.md
-      - Issue labels: ref/issue-labels.md
-  - Conventions:
-      - ⟨index⟩: convention/index.md
-      - Documentation: convention/documentation.md
-      - APIs: convention/apis.md
-      - Scripts and build files: convention/scripts-and-build-files.md
-      - Python: convention/python.md
-      - Java: convention/java.md
-      - JavaScript: convention/javascript.md
-      - SQL: convention/sql.md
-  - Specifications:
-      - ⟨index⟩: spec/index.md
-      - Advanced BNF with regex: spec/advanced-bnf-with-regex.md
-      - HTTP GET search DSL: spec/http-get-search-dsl.md
-      - HATEOAS See header: spec/hateoas-see-header.md
-      - Restricted ISO 8601: spec/restricted-iso-8601.md
-  - Posts & tutorials:
-      - ⟨index⟩: post/index.md
-      - ISO 8601 problems: post/iso-8601-problems.md
-      - Calculating durations: post/calculating-durations.md
-      - URI-safe characters: post/uri-safe-characters.md
-      - Duck typing is quackery: post/duck-typing-is-quackery.md
-      - Correct exception handling: post/correct-exception-handling.md
-      - Software test strategy guide: post/software-testing-strategy-guide.md
-      - Testing scientific software: post/testing-scientific-software.md
-      - Python infrastructure: post/retooling-python-builds.md
-      - Frontends for time-travelers: post/frontends-for-time-travelers.md
-      - Wonders of ChatGPT: post/wonders-of-chatgpt.md
+# Exclude from nav
+not_in_nav: _*.md
 
 # Theme
 theme:
@@ -175,8 +127,9 @@ extra_javascript:
 plugins:
   #- macros
   - include-markdown
-  - search
-  - table-reader
+  - search:
+      separator: '[,;:\s\-]+'
+  - literate-nav
   - mkdocstrings:
       handlers:
         python:
@@ -187,3 +140,9 @@ plugins:
       minify_js: true
       minify_css: true
       cache_safe: true
+
+validation:
+  absolute_links: relative_to_docs
+  anchors: warn
+  omitted_files: warn
+  unrecognized_links: warn

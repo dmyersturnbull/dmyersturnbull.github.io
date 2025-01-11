@@ -1,10 +1,10 @@
+# Setup guides
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Setup guides
 
 ---
 
@@ -32,7 +32,14 @@ Git, GitHub, SSH, GPG, and signed commits _(referenced by other guides)_
 
 ---
 
-<strong class="index">Other software</strong>
+<strong class="index">General</strong>
+
+[:fontawesome-solid-flask: **Research projects**](research-projects.md):
+Suggestions for organizing computational research projects
+
+---
+
+<strong class="index">Various software</strong>
 
 [:fontawesome-solid-code: **Arduino**](arduino.md):
 Bash scripts to download and install
@@ -43,30 +50,23 @@ Bash scripts to download, build, and install
 [ffmpeg](https://ffmpeg.org/)
 with extensions
 
-[:fontawesome-solid-code: **MariaDB**](mariadb.md):
-Advanced configuration for
-[MariaDB](https://mariadb.org/),
-and installing it as non-root
-
 [:fontawesome-solid-code: **Mamba and Conda-Forge**](mamba-and-conda.md):
 Instructions for
 [MicroMamba](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html)
 and
 [Conda-Forge](https://conda-forge.org/)
 
----
-
-<strong class="index">Miscellaneous</strong>
-
-[:fontawesome-solid-flask: **Research projects**](research-projects.md):
-Suggestions for organizing computational research projects
+[:fontawesome-solid-code: **MariaDB**](mariadb.md):
+Advanced configuration for
+[MariaDB](https://mariadb.org/),
+and installing it as non-root
 
 ---
 
 <strong class="index">Downloads</strong>
 
-[:fontawesome-solid-code: **`commonrc.sh`**](commonrc.sh):
+[:fontawesome-solid-code: **`commonrc.sh`**](files/commonrc.sh):
 Miscellaneous useful Bash functions and aliases I use
 
-[:fontawesome-solid-code: **`todos.sh`**](todos.sh):
+[:fontawesome-solid-code: **`todos.sh`**](files/todos.sh):
 Script that finds `TODO` and `FIXME` comments.

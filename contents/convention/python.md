@@ -1,10 +1,10 @@
+# Python conventions
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Python conventions
 
 ## Modules
 
@@ -58,8 +58,8 @@ Use immutable types unless there’s a compelling reason otherwise.
     === "dataclass"
 
         ```python
-        from typing import Self
         from dataclasses import dataclass
+        from typing import Self
 
 
         @dataclass(slots=True, frozen=True, order=True)
@@ -112,9 +112,9 @@ Use immutable types unless there’s a compelling reason otherwise.
 
 ## Abstract base classes
 
-Inherit directly from abstract base classes in the
+Inherit directly from abstract base classes in
 [`collections.abc`](https://docs.python.org/3/library/collections.abc.html)
-module.
+rather than using `metaclass=`.
 
 ```python
 from collections.abc import Sequence, MutableSequence
@@ -139,51 +139,6 @@ class AxisTicks(Sequence[int]):
 # dataclasses.FrozenInstanceError: cannot assign to field 'orientation'
 AxisTicks(orientation="x", items=[1, 3, 5])
 a.orientation = "y"
-```
-
-**`list` and `Sequence` are not the same!**
-You should use `Sequence` or `MutableSequence` for typing, not `list`.
-Refer to this hierarchy:
-
-```mermaid
-stateDiagram
-  direction RL
-  classDef abc font-style:italic,stroke:#999,stroke-width:2px,stroke-dasharray: 5 5;
-classDef concrete stroke:#999,stroke-width:2px;
-Container --> Iterable:::abc
-Sized:::abc --> Iterable:::abc
-Collection:::abc --> Iterable:::abc
-Iterator:::abc --> Iterable:::abc
-Reversible:::abc --> Iterable:::abc
-Sequence:::abc --> Reversible:::abc
-Collection:::abc --> Container:::abc
-Callable:::abc --> Container:::abc
-Collection:::abc --> Sized:::abc
-Set:::abc --> Collection:::abc
-Mapping:::abc --> Collection:::abc
-Sequence:::abc --> Collection:::abc
-ByteString:::abc --> Collection:::abc
-MappingView:::abc --> Collection:::abc
-MutableMapping:::abc --> Mapping:::abc
-MutableSequence:::abc --> Sequence:::abc
-MutableSet:::abc --> Set:::abc
-ItemsView:::abc --> MappingView:::abc
-ValuesView:::abc --> MappingView:::abc
-KeysView:::abc --> MappingView:::abc
-MutableSequence:::abc --> Sequence:::abc
-str:::concrete --> Sequence
-tuple:::concrete --> Sequence
-range:::concrete --> Sequence
-list:::concrete --> MutableSequence
-bytearray:::concrete --> MutableSequence
-deque:::concrete --> MutableSequence
-frozenset:::concrete --> Set
-set:::concrete --> MutableSet
-bytes:::concrete --> ByteString
-memoryview:::concrete --> ByteString
-dict:::concrete --> MutableMapping
-defaultdict:::concrete --> MutableMapping
-Counter:::concrete --> MutableMapping
 ```
 
 ## Class members
@@ -295,6 +250,90 @@ Annotate `self`, `cls`, `*args`, and `**kwargs` parameters.
             ...  # first do something special
             super().delegate(*args, **kwargs)
     ```
+
+### Collection types
+
+In Python 3.9, [PEP 585](https://peps.python.org/pep-0585/) enabled type parameterization for the concrete types
+`list`, `set`, `frozenset`, `dict`, `tuple`, and `type` and deprecated their
+[aliases in `typing`'](https://docs.python.org/3/library/typing.html#aliases-to-types-in-collections).
+
+It also enabled parameterization on types from `collections.abc` like `Set`,
+and made corresponding types in `typing` deprecated aliases.
+For example,
+`typing.AbstractSet` is a deprecated alias to `collections.abc.Set`,
+`typing.MutableSet` is a deprecated alias to `collections.abc.MutableSet`,
+and `typing.Set` is a deprecated alias to `set`.
+Similarly, `typing.Sequence` is a deprecated alias to `collections.abc.Sequence`,
+and `typing.List` is a deprecated alias to `list`.
+`typing.Mapping` is a deprecated alias to `collections.abc.Mapping`,
+and `typing.Dict` is a deprecated alias to `dict`.
+
+- To annotate a parameter, `Sequence` is usually better than the concrete type `list`,
+  but `list` is so ubiquitous that it’s acceptable.
+- Using `Mapping`, at least for parameters, is usually better than using `dict`.
+- For parameters, `collections.abc.Set` is almost always better than `set`.
+  Although `set[str] | frozenset[str]` is comparable to `Set[str]`,
+  the latter is more general, as well as shorter and more obvious.
+
+??? info "Demonstrating `set`, `frozenset`, `MutableSet`, and `Set`"
+
+    ```python
+    from collections.abc import MutableSet, Set
+
+    isinstance(set(), set)  # True
+    isinstance(set(), MutableSet)  # True
+    isinstance(set(), Set)  # True
+
+    isinstance(frozenset(), set)  # False
+    isinstance(frozenset(), MutableSet)  # False
+    isinstance(frozenset(), Set)  # True
+    ```
+
+#### Collection hierarchy
+
+Refer to this diagram.
+Types like `KeysView` and `defaultdict` are rarely useful for typing.
+
+```mermaid
+stateDiagram
+  direction RL
+  classDef abc font-style:italic,stroke:#999,stroke-width:2px,stroke-dasharray: 5;
+classDef concrete stroke:#999,stroke-width:2px;
+Container --> Iterable:::abc
+Sized:::abc --> Iterable:::abc
+Collection:::abc --> Iterable:::abc
+Iterator:::abc --> Iterable:::abc
+Reversible:::abc --> Iterable:::abc
+Sequence:::abc --> Reversible:::abc
+Collection:::abc --> Container:::abc
+Callable:::abc --> Container:::abc
+Collection:::abc --> Sized:::abc
+Set:::abc --> Collection:::abc
+Mapping:::abc --> Collection:::abc
+Sequence:::abc --> Collection:::abc
+ByteString:::abc --> Collection:::abc
+MappingView:::abc --> Collection:::abc
+MutableMapping:::abc --> Mapping:::abc
+MutableSequence:::abc --> Sequence:::abc
+MutableSet:::abc --> Set:::abc
+ItemsView:::abc --> MappingView:::abc
+ValuesView:::abc --> MappingView:::abc
+KeysView:::abc --> MappingView:::abc
+MutableSequence:::abc --> Sequence:::abc
+str:::concrete --> Sequence
+tuple:::concrete --> Sequence
+range:::concrete --> Sequence
+list:::concrete --> MutableSequence
+bytearray:::concrete --> MutableSequence
+deque:::concrete --> MutableSequence
+frozenset:::concrete --> Set
+set:::concrete --> MutableSet
+bytes:::concrete --> ByteString
+memoryview:::concrete --> ByteString
+dict:::concrete --> MutableMapping
+defaultdict:::concrete --> MutableMapping
+Counter:::concrete --> MutableMapping
+```
 
 ## Docstrings
 

@@ -1,17 +1,17 @@
+# Wonders of ChatGPT
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-# Wonders of ChatGPT
-
 A collection of ChatGPT responses that were useful, great, strange, strange, or just unparsable nonsense.
 
 ## Mathematics of subtractive color spaces
 
 ![Meaningless diagram meant to illustrate the mixing of two spectral colors
-in a subtractive color space](subtractive-color-model.webp "Subtractive color model diagram").
+in a subtractive color space](files/subtractive-color-model.webp "Subtractive color model diagram").
 
 ## Apple math
 

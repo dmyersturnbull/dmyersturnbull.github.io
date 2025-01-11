@@ -1,10 +1,10 @@
+# Conventions
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Conventions
 
 ---
 
@@ -19,7 +19,7 @@ Writing and maintaining documentation
 [:fontawesome-solid-mug-hot: **Java**](java.md):
 Java and Kotlin conventions
 
-[:fontawesome-solid-code: **JavaScript**](javascript.md):
+[:fontawesome-solid-code: **JavaScript and TypeScript**](javascript-and-typescript.md):
 JavaScript and TypeScript conventions
 
 [:fontawesome-solid-dragon: **Python**](python.md):

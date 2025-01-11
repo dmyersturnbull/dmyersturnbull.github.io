@@ -1,10 +1,10 @@
+# API conventions
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# API conventions
 
 ## JSON and data representation
 
@@ -185,7 +185,7 @@ A duration may be written these three ways:
    using only integral hours, minutes, and seconds and starting with `PT`; or
 3. Hours, minutes and seconds; i.e. `HH:MM:SS[.iii[iii]]` (also defined by ISO 8601).
 
-**See [restricted ISO-8601 specification](../spec/restricted-iso-8601.md)**
+**See [restricted ISO-8601 specification](../spec/fixed-iso-8601.md)**
 
 **For intervals**, both `{"start": ..., "end": ...}` and ISO 8601 `T1--T2` syntax are acceptable.
 Do not separate times with `/` or use a start-time/duration pair.
@@ -400,7 +400,7 @@ For example, if a `species` resource links to its `genus`, which links to `famil
 `species` should **not** link to `family`.
 To avoid polluting JSON response bodies, put the links in
 [`Link` headers](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Link)
-or [`See` headers](../spec/hateoas-see-header.md).
+or [`See` headers](../spec/http-see-header.md).
 
 #### Content types
 

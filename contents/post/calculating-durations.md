@@ -1,10 +1,10 @@
+# Calculation durations
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Calculation durations
 
 This document serves only to warn developers against calculating durations by subtracting date-times.
 **Don’t.**
@@ -25,6 +25,7 @@ I won’t get into that.
 ## The problem
 
 Calculating a duration by subtracting date-times is erroneous and a common software antipattern.
+
 The following example shows an ML training procedure, written in a fictional `.lang` language.
 It accesses the current system date-time both before training (`t0`) and after training (`t1`).
 It writes the values as offset-aware ISO 8601 date-times; e.g. `2024-12-16 T 14:30 -08:00`.

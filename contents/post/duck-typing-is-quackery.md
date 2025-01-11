@@ -1,10 +1,10 @@
+# Duck typing is quackery
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Duck typing is quackery
 
 _Apologies for the pun, and to [Phil Haack](https://haacked.com/archive/2014/01/04/duck-typing/), who beat me to it._
 

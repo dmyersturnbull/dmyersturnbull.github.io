@@ -1,10 +1,10 @@
+# Gaslit by a computer
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Gaslit by a computer
 
 Software guides and reference docs.
 By [Douglas Myers-Turnbull](https://dmyersturnbull.com).

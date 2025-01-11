@@ -1,14 +1,16 @@
+# Advanced BNF with regex
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-# Advanced BNF with regex
-
 <b>Spec status: Use with caution.</b>
 Although useful, applying it in practice might cause confusion.
 Take it, modify it, use it. (CC-BY-SA)
+
+**An advanced BNF derivative.**
 
 Standards for specifying grammars are a mess, as [Wirth et al. describe](https://dl.acm.org/doi/10.1145/359863.359883).
 David A. Wheeler also wrote a

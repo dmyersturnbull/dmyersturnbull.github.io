@@ -1,10 +1,10 @@
+# Scripts and build files
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Scripts and build files
 
 ## Command-line tools
 
@@ -40,25 +40,6 @@ Use standard option names:
 
 ## Bash
 
-Use [bertvv’s Bash guidelines](https://bertvv.github.io/cheat-sheets/Bash.html)
-alongside the following rules and exceptions.
-
-1. As the only exception: `$var` is preferred over `${var}` where either would work.
-
-!!! note
-
-    I recently (2024-08) changed my mind on this: previously.
-    I previously followed [bertvv](https://github.com/bertvv)’s advice and used forced `${}`.
-    That adds clarity, but it contradicts my
-    [less > more principle](https://dmyersturnbull.github.io/convention/#principles).
-
-1. Use `#!/usr/bin/env bash`.
-2. Read stdin where applicable, and reserve stdout for machine-readable output.
-   _For usage errors:_ write the usage to stderr; `exit 2`.
-   _For `--help`_: write the usage and program description to stdout; `exit 0`.
-3. Use `my_fn() {}`, **not** `function my_fn {}`, and **definitely not** `function my_fn() {}`.
-4. Always explicitly `exit`.
-
 ??? rationale
 
     1. It’s more portable, and it allows callers to choose the specific Bash.
@@ -67,6 +48,25 @@ alongside the following rules and exceptions.
     3. `function my_fn {}` is effectively deprecated, non-portable, and never necessary.
         Note that `function my_fn() {}` is technically invalid in all major shell, though most will tolerate it.
     4. It’s more clear, and it prevents bugs like the one illustrated on the last line below.
+
+Use [bertvv’s Bash guidelines](https://bertvv.github.io/cheat-sheets/Bash.html)
+alongside the following rules and exceptions.
+
+1. As the only exception: `$var` is preferred over `${var}` where either would work.
+2. Use `#!/usr/bin/env bash`.
+3. Read stdin where applicable, and reserve stdout for machine-readable output.
+   _For usage errors:_ write the usage to stderr; `exit 2`.
+   _For `--help`_: write the usage and program description to stdout; `exit 0`.
+4. Use `my_fn() {}`, **not** `function my_fn {}`, and **definitely not** `function my_fn() {}`.
+5. Always explicitly `exit`.
+6. [Use `printf`, not `echo`](../cheatsheet/bash-tips.md#use-printf-not-echo).
+
+!!! note
+
+    I recently (2024-08) changed my mind on `$var` vs. `${var}`.
+    I previously followed [bertvv](https://github.com/bertvv)’s advice and used forced `${}`.
+    That adds clarity, but it contradicts my
+    [less > more principle](https://dmyersturnbull.github.io/convention/#principles).
 
 ### Example
 
@@ -78,28 +78,30 @@ alongside the following rules and exceptions.
 # SPDX-License-Identifier: MIT
 set -o errexit -o nounset -o pipefail # (1)!
 
+declare -r prog_name=$(basename "$0")
 declare -r -i default_min=2
-_usage="Usage: $0 in-dir [min-hits=$default_min]"
+_usage="Usage: $prog_name in-dir [min-hits=$default_min]"
 _desc="Computes gamma if in-dir contains < min-hits results."
 
-if (( $# == 1 )) && [[ "$1" == "--help" ]]; then
+if (( $# == 1 )) && [[ "$1" == "-h" || "$1" == "--help" ]]; then
 	printf '%s\n%s\n' "$_desc" "$_usage"
 	exit 0
 fi
 if (( $# == 0 )) || (( $# > 2 )); then
-  >&2 printf '%s\n%s\n' "Invalid usage." "$_usage"  # (2)!
-  exit 2  # (3)!
+  >&2 printf 'Invalid usage.\n%s\n' "$_usage" # (2)!
+  exit 2 # (3)!
 fi
 declare -r in_dir="$1"
 declare -r -i min_hits=$(( "${2:-}" || $default_min ))
 
 gamma::fail() {  # (4)!
-	>&2 printf '[FATAL] %s\n' "$1"; exit 1  # (5)!
+	>&2 printf '[FATAL] %s\n' "$1"
+	exit 1 # (5)!
 }
 
 gamma::must_compute() {
   _count=$(( ls -l -- "$in_dir" | wc -l ))
-  return (( $_count < $min_hits ))
+  return (( _count < $min_hits ))
 }
 
 gamma::compute() {
@@ -107,18 +109,19 @@ gamma::compute() {
 }
 
 gamma::main() {
-  >&2 printf '%s\n' "[INFO] Initializing..."
+  >&2 printf '[INFO] Initializing...\n'
   gamma::must_compute && gamma::compute
 }
 
 gamma::main
-exit 0  # (6)!
+exit 0 # (6)!
 ```
 
 1. [Set](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)
    `nounset`, `errexit`, and `pipefail`.
-   These options are sometimes called
+   With `IFS=$'\n\t'`, these options are sometimes called
    [Bash Strict Mode](http://redsymbol.net/articles/unofficial-bash-strict-mode/).
+   Using `IFS=$'\n\t'` is generally safer, but it’s less interoperable.
 2. Always log to stderr.
 3. `exit 2` for usage errors.
 4. Omit `function`. Using a package prefix (e.g. `gamma::`) can be helpful.
@@ -138,7 +141,7 @@ exit 0  # (6)!
 ### Parsing command-line arguments
 
 Either keep it simple as in the above example, or use a `case` statement.
-See [`todos.sh`](../guide/todos.sh) for a `case` example.
+See [`todos.sh`](../guide/files/todos.sh) for a `case` example.
 
 !!! rationale
 

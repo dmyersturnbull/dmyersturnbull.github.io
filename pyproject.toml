@@ -16,11 +16,19 @@ maintainers = [ { name = "Douglas Myers-Turnbull", email = " dmyersturnbull@gmai
 authors = [ { name = "Douglas Myers-Turnbull", email = " dmyersturnbull@gmail.com" } ]
 license = { text = "Apache-2.0" }
 dependencies = [
-  "mkdocs-include-markdown-plugin >=0.8",
-  "mkdocs >=1.6",
-  "mkdocs-material >=9.5",
-  "mkdocs-minify-plugin >=0.8",
-  "mkdocstrings[python] >=0.27"
+  "mkdocs-include-markdown-plugin>=0.8",
+  "mkdocs>=1.6",
+  "mkdocs-material>=9.5",
+  "mkdocs-minify-plugin>=0.8",
+  "mkdocstrings[python]>=0.27",
+  "mkdocs-literate-nav>=0.6.1",
+]
+
+# See https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups
+[dependency-groups]
+dev = [
+  "pre-commit>=4.0.1",
+  "ruff >=0.9",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -28,4 +36,4 @@ packages = ["contents"]
 
 [tool.ruff]
 line-length = 120
-include = ["pyproject.toml", ]
+include = ["pyproject.toml"]

@@ -1,10 +1,10 @@
+# Maintainer guide
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Maintainer guide
 
 !!! abstract "How to use these docs"
 
@@ -121,8 +121,8 @@ Squash the commits into one, and ensure the resulting commit message follows the
 
     GitHub has a "Squash and merge" button, but there is nowhere to add a commit body or footer.
     However, you can work around this in the repository settings:
-    Under "General" → "Pull Requests" → "Allow squash merging" (which should be checked),
-    set "default commit message" to "Pull request title and description".
+    Under _General ➤ Pull Requests ➤ Allow squash merging_ (which should be checked),
+    set _default commit message_ to _Pull request title and description_.
 
     Before clicking "Squash and merge", edit the PR title and description.
     The title will be the commit message, and the description will be the commit body and footer.
@@ -149,7 +149,7 @@ The `latest` tag should always match the main branch.
 
 ### File types
 
-- Prefer open standards like AVIF, WEBP, OGGm FLAC, and AV1.
+- Prefer open standards like AVIF, WEBP, OGG, FLAC, and AV1.
   (Choose webm over the more general MKV.)
 - Use simpler formats, like Markdown instead of ReST.
 - Prefer modern compression algorithms like
@@ -220,7 +220,7 @@ Commit messages must follow a subset of [Conventional Commits](https://www.conve
   of the form `Deprecates: first, second`.
 - Closed issues SHOULD be listed in a footer of the form `Closes: #10, #22, #33`.
   (_Note_: This guideline requires exactly 1 issue.)
-- Commits MUST NOT use footers that have not defined.
+- Commits MUST NOT use footers that have not been defined.
   The footers that are defined in this document are
   `BREAKING CHANGE`, `Deprecates`, `Closes`, and the attribution trailers listed below.
 - Projects MAY define their own additional footers;
@@ -284,7 +284,7 @@ Commit messages must follow a subset of [Conventional Commits](https://www.conve
     Signed-off-by: Sadie Wu <sadie@dev.com>
     ```
 
-**Refer to the [supplemental labels document](../ref/issue-labels.md#table) for details.**
+**Refer to the [supplemental labels document](/ref/issue-labels.md#table) for details.**
 
 #### Invalid and reverted changes
 
@@ -308,7 +308,7 @@ Use it for
 - trivial changes, and
 - `docs:`, `tests:`, `style:`, etc. commits that support a `feat:` commit added in the same release.
 
-<b>`changelog: include`</b> adds changes that would normally be ommitted (e.g. `style`).
+<b>`changelog: include`</b> adds changes that would normally be omitted (e.g. `style`).
 Use it only to acknowledge unusually important `style` contributions.
 
 #### Including dependent changes in one commit
@@ -352,11 +352,7 @@ If separate commits were made, consider applying `changelog: exclude` to some, a
 Scopes should be defined per project.
 If a scope is defined, it should be applied to all relevant commits,
 at least to those made after the scope’s introduction.
-
-Suggestions:
-
-- `i18n`
-- `plugins`
+Examples: `i18n` and `plugins`.
 
 ### Reference
 

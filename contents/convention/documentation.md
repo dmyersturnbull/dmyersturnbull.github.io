@@ -1,10 +1,10 @@
+# Documentation conventions
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Documentation conventions
 
 ### Summary points / highlights
 
@@ -180,29 +180,58 @@ Avoid the terms URL and URN; just use URI instead.
 
 ### Line breaks
 
+**Start each sentence on a new line.**
+
 !!! rationale
 
-    Keeping each sentence on its own line dramatically improves diffs.
+    Keeping each sentence on its own line dramatically simplifies diffs.
 
-**Start a new line for each sentence.**
+!!! bug "Incorrect `\n` treatment in GitHub Issues, Discussions, and PRs"
+
+    As recently as 2024-12, GitHub incorrectly renders `\n` as `<br>` in Discussions, Issues, and Pull Requests.
+    Per
+    [the original Markdown spec](https://daringfireball.net/projects/markdown/syntax#block),
+    [CommonMark](https://spec.commonmark.org/0.31.2/#soft-line-breaks),
+    and
+    [GitHub Flavored Markdown](https://github.github.com/gfm#soft-line-breaks),
+    a non-consecutive `\n` is a soft line break, either a space or `\n` in HTML.
+    In contrast, GitHub uses the correct behavior for `.md` files (e.g. `README.md`).
+    Obviously, prioritize readability of the rendered document over readability of the source.
 
 If needed to prevent a line from exceeding 120 characters, add line breaks elsewhere.
-Look for one of these places to add a line break, in order:
+Look for one of these places to add a line break:
 
-1. before a Markdown link
-2. After a colon, semicolon, or dash (`–`)
-3. After a comma that begins an independent clause
-4. After any other punctuation
-5. Before an opening HTML tag (or Markdown equivalent) or after a closing tag
-6. At any other natural place
+- Before and/or after a Markdown link
+- Before an opening HTML tag (or Markdown equivalent) or after a closing tag
+- After punctuation that begins an independent clause
+- At another natural place
 
-<b>Notes:</b>
+Also add a line break somewhere if you think it’s helpful.
+In particular, consider around a long Markdown link, or before items of an inline list.
+For example:
 
-- Add line breaks wherever you think they are helpful for items 1–4;
-  e.g. before each item of an inline list (i.e. before `(1)`).
-- You may leave a series of very short sentences on one line; e.g. `Be smart. Be fast. Be good.`.
+```markdown
+You must additionally follow the
+[Advanced Selection Criteria](https://github.com/organization/selection/criteria.md).
+That includes Criteria 3–6:
+(3) diagnostic equivalence;
+(4) generational set–set parity;
+(5) non-availability of identity; and
+(6) interdimensional periodicity.
+```
 
 ### Text styles and semantics
+
+??? rationale
+
+    We need to balance ease of writing Markdown, readability of the rendered HTML, and semantic precision.
+    The following guideline attempts to strike a good balance.
+    However, Markdown italics are a remaining problem.
+    Italics are normally
+    either [`<em>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/em)
+    or [`<i>`](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i).
+    This guideline recommends reserving `_`/`_` for `<i>`,
+    but Markdown processors rendered it as `<em></em>` regardless.
 
 Some semantic HTML elements are result in identical styles (in most browsers).
 This table summarizes how to use them in HTML and in Markdown.
@@ -221,7 +250,7 @@ This table summarizes how to use them in HTML and in Markdown.
 
 #### Italics
 
-Take `_`/`_` (and `*`/`*`) as semantically equivalent to the
+**Take `_`/`_`** (and `*`/`*`) as semantically equivalent to the
 **[`<i>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i)**.
 
 **Uses of `_`/`_`:**
@@ -458,8 +487,9 @@ Preferably, write units using decimal dot (`·`, [U22C5](https://www.compart.com
 <b>Note:</b>
 You can use inline LaTeX (`$`/`$`) to format dimensioned values instead.
 E.g., `5.4 kg m^2 s^{-2}`.
-Preferably, use [siunitx](https://ctan.org/pkg/siunitx) with
-`mode=match,reset-math-version=false,reset-text-family=false`.
+With LuaLaTeX, you can use proper Unicode mathematical glyphs along with
+[siunitx](https://ctan.org/pkg/siunitx), using `fontspec`, `\unimathsetup` and `\sisetup` as done in
+[`fontworthy.sty`](https://github.com/dmyersturnbull/desert-latex/blob/main/src/fontworthy.sty#L220).
 
 ### Uncertainty measurements
 
@@ -560,7 +590,7 @@ Grammars may be specified in any well-defined form.
 The IETF’s [ABNF](https://en.wikipedia.org/wiki/Augmented_Backus%E2%80%93Naur_form)
 (see [RFC 5234](https://datatracker.ietf.org/doc/rfc5234/),
 The [meta-grammar defined in the XML spec](https://www.w3.org/TR/xml/#sec-notation),
-and [regex-BNF](../spec/advanced-bnf-with-regex.md) are recommended.
+and [regex-BNF](../spec/regex-bnf.md) are recommended.
 
 !!! rationale
 

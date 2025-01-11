@@ -1,4 +1,10 @@
-## Restricted ISO 8601
+## Fixed ISO 8601
+
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 
 !!! related
 

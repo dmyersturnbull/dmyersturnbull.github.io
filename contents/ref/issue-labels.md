@@ -1,10 +1,10 @@
+# Supplemental – issue labels
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Issue labels
 
 This is a set of issue labels intended to complement the [contributor guide](contributor-guide.md).
 They are used in the [CICD repo](https://github.com/dmyersturnbull/cicd).

@@ -1,10 +1,10 @@
+# Contributor guide
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Contributor guide
 
 !!! abstract "How to use these docs"
 
@@ -59,7 +59,7 @@ These steps are highly recommended, but they are not required to submit a PR.
 To fork and clone, run
 
 ```bash
-gh repo fork https://github.com/<org>/<repo> --default-branch-only --clone
+gh repo fork https://github.com/ --clone < org > / < repo > --default-branch-only
 ```
 
 Install or upgrade [pre-commit](https://pre-commit.com/) by running `pip install pre-commit --upgrade`.
@@ -71,7 +71,7 @@ Don’t worry about code style: both pre-commit and a GitHub workflow will handl
 If you want, you can refer to the
 [coding conventions guide](https://dmyersturnbull.github.io/convention/)
 for conventions beyond simple formatting.
-Note that those rules are extensive and ordinarily the responsibilty of maintainers.
+Note that those rules are extensive and ordinarily the responsibility of maintainers.
 
 Limit changes to those needed to close the issue associated with the PR.
 When your PR gets accepted, your commits get squashed into one commit linked to exactly one issue,
@@ -99,7 +99,7 @@ To open a pull request, run
 gh pr create --fill --title '<issue-title>' --web
 ```
 
-When you’re ready, mark your PR as "ready for review" on GitHub or by running
+When you’re ready, mark your PR as “ready for review” on GitHub or by running
 
 ```bash
 gh pr ready <id>

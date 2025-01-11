@@ -1,3 +1,5 @@
+# Software testing strategy guide
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
@@ -12,8 +14,6 @@ blue { color: Blue }
 teal { color: Teal }
 purple { color: Purple }
 </style>
-
-# Software testing strategy guide
 
 _<b>Note:</b> This document is a draft._
 

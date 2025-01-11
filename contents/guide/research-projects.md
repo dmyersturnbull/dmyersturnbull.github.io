@@ -1,10 +1,10 @@
+# Research projects
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Research projects
 
 There are some great resources on good data organization, such as the
 [OSF’s guide](https://help.osf.io/article/147-organizing-files).
@@ -38,27 +38,27 @@ Reorganize your files if your current structure isn’t working.
 
 ```bash
 ├── src/
-│   └── pkg/
-│       ├── __init__.py
-│       ├── generate_raw_name_mapping.py
-│       └── analyze.py
+│ └── pkg/
+│ ├── __init__.py
+│ ├── generate_raw_name_mapping.py
+│ └── analyze.py
 ├── data/
-│   ├── temp-output/
-│       ├── raw-name-mapping.tsv
-│       └── figures/
-│   ├── living/
-│   │   ├── name-mapping.tsv
-│   │   └── figures/
-│   │   │   └── samples.pdf
-│   └── frozen/
-│       ├── name-mapping-2022-01-14.tsv
-│       ├── microscopy/
-│       │   └── 20220615T164555.confocal3
-│       │       ├── 20220615T164555.confocal3.tif
-│       │       └── 20220615T164555.confocal3.json
-│       └── reference/
-│           └── weird-sample-analysis-2022-01-24.ipynb
-│           └── weird-samples-2022-01-24.pdf
+│ ├── temp-output/
+│ ├── raw-name-mapping.tsv
+│ └── figures/
+│ ├── living/
+│ │ ├── name-mapping.tsv
+│ │ └── figures/
+│ │ │ └── samples.pdf
+│ └── frozen/
+│ ├── name-mapping-2022-01-14.tsv
+│ ├── microscopy/
+│ │ └── 20220615T164555.confocal3
+│ │ ├── 20220615T164555.confocal3.tif
+│ │ └── 20220615T164555.confocal3.json
+│ └── reference/
+│ └── weird-sample-analysis-2022-01-24.ipynb
+│ └── weird-samples-2022-01-24.pdf
 └── README.md
 ```
 
@@ -80,7 +80,7 @@ We want to keep this exact analysis, so we copy it to `data/frozen/reference/`.
 And we write a script to generate that figure (in this case, a Jupyter notebook).
 The script writes to `data/temp-output/` (**not** `data/frozen`).
 
-### JSON metdata
+### JSON metadata
 
 What's in `20220615T164555.confocal3.json`?
 

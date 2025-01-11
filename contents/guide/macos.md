@@ -1,10 +1,10 @@
+# macOS setup
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# macOS setup
 
 A setup guide for programmers, etc., on Windows.
 
@@ -15,7 +15,17 @@ A setup guide for programmers, etc., on Windows.
 
 ## Initial setup
 
-The obvious: Upgrade macOS, enable FileVault, and remove unneeded Login Items.
+First, upgrade macOS by running
+
+```bash
+softwareupdate --install --all --agree-to-license
+```
+
+Enable FileVault, and remove unneeded Login Items.
+
+!!! note "Reminder"
+
+    Remember to save your encryption key!
 
 Install [Homebrew](https://brew.sh/) and update it: `brew update && brew upgrade`.
 Install a few extra Linux utils and the text editor [Sublime](https://www.sublimetext.com/):
@@ -27,17 +37,20 @@ brew install --cask sublime-text
 
 And a couple of small things:
 
-- Show hidden files: Run `defaults write com.apple.Finder AppleShowAllFiles true`.
-  Then run `killall Finder`.
-- Show filename extensions: Do this in Finder → Settings → Advanced.
-- In Finder, add your home folder to the SideBar. File → add to sidebar.
-- Finder → settings → Advanced → Show all filenames.
+- Show hidden files:
+
+  ```bash
+  defaults write com.apple.Finder AppleShowAllFiles true \
+    && killall Finder
+  ```
+
+- Show filename extensions: Do this in _Finder ➤ Settings ➤ Advanced_.
+- In Finder, add your home folder to the SideBar: _File ➤ add to sidebar_.
+- _Finder ➤ settings ➤ Advanced ➤ Show all filenames_.
 
 ## Configure your shell
 
-**Follow this guide:**
-
-[Shell setup :fontawesome-solid-terminal:](nix-shells.md){ .md-button }
+**Follow: _[Shell setup :fontawesome-solid-terminal:](nix-shells.md)_.**
 
 ### `brew-refill` alias
 
@@ -70,21 +83,20 @@ Also install GPG and the GitHub CLI:
 brew install gnupg gh
 ```
 
-**Next, follow this guide:**
-
-[Shell setup :fontawesome-solid-shield-halved:](git-ssh-and-gpg.md){ .md-button }
+Next, **follow: _[Shell setup :fontawesome-solid-shield-halved:](git-ssh-and-gpg.md)_.**
 
 <!-- Toolkits; e.g. Java and Rust -->
 
 {%
-    include-markdown './_toolkits.md'
-    heading-offset=1
+  include-markdown './files/_toolkits.md'
+  heading-offset=1
 %}
 
 ## Generate a certificate
 
 If you need a certificate, set a static IP address and generate a certificate with
-[certbot](https://certbot.eff.org/). Choose “None of the above” for Software.
+[certbot](https://certbot.eff.org/).
+Choose “None of the above” for Software.
 Then follow the instructions exactly, including the “Automating renewal” section.
 This may not work through some company and university firewalls.
 

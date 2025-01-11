@@ -10,3 +10,6 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 [:fontawesome-solid-table-cells: **Click-to-copy symbols**](click-to-copy-symbols.md):
 Tables of Unicode symbols that you click on to copy
+
+[:fontawesome-solid-terminal: **Bash tips**](bash-tips.md):
+Tips for writing good Bash, and how to do some common but tricky things

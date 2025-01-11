@@ -1,17 +1,21 @@
 #!/usr/bin/env bash
 set -o errexit -o nounset -o pipefail
+# SPDX-FileCopyrightText: Copyright 2024, Contributors to the dmyersturnbull.github.io
+# SPDX-PackageHomePage: https://github.com/dmyersturnbull/dmyersturnbull.github.io
+# SPDX-License-Identifier: MIT
 
 commonrc::initialize() {
   # Creates a ~/.commonrc if it doesn't already exist.
   # The mostly blank file just adds these directories to $PATH:
-  # /usr/sbin, /usr/local/sbin, and ~/bin
+  # /usr/sbin, /usr/local/sbin, and ~/bin (creating ~/bin if needed)
+  mkdir -p "$HOME/bin"
   if [[ ! -e ~/.commonrc ]]; then
     # shellcheck disable=SC2016
     printf '%s\n\n%s\n%s\n%s\n' \
-    '# Common file sourced by ~/.bashrc, ~/.zshrc, etc.' \
-    '# Configure $PATH' \
-    'EXPORT PATH' \
-    'PATH="$PATH:/usr/sbin:/usr/local/sbin:$HOME/bin"'
+      '# Common file sourced by ~/.bashrc, ~/.zshrc, etc.' \
+      '# Configure $PATH' \
+      'EXPORT PATH' \
+      'PATH="$PATH:/usr/sbin:/usr/local/sbin:$HOME/bin"'
   fi
 }
 

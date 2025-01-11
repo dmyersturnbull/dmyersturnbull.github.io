@@ -1,10 +1,10 @@
+# Correct exception handling
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Correct exception handling
 
 <b>TL;DR:</b>
 

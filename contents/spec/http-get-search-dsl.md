@@ -1,10 +1,10 @@
+# HTTP GET search DSL
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# HTTP GET search DSL
 
 <b>Spec status: Useful and ready to go.</b>
 Take it, modify it, use it. (CC-BY-SA)
@@ -74,7 +74,7 @@ By reducing the number of ways to write a query, it also increases the likelihoo
 
 This includes optional extensions for images.
 
-**Using [bnf-with-regex](advanced-bnf-with-regex.md):**
+**Using [bnf-with-regex](regex-bnf.md):**
 
 ### Main grammar
 

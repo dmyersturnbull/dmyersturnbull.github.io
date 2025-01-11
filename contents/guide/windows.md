@@ -1,10 +1,10 @@
+# Windows setup
+
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-# Windows setup
 
 A setup guide for programmers, etc., on Windows.
 
@@ -55,7 +55,7 @@ Err on the side of assuming they’re useless and shouldn’t be there.
 Install the Windows Developer Mode.
 Go to the start menu and type _features_.
 Navigate to
-`Apps and Features → Manage optional features → add feature → Windows Developer Mode → install`.
+_Apps and Features ➤ Manage optional features ➤ add feature ➤ Windows Developer Mode ➤ install_.
 
 Also enable OpenSSH, uninstall Notepad and Wordpad, and disable other unnecessary Optional Features -- which is most of them.
 These include the Telnet Client, Windows Media Player, and PowerShell 2.0.
@@ -94,7 +94,7 @@ These include the Telnet Client, Windows Media Player, and PowerShell 2.0.
 ### Services and startup apps.
 
 Disable unnecessary startup apps.
-These are under `Settings → Apps → Startup`.
+These are under _Settings ➤ Apps ➤ Startup_.
 
 Next, open the Services app.
 Disable unnecessary services (set them to _Manual_ start).
@@ -184,7 +184,7 @@ Uninstall any versions you have installed.
 <!-- Toolkits; e.g. Java and Rust -->
 
 {%
-include-markdown './_toolkits.md'
+include-markdown './files/_toolkits.md'
 heading-offset=1
 %}
 
