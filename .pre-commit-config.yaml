@@ -1,12 +1,6 @@
-# SPDX-FileCopyrightText: Copyright 2020-2024, Contributors to Tyrannosaurus
-# SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
-# SPDX-License-Identifier: Apache-2.0
-#
-# SPDX-FileCopyrightText: Copyright 2024, Contributors to dmyersturnbull.github.io
-# SPDX-PackageHomePage: https://github.com/dmyersturnbull/dmyersturnbull.github.io
-# SPDX-License-Identifier: Apache-2.0
-#
-# Adapted from Tyrannosaurus <https://github.com/dmyersturnbull/tyrannosaurus>
+# SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+# SPDX-PackageHomePage: https://dmyersturnbull.github.io
+# SPDX-License-Identifier: CC-BY-SA-4.0
 
 # Check out https://pre-commit.com/ for documentation
 minimum_pre_commit_version: 4.0.1

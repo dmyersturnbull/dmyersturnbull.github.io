@@ -99,7 +99,7 @@ wheels = [
 
 [[package]]
 name = "dmyersturnbull-github-io"
-version = "0.0.1a0"
+version = "0.0.1"
 source = { editable = "." }
 dependencies = [
     { name = "mkdocs" },
@@ -119,8 +119,8 @@ dev = [
 [package.metadata]
 requires-dist = [
     { name = "mkdocs", specifier = ">=1.6" },
-    { name = "mkdocs-include-markdown-plugin", specifier = ">=0.8" },
-    { name = "mkdocs-literate-nav", specifier = ">=0.6.1" },
+    { name = "mkdocs-include-markdown-plugin", specifier = ">=7.0" },
+    { name = "mkdocs-literate-nav", specifier = ">=0.6" },
     { name = "mkdocs-material", specifier = ">=9.5" },
     { name = "mkdocs-minify-plugin", specifier = ">=0.8" },
     { name = "mkdocstrings", extras = ["python"], specifier = ">=0.27" },

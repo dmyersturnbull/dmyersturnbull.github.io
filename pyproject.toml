@@ -8,20 +8,20 @@ requires = ["hatchling~=1.25"]
 
 [project]
 name = "dmyersturnbull.github.io"
-version = "0.0.1-alpha0"
+version = "0.0.1"
 requires-python = "~=3.13"
 readme = { file = "README.md", content-type = "text/markdown" }
 description = "GitHub Pages https://dmyersturnbull.github.io"
 maintainers = [ { name = "Douglas Myers-Turnbull", email = " dmyersturnbull@gmail.com" } ]
 authors = [ { name = "Douglas Myers-Turnbull", email = " dmyersturnbull@gmail.com" } ]
-license = { text = "Apache-2.0" }
+license = { text = "CC-BY-SA-4.0" }
 dependencies = [
-  "mkdocs-include-markdown-plugin>=0.8",
+  "mkdocs-include-markdown-plugin>=7.0",
   "mkdocs>=1.6",
   "mkdocs-material>=9.5",
   "mkdocs-minify-plugin>=0.8",
   "mkdocstrings[python]>=0.27",
-  "mkdocs-literate-nav>=0.6.1",
+  "mkdocs-literate-nav>=0.6",
 ]
 
 # See https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups
