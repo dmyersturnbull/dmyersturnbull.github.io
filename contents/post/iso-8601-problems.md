@@ -1,7 +1,7 @@
 # ISO 8601 problems
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -50,7 +50,7 @@ Sadly, `"14:30:55.250" != "14:30:55,250"`.
 <small>
 <b>†</b>
 `.` is preferred in international contexts.
-See [_documentation: quantities_](../convention/documentation.md#quantities).
+See [_documentation: quantities_](../convention/documentation.md#dimensioned-quantities).
 </small>
 
 It allows `14:30:00.1`, `14:30:00.10`, and `14:30:00.100`,
@@ -62,6 +62,7 @@ Interestingly, `00:60:00` is not allowed.
 However, `00:00:60` is – apparently this was to simplify working with leap-seconds.
 
 For UTC offsets, it allows:
+
 - either 4 or 2 digits (`+04:00` or `+04`)
 - A minus sign (`−`) or a hyphen-minus (`-`) for negative offsets.
 - The equivalent offsets `Z`, `+00`, `+00:00`, `±00`, and `±00:00`.
@@ -126,46 +127,46 @@ Parsing, especially validating, takes some work.
 This regex, which liberally uses lazy `??`, seems reasonable:
 
 ```regexp
-P(?:(?P<years>\d+(?:[.,]\d++)?+)Y)??
-P(?:(?P<months>\d+(?:[.,]\d++)?+)M)??
-P(?:(?P<days>\d+(?:[.,]\d++)?+)D)??
+P(?:(?<years>\d+(?:[.,]\d++)?+)Y)??
+P(?:(?<months>\d+(?:[.,]\d++)?+)M)??
+P(?:(?<days>\d+(?:[.,]\d++)?+)D)??
 (?:
 T
-P(?:(?P<hours>\d+(?:[.,]\d++)?+)H)??
-P(?:(?P<minutes>\d+(?:[.,]\d++)?+)M)??
-P(?:(?P<hours>\d+(?:[.,]\d++)?+)S)??
+P(?:(?<hours>\d+(?:[.,]\d++)?+)H)??
+P(?:(?<minutes>\d+(?:[.,]\d++)?+)M)??
+P(?:(?<hours>\d+(?:[.,]\d++)?+)S)??
 )?+
 ```
 
-But, it allows some non-compliant and weird strings like `` (empty), `P0DT0H`, `P1Y13M` and `PT0.5H30M`.
+But, it allows some non-compliant and weird strings like ``(empty),`P0DT0H`, `P1Y13M`and`PT0.5H30M`.
 This following regex is a little better:
 
 ```regexp
 P
-(?:(?P<years>\d*?[1-9](?:[.,]\d++)?+)Y)??
-(?:(?P<months>(?:[1-9]|1[012])(?:[.,]\d++)?+)M)??
-(?:(?P<days>(?:\d|[12]\d|3[01])(?:[.,]\d++)?+)D)??
+(?:(?<years>\d*?[1-9](?:[.,]\d++)?+)Y)??
+(?:(?<months>(?:[1-9]|1[012])(?:[.,]\d++)?+)M)??
+(?:(?<days>(?:\d|[12]\d|3[01])(?:[.,]\d++)?+)D)??
 (?:
 T
-(?:(?P<hours>(?:[1-9]|1[0-9]|2[0-3])(?:[.,]\d++)?+)H)??
-(?:(?P<minutes>(?:[1-9]|[1-5][0-9])(?:[.,]\d++)?+)M)??
-(?:(?P<seconds>(?:[1-9]|[1-5][0-9])(?:[.,]\d++)?+)S)??
+(?:(?<hours>(?:[1-9]|1[0-9]|2[0-3])(?:[.,]\d++)?+)H)??
+(?:(?<minutes>(?:[1-9]|[1-5][0-9])(?:[.,]\d++)?+)M)??
+(?:(?<seconds>(?:[1-9]|[1-5][0-9])(?:[.,]\d++)?+)S)??
 )?+
 ```
 
 But it (1) doesn’t allow leading 0s;
-(2) requires _sec < 60_, _min < 60_, _hr < 24_, _day < 32_, and _month < 12; and
+(2) requires _sec < 60_, _min < 60_, _hr < 24_, _day < 32_, and \_month < 12; and
 (3) allows (e.g.) February 31.
 Compare with this pattern for `hh:mm:ss[.iiiiiiiii]`:
 
 ```regexp
-(?P<hours>0\d|[1-9]\d++)
+(?<hours>0\d|[1-9]\d++)
 :
-(?P<minutes>[0-5]\d)
+(?<minutes>[0-5]\d)
 :
-(?P<seconds>[0-5]+\d)
+(?<seconds>[0-5]+\d)
 \.
-(?P<nanoseconds>\d{9})?+
+(?<nanoseconds>\d{9})?+
 ```
 
 #### Representations are non-unique
@@ -240,16 +241,13 @@ The square brackets can contain an
 but zone names like `Etc/GMT-8` are discouraged (except `Etc/UTC`).
 You can also us offset; e.g. `[-08:00]`.
 
-!!! note
-   You cannot use both; `[-08:00][America/Los_Angeles]` is **invalid**.
-   You could use a custom “experimental” key prefixed with `_`;
-   e.g. `[-08:00][_tz=America/Los_Angeles]`.
-   However, this requires agreement and would probably lead to confusion.
+You cannot use both; `[-08:00][America/Los_Angeles]` is **invalid**.
+You could use a custom _experimental_ key prefixed with `_`;
+e.g. `[-08:00][_tz=America/Los_Angeles]`.
+However, this requires agreement and would probably lead to confusion.
 
-!!! note
-
-    Prefixing `!`, as in `[!America/Los_Angeles]`, marks the zone/offset _critical_.
-    However, many implementations will either ignore the marker or fail to parse the string.
+Prefixing `!`, as in `[!America/Los_Angeles]`, marks the zone/offset _critical_.
+However, many implementations will either ignore the marker or fail to parse the string.
 
 #### Forcing natural lexicographical sorting
 
@@ -260,7 +258,7 @@ You can force natural lexicographical sorting while retaining the local offset o
 2024-12-16T14:30:55Z[-08:00]
 ```
 
-??? note
+???+ note "Inconsistent strings"
 
     These strings are considered _inconsistent_, and the prefix `!` forces implementations to treat them as erroneous:
 

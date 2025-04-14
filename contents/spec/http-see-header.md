@@ -1,7 +1,7 @@
 # HTTP `See` header
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -91,8 +91,8 @@ from typing import Iterable, Self
 from urllib.parse import unquote, urlencode
 
 
-_LINK_PATTERN = re.compile(r"(?:^|, *)<(?P<uri>[^>]+)>(?P<params>[^,]+)")
-_PARAMS_PATTERN = re.compile(r"(?:^|; *)(?P<key>method|rel|doc)=<?(?P<value>[^ ;>]+)>?")
+_LINK_PATTERN = re.compile(r"(?:^|, *)<(?<uri>[^>]+)>(?<params>[^,]+)")
+_PARAMS_PATTERN = re.compile(r"(?:^|; *)(?<key>method|rel|doc)=<?(?<value>[^ ;>]+)>?")
 
 
 @dataclass(slots=True, frozen=True, order=True)
@@ -105,16 +105,16 @@ class See:
 
 class SeeEncoding:
 
-    def encode(self: Self, see_links: Iterable[See]) -> str:
+    def encode(selfself, see_links: Iterable[See]) -> str:
         return ", ".join(self._encode_single(see) for see in see_links)
 
-    def decode(self: Self, header: str) -> list[See]:
+    def decode(selfself, header: str) -> list[See]:
         return [
             self._decode_single(m.group("uri"), m.group("params"))
             for m in _LINK_PATTERN.finditer(header)
         ]
 
-    def _encode_single(self: Self, see: See) -> str:
+    def _encode_single(selfself, see: See) -> str:
         data = {
             k: urlencode(f"<{v}>") if k == "doc" else urlencode(v)
             for k, v in asdict(see).items()
@@ -122,7 +122,7 @@ class SeeEncoding:
         }
         return "; ".join([f"<{urlencode(see.uri)}>", *data])
 
-    def _decode_single(self: Self, uri: str, params: str) -> See:
+    def _decode_single(selfself, uri: str, params: str) -> See:
         data = {
             m.group("key"): unquote(m.group("value"))
             for m in _PARAMS_PATTERN.finditer(params)

@@ -1,7 +1,7 @@
 # Duck typing is quackery
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -175,7 +175,7 @@ class GooborToBreezeMatrixAdapter extends Matrix {
 }
 ```
 
-??? note "Note – Scala structural typing"
+??? note "Note: Scala structural typing"
 
     Scala supports true compile-time structural typing.
     You could easily rewrite `calculate` like this:
@@ -222,7 +222,6 @@ A `quack` function could behave in _at least_ two ways:
 
     ```python
     from dataclasses import dataclass
-    from typing import Self
 
 
     @dataclass(frozen=True, slots=True)

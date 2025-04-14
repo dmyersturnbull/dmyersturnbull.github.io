@@ -1,7 +1,7 @@
 # Correct exception handling
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -33,7 +33,7 @@ Just leave them be and let them bubble up.
 At a level where context is available, you should apply a catch-wrap-throw pattern.
 Provide context by choosing a meaningful exception class, and via fields.
 
-!!! example
+???+ example
 
     ```java
     public void update(AppNetworkClient client) {

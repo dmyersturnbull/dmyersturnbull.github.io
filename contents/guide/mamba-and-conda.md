@@ -1,12 +1,12 @@
 # Mamba and Conda setup
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-!!! warning
+!!! warning "Warning: Not recommended"
 
     I have recommended against the Conda/Mamba ecosystem for many years.
     Consider using the PyPi ecosystem and tools like
@@ -74,7 +74,7 @@ conda create \
 conda activate ds
 ```
 
-!!! bug "pywin32 and pywinutils problems"
+!!! bug "Bug: pywin32 and pywinutils"
 
     If you are on Windows, add `pywin32` and `pywinutils`.
     Some versions of [pywin32 have issues](https://github.com/mhammond/pywin32/issues/1431),

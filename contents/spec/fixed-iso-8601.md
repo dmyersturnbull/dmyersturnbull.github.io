@@ -1,7 +1,7 @@
-## Fixed ISO 8601
+# Fixed ISO 8601
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -21,13 +21,13 @@ If nanoseconds or below are needed, store them separately.
 
 ```regexp
 ^
-(?P<year>\d{4})
--(?P<month>0[1-9]|1[012])
--(?P<day>0[1-9]|[1-2]\d|3[01])
-T(?P<hour>[1-9]|1\d|2[0-3])
-:(?P<minute>[1-9]|[1-5]\d)
-:(?P<second>[1-9]|[1-5]\d(?:\.\d{6})?+)
-(?P<offset>Z|[+-]\d{2}:\d{2})
+(?<year>\d{4})
+-(?<month>0[1-9]|1[012])
+-(?<day>0[1-9]|[1-2]\d|3[01])
+T(?<hour>[1-9]|1\d|2[0-3])
+:(?<minute>[1-9]|[1-5]\d)
+:(?<second>[1-9]|[1-5]\d(?:\.\d{6})?+)
+(?<offset>Z|[+-]\d{2}:\d{2})
 $
 ```
 
@@ -47,7 +47,7 @@ Timezone names:
 - SHOULD NOT start with `Etc/`, except for `Etc/UTC`.
 - SHOULD NOT use `Etc/UTC` in place of `Europe/London`.
 
-??? example "Example – RFC 9557"
+??? example "Example: RFC 9557"
 
     ```json
     {
@@ -57,7 +57,7 @@ Timezone names:
     }
     ```
 
-??? example "Example – explicit"
+??? example "Example: explicit"
 
     ```json
     {
@@ -77,7 +77,7 @@ I [advise against repeating intervals](../post/iso-8601-problems.md#intervals),
 and they are not part of this spec.
 Represent them explicitly instead.
 
-??? example "Example – recurring events"
+??? example "Example: recurring events"
 
     ```json
     {
@@ -101,11 +101,11 @@ The result is `PT<h>H[<m>M[<s>S]]`, which is trivial parse and convert to `hh:mm
     (?
     ^
     PT
-    (?:(?P<hour>\d)H)??
-    (?:(?P<minute>\d++)M)??
+    (?:(?<hour>\d)H)??
+    (?:(?<minute>\d++)M)??
     (?:
-    (?P<second>\d++S)?+
-    (?:\.(?P<microsecond>\d{1,6}++)?+
+    (?<second>\d++S)?+
+    (?:\.(?<microsecond>\d{1,6}++)?+
     )
     $
     )
@@ -116,10 +116,10 @@ The result is `PT<h>H[<m>M[<s>S]]`, which is trivial parse and convert to `hh:mm
     ```regexp
     (?
     ^
-    (?P<hour>\d{2,}+)
-    :(?P<minute>[0-5]\d)
-    :(?P<second>[0-5]\d)
-    (?:\.(?P<microsecond>\d{6}))?+
+    (?<hour>\d{2,}+)
+    :(?<minute>[0-5]\d)
+    :(?<second>[0-5]\d)
+    (?:\.(?<microsecond>\d{6}))?+
     $
     )
     ```
@@ -154,19 +154,19 @@ This is the full specification.
 date-time:
   type: string
   pattern: >-
-    (?P<year>\d{4})
-    -(?P<month>0[1-9]|1[012])
-    -(?P<day>0[1-9]|[1-2]\d|3[01])
-    T(?P<hour>[1-9]|1\d|2[0-3])
-    :(?P<minute>[1-9]|[1-5]\d)
+    (?<year>\d{4})
+    -(?<month>0[1-9]|1[012])
+    -(?<day>0[1-9]|[1-2]\d|3[01])
+    T(?<hour>[1-9]|1\d|2[0-3])
+    :(?<minute>[1-9]|[1-5]\d)
     :(?:
-    (?P<second>[1-9]|[1-5]\d)
-    (?P<microsecond>\.\d{6})?+
+    (?<second>[1-9]|[1-5]\d)
+    (?<microsecond>\.\d{6})?+
     )
-    (?P<offset>Z|[+-]\d{2}:\d{2})
+    (?<offset>Z|[+-]\d{2}:\d{2})
     (?:
     \[
-    (?P<zone>
+    (?<zone>
     (?:[A-Z][A-Za-z0-9]*+(?:[_+-][A-Za-z0-9]++)))
     (?:/[A-Z][A-Za-z0-9]*+(?:[_+-][A-Za-z0-9]++)){0,3}+
     )
@@ -187,13 +187,13 @@ interval:
 interval-string:
   type: string
   pattern: >-
-    (?P<start>
+    (?<start>
     \d{4}(0[1-9]|1[012])(0[1-9]|[1-2]\d|3[01])
     T([1-9]|1\d|2[0-3]):([1-9]|[1-5]\d):([1-9]|[1-5]\d)(\.\d{6})?+
     (Z|[+-]\d{2}:\d{2})
     )
     --
-    (?P<end>
+    (?<end>
     \d{4}(0[1-9]|1[012])(0[1-9]|[1-2]\d|3[01])
     T([1-9]|1\d|2[0-3]):([1-9]|[1-5]\d):([1-9]|[1-5]\d)(\.\d{6})?+
     (Z|[+-]\d{2}:\d{2})
@@ -209,11 +209,11 @@ pt-duration:
   pattern: >-
     ^
     PT
-    (?:(?P<hour>\d)H)??
-    (?:(?P<minute>\d++)M)??
+    (?:(?<hour>\d)H)??
+    (?:(?<minute>\d++)M)??
     (?:
-    (?P<second>\d++S)?+
-    (?:\.(?P<microsecond>\d{1,6}++)?+)
+    (?<second>\d++S)?+
+    (?:\.(?<microsecond>\d{1,6}++)?+)
     )
     $
 
@@ -221,9 +221,9 @@ hhmmss-duration:
   type: string
   pattern: >-
     ^
-    (?P<hour>\d{2,}+)
-    :(?P<minute>[0-5]\d)
-    :(?P<second>[0-5]\d)
-    (?:\.(?P<microsecond>\d{6}))?+
+    (?<hour>\d{2,}+)
+    :(?<minute>[0-5]\d)
+    :(?<second>[0-5]\d)
+    (?:\.(?<microsecond>\d{6}))?+
     $
 ```

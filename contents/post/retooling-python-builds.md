@@ -1,7 +1,7 @@
 # Retooling Python builds
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -9,7 +9,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 The landscape of Python build infrastructure is a mess.
 I made over 100 commits to get a sensible, elegant, and secure build.
 It took too long, but here’s the result:
-**[template repository :fontawesome-solid-code:](https://github.com/dmyersturnbull/cicd)**
+**[template repository :fontawesome-solid-code:](https://github.com/dmyersturnbull/tyranno-sandbox)**
 
 <!--
 The result is a template project and tool called
@@ -112,3 +112,13 @@ It also formats all of your files.
 If you need your package published to [Conda-Forge](https://conda-forge.org/) as well, you can.
 That takes [a few manual steps](https://tyrannosaurus.readthedocs.io/en/latest/usage.html#anaconda-recipes).
 -->
+
+!!! aside
+
+    YAML is honestly really bad.
+    1.1 is downright dangerous, but even 1.2 is a mess.
+
+    See:
+
+    - [the YAML document from Hell](https://ruudvanasseldonk.com/2023/01/11/the-yaml-document-from-hell).
+    - [YAML sucks](https://github.com/cblp/yaml-sucks).

@@ -1,7 +1,7 @@
 # Gaslit by a computer
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -28,3 +28,10 @@ Data format specifications, vocabularies, and domain-specific languages
 
 [:fontawesome-solid-message: **Posts**](post/index.md):
 Ideas, summaries, recommendations, notes, etc.
+
+!!! note "To anyone actually named Kerri Johnson"
+
+    I’ve been consistently using your name as an example for about 10 years, in constant fear this day might come.
+    I’ll stop using your name on request.
+    <b>History:</b>
+    Kerri Johnson was the merger of two previous names, Kerri Kerrigan and John Johnson.

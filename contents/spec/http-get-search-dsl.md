@@ -1,7 +1,7 @@
 # HTTP GET search DSL
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -29,17 +29,13 @@ The query above finds `foods` with `name` ending in "apple"
 and either `type` "fruit" or weight (in `grams`) less than 5.
 It sorts by name, then by `purchase_date` in descending order.
 
-!!! note
-
-    Pagination is not described but is probably useful.
-
 ### Goals
 
 The language must:
 
 - Be easy to write and easy to implement.
 - Be able to represent most data search and download requests.
-- Be self-documenting, be highly readable, and have URI-safe queries. \_\_ †
+- Be self-documenting, highly readable, and not require percent-encoding. †
 - Have a unique and easy-to-calculate normal form.
 - Yield high cache hit rates even for non-normalized queries.
 - Support filtering that:
@@ -49,6 +45,14 @@ The language must:
 - Support requesting any subset of fields.
 - Support sorting by any number of fields.
 
+<b>† URI safety:</b>
+This means that percent-encoding is not needed (with some exceptions, such as in regex patterns).
+You only need to escape characters in the regex class `[:/?#[]@]` inside strings
+(e.g. the `@` in `email:eq:admin@api.tld`).
+See
+[URI-safe characters](../post/uri-safe-characters.md)
+for a dive into the URI RFCs.
+
 ### Non-goals
 
 It does not need to:
@@ -56,33 +60,98 @@ It does not need to:
 - Be as powerful as SQL for search.
 - Be as powerful as GraphQL for download.
 
-### † URI safety
+### OpenAPI
 
-This means that percent-encoding is not needed (with some exceptions, such as in regex patterns).
-You only need to escape characters in the regex class `[:/?#[]@]` inside a URI query (`query` component).
-See
-[URI-safe characters](../post/uri-safe-characters.md)
-for a dive into the URI RFCs.
+```yaml
+filter:
+  in: query
+  name: "where"
+  description: |
+    Array of filter expressions.
+    Returned values must match **all** filter expressions.
+    _Example_: `type:eq:fruit|grams:lt:5&filter=name:regex:.+?apple`
+  allowReserved: true
+  style: form
+  explode: true
+  schema:
+    type: string
+    example: "type:eq:fruit|grams:lt:5"
 
-### Conjuctive normal form
+return:
+  in: query
+  name: return
+  description: >-
+    A key of the records to include in the returned data.
+    If no `return` parameter is provided, all keys will be returned.
+    (This parameter is split by commas.)
+  allowReserved: true
+  style: simple
+  explode: true
+  schema:
+    type: string
+    pattern: '^([a-z][a-z0-9,;=+~_-]*+)(?:\.([a-z][a-z0-9,;=+~_-]*+))*+$'
+
+sort:
+  in: query
+  name: sort
+  description: >-
+    Comma-separated list of keys to sort records by.
+    Records will be sorted by the first key, using the second key to break ties, and so on.
+    Prefix a key with `-` to reverse the order use descending rather than ascending order.
+  allowReserved: true
+  schema:
+    type: string
+    pattern: '^(-?[a-z][a-z0-9,;=+~_-]*+)(?:\.(-?[a-z][a-z0-9,;=+~_-]*+))*+$'
+
+jmespath:
+  in: query
+  name: jmespath
+  description: >-
+    JMESPath expression to apply after `filter`, `get`, and `sort`.
+    `jmespath` much slower than `filter`.
+    Whenever possible, prefer using `filter`, using `jmespath` only for complex non-filtering transformations.
+  allowReserved: true
+  schema:
+    type: string
+    minLength: 1
+
+limit:
+  in: query
+  name: limit
+  description: >-
+    For pagination, the max number of records to return.
+  schema:
+    type: number
+    minimum: 0
+
+offset:
+  in: query
+  name: offset
+  description: >-
+    For pagination, the index of the first record to return (starting at 0).
+  schema:
+    type: number
+    minimum: 0
+```
+
+## `where`
+
+### Conjunctive normal form
 
 The grammar restricts queries to conjunctive normal form.
 This removes any need for parentheses.
 By reducing the number of ways to write a query, it also increases the likelihood of a cache hit.
 
-## Grammar
-
-This includes optional extensions for images.
+### `where` grammar
 
 **Using [bnf-with-regex](regex-bnf.md):**
-
-### Main grammar
 
 ```text
 param          = where | return | sort
 where          = 'where[' INDEX ']=' condition ('|' condition)*
 where          = param-defn condition ('|' condition)*
 param-defn     = 'where' '(' INDEX ')' '='
+condition      = spec(KEY-VERB) key
 condition      = key ':' STR-VERB ':' STR
                | spec(STR-VERB) STR
                | spec(INT-VERB) INT
@@ -92,7 +161,6 @@ condition      = key ':' STR-VERB ':' STR
                | spec(DEFINED-VERB) BOOLEAN
                | spec(CONTAINS-VERB) (STR | INT | BOOLEAN)
                | spec(SIZE-VERB) LITERAL-NONNEG-INT
-               | spec(KEY-VERB) key
 
 spec(verb)     = key ':' verb ':'
 return         = 'return=' key ('|' key)*
@@ -117,7 +185,7 @@ NORMAL-CHAR    = ALPHANUM | [_.~-]
 SPECIAL-CHAR   = [=!$()*+,/?]
 ```
 
-!!! note
+!!! note "Caution: avoid reserved characters in keys"
 
     Although this grammar allows reserved characters in keys, avoid them where possible.
 
@@ -142,7 +210,7 @@ HTTP/3
 Content-Type: text/json
 ```
 
-!!! note
+!!! tip "Tip: `where(1)` instead of `where[1]`"
 
     If you dislike exploded query paramters (i.e. `key=value-1&key=value-2`),
     consider appending `(n)` to the each key; e.g. `where(1)=...&where(2)=...`.
@@ -171,7 +239,7 @@ To normalize a URI:
 
 ## Caching
 
-!!! note
+!!! note "Note: caching"
 
     For caching, some request headers may need to be used in the caching logic.
     For example, `If-Match` may need to be handled along with `ETag`.

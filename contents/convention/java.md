@@ -1,7 +1,7 @@
 # Java conventions
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -85,7 +85,7 @@ Builder methods should follow the immutable convention (i.e. `angle()`).
 
 ### Overriding `toString`
 
-!!! tip
+!!! tip "IntelliJ tip"
 
     IntelliJ can do this for you.
     Use the `StringJoiner` `toString` template.
@@ -120,7 +120,7 @@ Immutable classes should implement `Comparable` and override `compareTo` as long
 
 ## Overriding `hashCode`
 
-!!! tip
+!!! tip "IntelliJ tip"
 
     IntelliJ can do this for you.
     Use the default `hashCode` template.
@@ -139,7 +139,7 @@ public class Claz {
 
 ## Overriding `equals`
 
-!!! tip
+!!! tip "IntelliJ tip"
 
     IntelliJ can do this for you.
     Use the provided `hashCode` and `equals` templates.
@@ -187,10 +187,10 @@ public class Claz {
 }
 ```
 
-??? tip "IntelliJ template for universal equality"
+??? tip "IntelliJ tip (universal equality)"
 
     Use this IntellJ template.
-    Under Generate ➤ equals() and hashCode() ➤ ...
+    Under _Generate ➤ equals() and hashCode() ➤ ..._,
     make a new template called _universal_.
 
     <b>`equals()` template:</b>
@@ -346,10 +346,10 @@ public class Claz {
 }
 ```
 
-??? tip "IntelliJ template for multiversal equality"
+??? tip "IntelliJ tip (multiversal equality)"
 
     Use this IntellJ template.
-    Under Generate ➤ equals() and hashCode() ➤ ...
+    Under _Generate ➤ equals() and hashCode() ➤ ..._,
     make a new template called _universal_.
 
     <b>`equals()` template:</b>
@@ -489,7 +489,7 @@ for example, `calculateAsync()`.
 
 ## Member ordering
 
-!!! tip
+!!! tip "IntelliJ tip"
 
     IntelliJ can do this for you.
     Import the [IntelliJ formatter settings](intellij-style.xml).

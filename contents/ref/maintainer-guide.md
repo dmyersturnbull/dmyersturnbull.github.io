@@ -1,7 +1,7 @@
 # Maintainer guide
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -117,7 +117,7 @@ Instead, just comment.
 Squash the commits into one, and ensure the resulting commit message follows the
 [commit message format](#reference) specification.
 
-???+ tip "Tip – GitHub squash and merge"
+???+ tip "Tip": GitHub squash and merge"
 
     GitHub has a "Squash and merge" button, but there is nowhere to add a commit body or footer.
     However, you can work around this in the repository settings:
@@ -135,9 +135,13 @@ If the contributor abandoned the PR, instead use `gh pr checkout <number>`.
 ### Versioning
 
 Versioning is a subset of [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
-Pre-releases are permitted only in the forms `alpha<int>`, `beta<int>`, `preview<int>`, and `rc<int>`,
+Pre-release numbers are discouraged.
+If used, restrict to these forms:
+`alpha<int>`, `beta<int>`, and `rc<int>`,
 where `<int>` starts at 0.
-Alpha/beta/preview/RC MUST NOT be used out of order (e.g., **not** `alpha1`, `beta1`, `alpha2`).
+Alpha/beta/RC MUST NOT be used out of order (e.g., **not** `alpha1`, `beta1`, `alpha2`).
+Pre-release numbers also **SHOULD NOT be used in Python projects** because
+[PEP 440](https://peps.python.org/pep-0440/) and [semver.org](https://semver.org/) prescribe different formats.
 
 ### Tags and deployment
 
@@ -204,85 +208,6 @@ Follow those headers with a plain-language statement that you have modified the 
     ```
 
 ## Commit messages
-
-### Conventional commit messages
-
-Commit messages must follow a subset of [Conventional Commits](https://www.conventionalcommits.org/).
-
-- Breaking changes MUST use `!`.
-- The body SHOULD be written as CommonMark.
-  In that case, headings more significant than level 4 (`####`) MUST NOT be used.
-  (Treat the subject as a level 3 (`###`) heading.)
-  Imperative phrasing SHOULD be used.
-- Footers MUST be listed one per line in a single paragraph.
-- For a breaking change, if a body is included, the `BREAKING CHANGE:` footer MUST be present.
-- If a body is included, deprecations SHOULD be indicated by a `Deprecates:` footer
-  of the form `Deprecates: first, second`.
-- Closed issues SHOULD be listed in a footer of the form `Closes: #10, #22, #33`.
-  (_Note_: This guideline requires exactly 1 issue.)
-- Commits MUST NOT use footers that have not been defined.
-  The footers that are defined in this document are
-  `BREAKING CHANGE`, `Deprecates`, `Closes`, and the attribution trailers listed below.
-- Projects MAY define their own additional footers;
-  any such footer MUST be designed to facilitate automation or computational analysis.
-- Trailers MUST be ordered as: `BREAKING CHANGE:`, `Deprecates:`, `Closes:`, attribution(s).
-- Each commit type MUST be
-  `drop`, `depr`, `feat`, `security`, `fix`, `perf`, `build`, `docs`, `test`, `ci`, `refactor`, or `style`.
-
-???+ info "Allowed attribution trailers"
-
-    - Acked-by
-    - Reviewed-by
-    - Helped-by
-    - Reported-by
-    - Mentored-by
-    - Suggested-by
-    - CC
-    - Noticed-by
-    - Tested-by
-    - Improved-by
-    - Thanks-to
-    - Based-on-patch-by
-    - Contributions-by
-    - Co-authored-by
-    - Requested-by
-    - Original-patch-by
-    - Inspired-by
-    - Signed-off-by
-
-???+ example "Examples – only message"
-
-    <b>Example 1:</b>
-
-    ```text
-    feat!: add schema
-    ```
-
-    <b>Example 2:</b>
-
-    ```text
-    doc(i18n): add JP translation
-    ```
-
-???+ example "Example – body and footers"
-
-    ```text
-    feat!: add major new feature
-
-    Introduce option to set custom template **for paid users only**.
-
-    Define template parameters:
-    - name
-    - status
-
-    BREAKING CHANGE: /api/v1/generate-report endpoint
-    Closes: #14
-    Co-authored-by: Amelia Johnson <amelia@dev.com>
-    Co-authored-by: Cecilia Johnson <cecilia@dev.com>
-    Reviewed-by: Kerri Hendrix <kerri@dev.com>
-    Acked-by: Tom Monson <joe@dev.com>
-    Signed-off-by: Sadie Wu <sadie@dev.com>
-    ```
 
 **Refer to the [supplemental labels document](/ref/issue-labels.md#table) for details.**
 
@@ -366,6 +291,6 @@ Examples: `i18n` and `plugins`.
 [BREAKING CHANGE: <feature, etc.>]
 [Deprecates: <feature, etc.>]
 [Closes: #<issue>]
-[*: <author>]*
+[<trailer>: <author>]*
 """
 ```

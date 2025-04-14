@@ -1,105 +1,129 @@
 #!/usr/bin/env bash
-set -o errexit -o nounset -o pipefail
-# SPDX-FileCopyrightText: Copyright 2024, Contributors to the dmyersturnbull.github.io
+# SPDX-FileCopyrightText: Copyright 2024, Contributors to dmyersturnbull.github.io
 # SPDX-PackageHomePage: https://github.com/dmyersturnbull/dmyersturnbull.github.io
-# SPDX-License-Identifier: MIT
+# SPDX-License-Identifier: Apache-2.0
 
-__z=$(basename "$0")
-declare -r prog_name=$__z
-declare -r prog_vr=v0.1.0
+set -o errexit -o nounset -o pipefail # "strict mode"
 
-# usage, help info, etc.
+script_path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
+declare -r script_name="${script_path##*/}"
+
+# usage, help description, etc.
+
+description="\
+Description:
+  Installs and configures MariaDB without root access.
+"
+
 declare -r usage="\
 Usage:
-  $prog_name [-t,--to=<path>] <file>
-  $prog_name -h --help
-  $prog_name --version
-
-Options:
-  -t, --to=<dir>  Target directory to install to (default: ~/mysql/).
+  $script_name --help
+  $script_name [OPTIONS] <file>
 
 Arguments:
-  <file> Path to a mariadb.tar.gz file containing a MariaDB binary distribution.
+  <file>       Path to a mariadb.tar.gz file containing a MariaDB binary distribution.
+
+Options:
+  -h, --help   Show this message and exit.
+  -t, --to     Target directory to install to (default: ~/mysql/).
 
 Example:
-  $prog_name --to ~/mysql/ mariadb-11.7.1-linux-systemd-x86_64.tar.gz
-"
-info="\
-$prog_name $prog_vr
-
-Installs and configures MariaDB without root access.
+  $script_name --to ~/mysql/ mariadb-11.7.1-linux-systemd-x86_64.tar.gz
 "
 
-# Arguments and options:
-target_dir=
-gz_file=
-
-# Function to set <file>
-# It's positional, so treat any subsequent positional args as unknown.
-_mariadb_non_root::set_gz_file() {
-  if [[ -n "$gz_file" ]]; then
-    printf >&2 'Unknown arg: '%s'\n%s\n' "$1" "$usage"
-    exit 2
-  fi
-  gz_file="$1"
+apprise() {
+  printf >&2 "[%s] %s\n" "$1" "$2"
 }
+
+usage_error() {
+  apprise ERROR "$1" || true
+  printf >&2 '%s\n' "$usage" || true
+  exit 2
+}
+
+general_error() {
+  apprise ERROR "$1" || true
+  exit 1
+}
+
+# Parse arguments.
+
+to="$HOME/mysql/"
+gz_file=
 
 while (($# > 0)); do
   case "$1" in
-    --to=*) target_dir="${1#--to=}" ;;
-    -t | --to) target_dir="$2" shift ;;
-    -h | --help)
-      printf '%s\n\n%s\n' "$info" "$usage"
-      exit 0
-      ;;
-    -v | --version)
-      printf '%s\n' "$prog_vr"
-      exit 0
-      ;;
-    --) break ;;
-    -*)
-      printf >&2 "Unknown option: '%s'\n%s\n" "$1" "$usage"
+    --)
       break
       ;;
-    *) _mariadb_non_root::set_gz_file "$1" ;;
+    -h | --help)
+      printf '%s\n\n%s\n' "$description" "$usage"
+      exit 0
+      ;;
+    --to=*)
+      to="${1#--to=}"
+      ;;
+    -t | --to)
+      to="$2"
+      shift
+      ;;
+    -*)
+      usage_error "Unrecognized option: '$1'."
+      ;;
+    *)
+      # Positional arg for input .gz file.
+      # If it's already set, then this is an extra positional arg (which is an error).
+      if [[ "$gz_file" ]]; then
+        usage_error "Unexpected positional argument: '$1'."
+      fi
+      gz_file="$1"
+      ;;
   esac
   shift
 done
 
+if [[ -z "$gz_file" ]]; then
+  usage_error "Missing required positional argument <file>."
+fi
+if [[ "$gz_file" != *.tar.gz ]]; then
+  general_error "Input file must be a .tar.gz file: '$1'."
+fi
 if [[ ! -f "$gz_file" ]]; then
-  printf >&2 "Path does not exist or is not a file: '%s\n'" "$gz_file"
-  exit 3
+  general_error "Input file does not exist or is not a file: '$gz_file'."
+fi
+if [[ -e "$to" ]]; then
+  general_error "Target directory exists and is not a directory: '$to'."
 fi
 
-if [[ ! -d "$gz_file" ]] || [[ -d "$gz_file" ]] && [[ -n "$(ls -A "$gz_file")" ]]; then
-  printf >&2 "Target path already exists (and is nonempty or not a directory): '%s\n'" "$target_dir"
-  exit 3
+if [[ -d "$to" ]] && [[ -n "$(ls -A "$to")" ]]; then
+  general_error "Target directory is not empty: '%s'." "$to"
 fi
 
 # Extract the .tar.gz to the target dir (~/mysql/).
-mkdir -p "$target_dir"
-gunzip -s "$gz_file" | tar -C "$target_dir" -x -f - || exit $?
+mkdir -p "$to"
+gunzip -s "$gz_file" | tar -C "$to" -x -f - || exit $?
 
 # Create a defaults file.
-config_file="$target_dir/my.cnf"
+config_file="$to/my.cnf"
 touch -a "$config_file"
 
 # Install MariaDB.
-install_script="$target_dir/scripts/mariadb-install-db"
+install_script="$to/scripts/mariadb-install-db"
 chmod +x "$install_script" || exit $?
 "$install_script" --defaults-file="$config_file" || exit $?
 
 # Declare a specific, local socket named "socket".
-socket_file="$target_dir/socket"
-cat >> "$config_file" <<- EOF
-[mysqld]
+socket_file="$to/socket"
+cat >> "$config_file" << EOF
+[client]
 socket = $socket_file
-[mysql]
+
+[mysqld]
 socket = $socket_file
 EOF
 
-bin_dir="$target_dir/bin/"
-printf >&2 'Installed MariaDB to %s with defaults file %s .\n' "$target_dir" "$config_file"
-printf >&2 'Start the server daemon by running %s .\n' "$bin_dir/mysqld_safe"
-printf >&2 'Connect through local socket %s by running %s.\n' "$socket_file" "$bin_dir/mysql"
-printf >&2 'Consider adding %s to your PATH.\n' "$bin_dir"
+bin_dir="$to/bin/"
+apprise INFO "Installed MariaDB to $to with defaults file $$config_file."
+apprise INFO "Start the server daemon by running '$bin_dir/mysqld_safe'."
+apprise INFO "Connect through local socket $socket_file by running '$bin_dir/mysql'."
+apprise INFO "Consider adding $bin_dir to your PATH."

@@ -1,7 +1,7 @@
 # Python conventions
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -53,13 +53,12 @@ Use [pydantic](https://pydantic-docs.helpmanual.io/) or
 Most libraries should use only dataclasses to avoid a dependency on pydantic.
 Use immutable types unless there’s a compelling reason otherwise.
 
-??? Example
+??? example
 
     === "dataclass"
 
         ```python
         from dataclasses import dataclass
-        from typing import Self
 
 
         @dataclass(slots=True, frozen=True, order=True)
@@ -128,10 +127,10 @@ class AxisTicks(Sequence[int]):
     orientation: Literal["x"] | Literal["y"]
     items: Sequence[int]
 
-    def __getitem__(self: Self, i: int) -> int:
+    def __getitem__(selfself, i: int) -> int:
         return self.items[i]
 
-    def __len__(self: Self) -> int:
+    def __len__(selfself) -> int:
         return len(self.items)
 
 
@@ -198,7 +197,7 @@ Within each of the 8 types, order by, in order of decreasing importance:
 Use `pathlib` instead of `os` wherever possible.
 Always read and write text as UTF-8, and pass `encoding="utf-8"` (i.e. not `utf8` or `UTF-8`).
 
-??? Example
+??? example
 
     ```python
     from pathlib import Path
@@ -237,16 +236,16 @@ Annotate `self`, `cls`, `*args`, and `**kwargs` parameters.
         value: int
 
         @classmethod
-        def new_zero(cls: type[Self]) -> Self:
+        def new_zero(cls) -> Self:
             return cls(0)
 
-        def __add__(self: Self, other: Self) -> Self:
+        def __add__(selfself, otherself) -> Self:
             return self.__class__(self.value + other.value)
 
-        def add_sum(self: Self, *args: int) -> Self:
+        def add_sum(selfself, *args: int) -> Self:
             return self.__class(self.value + sum(args))
 
-        def delegate(self: Self, *args: Any, **kwargs: Unpack[tuple[str, Any]]) -> None:
+        def delegate(selfself, *args: Any, **kwargs: Unpack[tuple[str, Any]]) -> None:
             ...  # first do something special
             super().delegate(*args, **kwargs)
     ```
@@ -344,5 +343,4 @@ as [mkdocstrings supports](https://mkdocstrings.github.io/griffe/docstrings/#goo
 
 Use [Ruff](https://docs.astral.sh/ruff/) to catch potential problems and bad practices.
 Use **at least** the rules enabled in the
-[cicd pyproject.toml](https://github.com/dmyersturnbull/cicd/blob/main/pyproject.toml).
-To disable counting a line or block in test coverage, use `# nocov` (not `# pragma: nocov`, etc.).
+[tyranno-sandbox pyproject.toml](https://github.com/dmyersturnbull/tyranno-sandbox/blob/main/pyproject.toml).

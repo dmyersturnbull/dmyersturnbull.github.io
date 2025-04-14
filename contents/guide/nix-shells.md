@@ -1,7 +1,7 @@
 # Nix shells
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -20,7 +20,7 @@ You’ll thank me later.
 Run
 
 ```bash
-sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+sh -c "$(curl --fail https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
 ```
 
 You should be prompted to change your shell.
@@ -41,7 +41,7 @@ You should now have a colorful shell, complete with a plugin for Git.
 
 ## `.commonrc` file
 
-??? context "About `.bash_profile`, `.zshenv`, etc."
+??? background "About `.bash_profile`, `.zshenv`, etc."
 
     | File              | Shell  | Read if shell is          | My advice                      |
     |-------------------|--------|---------------------------|--------------------------------|
@@ -79,20 +79,21 @@ Run these commands:
 
 ```bash
 mkdir -p ~/bin
-wget https://dmyersturnbull.github.io/guide/commonrc-config.sh -O ~/bin/commonrc-config.sh
+curl https://dmyersturnbull.github.io/guide/commonrc-config.sh -O ~/bin/commonrc-config.sh
 source ~/bin/commonrc-config.sh
-commonrc::initialize
-commonrc::add_to_rc bashrc # adds 'source $HOME/.commonrc'
-commonrc::add_to_rc zshrc
-commonrc::add_line 'source ~/bin/commonrc-config.sh'
+commonrc::init
+commonrc::source_from bashrc # adds 'source $HOME/.commonrc'
+commonrc::source_from zshrc
 ```
 
-If you want to include the [Fish shell](https://fishshell.com), run
+??? info "Fish shell"
 
-```bash
-mkdir -p ~/.config/fish/
-commonrc::add_to_rc ~/.config/fish/config.fish
-```
+    If you want to include the [Fish shell](https://fishshell.com), run
+
+    ```bash
+    mkdir -p ~/.config/fish/
+    commonrc::add_to_rc ~/.config/fish/config.fish
+    ```
 
 ??? info
 

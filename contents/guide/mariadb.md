@@ -1,7 +1,7 @@
 # MariaDB setup
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -15,8 +15,8 @@ Global installation is recommended, unless you do not have sudo / administrator 
 
 === "Ubuntu"
 
-    Follow the [
-    MariaDB installation instructions](https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/).
+    Follow the
+    [MariaDB installation instructions](https://mariadb.com/kb/en/mariadb-package-repository-setup-and-usage/).
     Use the _MariaDB Repository Configuration Tool_ and run:
 
     ```bash
@@ -129,8 +129,8 @@ Set `$MYSQL_HOME` to `~/mysql/`, and add `~/mysql/bin/` to your PATH.
 If you have [`~/.commonrc`](nix-shells.md#commonrc-file), run
 
 ```bash
-commonrc::add_line "PATH=\$PATH:$HOME/mysql/bin/"
-commonrc::add_line "MYSQL_HOME=\$HOME/mysql/bin/"
+commonrc::prepend_to_path '$HOME/mysql/bin/'
+commonrc::add_line 'MYSQL_HOME=$HOME/mysql/bin/'
 ```
 
 ### Usage
@@ -203,62 +203,60 @@ select @@server_timezone;
 
 ## Other variables
 
-Add this to your `my.cnf`
+Include the following options in your `my.cnf`.
+Note that `[client]` affects `mysql`, `mysqldump`, etc.
+Also note that `-` and `_` are interchangeable in keys; the docs indicate that hyphens are preferred.
 
 ```ini
+[client]
+default-character-set=utf8mb4
+
 [mysqld]
 # Timezone (if not set previously)
-time_zone = '+00:00'
-system_time_zone = '+00:00'
+time-zone = '+00:00'
+system-time-zone = '+00:00'
 
 # Use real Unicode everywhere
-character_set_client = utf8mb4
-character_set_server = utf8mb4
-character_set_system = utf8mb4
-character_set_filesystem = utf8mb4
-character_set_results = utf8mb4
-character_set_database = utf8mb4
-# Case-insensitive Unicode Collation Algorithm
-# 520 is the current latest version
-# https://www.unicode.org/Public/UCA/5.2.0/allkeys.txt
-collation_server = utf8mb4_unicode_520_ci
+character-set-client = utf8mb4
+character-set-server = utf8mb4
+character-set-system = utf8mb4
+character-set-filesystem = utf8mb4
+character-set-results = utf8mb4
+character-set-database = utf8mb4
+
+# Use the Unicode Collation Algorithm
+# 9.0.0 is the current latest version
+# '_ai' => accent-insensitive
+# '_ci' => case-insensitive
+# https://www.unicode.org/Public/UCA/9.0.0/allkeys.txt
+collation-server = utf8mb4_0900_ai_ci
+init-connect = 'SET NAMES utf8mb4 COLLATE utf8mb4_0900_ai_ci'
 
 # Do not commit after each statement
 # Use COMMIT or ROLLBACK instead
 autocommit = 0
 
 # have single-row inserts produce a warning
-sql_warnings = 1
+sql-warnings = 1
 
 # use more precision during divide (default is 4)
-div_precision_increment = 8
+div-precision-increment = 8
 
 # disable weird behaviors
-explicit_defaults_for_timestamp = 1
-sql_mode = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,SIMULTANEOUS_ASSIGNMENT'
+explicit-defaults-for-timestamp = 1
+sql-mode = 'STRICT_TRANS_TABLES,ERROR_FOR_DIVISION_BY_ZERO,SIMULTANEOUS_ASSIGNMENT'
 
 # Things to tweak
-interactive_timeout = 604800
-wait_timeout = 604800
-innodb_page_size = 16k
-max_allowed_packet = 1GB
-query_cache_limit = 128K
-query_cache_size = 64M
+interactive-timeout = 604800
+wait-timeout = 604800
+innodb-page-size = 16k
+max-allowed-packet = 1GB
+query-cache-limit = 128K
+query-cache-size = 64M
 
 [mysqldump]
-max_allowed_packet = 1GB
+max-allowed-packet = 1GB
 quote-names
-```
-
-## Database creation
-
-The current best way to create a database is by running
-
-```sql
-create database `mydatabase`
-    default character set utf8mb4
-    collate utf8mb4_unicode_520_ci
-;
 ```
 
 ## Robust backups
@@ -283,7 +281,7 @@ Hex-encoding adds more robustness because tools can often fix corrupted compress
 Since compression is used, no additional storage is needed; the only downside is reduced write speed.
 
 Here is the backup script:
-**[`back-up-mariadb.sh`](files/back-up-mariadb.sh)**.
+**[`back-up-mariadb.sh`](../scripts/back-up-mariadb.sh)**.
 
 It uses these environment variables:
 
@@ -295,7 +293,7 @@ It uses these environment variables:
 ## Schema files
 
 Here’s a script to write the schema in a nice way:
-**[`write-mariadb-schema.sh`](files/write-mariadb-schema.sh)**.
+**[`write-mariadb-schema.sh`](../scripts/write-mariadb-schema.sh)**.
 
 It uses these environment variables:
 

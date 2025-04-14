@@ -1,5 +1,3 @@
-# Java, Rust, and Python
-
 For Rust, just [install the Rust toolchain](https://rustup.rs/).
 
 For Java, download [JDK 21 LTS from Temurin](https://adoptium.net/temurin/releases/)
@@ -13,3 +11,6 @@ Make your life easier:
 (1) Leave your system Python alone,
 (2) don’t install Python via a package manager,
 and (3) install and use Conda/Mamba only if necessary.
+
+_[LTS]: Long-Term Support
+_[JDK]: Java Development Kit

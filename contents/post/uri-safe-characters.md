@@ -1,7 +1,7 @@
 # URI-safe characters
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -24,8 +24,8 @@ There is a **full grammar in
 
 ### URI Components
 
-RFC 3986 defines 5 main URI _components_ in
-[§3](https://datatracker.ietf.org/doc/html/rfc3986#section-3 "RFC 3986 §3").
+[RFC 3986 §3](https://datatracker.ietf.org/doc/html/rfc3986#section-3)
+defines 5 main URI _components_.
 
 ```text
         [                ]              [             ][          ] # (1)!
@@ -45,7 +45,7 @@ scheme        authority       path            query       fragment
     If _authority_ is omitted, _path_ MAY start with `/` but MUST NOT start with `//`.
     So, `https:/info/users`, `https:info/users`, `https:?name=charlie` are valid, but `https://info/users` is not.
 
-??? example "Example – the `file` scheme"
+??? example "Example: the `file` scheme"
 
     The `file` scheme,
     defined in [RFC 8089](https://datatracker.ietf.org/doc/html/rfc8089.html),
@@ -61,7 +61,7 @@ scheme        authority       path            query       fragment
 
 ### General delimiters and sub-delimiters
 
-[§2.2 of RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#section-2.2)
+[RFC 3986 §2.2](https://datatracker.ietf.org/doc/html/rfc3986#section-2.2)
 splits reserved characters into two sets, **`gen-delims`** and **`sub-delims`**:
 
 ```abnf
@@ -71,14 +71,14 @@ unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
 ```
 
 - `General delimiters`:
-   Separate components or subcomponents (_userinfo_, _host_, _port_).
-   They must be encoded in components where their reserved meanings would apply.
-   For example, `:` must be encoded in _authority_ but not _query_; e.g. `https://api.tld/a:b:c` is valid.
+  Separate components or subcomponents (_userinfo_, _host_, _port_).
+  They must be encoded in components where their reserved meanings would apply.
+  For example, `:` must be encoded in _authority_ but not _query_; e.g. `https://api.tld/a:b:c` is valid.
 - `Sub-delimiters`:
-   Are used reserved within one or more components but are not general delimiters.
-   Whether they must be encoded depends on the component and the scheme.
+  Are used reserved within one or more components but are not general delimiters.
+  Whether they must be encoded depends on the component and the scheme.
 
-!!! important
+!!! note "Caution: scheme-specific restrictions"
 
     A scheme can restrict URIs in many ways, including whether a sub-delimiter must be encoded.
     (In fact, §2.2 states that you should encode a reserved character unless the scheme specifically allows it.)
@@ -92,10 +92,10 @@ can be used for its literal meaning without percent-encoding.
 (Note that `%` must also be encoded.)
 
 | component | `:` | `/` | `?` | `#` | `[` | `]` | `@` |
-|-----------|-----|-----|-----|-----|-----|-----|-----|
+| --------- | --- | --- | --- | --- | --- | --- | --- |
 | scheme    |     |     |     |     |     |     |     |
 | authority | ¹   |     |     |     |     |     |     |
-| path      | y²  |     |     |     |     |     | y   |
+| path      | ²   |     |     |     |     |     | y   |
 | query     | y   | y   | y   |     |     |     | y   |
 | fragment  | y   | y   | y   | ³   |     |     | y   |
 
@@ -104,7 +104,7 @@ can be used for its literal meaning without percent-encoding.
 ///
 
 | component | `!` | `$` | `&` | `'` | `(` | `)` | `*` | `+` | `,` | `;` | `=` |
-|-----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| --------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | authority | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
 | path      | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
 | query     | y   | y   | y⁴  | y   | y   | y   | y   | y   | y   | y   | y⁴  |
@@ -154,15 +154,16 @@ So, the full set of allowed characters in URI queries is
 unreserved / sub-delims / "/" / "?"`.
 ```
 
-[RFC 6920 §3](https://datatracker.ietf.org/doc/rfc6920/#section-3), “Naming Things with Hashes” affirms these conclusions:
+[RFC 6920 §3](https://datatracker.ietf.org/doc/rfc6920/#section-3),
+“Naming Things with Hashes” affirms these conclusions:
 
 > [...] percent-encoding is used to distinguish between reserved and unreserved functions
-  of the same character in the same URI component.
-  As an example, an ampersand ('&') is used in the query part to separate attribute-value pairs;
-  therefore, an ampersand in a value has to be escaped as '%26'.
-  Note that the set of reserved characters differs for each component.
-  As an example, a slash ('/') does not have any reserved function in a query part
-  and therefore does not have to be escaped.
+> of the same character in the same URI component.
+> As an example, an ampersand ('&') is used in the query part to separate attribute-value pairs;
+> therefore, an ampersand in a value has to be escaped as '%26'.
+> Note that the set of reserved characters differs for each component.
+> As an example, a slash ('/') does not have any reserved function in a query part
+> and therefore does not have to be escaped.
 
 ### No scheme-specific restrictions
 
@@ -170,14 +171,14 @@ Ok, fine.
 Technically, RFC 3986 also says:
 
 > RFC 3986 excludes portions of
-  [RFC 1738](https://www.rfc-editor.org/rfc/rfc1738)
-  that defined the specific syntax of individual URI schemes;
-  those portions will be updated as separate documents.
+> [RFC 1738](https://www.rfc-editor.org/rfc/rfc1738)
+> that defined the specific syntax of individual URI schemes;
+> those portions will be updated as separate documents.
 
 Fortunately, the HTTP-specific part of RFC 1738 states (where `(<searchpart>` means `query`):
 
 > Within the <path> and <searchpart> components, "/", ";", "?" are reserved.
-  The "/" character may be used within HTTP to designate a hierarchical structure.
+> The "/" character may be used within HTTP to designate a hierarchical structure.
 
 That means there is no HTTP-specific ban on our `sub-delims`, either.
 
@@ -211,7 +212,7 @@ In particular,
 
 The following grammars are simple and may be helpful.
 
-!!! note "Aside"
+!!! note "Note: WHATWG"
 
     _WHATWG_ does not seem to be in the habit of writing short, precise docs for their specs.
     To describe a [“URL string”](https://url.spec.whatwg.org/#valid-url-string),
@@ -254,13 +255,13 @@ This is because the 1994
 [RFC 1738](https://datatracker.ietf.org/doc/html/rfc1738) for URLs,
 which RFC 3986 obsoletes, had this language
 
-> Thus, only alphanumerics, the special characters "$-_.+!*'(),",
+> Thus, only alphanumerics, the special characters "$-\_.+!\*'(),",
 > and reserved characters used for their reserved purposes may be used unencoded within a URL.
 
 RFC 3986 instead says
 
 > If data for a URI component would conflict with a reserved character’s purpose as a delimiter,
-  then the conflicting data must be percent-encoded before the URI is formed.
+> then the conflicting data must be percent-encoded before the URI is formed.
 
 Smart URI `urlencode` implementations could be introduced under new names such as `uriencode`
 without breaking backwards compatibility.
@@ -272,14 +273,15 @@ As [@mgiuca points out](https://unspecified.wordpress.com/2012/02/12/how-do-you-
 full URIs cannot be normalized (ala `urlencode`) reliably because they cannot be partitioned into their components unambiguously.
 
 Examples:
--  `https://api.tld/redirect?uri=https://boeing.fly/news?page2&nav=yes`
-   Is the redirect to `https://boeing.fly/news?page2&nav=yes` or to `https://boeing.fly/news?page2?page2`?
--  `https://api.tld/redirect?uri=https://boeing.fly/news#ex`
-   Is the redirect to `https://boeing.fly/news#ex` or to `https://boeing.fly/news`?
+
+- `https://api.tld/redirect?uri=https://boeing.fly/news?page2&nav=yes`
+  Is the redirect to `https://boeing.fly/news?page2&nav=yes` or to `https://boeing.fly/news?page2?page2`?
+- `https://api.tld/redirect?uri=https://boeing.fly/news#ex`
+  Is the redirect to `https://boeing.fly/news#ex` or to `https://boeing.fly/news`?
 
 Instead, normalize each URI component separately.
 
-!!! tip
+!!! bug "Functions to avoid"
 
     Avoid these library functions, which return incorrect results for some URIs:
 

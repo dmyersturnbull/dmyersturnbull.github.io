@@ -1,7 +1,7 @@
 # Advanced BNF with regex
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -21,7 +21,7 @@ but it doesn’t use regex and has a non-obvious syntax for repetitions.
 The [W3C XML EBNF](https://www.w3.org/TR/xml/#sec-notation) is better,
 but it still lacks some functionality and the expressiveness that regex can provide.
 
-!!! tip
+!!! tip "Tip: diagrams"
 
     A tool called the
     [Railroad Diagram Generator](https://www.bottlecaps.de/rr/ui)
@@ -35,10 +35,25 @@ Use it to describe
 and
 [CFGs](https://en.wikipedia.org/wiki/Context-free_grammar).
 
-Compatible with either ABNF or W3C XML EBNF (but not both for one document), _regex-bnf_ supports full
-[ECMA 262 regular expressions](https://tc39.es/ecma262/#sec-patterns),
-and has additional, very powerful features such as intersections (i.e. rule A **and** rule B).
-Core rules are defined, such as `ALPHA`, `BASE64`, and `RFC-3339-DATETIME`.
+Most importantly, _regex-bnf_ supports full
+[ECMA 262 regular expressions](https://tc39.es/ecma262/#sec-patterns).
+It has additional, very powerful features, including
+
+- intersection: `A & B`, where both rules consume the same input
+- complement: `(! A)`, any sequence that does not match rule A
+- exclusion: `A - B`, which requires that `B` rejects the input that `A` accepts
+- exclusive disjunction: `A ^ B`, equivalent to `(A - B) | (B - A)`
+- repetition: `A{5,10}`, rule A at least 5 times and at most 10
+
+Rules can be declared with `=` (ABNF), `::=` (XML), or `:=`.
+Similarly, inline `;` comments (ABNF) and `/* */` (XML) multiline comments are allowed.
+For alternation, both `/` (ABNF) and `|` (XML) are supported,
+but **`/` signals ordered choice** in contrast to `|`.
+Always use `/` for PEGs.
+
+As syntactic sugar, you can declare inline rules; e.g. `cmd = name (' --force')=force`.
+You can also use some predefined rules, such as `ALPHA`, `BASE64`, and `RFC-3339-DATETIME`.
+(The full list is shown further down.)
 
 ## Grammar
 
@@ -54,7 +69,7 @@ The formal grammar for regex-bnf is presented in both itself and in
 
     rule-defn       = rule-name def-symbol rule-rhs
     func-defn       = rule-name arg-spec def-symbol rule-rhs
-    def-symbol      = SP+ ('=' | '::=') SP+
+    def-symbol      = SP+ (`:?:?=`) SP+
     rule-rhs        = (SP* NL)+ SP+ rule-rhs | rule-expr
     rule-expr       = (group-expr | term) inline-label?
     arg-spec        = '(' rule-name (',' rule-name)* ')'
@@ -70,12 +85,14 @@ The formal grammar for regex-bnf is presented in both itself and in
                       | concatenation
                       | intersection
                       | exclusion
-                      | alternatation
+                      | ordered-alt
+                      | unordered-alt
                       | exclusive-or
     concatenation   = rule-expr SP+ rule-expr
     intersection    = rule-expr SP+ '&' SP+ rule-expr
     exclusion       = rule-expr SP+ '-' SP+ rule-expr
-    alternatation   = rule-expr SP+ [|/] SP+ rule-expr
+    ordered-alt     = rule-expr SP+ '/' SP+ rule-expr
+    unordered-alt   = rule-expr SP+ '|' SP+ rule-expr
     exclusive-or    = rule-expr SP+ '^' SP+ rule-expr
 
     quant-expr      = unit-quant
@@ -99,12 +116,12 @@ The formal grammar for regex-bnf is presented in both itself and in
     dot-regex       = '.' quant-expr
                       ; Note: a single . MUST be enclosed in ``.
                       ; This avoids ambiguity with the ABNF's concatenation operator.
-    tick-regex      = ``(`+)(?P<pattern>[^`].*?[^`])(\1)``
+    tick-regex      = ``(`+)(?<pattern>[^`].*?[^`])(\1)``
                       ; Enclose in as many backticks as needed (ala Markdown).
                       ; The pattern <pattern> MUST NOT start or end with a backtick.
                       ; (Escape the backtick as \u0060 if needed.)
 
-    primitive.      = literal | unicode-escape | unicode-name
+    primitive       = literal | unicode-escape | unicode-name
     literal         = `"[^"]++"` | `'[^']++'`
     unicode-escape  = '#'? `[0-9A-F]{1,8}+` | '%x' `[0-9A-F]{2}`
     unicode-name    = "#'" [A-Za-z0-9,/()-,]+ "'"
@@ -127,7 +144,7 @@ The formal grammar for regex-bnf is presented in both itself and in
 
     rule-defn       ::= rule-name def-symbol rule-rhs
     func-defn       ::= rule-name arg-spec def-symbol rule-rhs
-    def-symbol      ::= ' '+ ('::=' | '=') ' '+
+    def-symbol      ::= ' '+ ('::=' | '=' | ':=') ' '+
     rule-rhs        ::= (' '* #x0d)+ ' '+ rule-rhs | rule-expr
     rule-expr       ::= (group-expr | term) inline-label?
     inline-label    ::= '=' rule-name
@@ -139,22 +156,24 @@ The formal grammar for regex-bnf is presented in both itself and in
     complement      ::= '(!' ' '+ primitive ')'
 
     term            ::= singleton
-    | concatenation
-    | intersection
-    | exclusion
-    | alternatation
-    | exclusive-or
+                      | concatenation
+                      | intersection
+                      | exclusion
+                      | ordered-alt
+                      | unordered-alt
+                      | exclusive-or
     concatenation   ::= rule-expr ' '+ rule-expr
     intersection    ::= rule-expr ' '+ '&' ' '+ rule-expr
     exclusion       ::= rule-expr ' '+ '-' ' '+ rule-expr
-    alternatation   ::= rule-expr ' '+ [|/] ' '+ rule-expr
+    ordered-alt.    ::= rule-expr ' '+ '/' ' '+ rule-expr
+    unordered-alt   ::= rule-expr ' '+ '|' ' '+ rule-expr
     exclusive-or    ::= rule-expr ' '+ '^' ' '+ rule-expr
 
     quant-expr      ::= unit-quant
-    | exact-quant
-    | min-quant
-    | max-quant
-    | range-quant
+                      | exact-quant
+                      | min-quant
+                      | max-quant
+                      | range-quant
     exact-quant     ::= '{' count '}'
     range-quant     ::= '{' min ',' max '}'
     min-quant       ::= '{' min ',}'

@@ -1,7 +1,7 @@
 # Conventions
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -38,7 +38,7 @@ SQL conventions
 These docs are meant to be linked to.
 Include a link in your project’s readme or `CONTRIBUTING.md` file.
 
-!!! example
+???+ example
 
     ```markdown
     See https://dmyersturnbull.github.io/style/java/
@@ -57,8 +57,8 @@ Include a link in your project’s readme or `CONTRIBUTING.md` file.
 
 ## Auto-formatters
 
-Use the auto-formatter setup in
-[dmyersturnbull/cicd](https://github.com/dmyersturnbull/cicd).
+Use the auto-formatter setup in the
+[tyranno-sandbox repo](https://github.com/dmyersturnbull/tyranno-sandbox).
 This includes `.editorconfig`,
 [Prettier](https://prettier.io/), and
 the [Ruff formatter](https://docs.astral.sh/ruff/formatter/)

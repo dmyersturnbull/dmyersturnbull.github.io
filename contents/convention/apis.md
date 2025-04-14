@@ -1,7 +1,7 @@
 # API conventions
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2024, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -79,11 +79,10 @@ Permit only 1 type for a given key or array.
        They could signal an invalid value, a truly missing value (i.e. never found/added),
        or a selective decision to exclude (e.g. to save bandwidth).
 
-    <small>
-    About using `null` for missing-but-schema-supported keys:
-    This practice is not obvious, wastes bandwidth, is supurfulous to the schema, and breaks if the schema changes.
+    Also don’t use `null` to indicate that a key is supported in the schema but not used.
+    This practice is not always understood, wastes bandwidth, is supurfulous to the schema,
+    and breaks if the schema changes.
     Let the schema specify what keys are allowed.
-    </small>
 
 #### Null values (JSON `null`):
 
@@ -190,7 +189,7 @@ A duration may be written these three ways:
 **For intervals**, both `{"start": ..., "end": ...}` and ISO 8601 `T1--T2` syntax are acceptable.
 Do not separate times with `/` or use a start-time/duration pair.
 
-!!! warning "Warning – calculating durations"
+!!! warning "Caution: calculating durations"
 
     Be careful when calculating durations.
     Things like NTP synchronization events can cause $T^C_1 - T^C_2$ for a clock $C$ to not correspond
@@ -209,27 +208,27 @@ servers must not use status codes, methods, responses, or conditions not listed 
 
 #### General status codes
 
-| Code | Name                            | Methods                   | Response         | Condition(s)                                                                             |
-|------|---------------------------------|---------------------------|------------------|------------------------------------------------------------------------------------------|
-| 200  | OK                              | HEAD, GET, PATCH          | resource         | The requested resource is being returned.                                                |
-| 201  | Created                         | POST, PUT                 | canonical URI    | The resource has been created.                                                           |
-| 202  | Accepted                        | POST, PUT, PATCH¹, DELETE | ∅                | The request will be processed asynchronously.                                            |
-| 204  | No Content                      | DELETE                    | ∅                | The deletion was successful.                                                             |
-| 308  | Permanent Redirect              | any                       | resource         | A non-canonical URI was used, and a permanent redirect is provided to the canonical URI. |
-| 400  | Bad Request                     | any                       | problem details² | The endpoint does not exist, the parameters are wrong, or the body is malformed.         |
-| 401  | Unauthorized                    | any                       | problem details  | Authentication was required but not provided.                                            |
-| 403  | Forbidden                       | any                       | problem details  | The provided authentication carries insufficient privileges.                             |
-| 404  | Not Found                       | GET, PATCH, DELETE        | problem details  | The requested resource does not exist.                                                   |
-| 406  | Not Acceptable                  | HEAD, GET                 | problem details  | The `Accept` headers are unsatisfiable.                                                  |
-| 409  | Conflict                        | POST, PUT, PATCH          | problem details  | The resource already exists.                                                             |
-| 409  | Conflict                        | DELETE                    | problem details  | The resource cannot be deleted because other resources reference it.                     |
-| 410  | Gone                            | GET, PATCH, DELETE        | problem details  | The resource does not exist, although it did before.                                     |
-| 413  | Content Too Large               | POST, PUT, PATCH          | problem details  | The request payload is too large.                                                        |
-| 415  | Unsupported Media Type          | POST, PUT, PATCH          | problem details  | The request payload’s media type is unsupported.                                         |
-| 422  | Unprocessable Entity            | POST, PUT, PATCH          | problem details  | The request was readable but contained semantic errors, such as invalid references.      |
-| 429  | Too Many Requests               | any                       | problem details  | The client has exceeded the rate limit.                                                  |
-| 500  | Server Error                    | any                       | problem details  | The server encountered an internal error.                                                |
-| 503  | Service Unavailable             | any                       | problem details  | The service is overloaded or down for maintenance.                                       |
+| Code | Name                   | Methods                   | Response         | Condition(s)                                                                             |
+| ---- | ---------------------- | ------------------------- | ---------------- | ---------------------------------------------------------------------------------------- |
+| 200  | OK                     | HEAD, GET, PATCH          | resource         | The requested resource is being returned.                                                |
+| 201  | Created                | POST, PUT                 | canonical URI    | The resource has been created.                                                           |
+| 202  | Accepted               | POST, PUT, PATCH¹, DELETE | ∅                | The request will be processed asynchronously.                                            |
+| 204  | No Content             | DELETE                    | ∅                | The deletion was successful.                                                             |
+| 308  | Permanent Redirect     | any                       | resource         | A non-canonical URI was used, and a permanent redirect is provided to the canonical URI. |
+| 400  | Bad Request            | any                       | problem details² | The endpoint does not exist, the parameters are wrong, or the body is malformed.         |
+| 401  | Unauthorized           | any                       | problem details  | Authentication was required but not provided.                                            |
+| 403  | Forbidden              | any                       | problem details  | The provided authentication carries insufficient privileges.                             |
+| 404  | Not Found              | GET, PATCH, DELETE        | problem details  | The requested resource does not exist.                                                   |
+| 406  | Not Acceptable         | HEAD, GET                 | problem details  | The `Accept` headers are unsatisfiable.                                                  |
+| 409  | Conflict               | POST, PUT, PATCH          | problem details  | The resource already exists.                                                             |
+| 409  | Conflict               | DELETE                    | problem details  | The resource cannot be deleted because other resources reference it.                     |
+| 410  | Gone                   | GET, PATCH, DELETE        | problem details  | The resource does not exist, although it did before.                                     |
+| 413  | Content Too Large      | POST, PUT, PATCH          | problem details  | The request payload is too large.                                                        |
+| 415  | Unsupported Media Type | POST, PUT, PATCH          | problem details  | The request payload’s media type is unsupported.                                         |
+| 422  | Unprocessable Entity   | POST, PUT, PATCH          | problem details  | The request was readable but contained semantic errors, such as invalid references.      |
+| 429  | Too Many Requests      | any                       | problem details  | The client has exceeded the rate limit.                                                  |
+| 500  | Server Error           | any                       | problem details  | The server encountered an internal error.                                                |
+| 503  | Service Unavailable    | any                       | problem details  | The service is overloaded or down for maintenance.                                       |
 
 1. Use [JSON Merge Patch](https://datatracker.ietf.org/doc/rfc7396/) for all PATCH requests;
    see the [JSON Merge Patch section](#json-merge-patch).
@@ -239,7 +238,7 @@ servers must not use status codes, methods, responses, or conditions not listed 
 #### Specialized status codes
 
 | Code | Name                            | Methods                  | Response        | Use case                                                                           |
-|------|---------------------------------|--------------------------|-----------------|------------------------------------------------------------------------------------|
+| ---- | ------------------------------- | ------------------------ | --------------- | ---------------------------------------------------------------------------------- |
 | 100  | Continue¹                       | POST, PUT, PATCH         | ∅               | The `100-continue` request has succeeded (rare).                                   |
 | 206  | Partial Content                 | GET                      | part            | A range was requested and is being returned.                                       |
 | 304  | Not Modified                    | HEAD, GET                | ∅               | The `If-None-Match` condition has matched.                                         |
@@ -355,7 +354,7 @@ All 4xx and 5xx responses must include an RFC 9457 body with media-type `applica
 
 - `title` (**required**): A short, human-readable title that ends with a period.
 - `detail` (**required** sans 500 Server Error and 418 I'm a Teapot):
-   A human-readable description of the problem in one or more complete sentences.
+  A human-readable description of the problem in one or more complete sentences.
 - `type` (**optional**; if used, it should be used for all responses):
   A URI at which the client can find more information about the problem type (see below).
 - `status` (**optional**): The status code (e.g. `400`) shared with the response status code.
@@ -376,13 +375,13 @@ The response body must include the problem detail’s `title` alongside a more d
 Multiple representations must be available via content negotiation:
 
 - `text/html; charset=utf-8` (**required** per RFC 9457):
-   Include the title in an `<h1>`, ⋯, `<h6>`.
+  Include the title in an `<h1>`, ⋯, `<h6>`.
 - `application/json` (**required**):
-   Include at least the keys `title` and `description`.
+  Include at least the keys `title` and `description`.
 - `text/x-markdown` (**recommended**):
-   Include the title in an `#`, ⋯, `#####`.
-   If OpenAPI is used, use the schema’s
-   [`response.description`](https://spec.openapis.org/oas/v3.1.0#fixed-fields-14).
+  Include the title in an `#`, ⋯, `#####`.
+  If OpenAPI is used, use the schema’s
+  [`response.description`](https://spec.openapis.org/oas/v3.1.0#fixed-fields-14).
 
 #### RFC 9457 extensions
 
