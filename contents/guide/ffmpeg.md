@@ -13,6 +13,7 @@ QuickSync is one option; it should support AV1 eventually on Alder Lake and high
 
 Then, compile ffmpeg with required options.
 
-See: [:fontawesome-solid-code: `files/install-ffmpeg.sh`](files/install-ffmpeg.sh).
+See:
+[:fontawesome-solid-code: `files/install-ffmpeg.sh`](files/install-ffmpeg.sh).
 
 _Credits: Cole Helsell drafted the original version of this guide with me._

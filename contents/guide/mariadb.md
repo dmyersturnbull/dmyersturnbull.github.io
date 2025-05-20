@@ -303,17 +303,20 @@ It uses these environment variables:
 ## ERDs
 
 [This script by Andrea Agili](https://gist.github.com/agea/6591881)
-will generate an [ERD](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model) from a database connection.
+will generate an
+[ERD](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model)
+from a database connection.
 It will write a [GraphML](https://en.wikipedia.org/wiki/GraphML) file,
 which you can open in a tool like
 [yEd](https://www.yworks.com/products/yed)
-to apply a layout algorithm
-and [crow’s foot notation](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model#Crow's_foot_notation).
+to apply a layout algorithm and
+[crow’s foot notation](https://en.wikipedia.org/wiki/Entity%E2%80%93relationship_model#Crow's_foot_notation).
 After generating an SVG from yEd, you can modify the SVG code to add an
 [<a> element](https://developer.mozilla.org/en-US/docs/Web/SVG/Element/a)
 links to per-table anchors in a schema file.
 
-After downloading the script, also download [the MySQL Connector](https://dev.mysql.com/downloads/connector/j/).
+After downloading the script, also download the
+[MySQL Connector](https://dev.mysql.com/downloads/connector/j/).
 Extract the JAR alongside.
 
 Then output a graphml file by running:

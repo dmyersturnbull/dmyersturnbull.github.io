@@ -8,6 +8,11 @@ set -o errexit -o nounset -o pipefail # "strict mode"
 script_path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
 declare -r script_name="${script_path##*/}"
 
+if [[ "$(uname)" != Linux ]]; then
+  printf "[ERROR] %s only supports Linux, not %s.\n" "$script_name" "$(uname)"
+  exit 3
+fi
+
 declare -r description="\
 Description:
   Adds Nautilus bookmarks.
@@ -32,8 +37,8 @@ apprise() {
 }
 
 usage_error() {
-  apprise ERROR "$1" || true
-  printf >&2 '%s\n' "$usage" || true
+  apprise ERROR "$1"
+  printf >&2 '%s\n' "$usage"
   exit 2
 }
 

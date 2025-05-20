@@ -33,15 +33,15 @@ and [non‐functional](https://en.wikipedia.org/wiki/Non-functional_testing) tes
 ### Testing <em>layers</em>
 
 We can also consider testing in layers.
-(_Warning:_ This is [original research](https://en.wikipedia.org/wiki/Wikipedia:No_original_research).)
+Note that this view is original research, not a widely accepted concept.
 
-| Layer           | Type | Purposes                                             | Example types of test            |
-| --------------- | ---- | ---------------------------------------------------- | -------------------------------- |
-| 0 - Static      | F    | Constrain test surface                               | compilation, type checking       |
-| 1 - Unit        | F    | Verify components work in isolation; localize issues | unit                             |
-| 2 - Integration | F    | Verify components work together                      | integration                      |
-| 3 - System      | F    | Verify entire system works                           | system, regression, sanity       |
-| 4 - Acceptance  | NF   | Validate that software meets requirements            | security, performance, usability |
+| Layer           | Type | Purposes                                  | Example types of test      |
+| --------------- | ---- | ----------------------------------------- | -------------------------- |
+| 0 - Static      | F    | Constrain test surface                    | compilation, type checking |
+| 1 - Unit        | F    | Verify units; localize issues             | unit                       |
+| 2 - Integration | F    | Verify multi-unit components              | integration                |
+| 3 - System      | F    | Verify entire system works                | system, regression, sanity |
+| 4 - Acceptance  | NF   | Validate that software meets requirements | security, usability        |
 
 Where does an integration test end and a system test begin?
 It doesn’t matter, as long as you distinguish between the extremes and have both.
@@ -125,7 +125,7 @@ and the conditions under which they are raised. This is easy in JUnit, scalatest
 
 ### Mocking
 
-[Mocking](https://stackoverflow.com/questions/2665812/what-is-mocking) is a crucial part of
+[Mocking](https://stackoverflow.com/q/2665812) is a crucial part of
 writing unit tests.
 
 However, it is often better to focus on writing units (classes and functions)
@@ -218,7 +218,8 @@ Not handling timezones correctly can introduce errors for users outside your reg
 
 End-to-end (E2E) tests simulate real user scenarios to validate the complete flow of an application.
 They test how different parts of the system work together, from the user interface to the backend.
-E2E tests ensure that the integrated system meets requirements and behaves as expected in real-world scenarios.
+E2E tests ensure that the integrated system meets requirements
+and behaves as expected in real-world scenarios.
 
 _Example scenario:_ User logs in, updates their profile, and logs out.
 
@@ -226,7 +227,8 @@ _Example scenario:_ User logs in, updates their profile, and logs out.
 
 These test your code on simple cases.
 These are a useful layer of testing because they’re easy to write.
-They don’t test correctness in more general cases, and they’re weak to results that are just slightly wrong.
+They don’t test correctness in more general cases,
+and they’re weak to results that are just slightly wrong.
 
 ### Regression tests
 
@@ -263,13 +265,14 @@ handles the failure well. For example, without losing data or catching fire.
 
 ### Security
 
-Security testing identifies vulnerabilities in the system to prevent unauthorized access and data breaches.
-It includes security code reviews, penetration testing, and vulnerability scanning.
+Security testing identifies vulnerabilities in the system
+and includes security reviews, penetration testing, and vulnerability scanning.
 
 ### Fault injection
 
 Fault injection is an advanced type of testing.
-It assesses the system’s resilience by introducing faults or errors and verifying that they are handled properly.
+It assesses the system’s resilience by introducing faults or errors
+and verifying that they are handled properly.
 This helps ensure the system can gracefully recover from unexpected issues.
 
 **Example:**
@@ -279,11 +282,13 @@ This helps ensure the system can gracefully recover from unexpected issues.
 
 ### Compatibility and localization
 
-Compatibility tests make sure that the software functions correctly on different platforms (e.g. Linux, Windows, macOS),
+Compatibility tests make sure that the software functions correctly on different platforms
+(e.g. Linux, Windows, macOS),
 OS versions, processor architectures (e.g. x86, ARM, and RISC-V), endianess, and/or web browsers.
 It is also important to know the hardware requirements, especially available RAM.
 
-Localization tests ensure the software functions correctly in different locales, languages, and regions.
+Localization tests ensure the software functions correctly in different
+locales, languages, and geographical locations.
 This includes checking date formats, currency symbols, and translated content.
 
 !!! tip
@@ -292,7 +297,8 @@ This includes checking date formats, currency symbols, and translated content.
 
 **Example:**
 
-- **Scenario:** Verifying that a web application correctly displays dates, times, and text in various languages.
+- **Scenario:** Verifying that a web application correctly displays dates, times,
+  and text in various languages.
 - **Tools:** [Globalize.js](https://github.com/globalizejs/globalize).
 
 ### Accessibility
@@ -333,7 +339,8 @@ Coverage is a simple indicator of how much of your code is tested.
 
 Coverage analyzers test either static coverage by examining calls in the tests,
 or runtime coverage by analyzing the code branches that are actually executed by your tests.
-The Python package [coverage](https://coverage.readthedocs.io) analyzes runtime coverage and can give a report of
+The Python package [coverage](https://coverage.readthedocs.io)
+analyzes runtime coverage and can give a report of
 percent coverage and the specific execution branches (and lines of code) that were not covered.
 
 These do not assess what edge cases were tested or other important metrics.
@@ -358,25 +365,25 @@ can be useful too. Good code is usually on the shorter side.
 
 This is a collection of various types of tests.
 
-| test type       | when it passes                                     | type       | layers | general |
-| --------------- | -------------------------------------------------- | ---------- | ------ | ------- |
-| unit            | Components behave correctly, esp. for edge cases   | functional | 1      | yes     |
-| integration     | 2 or more components behave correctly in concert   | functional | 2      | yes     |
-| property        | Invariants hold for generated data                 | functional | 1–3    | yes     |
-| assertion       | Internal state makes sense (during runtime)        | functional | 1–3    | no      |
-| system          | All components behave correctly together           | functional | 3      | yes     |
-| concurrency     | The system works in multi‐threaded environments    | functional | 3      | yes     |
-| regression      | Results match the previous run’s                   | functional | 3      | no      |
-| end-to-end      | Sequence of user actions gives valid results       | functional | 3      | no      |
-| smoke           | The software runs without failure on correct input | functional | 3      | no      |
-| sanity          | Output makes some sense                            | functional | 3      | no      |
-| fault injection | Injecting faulty data causes a good failure mode   | functional | 3      | no      |
-| mutation        | Injecting errors in code causes the tests to fail  | functional | -      | -       |
-| load            | The system handles a large load                    | acceptance | 4      | no      |
-| stress          | The system fails gracefully                        | acceptance | 4      | no      |
-| recovery        | The system can recover from catastrophic failure   | acceptance | 4      | no      |
-| security        | The software is difficult to exploit               | acceptance | 4      | no      |
-| usability       | The software is easy to use                        | acceptance | 4      | no      |
-| localization    | Locale-specific behavior is correct                | acceptance | 4      | no      |
-| compatibility   | Behavior is correct under required OSes, etc.      | acceptance | 4      | no      |
-| performance     | Code runs sufficiently quickly                     | acceptance | 4      | no      |
+| test type       | when it passes                                     | type | layers | general |
+| --------------- | -------------------------------------------------- | ---- | ------ | ------- |
+| unit            | Components behave correctly, esp. for edge cases   | F    | 1      | yes     |
+| integration     | 2 or more components behave correctly in concert   | F    | 2      | yes     |
+| property        | Invariants hold for generated data                 | F    | 1–3    | yes     |
+| assertion       | Internal state makes sense (during runtime)        | F    | 1–3    | no      |
+| system          | All components behave correctly together           | F    | 3      | yes     |
+| concurrency     | The system works in multi‐threaded environments    | F    | 3      | yes     |
+| regression      | Results match the previous run’s                   | F    | 3      | no      |
+| end-to-end      | Sequence of user actions gives valid results       | F    | 3      | no      |
+| smoke           | The software runs without failure on correct input | F    | 3      | no      |
+| sanity          | Output makes some sense                            | F    | 3      | no      |
+| fault injection | Injecting faulty data causes a good failure mode   | F    | 3      | no      |
+| mutation        | Injecting errors in code causes the tests to fail  | F    | -      | -       |
+| load            | The system handles a large load                    | A    | 4      | no      |
+| stress          | The system fails gracefully                        | A    | 4      | no      |
+| recovery        | The system can recover from catastrophic failure   | A    | 4      | no      |
+| security        | The software is difficult to exploit               | A    | 4      | no      |
+| usability       | The software is easy to use                        | A    | 4      | no      |
+| localization    | Locale-specific behavior is correct                | A    | 4      | no      |
+| compatibility   | Behavior is correct under required OSes, etc.      | A    | 4      | no      |
+| performance     | Code runs sufficiently quickly                     | A    | 4      | no      |

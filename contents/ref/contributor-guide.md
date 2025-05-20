@@ -34,7 +34,7 @@ you don’t need to follow any conventions.
 
 Before writing any code, please **open an issue** to discuss the intended change.
 Please only address one issue per PR, and write `Fixes #123` in the description.
-Feel free to open a PR well before it’s complete; just mark it as a draft until it’s ready for review.
+You can open a PR well before it’s complete; just mark it as a draft until it’s ready for review.
 
 ### Setting up
 
@@ -59,11 +59,10 @@ These steps are highly recommended, but they are not required to submit a PR.
 To fork and clone, run
 
 ```bash
-gh repo fork https://github.com/ --clone < org > / < repo > --default-branch-only
+gh repo fork --default-branch-only --clone the-owner/the-repo
 ```
 
-Install or upgrade [pre-commit](https://pre-commit.com/) by running `pip install pre-commit --upgrade`.
-Then, inside the repository, run `pre-commit install` to initialize pre-commit.
+Then follow the remaining instructions in the repo’s `CONTRIBUTING.md`.
 
 ### Make the changes
 
@@ -85,30 +84,25 @@ which is automatically closed.
 
 ### Commit the changes
 
-You do not need to follow any convention for commit messages.
-Write a message that you think is helpful.
+Write informative commit messages, but don’t worry about formatting.
+Your messages will be copied to the PR description, which the maintainers will modify if needed.
+Keep titles brief ( ≤ 100 characters), and put additional details in message bodies as needed.
 
 If your commits are messy (e.g. some are just fixups), consider fixing them `rebase -i`.
 Edit (`e`) commit messages to clarify them and fixup (`f`) any messages that should be excluded.
 
 ### Open a PR
 
+Feel free to solicit feedback on your changes by opening a draft pull request.
 To open a pull request, run
 
 ```bash
-gh pr create --fill --title '<issue-title>' --web
+gh pr create --fill-verbose --web
 ```
 
-When you’re ready, mark your PR as “ready for review” on GitHub or by running
+Then edit the PR title.
+When you’re ready, mark it as “ready for review”, either on GitHub or by running
 
 ```bash
 gh pr ready <id>
-```
-
-Feel free to solicit feedback on your changes by opening a draft pull request.
-After that, `git push` to your fork to update the pull request.
-To start, run
-
-```bash
-gh pr create --fill --web --draft
 ```

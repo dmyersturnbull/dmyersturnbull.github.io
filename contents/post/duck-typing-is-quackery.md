@@ -6,7 +6,9 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-_Apologies for the pun, and to [Phil Haack](https://haacked.com/archive/2014/01/04/duck-typing/), who beat me to it._
+Apologies for the pun and to
+\_[Phil Haack](https://haacked.com/archive/2014/01/04/duck-typing/),
+who beat me to it.
 
 ## What is duck typing?
 
@@ -19,7 +21,8 @@ In programming, the duck test becomes:
 
 > If it has no-arg functions `swim` and `quack`, then it is probably a duck.
 
-The claimed benefits are (a) not having to worry about types, and (b) decreased coupling because interfaces are implied.
+The claimed benefits are (a) not having to worry about types,
+and (b) decreased coupling because interfaces are implied.
 But the downsides are substantial.
 I want to focus on two downsides that seem seldom discussed.
 
@@ -68,7 +71,8 @@ After putting your paper on arXiv, you implement it in three languages—Java, S
 
 In Java, the method takes two `IndArray` instances and outputs a third.
 If people read your paper, it’s clear how to use it.
-In Scala, the function takes two [Breeze Matrices](http://www.scalanlp.org/api/breeze/#breeze.linalg.Matrix)
+In Scala, the function takes two
+[Breeze Matrices](http://www.scalanlp.org/api/breeze/#breeze.linalg.Matrix)
 and outputs a matrix.
 
 For the Python code, you realize that `matrix_a` isn’t clear to users.
@@ -91,13 +95,13 @@ class MyAlgorithm:
 ```
 
 That looks Pythonic.
-[Better to ask for forgiveness than permission.](https://stackoverflow.com/questions/12265451/ask-forgiveness-not-permission-explain)
+[Better to ask for forgiveness than permission.](https://stackoverflow.com/q/12265451)
 
 Then, you write some tests.
 In fact, you test your code with Numpy `ndarray`,
 [PySpark matrices](https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.mllib.linalg.Matrices.html),
 and [Polars DataFrames](https://pola-rs.github.io/polars/py-polars/html/reference/dataframe/index.html).
-That’s three times the work of your Java and Scala implementations, but at least you’re safe and sound.
+That’s three times the work of your Java and Scala implementations, but at least it’s safe.
 
 A year later, a PhD student in a dark room finds your lovely Python library.
 It’s got 450 GitHub stars, so it must be good.
@@ -116,7 +120,8 @@ def calculate(self, matrix_a, matrix_b):
     return final_matrix
 ```
 
-You assumed element-wise multiplication because thats what [Numpy `ndarray`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html) does.
+You assumed element-wise multiplication because that’s what
+[Numpy `ndarray`](https://numpy.org/doc/stable/reference/generated/numpy.ndarray.html) does.
 The matrix library she used defines `__mul__` as matrix multiplication.
 That’s not her fault.
 Maybe you can improve the documentation:
@@ -152,7 +157,8 @@ But it really wasn’t your fault; you were writing Pythonic code and following 
 In contrast, our Scala code was easy to test, and it’s easy to understand how to use at a glance.
 
 ```scala
-import breeze.linalg.Matrix;
+import breeze.linalg.Matrix
+
 class MyAlgorithm {
   def calculate(matrixA: Matrix, matrixB: Matrix): Matrix = {
     // some fancy things...
@@ -161,14 +167,14 @@ class MyAlgorithm {
 }
 ```
 
-When documentation is rendered, it shows that `matrixA` and `matrixB` are both `breeze.linalg.Matrix`.
+The rendered documentation would show that `matrixA` and `matrixB` are both `breeze.linalg.Matrix`.
 Upon seeing the method signature, a user could read up about how Breeze matrices works.
 Alternatively, they could skip that --
 because you, as the library author, are certifying that your code works with Breeze matrices.
 If they’re using matrices of another library, they can write an adapter.
 
 ```scala
-import breeze.linalg.Matrix;
+import breeze.linalg.Matrix
 
 class GooborToBreezeMatrixAdapter extends Matrix {
   def *(other: GooborMatrix): GooborMatrix = this.matrixMultiply(other)
@@ -254,12 +260,14 @@ You have two options.
         ...
     ```
 
-In fact, what really matters is the _behavior_ of the duck, not whether it’s a duck.
-Knowing (or suspecting) that it’s a duck is not enough; you need to know how the duck-like object behaves.
+In fact, what really matters is the **behavior** of the duck, not whether it’s a duck.
+Suspecting or even knowing that it’s a duck is not enough;
+you need to know how the duck-like object behaves.
 As Alex Martelli (the author of Python in a Nutshell) wrote in an email thread:
 
 !!! quote
 
-    Amen, hallelujah. You don’t really care for IS-A -- you really only care for BEHAVES-LIKE-A- [...],
+    Amen, hallelujah.
+    You don’t really care for IS-A – you really only care for BEHAVES-LIKE-A- […],
     so, if you do test, this behaviour is what you should be testing for
-    **--- [Alex Martelli](https://groups.google.com/g/comp.lang.python/c/CCs2oJdyuzc/m/NYjla5HKMOIJ)**
+    **— [Alex Martelli](https://groups.google.com/g/comp.lang.python/c/CCs2oJdyuzc/m/NYjla5HKMOIJ)**

@@ -10,7 +10,8 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 Use the newest [JSON Schema](https://json-schema.org/) (version 2020-12 as of 2024-12).
 Follow the [Google JSON guide](https://google.github.io/styleguide/jsoncstyleguide.xml).
-Contradicting that guide, property names may follow other conventions if needed to accommodate other needs.
+Contradicting that guide,
+property names may follow other conventions if needed to accommodate other needs.
 
 ### Property definitions
 
@@ -88,7 +89,8 @@ Permit only 1 type for a given key or array.
 
 **Do not use JSON `null`**, except in
 [JSON Merge Patch](hhttps://datatracker.ietf.org/doc/rfc7396/).
-JSON Merge Patch uses it to signal deletion, so using `null` for other purposes effectively prevents HTTP `PATCH`.
+JSON Merge Patch uses it to signal deletion,
+so using `null` for other purposes effectively prevents HTTP `PATCH`.
 It’s problematic for other reasons; refer to the _rationale_ box.
 Tip: replace any `{"key": null}` with `{}` or (e.g.) `{"status: "error:too_few_samples}"}`.
 If a null value is encountered (e.g. in a received payload), pretend it isn’t there.
@@ -189,10 +191,11 @@ A duration may be written these three ways:
 **For intervals**, both `{"start": ..., "end": ...}` and ISO 8601 `T1--T2` syntax are acceptable.
 Do not separate times with `/` or use a start-time/duration pair.
 
-!!! warning "Caution: calculating durations"
+!!! note "Caution: calculating durations"
 
     Be careful when calculating durations.
-    Things like NTP synchronization events can cause $T^C_1 - T^C_2$ for a clock $C$ to not correspond
+    Things like NTP synchronization events can cause $T^C_1 - T^C_2$
+    for a clock $C$ to not correspond
     to an elapsed time (or true duration).
     See [_calculating durations_](../post/calculating-durations.md).
 
@@ -208,27 +211,27 @@ servers must not use status codes, methods, responses, or conditions not listed 
 
 #### General status codes
 
-| Code | Name                   | Methods                   | Response         | Condition(s)                                                                             |
-| ---- | ---------------------- | ------------------------- | ---------------- | ---------------------------------------------------------------------------------------- |
-| 200  | OK                     | HEAD, GET, PATCH          | resource         | The requested resource is being returned.                                                |
-| 201  | Created                | POST, PUT                 | canonical URI    | The resource has been created.                                                           |
-| 202  | Accepted               | POST, PUT, PATCH¹, DELETE | ∅                | The request will be processed asynchronously.                                            |
-| 204  | No Content             | DELETE                    | ∅                | The deletion was successful.                                                             |
-| 308  | Permanent Redirect     | any                       | resource         | A non-canonical URI was used, and a permanent redirect is provided to the canonical URI. |
-| 400  | Bad Request            | any                       | problem details² | The endpoint does not exist, the parameters are wrong, or the body is malformed.         |
-| 401  | Unauthorized           | any                       | problem details  | Authentication was required but not provided.                                            |
-| 403  | Forbidden              | any                       | problem details  | The provided authentication carries insufficient privileges.                             |
-| 404  | Not Found              | GET, PATCH, DELETE        | problem details  | The requested resource does not exist.                                                   |
-| 406  | Not Acceptable         | HEAD, GET                 | problem details  | The `Accept` headers are unsatisfiable.                                                  |
-| 409  | Conflict               | POST, PUT, PATCH          | problem details  | The resource already exists.                                                             |
-| 409  | Conflict               | DELETE                    | problem details  | The resource cannot be deleted because other resources reference it.                     |
-| 410  | Gone                   | GET, PATCH, DELETE        | problem details  | The resource does not exist, although it did before.                                     |
-| 413  | Content Too Large      | POST, PUT, PATCH          | problem details  | The request payload is too large.                                                        |
-| 415  | Unsupported Media Type | POST, PUT, PATCH          | problem details  | The request payload’s media type is unsupported.                                         |
-| 422  | Unprocessable Entity   | POST, PUT, PATCH          | problem details  | The request was readable but contained semantic errors, such as invalid references.      |
-| 429  | Too Many Requests      | any                       | problem details  | The client has exceeded the rate limit.                                                  |
-| 500  | Server Error           | any                       | problem details  | The server encountered an internal error.                                                |
-| 503  | Service Unavailable    | any                       | problem details  | The service is overloaded or down for maintenance.                                       |
+| Code | Name                   | Methods                   | Response      | Condition(s)                                            |
+| ---- | ---------------------- | ------------------------- | ------------- | ------------------------------------------------------- |
+| 200  | OK                     | HEAD, GET, PATCH          | resource      | Requested resource is being returned                    |
+| 201  | Created                | POST, PUT                 | canonical URI | Resource has been created                               |
+| 202  | Accepted               | POST, PUT, PATCH¹, DELETE | ∅             | Request will be processed asynchronously                |
+| 204  | No Content             | DELETE                    | ∅             | Deletion was successful                                 |
+| 308  | Permanent Redirect     | any                       | resource      | Non-canonical URI was used (canonical in `Location`)    |
+| 400  | Bad Request            | any                       | problem²      | Invalid endpoint, params, or body syntax                |
+| 401  | Unauthorized           | any                       | problem       | Authentication was required but not provided            |
+| 403  | Forbidden              | any                       | problem       | Provided authentication carries insufficient privileges |
+| 404  | Not Found              | GET, PATCH, DELETE        | problem       | Resource does not exist                                 |
+| 406  | Not Acceptable         | HEAD, GET                 | problem       | `Accept` headers are unsatisfiable                      |
+| 409  | Conflict               | POST, PUT, PATCH          | problem       | Resource already exists                                 |
+| 409  | Conflict               | DELETE                    | problem       | Can’t delete resource because others reference it       |
+| 410  | Gone                   | GET, PATCH, DELETE        | problem       | Resource does not exist, although it used to            |
+| 413  | Content Too Large      | POST, PUT, PATCH          | problem       | Request payload is too large                            |
+| 415  | Unsupported Media Type | POST, PUT, PATCH          | problem       | Request payload’s media type is unsupported             |
+| 422  | Unprocessable Entity   | POST, PUT, PATCH          | problem       | Request has semantic errors, such as invalid references |
+| 429  | Too Many Requests      | any                       | problem       | Client has exceeded the rate limit                      |
+| 500  | Server Error           | any                       | problem       | Server encountered an internal error                    |
+| 503  | Service Unavailable    | any                       | problem       | Service is overloaded or down for maintenance           |
 
 1. Use [JSON Merge Patch](https://datatracker.ietf.org/doc/rfc7396/) for all PATCH requests;
    see the [JSON Merge Patch section](#json-merge-patch).
@@ -237,18 +240,18 @@ servers must not use status codes, methods, responses, or conditions not listed 
 
 #### Specialized status codes
 
-| Code | Name                            | Methods                  | Response        | Use case                                                                           |
-| ---- | ------------------------------- | ------------------------ | --------------- | ---------------------------------------------------------------------------------- |
-| 100  | Continue¹                       | POST, PUT, PATCH         | ∅               | The `100-continue` request has succeeded (rare).                                   |
-| 206  | Partial Content                 | GET                      | part            | A range was requested and is being returned.                                       |
-| 304  | Not Modified                    | HEAD, GET                | ∅               | The `If-None-Match` condition has matched.                                         |
-| 412  | Precondition Failed¹            | POST, PUT, PATCH, DELETE | problem details | A mid-air edit condition (using `If-...` headers) failed.                          |
-| 416  | Range Not Satisfiable           | GET                      | problem details | The requested range is out of bounds.                                              |
-| 417  | Expectation Failed¹             | POST, PUT, PATCH         | problem details | The `Expect: 100-continue` expectation failed.                                     |
-| 418  | I'm a Teapot                    | any                      | problem details | The request is blocked due to suspicious or malicious activity, or excessive data. |
-| 423  | Locked                          | POST, PUT, PATCH, DELETE | problem details | **(strongly discouraged)** A needed resource is “in use”.                          |
-| 428  | Precondition Required¹          | POST, PUT, PATCH, DELETE | problem details | A precondition (using `If-...` headers) is required.                               |
-| 431  | Request Header Fields Too Large | any                      | problem details | The headers are too large.                                                         |
+| Code | Name                            | Methods                  | Response | Use case                                                |
+| ---- | ------------------------------- | ------------------------ | -------- | ------------------------------------------------------- |
+| 100  | Continue¹                       | POST, PUT, PATCH         | ∅        | `100-continue` request has succeeded (rare).            |
+| 206  | Partial Content                 | GET                      | part     | Range was requested and is being returned.              |
+| 304  | Not Modified                    | HEAD, GET                | ∅        | `If-None-Match` condition has matched.                  |
+| 412  | Precondition Failed¹            | POST, PUT, PATCH, DELETE | problem  | Mid-air edit condition (using `If-...` headers) failed. |
+| 416  | Range Not Satisfiable           | GET                      | problem  | Requested range is out of bounds.                       |
+| 417  | Expectation Failed¹             | POST, PUT, PATCH         | problem  | `Expect: 100-continue` expectation failed.              |
+| 418  | I'm a Teapot                    | any                      | problem  | Blocked due to suspicious or excessive activity         |
+| 423  | Locked                          | POST, PUT, PATCH, DELETE | problem  | Needed resource is in use _(discouraged)_               |
+| 428  | Precondition Required¹          | POST, PUT, PATCH, DELETE | problem  | Precondition (using `If-...` headers) is required.      |
+| 431  | Request Header Fields Too Large | any                      | problem  | Headers are too large.                                  |
 
 <small>
 <b>†</b> These statuses are only applicable to modifiable resources.
@@ -258,13 +261,16 @@ servers must not use status codes, methods, responses, or conditions not listed 
 
 404 Not Found is reserved for resources that _could_ exist but do not;
 attempts to access an invalid endpoint must always generate a 400 (Bad Request).
-For example, if `id` must be hexadecimal for `/machine/{id}`, then `/machine/zzz` should generate a 400.
-The response body
-([RFC 9457](https://datatracker.ietf.org/doc/rfc9457/#name-members-of-a-problem-detail) problem details)
-should describe the problem; e.g. `{..., "detail": "{id} must match ^[0-9A-F]{16}$"}`.
+For example, if `id` must be hexadecimal for `/machine/{id}`,
+then `/machine/zzz` should generate a 400.
+The response body in
+[RFC 9457](https://datatracker.ietf.org/doc/rfc9457/#name-members-of-a-problem-detail)
+problem details should describe the problem;
+e.g. `{..., "detail": "{id} must match ^[0-9A-F]{16}$"}`.
 
 Occasionally, the server might know that the resource will exist later.
-For example, if the client PUT a resource, received a 202 Accepted, and then tried to GET the resource too early.
+For example, if the client PUT a resource, received a 202 Accepted,
+and then tried to GET the resource too early.
 A 404 is still appropriate for this.
 You can indicate the resource’s status in the problem details (`detail` and/or custom field).
 
@@ -272,8 +278,8 @@ You can indicate the resource’s status in the problem details (`detail` and/or
 
 Use 422 Unprocessable Entity for errors with respect to the model semantics and/or data.
 For example, in `{"robot: "22-1-44", "action": "sit"}`, a 422 might be sent
-if robot 22-1-44 does not exist or lacks sit/stand functionality.
-A 409 Conflict might result if it 22-1-44 cannot accept the command because it is currently handling another.
+if robot `22-1-44` does not exist or lacks sit/stand functionality.
+A 409 Conflict might result if `22-1-44` is currently handling another command.
 Respond 409 Conflict for conflicting <em>state</em>,
 most notably to a request to delete a resource that other resources reference.
 
@@ -284,7 +290,8 @@ most notably to a request to delete a resource that other resources reference.
 for reasons other than ratelimiting.
 Although this status is nonstandard, some servers use it for similar reasons.
 
-Clients should respond to these situations very differently than to other 4xx responses, such as 401, 403, and 429.
+Clients should respond to these situations very differently than to other 4xx responses,
+such as 401, 403, and 429.
 A 418 conveys that:
 
 1. The client cannot rectify the problem;
@@ -300,7 +307,8 @@ Use cases:
 ### JSON Merge Patch
 
 For JSON, all PATCH endpoints must use [JSON Merge Patch](https://datatracker.ietf.org/doc/rfc7396/).
-Because JSON Merge Patch uses `null` to signal deletion, `null` may not be used for any other purpose.
+Because JSON Merge Patch uses `null` to signal deletion,
+`null` may not be used for any other purpose.
 See the [null section](#null-and-missing-values-numerical-range-and-precision) for more information.
 
 For non-JSON data, there are two options:
@@ -386,9 +394,11 @@ Multiple representations must be available via content negotiation:
 #### RFC 9457 extensions
 
 Always include extensions that a client would likely want to parse.
-For example, specify the incorrect request parameter or header, or the dependent resource for a 409 Conflict.
+For example, for a 400 Bad Request, specify the incorrect parameter or header.
+For a 409 Conflict, specify the dependent resource.
 Use kebab-case or camelCase according to the convention your overall API uses.
-These extensions might occasionally be redundant to headers, such as `Accept` and `RateLimit-Limit`; that’s fine.
+These extensions might occasionally be redundant to headers, such as `Accept` and `RateLimit-Limit`;
+that’s fine.
 
 ### Response headers
 
@@ -412,7 +422,8 @@ Use [draft IETF rate-limiting headers](https://www.ietf.org/archive/id/draft-pol
 `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`.
 These should always be included for 429 (Too Many Requests) responses
 along with a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header.
-`RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset` MAY be included for other responses as well.
+`RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`
+MAY be included for other responses as well.
 
 #### Content-Disposition
 

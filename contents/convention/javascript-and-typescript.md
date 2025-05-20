@@ -17,4 +17,4 @@ instead of `for`…`in`.
 ## Formatting
 
 [Prettier](https://prettier.io/) will handle almost all formatting.
-Just set the max line length to 120.
+Just set the max line length to 100.

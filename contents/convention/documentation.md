@@ -25,7 +25,7 @@ Here are the important points.
 <b>Markdown:</b>
 
 - Start a new line for every sentence (it helps with diffs).
-- Limit lines to 120 characters, breaking at sensible places.
+- Limit lines to 100 characters, breaking at sensible places.
 - Use `**bold**` for emphasis, `_italics_` as the
   [`<i>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i),
   and `<b></b>` for non-emphasized but bold text; e.g. `<b>Score:</b> 12.5`.
@@ -46,7 +46,8 @@ For example, if camelCase is used in your JSON Schema, use camelCase for schema 
     Moreover, the IANA media types are `application/yaml`, `text/html`, and `image/jpeg`.
     `.yml`, `.htm`, and `.jpg` are relics of DOS.
     Extensions prominently show essential information, and ommitting them can cause confusion.
-    For example, a file named `info` could be a plain-text info document or a shell script that writes the info.
+    For example, a file named `info` could be a plain-text info document
+    or a shell script that writes the info.
     Instead, write it as `info.txt` or `info.sh`.
 
 Prefer kebab-case (e.g. `full-document.pdf`), treating `-` as a space.
@@ -76,7 +77,7 @@ Forgo comments that are obvious or otherwise unhelpful.
             Uses a Least Recently Used (LRU) policy with an expiration duration.
             """
 
-            def get_cache_item(selfself, key: str) -> T:
+            def get_cache_item(self, key: str) -> T:
                 # (1)!
                 """
                 Gets the cache item corresponding to key `key`.
@@ -101,21 +102,23 @@ Forgo comments that are obvious or otherwise unhelpful.
             Uses a Least Recently Used (LRU) policy with an optional expiration duration.
             """
 
-            def get_cache_item(selfself, key: str) -> T:
+            def get_cache_item(self, key: str) -> T:
                 return self._items[key]
         ```
 
 ## Language and grammar
 
 **Apply these guidelines to both comments and documentation.**
-See [Google’s documentation style guide](https://developers.google.com/style/) for additional guidelines.
+See
+[Google’s documentation style guide](https://developers.google.com/style/)
+for additional guidelines.
 
 ### Style
 
 Remove text that is repetitive or superfluous.
 Be direct.
 Use examples, diagrams, formal grammars, pseudocode, and mathematical expressions.
-Write English descriptions for diagrams and any other elements that are be inaccessible to screen readers.
+Write English descriptions for any elements that are probably inaccessible to screen readers.
 
 Keep language accessible:
 Introduce or explain jargon, favor simpler words, and replace idioms with literal phrasing.
@@ -185,7 +188,8 @@ and
 
 ??? bug "Incorrect `\n` treatment in GitHub Issues, Discussions, and PRs"
 
-    As recently as 2024-12, GitHub incorrectly renders `\n` as `<br>` in Discussions, Issues, and Pull Requests.
+    As recently as 2024-12, GitHub incorrectly renders `\n` as `<br>`
+    in Discussions, Issues, and Pull Requests.
     Per
     [the original Markdown spec](https://daringfireball.net/projects/markdown/syntax#block),
     [CommonMark](https://spec.commonmark.org/0.31.2/#soft-line-breaks),
@@ -195,7 +199,7 @@ and
     In contrast, GitHub uses the correct behavior for `.md` files (e.g. `README.md`).
     Obviously, prioritize readability of the rendered document over readability of the source.
 
-If needed to prevent a line from exceeding 120 characters, add line breaks elsewhere.
+If needed to prevent a line from exceeding 100 characters, add line breaks elsewhere.
 Look for one of these places to add a line break:
 
 - Before and/or after a Markdown link
@@ -250,8 +254,7 @@ This table summarizes how to use them in HTML and in Markdown.
 
 <a id="non-uses-of-__"></a>**Non-uses of `_`/`_`:**
 
-- Ubiquitous foreign phrases like _in vivo_, _in sitro_, _in silico_, and \_et al.;
-  no markup is needed.
+- Ubiquitous foreign phrases like _in vivo_, _in sitro_, _in silico_, and \_et al.; no markup is needed.
 - Emphasis or importance. Instead, use bold `**`/`**`.
 - Stress (e.g. to distinguish `<<I>> will go there` and `I will go <<there>>`.).
   (Refer to the following section.)
@@ -262,8 +265,9 @@ This table summarizes how to use them in HTML and in Markdown.
 is usually marked using italics.
 Consider the difference between `_I_ will go there` and `I will go _there_`.
 The italicization is essential to the meaning.
-This can lead to confusion if read as plaintext or by a screen reader, which may not announce the italicization.
-It’s best to make the exact meaning explicit by rephrasing, such as in `I specifically will go there.`
+This can lead to confusion if read as plaintext or by a screen reader.
+It’s best to make the exact meaning explicit by rephrasing:
+e.g. `I – specifically I – will go there.`
 If you need to use italics for stress, prefer explicit `<em></em>`.
 
 <a id="using-the-dnf-element"></a>**Using the `<dfn>` element**
@@ -287,7 +291,7 @@ For example, you might write `<b>Score:</b> 55.3%`.
 !!! tip "Tip: Smarty plugin"
 
     With the Material for mkdocs
-    [Smarty plugin](https://squidfunk.github.io/mkdocs-material/reference/formatting/#adding-keyboard-keys),
+    [Smarty plugin](https://squidfunk.github.io/mkdocs-material/reference/formatting/),
     you can use `++`/`++` instead of `<kdb>`/`<kdb>`; e.g. `++ctrl+alt+del++`.
 
 Use backticks for code, `<kbd>`/`</kdb>` for keyboard keys.
@@ -351,11 +355,13 @@ For example: `say something nice; e.g. “nice boots”.`.
 
 ### Abbreviations
 
-For the first appearance, consider writing it out in this format: _Public Library of Science (PLOS)_ †.
+For the first appearance, consider writing it out in this format:
+_Public Library of Science (PLOS)_ †.
 Omit periods (`.`) for initialisms; e.g. _USA_, not _U.S.A._.
 
 <small>
-<b>†</b> Note that the correct abbreviation for <abbr title="Public Library of Science">PLOS</abbr> is
+<b>†</b> Note that the correct abbreviation for
+<abbr title="Public Library of Science">PLOS</abbr> is
 <a href="https://theplosblog.plos.org/2012/07/new-plos-look/">
 <i>PLOS</i>, <strong>not</strong> <i>PL<b>o</b>S</i>.
 </a>
@@ -387,7 +393,8 @@ The content should be
     and they are less accessible for people who are vision-impaired.
 
     - The asterisk `*` has other very common meanings and is inconvenient in Markdown.
-      (The [U+204E `⁎`](https://www.fileformat.info/info/unicode/char/204e/index.htm) avoids the second problem.)
+      (The [U+204E `⁎`](https://www.fileformat.info/info/unicode/char/204e/index.htm)
+      avoids the second problem.)
     - The double vertical bar `‖` has other very common meanings.
     - The pilcrow `¶` is too heavy and prominent in most fonts.
     - Doubled-up footnote symbols mean you have too many footnotes.
@@ -405,7 +412,8 @@ This statement is false. †
 The symbols don’t need to be superscripted.
 Placement is discretionary: position before or after punctuation, with or without a space.
 These symbols are recommended, in order:
-`†` (dagger), `‡` (double dagger), `§` (section mark), `♯` (musical sharp), `♮` (musical natural), and `◊` (lozenge).
+`†` (dagger), `‡` (double dagger), `§` (section mark), `♯` (musical sharp), `♮` (musical natural),
+and `◊` (lozenge).
 
 You can modify this list if needed,
 or use another scheme like superscript numbers, superscript lowercase letters, etc.
@@ -475,7 +483,7 @@ and the [Guides in Metrology](https://www.bipm.org/en/committees/jc/jcgm/publica
     LuaTeX, [siunitx](https://ctan.org/pkg/siunitx), and [fontspec](https://ctan.org/pkg/fontspec)
     is the ideal solution, but it is not usable in Markdown.
     You need a suitable font, and `fontspec`, `\unimathsetup` and `\sisetup` as shown in
-    [`fontworthy.sty`](https://github.com/dmyersturnbull/desert-latex/blob/main/src/fontworthy.sty#L220).
+    [`fontworthy.sty`](https://github.com/dmyersturnbull/desert-latex/blob/main/src/fontworthy.sty).
 
 #### Numbers
 
@@ -549,12 +557,13 @@ Use the micro sign instead of the greek letter mu, but capital omega instead of 
 From the
 [Unicode spec, “Greek Letters as Symbols”](https://www.unicode.org/versions/Unicode16.0.0/core-spec/chapter-7/#G12477):
 
-> For compatibility purposes, a few Greek letters are separately encoded as symbols in other character blocks.
+> For compatibility purposes,
+> a few Greek letters are separately encoded as symbols in other character blocks.
 > Examples include U+00B5 µ MICRO SIGN in the Latin-1 Supplement character block
 > and U+2126 Ω OHM SIGN in the Letterlike Symbols character block.
 > The ohm sign is canonically equivalent to the capital omega,
 > and normalization would remove any distinction.
-> <mark>[The Ohm sign's] use is therefore discouraged in favor of capital omega.</mark> > <mark>The same equivalence does not exist between micro sign and mu</mark>,
+> <mark>The Ohm sign's use is therefore discouraged in favor of capital omega.</mark> > <mark>The same equivalence does not exist between micro sign and mu</mark>,
 > and use of either character as a micro sign is common.
 
 </small>
@@ -563,7 +572,8 @@ From the
 
 State whether a value means standard error or standard deviation.
 Do **not** write `5.0 ±0.1` – that’s ambiguous.
-You may use the abbreviations _standard error (SE)_, _standard deviation (SD)_, and _confidence interval (CI)_,
+You may use the abbreviations
+_standard error (SE)_, _standard deviation (SD)_, and _confidence interval (CI)_,
 or spell them out.
 
 Use one of these formats:
@@ -621,7 +631,7 @@ Use the `alt` attribute for media elements, including `<img>`, `<video>`, `<audi
 
 ### Formatting
 
-Use [Prettier](https://prettier.io/) with default options except for line length, which must be 120.
+Use [Prettier](https://prettier.io/) with default options except for line length, which must be 100.
 Note that Prettier wraps tags in way that looks strange at first;
 it does that to avoid adding extra whitespace.
 

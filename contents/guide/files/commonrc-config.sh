@@ -48,7 +48,7 @@ commonrc::init() {
 commonrc::_find_regex() {
   local _file="$1"
   local _expr="$2"
-  [[ -f "$commonrc_file" ]] && ! grep --extended-regexp "$_expr" "$_file"
+  [[ -f "$commonrc_file" ]] && ! grep -E "$_expr" "$_file"
   return $?
 }
 

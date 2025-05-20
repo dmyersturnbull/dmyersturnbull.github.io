@@ -109,6 +109,12 @@ With `IFS=$'\n\t'`, these options are sometimes called
 This forces you to handle errors explicitly, with proper comments, error codes, and error messages.
 It also makes the code more interoperable and shareable.
 
+!!! warning
+
+    **Why you should be vigilant about quoting variables:**
+    Just search for
+    [GitHub issues about unquoted shell variables](https://github.com/search?l=Shell&q=unquoted&type=Issues).
+
 #### Variables
 
 Use `UPPERCASE_SNAKE_CASE` for environment variables and `lowercase_snake_case` for others.
@@ -123,8 +129,8 @@ Prefer `$var`; use `${var}` only when needed.
 #### stdout and stdin
 
 Shell scripts make it easy to chain, piping data from one command to the next without storage IO.
-This results in higher throughput, lower latency, less wear on storage devices, lower energy usage, …,
-along with easier parallelization and code that’s concise and obvious.
+This raises throughput, lowers latency, avoids wear on storage devices, and lowers energy usage.
+It also simplifies parallelization and leaves code more concise and obvious.
 
 So, default to using stdout and stdin instead of files.
 Use stdout only for machine-readable output, **not** logging.
@@ -145,7 +151,8 @@ Use the levels `DEBUG`, `INFO`, `WARN`, and `ERROR`, with `INFO` as the default 
 Other structured data may be included (e.g. date-time, time elapsed, % progress, thread id).
 
 If desired, you can distinguish logging levels with ANSI color and/or style codes.
-This is ok **only** if stderr is a TTY as determined by `[[ -t 2 ]]` or with a `--color` (e.g.) command-line switch.
+This is ok **only** if stderr is a [TTY] as determined by `[[ -t 2 ]]`
+or with a `--color` (e.g.) command-line switch.
 Terminal color schemes can vary, so prefer fewer colors.
 See [`todos.sh`](../scripts/todos.sh) for an example.
 
@@ -181,6 +188,11 @@ declare -r config_dir="${XDG_CONFIG_HOME:-$HOME/some-app/}"
 mkdir -p -m 0700 "$config_dir"
 ```
 
+!!! warning
+
+    `~` **doesn’t** expand inside double quotes.
+    In scripts, always use `$HOME` instead.
+
 #### Script directory and name
 
 ??? rationale
@@ -199,7 +211,8 @@ mkdir -p -m 0700 "$config_dir"
        whose final component starts with `-`.
 
     _Note:_
-    This even works with paths that contain `[*?]`, [|&<>]`, `['"]`, and even `\\` and possibly control chars.
+    This even works with paths that contain `[*?]`, [|&<>]`, `['"]`,
+    and even `\\` and possibly control chars.
     However, please, please
     [don’t use such characters in filenames](https://dwheeler.com/essays/fixing-unix-linux-filenames.html).
 
@@ -207,42 +220,18 @@ Rely on `BASH_SOURCE` and
 [`realpath`](https://www.gnu.org/software/coreutils/manual/html_node/realpath-invocation.html#realpath-invocation).
 Although `realpath` is not POSIX, it is available on all modern Linux and BSD/macOS distributions.
 
-Use the following definitions as needed:
+Use the following definitions as needed,
+where `my_namespace` is a namespace you expect would be unique if the script is `source`d.
+If the script is not intended to be `source`d, using e.g. `script_name` is ok.
 
 ```bash
-script_path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
-declare -r script_name="${script_path##*/}"
-declare -r script_dir="${script_path%/*}"
-unset script_path
+my_namespace__path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
+declare -r my_namespace__name="${my_namespace__path##*/}"
+declare -r my_namespace__dir="${my_namespace__path%/*}"
+unset my_namespace__path # (1)!
 ```
 
-!!! warning "Caution: avoid name clashes for `source`-ed scripts"
-
-    If the script is meant to be `source`-ed, choose more specific variable names to avoid clashes.
-
-    Otherwise, if both scripts define `script_name` or `script_dir`,
-    you’ll get an error like `read-only variable: script_name`.
-    Worse, if only `script_path` is shared:
-
-    ??? example
-
-        ```bash title="functions.sh"
-        #!/usr/bin/env bash
-        script_path="$( realpath -- "${BASH_SOURCE[0]}" || exit $? )"
-        # ...
-        ```
-
-        ```bash title="script.sh"
-        #!/usr/bin/env bash
-        script_path="$( realpath -- "${BASH_SOURCE[0]}" || exit $? )"
-        source "${script_path%/*}"/functions.sh
-        (( $# > 1)) && printf >&2 'Usage: %s <path>\n' "${script_path##*/}"
-        ```
-
-        ```bash title="interactive shell"
-        ❯ ./script.sh
-        Usage: functions.sh <path>
-        ```
+1. Assuming it’s not needed.
 
 Make sure to use `--` with `realpath` to protect paths that start with `-`.
 (Don’t use `-e` because it is GNU-specific and not necessary.)
@@ -270,23 +259,119 @@ and `dirname`/`basename` are not needed.
     fi
     ```
 
+#### Definitions
+
+Refer to the
+[Google style guide](https://google.github.io/styleguide/shellguide.html).
+
+Make variables read-only whenever possible, using `declare -r`.
+For functions, use `readonly -f` (or, equivalently,`declare -r -g -f`).
+
+!!! warning
+
+    Always use `readonly -f` **after** defining the function.
+
+    === "✅ Correct"
+
+        ```bash
+        my_function() {}
+        readonly -f my_function
+        ```
+
+    === "❌ Incorrect"
+
+        ```bash
+        my_function() {}
+        readonly -f my_function
+        ```
+
+As per the Google guide,
+choose a namespace and prefix function names with `namespace::`.
+Prefix non-exported global variables with `namespace__`.
+You may omit these prefixes if the script is not intended to be `source`d.
+
+!!! warning
+
+    **Name collisions in Bash are usually silent.**
+
+The following example illustrates why the above rules are important.
+
+<details>
+<summary><code>library.sh</code></summary>
+
+```bash title="lib.sh"
+#!/usr/bin/env bash
+set -o errexit -o nounset -o pipefail # "strict mode"
+
+script="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
+if (($# > 0)); then
+  printf >&2 "%s should be sourced\n" "${script##*/}"
+  exit 2
+fi
+
+count() {
+  printf "%s\n" $#
+}
+
+run_lib() {
+  count || return $?
+}
+```
+
+</details>
+
+<details>
+<summary><code>cli.sh</code></summary>
+
+```bash title="cli.sh"
+#!/usr/bin/env bash
+set -o errexit -o nounset -o pipefail # "strict mode"
+
+script="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
+
+source "${script%/*}"/lib.sh
+count() {
+  printf "1\n"
+}
+
+# Main code
+printf >&2 "Running %s\n" "${script##*/}"
+run_lib "$@"
+```
+
+</details>
+
+```console title="interactive shell"
+❯ ./script.sh one two three
+Running lib.sh
+1
+```
+
+Note that `run_lib` calls the `count` redefined by its caller,
+and that `cli.sh` uses the script name of `lib.sh`.
+
+Prevent this by marking variables and functions readonly and using namespace prefixes.
+
 #### Deprecated things
 
 - [Use `printf`, not `echo`](../cheatsheet/bash-tips.md#use-printf-not-echo).
 - Use `[[ ]]`, not `[ ]`.
 - Use `$( )`, not backticks.
 - Use `(( ))` for numeric comparisons.
-- Use `[[ -z "$var" ]]` and `[[ -n "$var" ]]` rather than `[[ "$var" == "" ]]` and `[[ "$var != "" ]]`.
+- Use `[[ -z "$var" ]]` and `[[ -n "$var" ]]`
+  rather than `[[ "$var" == "" ]]` and `[[ "$var != "" ]]`.
 
 #### Formatting
 
-Choose a max line length, per your discretion.
-Recommended choices are ≤80, ≤90, and ≤100, but aim for shorter lines (i.e. ≤80) even if the max is higher.
+Choose a max line length; recommended choices are ≤80 and ≤100.
+For long or complex lines, put each argument on its own line ("chomping" style),
+and otherwise be thoughtful and consistent about where you break lines.
 
 #### Comments
 
 Use comments as needed, not out of habit.
-Above non-trivial functions, add a header that lists the arguments, environment variables, return codes, etc.
+Above non-trivial functions, add a header that lists
+the arguments, environment variables, return codes, etc.
 It’s ok to be brief or to refer to other documentation.
 
 #### TODO and FIXME
@@ -382,21 +467,23 @@ so there is no need to chain them on a single line.
 
 ### Labels
 
-Use [Open Containers labels](https://github.com/opencontainers/image-spec/blob/master/annotations.md),
-including:
+Use
+[Open Containers labels](https://github.com/opencontainers/image-spec/blob/master/annotations.md),
+at least including
 
 - `org.opencontainers.image.version`
 - `org.opencontainers.image.vendor`
 - `org.opencontainers.image.title`
 - `org.opencontainers.image.url`
-- `org.opencontainers.image.documentation`
 
 ### Multistage builds
 
-Where applicable, use a multistage build to separate _build-time_ and _runtime_ to keep containers slim.
+Where applicable, use a multistage build to separate _build-time_ and _runtime_,
+thereby keeping final images small.
 For example, when using Maven, Maven is only needed to assemble, not to run.
 
-Here, `maven:3-eclipse-temurin-21` is used as a base image, maven is used to compile and build a JAR artifact,
+Here, `maven:3-eclipse-temurin-21` is used as a base image,
+maven is used to compile and build a JAR artifact,
 and everything but the JAR is discarded.
 `eclipse-temurin:21` is used as the runtime base image, and only the JAR file is needed.
 

@@ -6,12 +6,15 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-Refer to [Google’s Java style guide](https://google.github.io/styleguide/javaguide.html)
-for additional recommendations.
+!!! abstract "Important"
+
+    This document defers to
+    [Google’s Java style guide](https://google.github.io/styleguide/javaguide.html)
+    for formatting, naming, other conventions included in the latter.
 
 ## Banned features
 
-These features are **totally** banned:
+These features are **totally banned**:
 
 - `clone()` and `Cloneable`
 - `finalize()`
@@ -19,7 +22,7 @@ These features are **totally** banned:
 - labels (e.g. `outer_loop: for ...`)
 - `notify()` and `wait()`
 
-These features are **partly** banned:
+These features are **partly banned**:
 
 - non-`final` or mutable `static` fields
 - Arrays (use collections instead)
@@ -155,7 +158,8 @@ In some languages, type safety of equality can be checked by the compiler.
 </small>
 
 Use `getClass()` to check type compatibility, **not** `instanceof`.
-(For universal equality, only `getClass()` makes sense – and for multiversal equality, there is no difference.)
+(For universal equality, only `getClass()` makes sense;
+for multiversal equality, there is no difference.)
 Additionally, subclasses of classes defining `equals()` should never add data or state.
 
 ### Universal equality
@@ -522,7 +526,7 @@ or by another natural ordering.
 Use [prettier-java](https://github.com/jhipster/prettier-java) with:
 
 - 4 spaces for indentation
-- print width of 120
+- print width of 100
 
 ### Optional syntax
 
@@ -556,10 +560,12 @@ Write non-ASCII characters without escaping, except characters that are likely t
 
 #### Comments
 
-Use `//` for multiline comments instead of `/* */`, unless the comment spans many lines (i.e. more than 20).
+Use `//` for multiline comments instead of `/* */`,
+unless the comment spans many lines (i.e. more than 20).
 Prefer [Markdown Documentation Comments](https://openjdk.org/jeps/467) if available.
 
 #### Literals
 
-Always add `.0` to floats (e.g. `double x = 2.0 * pi`) and prefix with `0.` (e.g. `double x = 0.001`).
+Always add `.0` to floats (e.g. `double x = 2.0 * pi`) and prefix with `0.`
+(e.g. `double x = 0.001`).
 Digit grouping with `_` is optional; use it only for amounts or quantities, not identifiers.

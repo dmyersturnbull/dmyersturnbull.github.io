@@ -57,6 +57,8 @@ Include a link in your project’s readme or `CONTRIBUTING.md` file.
 
 ## Auto-formatters
 
+Whenever possible, let tools auto-format your code.
+
 Use the auto-formatter setup in the
 [tyranno-sandbox repo](https://github.com/dmyersturnbull/tyranno-sandbox).
 This includes `.editorconfig`,
@@ -75,6 +77,12 @@ These auto-formatters are meant to be run via
 or before each merge.
 This document lists non-formatting guidelines (e.g. accessibility)
 and formatting conventions that auto-formatters do not handle.
+
+## Line lengths
+
+Try to limit lines to ≤ 100 characters, but it’s ok if some lines are longer.
+**If breaking a line would make the code less readable, leave it alone.**
+Note that both Prettier and the Ruff formatter take this approach and will accept some longer lines.
 
 ## Principles
 

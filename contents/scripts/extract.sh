@@ -59,6 +59,17 @@ apprise() {
   printf >&2 "[%s] %s\n" "$1" "$2"
 }
 
+usage_error() {
+  apprise ERROR "$1"
+  printf >&2 '%s\n' "$usage"
+  exit 2
+}
+
+general_error() {
+  apprise ERROR "$1"
+  exit 1
+}
+
 # Show help if requested.
 if [[ "${1:-}" == "--help" || "${1:-}" == "-h" ]]; then
   printf '%s\n%s\n%s\n' "$description" "$usage" "$help"
@@ -67,9 +78,7 @@ fi
 
 # Parse arguments.
 if (($# != 1)); then
-  apprise "ERROR" "Invalid number of arguments."
-  printf >&2 '%s\n' "$usage"
-  exit 2
+  usage_error "Invalid number of arguments."
 fi
 
 file="$1"
@@ -95,7 +104,6 @@ case "$file" in
   *.tar)
     tar xvf "$file" || exit $?
     ;;
-
   # Single-file compression formats
   *.bz2)
     bunzip2 "$file" || exit $?
@@ -150,9 +158,7 @@ case "$file" in
   *.lha | *.lzh)
     lha x "$file" || exit $?
     ;;
-
   *)
-    apprise "ERROR" "Unknown file type: $file"
-    exit 1
+    general_error "Unknown file type: $file"
     ;;
 esac

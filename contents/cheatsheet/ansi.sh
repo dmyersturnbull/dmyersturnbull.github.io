@@ -27,7 +27,7 @@ declare -r -A background_colors=(
 
 ansi::table() {
   local code name
-  declare -n list="$1"
+  local -n list="$1"
   printf '\n## %s\n\n' "${1/_/ }"
   printf '| code | name           | sequence | sample |\n'
   printf '| ---- | -------------- | -------- | ------ |\n'

@@ -16,7 +16,8 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 Use [RFC 3339](https://datatracker.ietf.org/doc/html/rfc3339).
 However, do **not** use `-00:00`, and do **not** use `_` (instead, use `T`).
 If fractional seconds are needed, use exactly 6 decimal digits, 0-padded (e.g. `:00.000000`).
-Nanoseconds cannot be stored exactly in a (signed or unsigned) float32 or int32, are often not supported, and are almost always very imprecise.
+Nanoseconds cannot be stored exactly in a (signed or unsigned) float32 or int32,
+are often not supported, and are almost always very imprecise.
 If nanoseconds or below are needed, store them separately.
 
 ```regexp

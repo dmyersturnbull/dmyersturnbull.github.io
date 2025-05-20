@@ -10,28 +10,41 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 !!! prerequisites
 
-    You need [GitHub CLI](https://github.com/cli/cli) (`gh`).
+    You need the [GitHub CLI](https://github.com/cli/cli) (`gh`).
 
-Download and install [Arduino](https://www.arduino.cc/).
+These instructions, though hardly worth keeping, show how to download and install the
+[Arduino IDE](https://www.arduino.cc/en/software/)
+from its [home on GitHub](https://github.com/arduino/arduino-ide).
 
-=== "Linux"
+=== "Linux (x86-64)"
 
     ```bash
-    gh release download --repo arduino/arduino-ide --archive=zip --dir arduino-temp
-    unzip arduino-temp/*.zip
-    sudo mv $(( ls -Art arduino-temp/ | tail -n 1 )) /opt/arduino
-    rm -r arduino-temp
+    gh release download --repo arduino/arduino-ide --pattern 'arduino-ide_*64bit.AppImage'
+    f=$(ls *.AppImage)
+    chmod +x "$f"
+    dest="$HOME"/bin/arduino/"${f##*/}"
+    mkdir -p "$(dirname "$dest")"
+    mv "$f" "$dest"
+    printf "Installed to '%s'.\n" "$dest"
     ```
 
 === "Windows"
 
-    Install the latest from the
-    [Arduino GitHub downloads](https://github.com/arduino/arduino-ide/releases/download/).
+    ```bash
+    gh release download --repo arduino/arduino-ide --pattern 'arduino-ide_*64bit.msi'
+    open arduino-ide_*64bit.msi
+    ```
 
-=== "macOS"
+=== "macOS (ARM)"
 
     ```bash
-    gh release download --repo arduino/arduino-ide --archive=dmg --dir arduino-temp
-    open -a $(( ls -Art arduino-temp/*.dmg | tail -n 1 ))
-    rm -r arduino-temp/
+    gh release download --repo arduino/arduino-ide --pattern 'arduino-ide_*arm64.dmg'
+    open arduino-ide_*arm64.dmg
+    ```
+
+=== "macOS (Intel)"
+
+    ```bash
+    gh release download --repo arduino/arduino-ide --pattern 'arduino-ide_*64bit.dmg'
+    open arduino-ide_*64bit.dmg
     ```

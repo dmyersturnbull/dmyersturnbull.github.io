@@ -36,13 +36,13 @@ apprise() {
 }
 
 usage_error() {
-  apprise ERROR "$1" || true
-  printf >&2 '%s\n' "$usage" || true
+  apprise ERROR "$1"
+  printf >&2 '%s\n' "$usage"
   exit 2
 }
 
 general_error() {
-  apprise ERROR "$1" || true
+  apprise ERROR "$1"
   exit 1
 }
 
@@ -73,6 +73,8 @@ create_backup::run() {
   local source_dir="$1"
   local target_root="$2"
   local last
+  # `find -printf %P`: `%P` shows
+  # the file's name with the name of the starting-point under which it was found removed.
   last=$(
     find "$target_root" \
       -maxdepth 1 \

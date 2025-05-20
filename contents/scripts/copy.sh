@@ -52,8 +52,8 @@ apprise() {
 }
 
 usage_error() {
-  apprise ERROR "$1" || true
-  printf >&2 '%s\n' "$usage" || true
+  apprise ERROR "$1"
+  printf >&2 '%s\n' "$usage"
   exit 2
 }
 

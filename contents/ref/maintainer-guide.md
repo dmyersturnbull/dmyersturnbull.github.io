@@ -27,7 +27,7 @@ It specifies:
 
 - One-commit-to-one-PR and one-issue-to-one-PR policies
 - A commit message specification compatible with [Conventional Commits](https://www.conventionalcommits.org/)
-- `type:` issue labels that map 1-1 with commit types and map (1-0/1) to changelog sections
+- `type:` issue labels that map 1-1 with commit types and map consistently to changelog sections
 
 ## Development process overview
 
@@ -53,25 +53,37 @@ In fact, every entry can be linked to the corresponding issue, PR, and commit.
 
 ???+ example
 
-    ### Bug fixes
+    ### Deprecations
 
-    - fix: correct return value of /api/v1/calculate-sigma when epsilon is 0
-      (fixes [issue #14](https://github.com/org/repo/issues/14)):
-      [PR:11](https://github.com/org/repo/pull/11)/[831e229c](https://github.com/org/repo/commit/831e229c)
+    - depr: deprecate /api/v1/ (use /api/v2 instead)
+      ([issue: #14](https://github.com/org/repo/issues/14)
+      / [PR: #11](https://github.com/org/repo/pull/11)
+      / [commit: 831e229c](https://github.com/org/repo/commit/831e229c))
 
 ### Branches
 
 Use
 [trunk-based development](https://www.atlassian.com/continuous-delivery/continuous-integration/trunk-based-development).
-In that terminology, a _feature branch_ is a branch to be merged into <i>main</i>.
+In that terminology, a _feature branch_ is a branch to be merged into _main_.
 All development should happen in feature branches, and short-lived feature branches are preferred.
-Name feature branches `<type>/<issue>-<description>--<author-initials>`, where `<type>` is the issue type
+Name feature branches `<type>/<issue>-<description>--<initials>`, where `<type>` is the issue type
 (see the [section on commit messages](#commit-messages)),
-`<issue>` is the issue number, `<description>` is a short description of the issue,
-Example: `doc/14-japanese-translation--sw`.
+`<issue>` is the issue number, `<description>` is a 1–4-word description
+(obviously not containing `--`),
+and `<initials>` are the creator’s initials (lowercase; punctuation removed; `[a-z]+`).
 
-Each feature branch must be tied to exactly 1 issue and result in 1 commit to <i>main</i>.
-That means that branches must be squash-merged.
+If no issue is associated, use substitute `x` for `<issue>`.
+For example, this is appropriate for branches that update pinned dependencies in a lock file.
+
+!!! abstract "Summary: feature branch naming"
+
+    `<type>/<issue>-<description>--<initials>`; e.g. `fix/9-sighup-crash--kj`
+
+    If no issue is associated, use
+    `<type>/<description>--<initials>`; e.g. `fix/fix-dependencies--kj`
+
+Each feature branch MUST be tied to exactly 1 issue and SHOULD result in 1 commit to _main_.
+That means that branches SHOULD normally be squash-merged.
 
 ???+ example
 
@@ -115,7 +127,7 @@ Before required status checks have completed successfully, avoid submitting revi
 Instead, just comment.
 
 Squash the commits into one, and ensure the resulting commit message follows the
-[commit message format](#reference) specification.
+[commit message format](../spec/commit-messages.md) specification.
 
 ???+ tip "Tip": GitHub squash and merge"
 
@@ -129,7 +141,7 @@ Squash the commits into one, and ensure the resulting commit message follows the
     (Separate the body and footer with a blank line.)
 
 To help a contributor with their PR directly, see
-["Committing changes to a pull request branch created from a fork"](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/committing-changes-to-a-pull-request-branch-created-from-a-fork).
+[“Committing changes to a pull request branch created from a fork”](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/committing-changes-to-a-pull-request-branch-created-from-a-fork).
 If the contributor abandoned the PR, instead use `gh pr checkout <number>`.
 
 ### Versioning
@@ -137,17 +149,19 @@ If the contributor abandoned the PR, instead use `gh pr checkout <number>`.
 Versioning is a subset of [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 Pre-release numbers are discouraged.
 If used, restrict to these forms:
-`alpha<int>`, `beta<int>`, and `rc<int>`,
+`alpha.<int>`, `beta.<int>`, and `rc.<int>`,
 where `<int>` starts at 0.
-Alpha/beta/RC MUST NOT be used out of order (e.g., **not** `alpha1`, `beta1`, `alpha2`).
+Alpha/beta/RC MUST NOT be used out of order (e.g., **not** `alpha.1`, `beta.1`, `alpha.2`).
 Pre-release numbers also **SHOULD NOT be used in Python projects** because
 [PEP 440](https://peps.python.org/pep-0440/) and [semver.org](https://semver.org/) prescribe different formats.
+If you need to use them
 
 ### Tags and deployment
 
 Tags of the form `v<semver>` should result in full deployments.
-Tags of the form `v<major>` should automatically track their most recent semver tags.
-The `latest` tag should always match the main branch.
+Tags of the form `v<major>` and `v<major>.<minor>`
+should automatically track their most recent semver tags,
+and the `latest` tag should track the main branch.
 
 ## Repository contents
 
@@ -209,7 +223,13 @@ Follow those headers with a plain-language statement that you have modified the 
 
 ## Commit messages
 
-**Refer to the [supplemental labels document](/ref/issue-labels.md#table) for details.**
+!!! related "Important"
+
+    **Review:**
+
+    - The [supplemental table of labels](/ref/issue-labels.md#table)
+    - The [commit message specificiation](../spec/commit-messages.md)
+    - The [scopes section](#scopes) below
 
 #### Invalid and reverted changes
 
@@ -224,7 +244,8 @@ This might be `drop:` or the type of the reverted commit.
 
 #### Forcibly omitting or including release notes entries
 
-Use `changelog: exclude` and `changelog: exclude` to override which changes are included in the release notes.
+Use `changelog: exclude` and `changelog: exclude`
+to override which changes are included in the release notes.
 
 <b>`changelog: exclude`</b> excludes changes that would normally be included (e.g. `feat:`).
 Use it for
@@ -243,54 +264,53 @@ to add tests and documentation for a new feature inside a `feat:` commit,
 to remove them inside a `drop:` commit,
 and to update them inside a `fix:` or `security:` commit.
 
-If separate commits were made, consider applying `changelog: exclude` to some, as described in the section above.
+If separate commits were made, consider applying `changelog: exclude` to some,
+as described in the section above.
 
 ??? info "Subsuming types"
 
     Effectively, some types can be subsumed into others.
-    This diagram details the allowed ways:
+    This best-effort diagram attempts to show the allowed ways:
 
     ```mermaid
     graph TD
-        fix --> feat
-        security --> feat
-        perf --> feat
-        test --> fix
-        test --> feat
-        test --> perf
+        security --> feature
+        fix --> feature
+        performance --> feature
+        performance --> security
+        performance --> fix
+        build --> feature
+        build --> drop
+        build --> security
+        test --> feature
+        test --> drop
         test --> security
-        docs --> feat
+        test --> fix
+        test --> performance
+        docs --> feature
+        docs --> drop
+        docs --> security
         docs --> fix
-        ci --> build
-        build --> fix
-        refactor --> feat
-        refactor --> fix
-        refactor --> build
-        refactor --> ci
-        refactor --> test
+        docs --> build
+        docs --> deprecation
+        cicd --> build
+        refactor --> feature
+        refactor --> drop
         refactor --> security
-        s["style"] --> any["*"]
+        refactor --> fix
+        refactor --> performance
+        s["style"] --> any[*]
+        s["chore"] --> none[∅]
     ```
 
 ### Scopes
 
-Scopes should be defined per project.
-If a scope is defined, it should be applied to all relevant commits,
-at least to those made after the scope’s introduction.
-Examples: `i18n` and `plugins`.
+Projects should define their own scopes.
+However, they must not redefine [scopes listed here](issue-labels.md#table)
+or scopes defined in
+In addition to `dev`, the optional scopes `i18n` and `plugin`
+are defined for projects to adopt if desired.
 
-### Reference
-
-<b>Pattern:</b>
-
-```text
-<type>[(<scope>)][!]: <subject>
-
-<body>
-
-[BREAKING CHANGE: <feature, etc.>]
-[Deprecates: <feature, etc.>]
-[Closes: #<issue>]
-[<trailer>: <author>]*
-"""
-```
+Importantly, once defined, a scope should be applied consistently — to all relevant commits.
+Commit messages can’t be modified, but projects MAY choose to manually add labels retroactively.
+[Git notes](https://git-scm.com/docs/git-notes) might also be helpful.

@@ -74,7 +74,8 @@ For UTC offsets, it allows:
 I know we’re all used to it by now, but UTC offsets are clearly backward: They should be negated.
 `2020-01-01T18:00-08:00` **should** mean $16 - 8 = 10$ UTC.
 Instead, the actual hour is $16 + 8 = 24 \equiv 0$.
-The syntax should be declarative – by specifying what the value **is**, not what operation was already performed.
+The syntax should be declarative – by specifying what the value **is**,
+not what operation was already performed.
 
 #### The date and time aren’t visually seperated
 
@@ -210,7 +211,8 @@ Some of RFC 3339’s own problems are worth mentioning.
 
 ### Lexicographical sorting
 
-To sort date-times of the same UTC offset chronologically, you can sort their RFC 3339 timestamps lexicographically.
+To sort date-times of the same UTC offset chronologically,
+you can sort their RFC 3339 timestamps lexicographically.
 This obviously breaks if the offsets differ.
 If you need both lexicographical sorting and the original offsets, see the next section.
 
@@ -229,7 +231,7 @@ If you need both lexicographical sorting and the original offsets, see the next 
 ### Affixing timezone names
 
 [RFC 9557](https://datatracker.ietf.org/doc/rfc9557/),
-which updates RFC 3339, defines (among others) notation for attaching a timezone name to a date-time:
+which updates RFC 3339, defines (among others) notation to attach a timezone name to a date-time:
 
 ```text
 2024-12-16T14:30:55-08:00[America/Los_Angeles]
@@ -251,7 +253,8 @@ However, many implementations will either ignore the marker or fail to parse the
 
 #### Forcing natural lexicographical sorting
 
-You can force natural lexicographical sorting while retaining the local offset or zone, either of these formats:
+You can force natural lexicographical sorting while retaining the local offset or zone,
+either of these formats:
 
 ```text
 2024-12-16T14:30:55Z[America/Los_Angeles]
@@ -260,7 +263,8 @@ You can force natural lexicographical sorting while retaining the local offset o
 
 ???+ note "Inconsistent strings"
 
-    These strings are considered _inconsistent_, and the prefix `!` forces implementations to treat them as erroneous:
+    These strings are considered _inconsistent_,
+    and the prefix `!` forces implementations to treat them as erroneous:
 
     ```text
     2024-12-16T14:30:55+00:00[!-08:00]
@@ -276,7 +280,8 @@ You can force natural lexicographical sorting while retaining the local offset o
     > 2022-07-08T00:14:07Z[Europe/Paris]
     > ```
     >
-    > does not exhibit such an inconsistency, [because] `Z` does not imply a specific preferred time zone […]
+    > does not exhibit such an inconsistency,
+    > because `Z` does not imply a specific preferred time zone […]
 
     However, `2024-12-16T14:30:55+00:00[!-08:00]` **is inconsistent**
     because RFC 3339 assigns `Z` and `+00:00` slightly different meanings.

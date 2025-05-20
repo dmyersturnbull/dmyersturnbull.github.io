@@ -107,14 +107,7 @@ Tiny logging library for shell scripts (required)
   Finds `TODO` and `FIXME` comments
 - [:fontawesome-solid-terminal: **`gh-log.sh`**](../scripts/gh-log.sh):
   Git log with GitHub commit URLs
-
-!!! warning
-
-    The following scripts are all experimental.
-
 - [:fontawesome-solid-terminal: **`copy.sh`**](../scripts/copy.sh):
-  `rsync` pretending to be `cp`
+  `rsync` pretending to be `cp` **(EXPERIMENTAL)**
 - [:fontawesome-solid-terminal: **`create-btrfs-backup.sh`**](../scripts/create-btrfs-backup.sh):
-  Btrfs-specific backups
-- [:fontawesome-solid-gear: **`apprise.sh`**](../scripts/apprise.sh):
-  Tiny logging library for shell scripts (required)
+  Btrfs-specific backups **(EXPERIMENTAL)**

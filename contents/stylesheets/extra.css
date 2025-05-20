@@ -5,6 +5,12 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 */
 
 /*
+ * See:
+ * - https://squidfunk.github.io/mkdocs-material/customization/#additional-css
+ * - https://squidfunk.github.io/mkdocs-material/reference/admonitions/#customization
+ */
+
+/*
  * New admonition type: 'rationale'
  */
 :root {
@@ -89,13 +95,30 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 }
 
 /*
+ * Notice sign that works a bit like an admonition
+ */
+.notice-sign {
+  font-weight: 300;
+  outline: 2px dotted black;
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+.notice-sign:before {
+  color: blue;
+  font-size: x-large;
+  font-weight: 600;
+  content: "ⓘ";
+  margin-right: 2rem;
+}
+
+/*
  * New special 'index' header for index.md files:
  */
 .index {
   font-size: x-large;
   font-weight: 300;
-  margin-top: 10ex;
-  margin-bottom: 4ex;
+  margin-top: 4rem;
+  margin-bottom: 2rem;
 }
 
 /*

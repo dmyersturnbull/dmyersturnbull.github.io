@@ -64,16 +64,18 @@ You should now have a colorful shell, complete with a plugin for Git.
 
     <b>Further reading:</b>
 
-    - [`~/.bashrc` vs. `~/.bash_profile`](https://stackoverflow.com/questions/415403/whats-the-difference-between-bashrc-bash-profile-and-environment)
-    - [`~/.zsh*` files](https://unix.stackexchange.com/questions/71253/what-should-shouldnt-go-in-zshenv-zshrc-zlogin-zprofile-zlogout)
-    - [`~/.zsh*` files on macOS](https://apple.stackexchange.com/questions/388622/zsh-zprofile-zshrc-zlogin-what-goes-where)
-    - [`~/.profile` file](https://unix.stackexchange.com/questions/83742/what-is-the-difference-between-profile-and-bash-profile-and-why-dont-i-have-a)
+    - [`~/.bashrc` vs. `~/.bash_profile`](https://stackoverflow.com/q/415403)
+    - [`~/.zsh*` files](https://unix.stackexchange.com/q/71253)
+    - [`~/.zsh*` files on macOS](https://apple.stackexchange.com/q/388622)
+    - [`~/.profile` file](https://unix.stackexchange.com/q/83742)
 
-Create a new file, `~/.commonrc`, and have `~/.bashrc`, `~/.zshrc`, and any other Bash-compatible `~/.*rc` files source it.
+Create a new file, `~/.commonrc`, and have `~/.bashrc`, `~/.zshrc`,
+and any other Bash-compatible `~/.*rc` files source it.
 Use `~/.commonrc` to set up your environment variables, aliases, etc.
 This is a solid but extremely simple way to keep the shell configurations in sync.
 
-I wrote a little script called [`commonrc-config.sh`](files/commonrc-config.sh), which manages this nicely.
+I wrote a little script called [`commonrc-config.sh`](files/commonrc-config.sh),
+which manages this nicely.
 It does nothing on its own; it just provides some functions.
 Run these commands:
 
@@ -97,7 +99,8 @@ commonrc::source_from zshrc
 
 ??? info
 
-    `commonrc-config.sh`’s functions are just idempotent, so you won’t end up with multiple `source` lines, etc.
+    `commonrc-config.sh`’s functions are just idempotent,
+    so you won’t end up with multiple `source` lines, etc.
     Otherwise, it’s mostly equivalent to this:
 
     ```bash
@@ -105,7 +108,7 @@ commonrc::source_from zshrc
     printf 'export PATH="$PATH:/usr/sbin:/usr/local/sbin:$HOME/bin"\n' >> ~/.commonrc
     ```
 
-## Sudoers
+## Sudoers (Linux only)
 
 The easiest way is to run
 

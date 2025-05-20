@@ -105,16 +105,16 @@ class See:
 
 class SeeEncoding:
 
-    def encode(selfself, see_links: Iterable[See]) -> str:
+    def encode(self, see_links: Iterable[See]) -> str:
         return ", ".join(self._encode_single(see) for see in see_links)
 
-    def decode(selfself, header: str) -> list[See]:
+    def decode(self, header: str) -> list[See]:
         return [
             self._decode_single(m.group("uri"), m.group("params"))
             for m in _LINK_PATTERN.finditer(header)
         ]
 
-    def _encode_single(selfself, see: See) -> str:
+    def _encode_single(self, see: See) -> str:
         data = {
             k: urlencode(f"<{v}>") if k == "doc" else urlencode(v)
             for k, v in asdict(see).items()
@@ -122,7 +122,7 @@ class SeeEncoding:
         }
         return "; ".join([f"<{urlencode(see.uri)}>", *data])
 
-    def _decode_single(selfself, uri: str, params: str) -> See:
+    def _decode_single(self, uri: str, params: str) -> See:
         data = {
             m.group("key"): unquote(m.group("value"))
             for m in _PARAMS_PATTERN.finditer(params)

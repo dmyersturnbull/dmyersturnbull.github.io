@@ -7,7 +7,6 @@ set -o errexit -o nounset -o pipefail # "strict mode"
 
 script_path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
 declare -r script_name="${script_path##*/}"
-declare -r script_dir="${script_path%/*}"
 declare -r script_vr=v0.1.0
 
 # Declare options with their defaults.
@@ -18,7 +17,7 @@ declare socket_path=
 # Using >1 thread for compression is probably just a waste.
 declare -i zstd_level=2
 declare -i zstd_threads=1
-declare -i log_level=3
+declare -i log_level=2
 
 # Define usage, help info, etc.
 
@@ -46,8 +45,8 @@ Options:
   -p, --port          TCP port for connection (default: $port).
       --zstd-level    ZSTD compression level; higher is slower (default: $zstd_level).
       --zstd-threads  Number of threads for ZSTD to use (default: $zstd_threads).
-  -v  --verbose       Decrease log level (DEBUG, INFO (default), WARN, ERROR). Repeat to lower more.
-  -q  --quiet         Increase log level (DEBUG, INFO (default), WARN, ERROR). Repeat to raise more.
+  -v  --verbose       Decrement log level threshold, repeatable (default level: INFO).
+  -q  --quiet         Increment log level threshold, repeatable (default level: INFO).
 
 Environment variables:
   DB_USER             Username (default: empty).
@@ -57,10 +56,10 @@ declare -r help=""
 
 # Set up logging.
 
-if [[ -f "$script_dir"/apprise.sh ]]; then
-  source "$script_dir"/apprise.sh
+if [[ -f "$HOME"/bin/apprise.sh ]]; then
+  source "$HOME"/bin/apprise.sh
   apprise() {
-    apprise::log "$log_level" "$1" "$2"
+    apprise::log "$1" "$2"
   }
 else
   apprise() {
@@ -69,18 +68,15 @@ else
 fi
 
 usage_error() {
-  apprise ERROR "$1" || true
-  printf >&2 '%s\n' "$usage" || true
+  apprise ERROR "$1"
+  printf >&2 '%s\n' "$usage"
   exit 2
 }
 
 general_error() {
-  apprise ERROR "$1" || true
+  apprise ERROR "$1"
   exit 1
 }
-
-declare -i n_verbose=0
-declare -i n_quiet=0
 
 # Parse arguments.
 
@@ -159,8 +155,7 @@ while (($# > 0)); do
   shift
 done
 
-log_level=$(apprise::process_log_args $n_verbose $n_quiet) || exit $?
-use_color=$(apprise::process_color_arg "$use_color") || exit $?
+apprise::config $log_level "$use_color" || exit $?
 
 declare protocol_arg socket_arg host_arg port_arg user_arg password_arg
 if [[ -n "$socket_path" ]]; then

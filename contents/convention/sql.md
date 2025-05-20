@@ -15,7 +15,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 Use lowercase for keywords, aliases, function names, and columns, and table names.
 
-Wrap at 120 characters and do not align horizontally.
+Wrap at 100 characters and do not align horizontally.
 Multiline statements should follow this indentation format:
 
 ```sql

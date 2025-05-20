@@ -8,13 +8,8 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 The landscape of Python build infrastructure is a mess.
 I made over 100 commits to get a sensible, elegant, and secure build.
-It took too long, but here’s the result:
-**[template repository :fontawesome-solid-code:](https://github.com/dmyersturnbull/tyranno-sandbox)**
-
-<!--
-The result is a template project and tool called
-[Tyrannosaurus](https://github.com/dmyersturnbull/tyrannosaurus).
--->
+It took too long, but here’s the
+**[example repository :fontawesome-solid-code:](https://github.com/dmyersturnbull/tyranno-sandbox)**
 
 ## Compared to other languages
 
@@ -48,77 +43,63 @@ Well, you can’t.
 ### Pip
 
 This is not how any reasonable modern build tool should operate.
-Moreover, Pip [does not resolve dependencies](https://github.com/pypa/pip/issues/988) or identify conflicts.
-A `requirements.txt` is especially bad because it’s order‐dependent and might be run in parallel, making it stochastic.
+Moreover,
+[Pip doesn’t resolve dependencies](https://github.com/pypa/pip/issues/988)
+or identify conflicts.
+`requirements.txt` are especially bad: They’re order‐dependent and clobber earlier dependencies.
+And if they’re run in parallel, builds become stochastic.
 
 ### Conda
 
 Conda came after Pip.
-In contrast to pip/setuptools, Anaconda/Conda performed dependency resolution, specified package metadata,
+In contrast to pip/setuptools,
+Anaconda/Conda performed dependency resolution, specified package metadata,
 easily linked C/C++, and tailored to scientific computing, drawing a specialized audience.
-But Conda has multiple channels, lacks many packages, fights with pip, throws false positives about dependency
-conflicts, and can take literally hours to balk on a large dependency graph.
-_(In fairness, [Poetry’s resolver can be slow](https://python-poetry.org/docs/faq/) due to a flaw in PyPi.)_
+But Conda has multiple channels, lacks many packages, fights with pip,
+falsely claims there are dependency conflicts, and can take literally hours large dependency graph,
+only to balk with an incorrect complaint.
+In fairness,
+[Poetry’s resolver can be slow](https://python-poetry.org/docs/faq/)
+due to a flaw in PyPi.
 
 Conda can resolve dependencies correctly.
-Unfortunately, many packages are not on Anaconda or Conda-Forge, and some recipes are unmaintained and out‐of‐date.
+Unfortunately, many packages are not on Anaconda or Conda-Forge
+and some recipes are unmaintained and out‐of‐date.
 [Anaconda can corrupt itself](https://github.com/ContinuumIO/anaconda-issues/issues/11336).
 I just wrote a
-[StackOverflow answer](https://stackoverflow.com/questions/61624631/using-anaconda-is-a-messy-base-root-going-to-be-a-problem-in-the-long-term/61624747#61624747)
+[StackOverflow answer](https://stackoverflow.com/a/61624747)
 regarding this.
 
-### Wheels, pipx, Poetry, and Hatch
+### Wheels, pipx, uv, Poetry, and Hatch
 
-_Fast-forward to 2023:_ There are [wheels](https://pythonwheels.com/).
-And Poetry, Hatch, pipx, and even pip perform dependency resolution. Poetry, in particular, is way faster than Conda,
-is more clear about dependencies, doesn’t seem to throw false positives, and is friendlier to use.
+_**Update**: Fast-forward to 2025:_ Check out [uv](https://docs.astral.sh/uv/), too.
 
-!!! info "What are wheels?"
+_Fast-forward to 2023:_
+Pip now performs some dependency resolution – although it’s slow and somewhat unreliable.
+Hatch, Poetry, and pipx fully resolve dependency DAGs.
+These are way faster than Conda, are more clear about dependencies,
+don’t fail on resolvable graphs, and are more reliable and easier to use.
 
-    Python [wheels](https://pythonwheels.com/) are prebuilt, platform-specific packages which are distributed through PyPi.
-    They can be statically linked with compiled C/C++ libraries.
-    [Rdkit was a hold-out](https://github.com/rdkit/rdkit/issues/1812), distributing prebuilt packages only for Conda.
-    They now provide wheels under [rdkit-pypi](https://github.com/kuelumbus/rdkit-pypi).
+Additionally, there are [wheels](https://pythonwheels.com/)!
+Python [wheels](https://pythonwheels.com/)
+are prebuilt, platform-specific packages which are distributed through PyPi.
+They can be statically linked with compiled C/C++ libraries.
+[Rdkit was a hold-out](https://github.com/rdkit/rdkit/issues/1812),
+distributing prebuilt packages only for Conda.
+They now provide wheels under [rdkit-pypi](https://github.com/kuelumbus/rdkit-pypi).
 
-**TL;DR:** Stop using Conda.
+So, you can stop using Conda.
 If needed, install [mambaforge](https://github.com/conda-forge/miniforge#mambaforge).
 See [this Mambaforge setup guide](../guide/mamba-and-conda.md)
 
 ## A nice build
 
-It took me an unacceptable number of hours and commits.
-I’d change, push, wait for CI failures, and repeat.
-I made the repo public to be used as a template, so that others can avoid that special level of hell.
+Getting the
+**[example repository](https://github.com/dmyersturnbull/tyranno-sandbox)**
+working perfectly took me an unacceptable number of hours.
+You can go ahead and copy it to avoid that special kind of hell.
 
-It uses [Hatch](https://hatch.pypa.io/),
-[uv](https://docs.astral.sh/uv/),
-and
-[GitHub actions](https://help.github.com/en/actions).
-It doesn’t contain a `setup.py` or `setup.cfg`.
-
-When you push, it builds wheels, sdists, and a Docker image, and runs tests.
-It lints on commit using [pre-commit](https://pre-commit.com/).
-When you tag on GitHub, it publishes to PyPi and Docker Hub.
-
-<!--
-TODO: Re-add documentation on Tyrannosaurus.
-
-In fact, `pyproject.toml` is the only file that contains metadata to edit.
-When you commit, metadata is copied from `pyproject.toml` to other files,
-such as  `__init__.py`, `CITATION.cff`, and `environment.yml`.
-So if you add a contributor, keyword, or dependency, it will be reflected everywhere.
-It also formats all of your files.
-
-If you need your package published to [Conda-Forge](https://conda-forge.org/) as well, you can.
-That takes [a few manual steps](https://tyrannosaurus.readthedocs.io/en/latest/usage.html#anaconda-recipes).
--->
-
-!!! aside
-
-    YAML is honestly really bad.
-    1.1 is downright dangerous, but even 1.2 is a mess.
-
-    See:
-
-    - [the YAML document from Hell](https://ruudvanasseldonk.com/2023/01/11/the-yaml-document-from-hell).
-    - [YAML sucks](https://github.com/cblp/yaml-sucks).
+It primarily uses [Hatch(ling)](https://hatch.pypa.io/) and [uv](https://docs.astral.sh/uv/).
+The repo also contains a suite of useful
+[GitHub workflows](https://help.github.com/en/actions)
+for cross-platform testing, publishing packages/docs/images, generating release notes, and more.

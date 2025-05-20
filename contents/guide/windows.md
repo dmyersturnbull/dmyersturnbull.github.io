@@ -57,7 +57,8 @@ Go to the start menu and type _features_.
 Navigate to
 _Apps and Features ➤ Manage optional features ➤ add feature ➤ Windows Developer Mode ➤ install_.
 
-Also enable OpenSSH, uninstall Notepad and Wordpad, and disable other unnecessary Optional Features -- which is most of them.
+Also enable OpenSSH, uninstall Notepad and Wordpad, and disable other unnecessary Optional Features
+(most of them are unnecessary).
 These include the Telnet Client, Windows Media Player, and PowerShell 2.0.
 
 ??? example "Example Optional Features"
@@ -108,7 +109,7 @@ Otherwise, your system clock can drift seconds or even minutes after a small num
 ### Power settings
 
 In the power settings, disable hibernation, automatic sleep mode, and USB connection suspending.
-While these can save power, chances are too high that they will interfere with a long‐running job or backup.
+Although these can save power, they’re likely to interfere with a long‐running job or backup.
 
 In some cases, you will want to disable scanning in a drive. This can drop performance.
 It can even cause issues because it can open file handles, temporarily preventing writes;
@@ -166,7 +167,8 @@ Alternatively you can search for
 
 Install [Chocolatey](https://chocolatey.org/), a fantastic package manager.
 After installing, run `choco upgrade all -Y`.
-Install powershell-core (`choco install powershell-core -Y`) and restart your terminal, choosing PowerShell Core.
+Install powershell-core (`choco install powershell-core -Y`)
+and restart your terminal, choosing PowerShell Core.
 
 Set powershell-core as your default shell.
 Check the PowerShell version using: `Get-Host | Select-Object Version`. Make sure it’s 7+.
@@ -202,8 +204,10 @@ Keep packages up-to-date by occasionally running `choco upgrade all`.
 
 ## Other package managers (Snappy & Scoop)
 
-Install [Snappy](https://snappy.computop.org/installing.html#windows), a cross-platform package manager.
-Then install [Scoop](https://scoop.sh/), another package manager specialized for software development.
+Install [Snappy](https://snappy.computop.org/installing.html#windows),
+a cross-platform package manager.
+Then install [Scoop](https://scoop.sh/),
+another package manager specialized for software development.
 
 ## Git, SSH, & GPG
 
@@ -284,15 +288,17 @@ Install the package without optional packages (unless they’re wanted).
 !!! bug "Troubleshooting: Building packages from source"
 
     Some packages do not publish wheels for Windows.
-    Uv, as well as Pip and Poetry, will fall back to compiling on Windows if suitable wheels are not found.
-    You may need to install older versions of the Visual C++ Build Tools for this to work (as well as the latest).
+    Uv, as well as Pip and Poetry, will fall back to compiling on Windows
+    if suitable wheels are not found.
+    You may also need to install older versions of the Visual C++ Build Tools for this to work.
     Also take a look at
     [Christopher Golhlke’s wheel archive](https://www.lfd.uci.edu/~gohlke/pythonlibs/).
-    It often has Windows wheels for the latest Python versions much earlier than the packages officially release them.
+    It often has Windows wheels much earlier than the packages officially release them.
 
 ## Windows Linux Subsystem
 
-Follow [Microsoft’s instructions](https://learn.microsoft.com/en-us/windows/wsl/install) to install the WLS.
+Follow [Microsoft’s instructions](https://learn.microsoft.com/en-us/windows/wsl/install)
+to install the WLS.
 Then follow the [Linux setup guide](linux.md).
 
 ## Final steps

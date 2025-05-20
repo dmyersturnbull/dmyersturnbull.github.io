@@ -17,13 +17,13 @@ apprise() {
 }
 
 usage_error() {
-  apprise ERROR "$1" || true
-  printf >&2 '%s\n' "$usage" || true
+  apprise ERROR "$1"
+  printf >&2 '%s\n' "$usage"
   exit 2
 }
 
 general_error() {
-  apprise ERROR "$1" || true
+  apprise ERROR "$1"
   exit 1
 }
 
@@ -43,31 +43,21 @@ fi
 #   --branch               # Show branch information
 git config --global \
   alias.stat \
-  '
-  status
-    --short
-    --branch
-  '
+  "status --short --branch"
 
 # 'lg' alias -- Show commit logs in a condensed single line per commit
 # Arguments:
 #   --oneline             # Condense each commit to a single line
 git config --global \
   alias.lg \
-  '
-  log
-    --oneline
-  '
+  "log --oneline"
 
 # 'graph' alias -- Show commit logs with an ASCII graph of branch and merge history
 # Arguments:
 #   --graph               # Display an ASCII graph of the branch and merge history
 git config --global \
   alias.graph \
-  '
-  log
-    --graph
-  '
+  "log --graph"
 
 # 'long-graph' alias -- Show commit logs with cumulative counts, compact summary, and ASCII graph
 # Arguments:
@@ -76,12 +66,7 @@ git config --global \
 #   --cumulative          # Display cumulative commit counts
 git config --global \
   alias.long-graph \
-  '
-  log
-    --graph
-    --compact-summary
-    --cumulative
-  '
+  "log --graph --compact-summary --cumulative"
 
 # 'log-diff' alias -- Show commit logs with full diff and various diff options
 # Arguments:
@@ -97,22 +82,18 @@ git config --global \
 #   --color-moved-ws             # Highlight moved whitespace
 git config --global \
   alias.log-diff \
-  '
-  log
-    --full-diff
-    --unified=1
-    --color=always
-    --ignore-blank-lines
-    --ignore-space-at-eol
-    --diff-algorithm=histogram
-    --find-renames=50
-    --find-copies=50
-    --color-moved=zebra
-    --color-moved-ws
-  '
+  "log \
+    --full-diff \
+    --unified=1 \
+    --color=always \
+    --ignore-blank-lines \
+    --ignore-space-at-eol \
+    --diff-algorithm=histogram \
+    --find-renames=50 \
+    --find-copies=50 \
+    --color-moved=zebra \
+    --color-moved-ws"
 
 git config --global \
   alias.cute-log \
-  '
-  log --pretty=tformat:"%C(bold)%C(green)<%h>%C(italic)%(decorate:prefix=  ,suffix=,pointer=→)%n%C(bold)%C(cyan)%aI  %C(italic)--%an%n%C(dim)%s%n"
-  '
+  'log --pretty=tformat:"%C(bold)%C(green)<%h>%C(italic)%(decorate:prefix=  ,suffix=,pointer=→)%n%C(bold)%C(cyan)%aI  %C(italic)--%an%n%C(dim)%s%n'

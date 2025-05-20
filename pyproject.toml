@@ -28,7 +28,7 @@ dependencies = [
 [dependency-groups]
 dev = [
   "pre-commit>=4.2",
-  "ruff >=0.11.5",
+  "ruff >=0.11.10",
 ]
 
 [tool.hatch.build.targets.wheel]
@@ -43,14 +43,9 @@ packages = ["contents"]
 #
 #=================================== Ruff basics =============================#
 
-include = [
-  "*.py",           # Source
-  "pyproject.toml", # This file (RUF rules only)
-  "*.ipynb",        # Jupyter notebooks
-]
 exclude = [] # Rely on https://docs.astral.sh/ruff/settings/#respect-gitignore
 src = ["src"] # Needed for import sorting
-line-length = 120 # 120 is hatch's default via 'hatch init'
+line-length = 100
 
 [tool.ruff.format]
 docstring-code-format = true
@@ -156,13 +151,17 @@ ignore = [
   "RUF001",   # confusable characters
   "RUF002",   # confusable characters
   "RUF003",   # confusable characters
+  "PLC0415",  # imports at top (sometimes want lazy import)
+  "RUF021",   # demands parentheses in `or (x and y)`
 ]
 
 # -------------------------- Ruff unfixable rules -----------------------------
 unfixable = [
+  "ERA001",   # commented-out code (not autofixable currently, but just in case)
   "F841",     # unused variable
   "SIM112",   # uncapitalized env var
   "RUF027",   # possible f-string -- can make mistakes
+  "RUF102",   # invalid noqa
 ]
 
 # -------------------------- Ruff delegated options ---------------------------

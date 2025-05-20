@@ -19,9 +19,12 @@ Do not set `__author__` or similar fields, but do set `mainpkg/__version__`.
 The [Ruff formatter](https://docs.astral.sh/ruff/formatter/)
 – which is equivalent to [Black](https://github.com/psf/black)
 – should be used, so don’t worry much about formatting.
-Avoid add trailing commas so that Black can decide whether to keep code on one line or to chop it.
+Avoid trailing commas so the formatter can decide whether to keep code on one line or to chop it,
+or enable
+[`skip-magic-trailing-comma`](https://docs.astral.sh/ruff/settings/#format_skip-magic-trailing-comma).
 
-Sometimes Ruff/Black wraps lines in awkwardly, by prioritizing argument lists over call chains.
+Sometimes Ruff, Prettier, and other formatters
+wrap lines awkwardly by prioritizing argument lists over call chains.
 If this happens, either shorten the lines or break the code into multiple statements.
 For example:
 
@@ -116,9 +119,9 @@ Inherit directly from abstract base classes in
 rather than using `metaclass=`.
 
 ```python
-from collections.abc import Sequence, MutableSequence
+from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Literal, Self
+from typing import Literal
 
 
 @dataclass(slots=True, frozen=True)
@@ -127,16 +130,16 @@ class AxisTicks(Sequence[int]):
     orientation: Literal["x"] | Literal["y"]
     items: Sequence[int]
 
-    def __getitem__(selfself, i: int) -> int:
+    def __getitem__(self, i: int) -> int:
         return self.items[i]
 
-    def __len__(selfself) -> int:
+    def __len__(self) -> int:
         return len(self.items)
 
 
 # Error!
 # dataclasses.FrozenInstanceError: cannot assign to field 'orientation'
-AxisTicks(orientation="x", items=[1, 3, 5])
+a = AxisTicks(orientation="x", items=[1, 3, 5])
 a.orientation = "y"
 ```
 
@@ -239,22 +242,33 @@ Annotate `self`, `cls`, `*args`, and `**kwargs` parameters.
         def new_zero(cls) -> Self:
             return cls(0)
 
-        def __add__(selfself, otherself) -> Self:
+        def __add__(self, otherself) -> Self:
             return self.__class__(self.value + other.value)
 
-        def add_sum(selfself, *args: int) -> Self:
+        def add_sum(self, *args: int) -> Self:
             return self.__class(self.value + sum(args))
 
-        def delegate(selfself, *args: Any, **kwargs: Unpack[tuple[str, Any]]) -> None:
+        def delegate(self, *args: Any, **kwargs: Unpack[tuple[str, Any]]) -> None:
             ...  # first do something special
             super().delegate(*args, **kwargs)
     ```
 
 ### Collection types
 
-In Python 3.9, [PEP 585](https://peps.python.org/pep-0585/) enabled type parameterization for the concrete types
+In Python 3.9, [PEP 585](https://peps.python.org/pep-0585/)
+enabled type parameterization for the concrete types
 `list`, `set`, `frozenset`, `dict`, `tuple`, and `type` and deprecated their
-[aliases in `typing`'](https://docs.python.org/3/library/typing.html#aliases-to-types-in-collections).
+[`typing` aliases](https://docs.python.org/3/library/typing.html#aliases-to-types-in-collections).
+
+!!! warning
+
+    Don’t thoughtlessly replace `Set` with `set`.
+    `frozenset` $\sqsubseteq$ `Set`, but
+    `frozenset` $\not\sqsubseteq$ `set`.
+    Replacing `List` with `List` is less problematic because there’s only one builtin `List` type,
+    but doing that will break typing for types that inherit from or
+    [register](https://docs.python.org/3/library/abc.html#abc.ABCMeta.register) with `List`.
+    Consider disabling [Ruff UP006](https://docs.astral.sh/ruff/rules/non-pep585-annotation/).
 
 It also enabled parameterization on types from `collections.abc` like `Set`,
 and made corresponding types in `typing` deprecated aliases.
@@ -287,6 +301,8 @@ and `typing.Dict` is a deprecated alias to `dict`.
     isinstance(frozenset(), MutableSet)  # False
     isinstance(frozenset(), Set)  # True
     ```
+
+!!! bug
 
 #### Collection hierarchy
 

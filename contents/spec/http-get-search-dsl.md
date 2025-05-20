@@ -109,7 +109,8 @@ jmespath:
   description: >-
     JMESPath expression to apply after `filter`, `get`, and `sort`.
     `jmespath` much slower than `filter`.
-    Whenever possible, prefer using `filter`, using `jmespath` only for complex non-filtering transformations.
+    Whenever possible, prefer using `filter`,
+    using `jmespath` only for complex non-filtering transformations.
   allowReserved: true
   schema:
     type: string
@@ -185,9 +186,9 @@ NORMAL-CHAR    = ALPHANUM | [_.~-]
 SPECIAL-CHAR   = [=!$()*+,/?]
 ```
 
-!!! note "Caution: avoid reserved characters in keys"
+!!! note "Recommendation"
 
-    Although this grammar allows reserved characters in keys, avoid them where possible.
+    Avoid using reserved characters in keys when possible.
 
 ### Image extension
 
@@ -239,7 +240,7 @@ To normalize a URI:
 
 ## Caching
 
-!!! note "Note: caching"
+!!! note
 
     For caching, some request headers may need to be used in the caching logic.
     For example, `If-Match` may need to be handled along with `ETag`.
@@ -318,8 +319,9 @@ Field names are delimited by `|`, which signals union.
 
 Sort by one or more keys, delimited by `|` and listed from high to low precedence.
 Prepending `-` to a key reverses the sort order.
-For `sort-by=-author.name|author.email`, `author.name` is in descending order, and `author.email` is used to break ties.
-Note that a total ordering is guaranteed if and only if at least one field is unique for all records.
+For `sort-by=-author.name|author.email`:
+`author.name` is in descending order, and `author.email` is used to break ties.
+A total ordering is guaranteed if and only if at least one field is unique for all records.
 
 ## Images
 
@@ -336,8 +338,8 @@ However, supporting both is discouraged.
   Example: `/api/image/9hfzk2lr-01.webp`
 
 <small>
-    <b>†</b> Specifically, we’ll term an API resource-oriented if
-    URIs represent the same resource **iff** they have the same path.
+<b>†</b> Specifically, we’ll term an API resource-oriented if
+URIs represent the same resource **iff** they have the same path.
 </small>
 
 ### `crop`

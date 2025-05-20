@@ -15,10 +15,11 @@ _If you’re already convinced, skip this section._
 
 !!! quote
 
-    > Researchers are spending more and more time writing computer software to model biological structures,
-    > simulate the early evolution of the Universe and analyse past climate data, among other topics.
+    > Researchers are spending more and more time writing computer software to
+    > model biological structures, simulate the early evolution of the Universe
+    > and analyse past climate data, among other topics.
     > But **programming experts have little faith that most scientists are up to the task.**”
-    ― [Merali 2010 (doi:10.1038/467775a)](https://pubmed.ncbi.nlm.nih.gov/20944712/) (bolding changed)
+    ― [Merali 2010 (doi:10.1038/467775a)](https://pubmed.ncbi.nlm.nih.gov/20944712/) (bold added)
 
 Here’s what happens:
 [5 retractions in one lab due to a bug](https://science.sciencemag.org/content/314/5807/1856).

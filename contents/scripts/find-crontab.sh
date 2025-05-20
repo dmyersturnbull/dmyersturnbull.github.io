@@ -31,12 +31,12 @@ crontab_user_dirs=(
 )
 
 find_user_dir() {
-  local n_found=0
+  local -i n_found=0
   local last_found=
   for path in "${crontab_user_dirs[@]}"; do
     if [[ -d "$path" ]]; then
       apprise INFO "Found user directory: '$path'."
-      n_found=$((n_found + 1))
+      ((n_found++))
       last_found="$path"
     fi
   done
@@ -51,13 +51,13 @@ find_user_dir() {
 }
 
 find_user_file() {
-  local n_found=0
+  local -i n_found=0
   local last_found=
   for path in "${crontab_user_dirs[@]}"; do
     file="$path/$USER"
     if [[ -f "$file" ]]; then
       apprise INFO "Found user crontab: '$file'."
-      n_found=$((n_found + 1))
+      ((n_found++))
       last_found="$file"
     fi
   done

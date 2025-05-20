@@ -12,9 +12,12 @@ This details exactly what characters must be percent-encoded in URIs.
 
 ### Relevant specifications
 
-- [RFC 1738](https://datatracker.ietf.org/doc/html/rfc1738), “Uniform Resource Locators (URL)” (RFC Proposed Standard, obsolete)
-- [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986), “Uniform Resource Identifier (URI): Generic Syntax” (RFC Standard)
-- [RFC 6920](https://datatracker.ietf.org/doc/html/rfc3986), “Naming Things with Hashes” (RFC Proposed Standard)
+- [RFC 1738](https://datatracker.ietf.org/doc/html/rfc1738),
+  “Uniform Resource Locators (URL)” (RFC Proposed Standard, obsolete)
+- [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986),
+  “Uniform Resource Identifier (URI): Generic Syntax” (RFC Standard)
+- [RFC 6920](https://datatracker.ietf.org/doc/html/rfc3986),
+  “Naming Things with Hashes” (RFC Proposed Standard)
 - [IANA-recognized URI schemes](https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml)
 
 RFC 3986 is the main specification.
@@ -40,10 +43,13 @@ scheme        authority       path            query       fragment
 
     The rules for _path_ are a bit complex.
     Although it MUST be present, it MAY be empty.
-    (This is a very subtle distinction, but it contrasts with _authority_, _query_, and _fragment_, which can be omitted.)
-    If _authority_ is present, _path_ MUST either be empty OR start with `/` (separating it from the _authority_).
+    (This is a very subtle distinction,
+    but it contrasts with _authority_, _query_, and _fragment_, which can be omitted.)
+    If _authority_ is present, _path_ MUST either be empty OR start with `/`
+    (separating it from the _authority_).
     If _authority_ is omitted, _path_ MAY start with `/` but MUST NOT start with `//`.
-    So, `https:/info/users`, `https:info/users`, `https:?name=charlie` are valid, but `https://info/users` is not.
+    So, `https:/info/users`, `https:info/users`, `https:?name=charlie` are valid,
+    but `https://info/users` is not.
 
 ??? example "Example: the `file` scheme"
 
@@ -73,7 +79,8 @@ unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
 - `General delimiters`:
   Separate components or subcomponents (_userinfo_, _host_, _port_).
   They must be encoded in components where their reserved meanings would apply.
-  For example, `:` must be encoded in _authority_ but not _query_; e.g. `https://api.tld/a:b:c` is valid.
+  For example, `:` must be encoded in _authority_ but not _query_;
+  e.g. `https://api.tld/a:b:c` is valid.
 - `Sub-delimiters`:
   Are used reserved within one or more components but are not general delimiters.
   Whether they must be encoded depends on the component and the scheme.
@@ -81,7 +88,8 @@ unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
 !!! note "Caution: scheme-specific restrictions"
 
     A scheme can restrict URIs in many ways, including whether a sub-delimiter must be encoded.
-    (In fact, §2.2 states that you should encode a reserved character unless the scheme specifically allows it.)
+    (In fact, §2.2 states that you should encode a reserved character
+    unless the scheme specifically allows it.)
     The following section was written for HTTPS.
     It’s valid for some other schemes, but your mileage may vary.
 
@@ -117,7 +125,8 @@ can be used for its literal meaning without percent-encoding.
 ??? info "Footnotes"
 
     - <b>¹</b> Technically, `:` is allowed in _userinfo_ and carries no reserved meaning.
-      However, this is only for compatibility with a `username:password` syntax, which is deprecated.
+      However, this is only for compatibility with a `username:password` syntax,
+      which is deprecated.
 
     - <b>²</b>
       Literal `:` is valid in _path_, except as the first character in a
@@ -146,7 +155,7 @@ The following sections go through some of that for the _query_ component.
 RFC 3986 says this about query strings:
 
 > The characters slash ("/") and question mark ("?") may represent data within the query component.
-> Beware that some older, erroneous implementations may not handle such data correctly [...]
+> Beware that some older, erroneous implementations may not handle such data correctly […]
 
 So, the full set of allowed characters in URI queries is
 
@@ -157,7 +166,7 @@ unreserved / sub-delims / "/" / "?"`.
 [RFC 6920 §3](https://datatracker.ietf.org/doc/rfc6920/#section-3),
 “Naming Things with Hashes” affirms these conclusions:
 
-> [...] percent-encoding is used to distinguish between reserved and unreserved functions
+> […] percent-encoding is used to distinguish between reserved and unreserved functions
 > of the same character in the same URI component.
 > As an example, an ampersand ('&') is used in the query part to separate attribute-value pairs;
 > therefore, an ampersand in a value has to be escaped as '%26'.
@@ -184,7 +193,8 @@ That means there is no HTTP-specific ban on our `sub-delims`, either.
 
 ### Reaffirming: characters allowed in _query_
 
-The characters `&`, `-`, `~`, `.`, `_`, `=`, `?`, `/`, `!`, `$`, `+`, `'`, `(`, `)`, `*`, `+`, and `,`
+The characters
+`&`, `-`, `~`, `.`, `_`, `=`, `?`, `/`, `!`, `$`, `+`, `'`, `(`, `)`, `*`, `+`, and `,`
 do **not** require percent encoding inside a
 [URI query](https://datatracker.ietf.org/doc/html/rfc3986#section-3.4),
 according to its specification, RFC 3986.
@@ -201,9 +211,11 @@ This regex matches exactly the set of valid query strings (_spaces added for cla
 ### Parameters and key–value pairs
 
 Queries often follow more structure, by convention and some standards.
-The idea of passing key–value pairs in URIs is elegant, but the history and resulting standards are a mess.
-In particular,
-[WHATWG defines `application/x-www-form-urlencoded`](https://url.spec.whatwg.org/#application/x-www-form-urlencoded), stating:
+The idea of passing key–value pairs in URIs is elegant,
+but the history and resulting standards are a mess.
+In particular, WHATWG defines
+[`x-www-form-urlencoded`](https://url.spec.whatwg.org/#application/x-www-form-urlencoded),
+stating:
 
 > The application/x-www-form-urlencoded format is in many ways an aberrant monstrosity,
 > the result of many years of implementation accidents and compromises
@@ -221,14 +233,14 @@ The following grammars are simple and may be helpful.
 
 #### Parameter lists
 
-This grammar recognizes a _query_ component and captures its `&`-delimited parameters.
+This ABNF grammar recognizes a _query_ component and captures its `&`-delimited parameters.
 Note that empty parameters are not allowed.
 
 ```abnf
-query = param ('&' param)*
-param = (LIT | ESC)+
-LIT   = [^#[]@%]+
-ESC   = %[A-Za-z\d]{2}
+query    = param *('&' param)
+param    = 1*(LITERAL / ESCAPE)
+LITERAL  = *('^' / '#' / '[' / ']' / '@' / '%')
+ESCAPE   = '%' 2HEXDIG
 ```
 
 #### Key–value pairs
@@ -237,12 +249,12 @@ We can further restrict to `key=value` pairs.
 We’ll allow `=` inside a `value`.
 
 ```
-query = param ('&' param)*
-param = key '=' value
-key   = (LIT | ESC)+
-value = (LIT | ESC | '=')+
-LIT   = [^=#[]@%]+
-ESC   = %[A-Za-z0-9]{2}
+query    = param *('&' param)
+param    = key '=' value
+key      = 1*(LITERAL / ESCAPE)
+value    = 1*(LITERAL / ESCAPE / '=')
+LITERAL  = 0*('^' / '#' / '[' / ']' / '@' / '%')
+ESCAPE   = '%' 2HEXDIG
 ```
 
 ## Implementation considerations
@@ -269,15 +281,19 @@ Maintainers, get on this.
 
 ### Normalization of full URIs
 
-As [@mgiuca points out](https://unspecified.wordpress.com/2012/02/12/how-do-you-escape-a-complete-uri/),
-full URIs cannot be normalized (ala `urlencode`) reliably because they cannot be partitioned into their components unambiguously.
+As
+[@mgiuca points out](https://unspecified.wordpress.com/2012/02/12/how-do-you-escape-a-complete-uri/),
+full URIs cannot be normalized (ala `urlencode`) reliably
+because they cannot be partitioned into their components unambiguously.
 
 Examples:
 
 - `https://api.tld/redirect?uri=https://boeing.fly/news?page2&nav=yes`
-  Is the redirect to `https://boeing.fly/news?page2&nav=yes` or to `https://boeing.fly/news?page2?page2`?
+  Is the redirect to `https://boeing.fly/news?page2&nav=yes`
+  or to `https://boeing.fly/news?page2?page2`?
 - `https://api.tld/redirect?uri=https://boeing.fly/news#ex`
-  Is the redirect to `https://boeing.fly/news#ex` or to `https://boeing.fly/news`?
+  Is the redirect to `https://boeing.fly/news#ex`
+  or to `https://boeing.fly/news`?
 
 Instead, normalize each URI component separately.
 

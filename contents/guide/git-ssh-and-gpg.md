@@ -26,9 +26,27 @@ git config --global user.email "email-associated-with-github@address.tld"
 ```
 
 To clone with https, you may need to add the
-[git https helper](https://stackoverflow.com/questions/8329485/unable-to-find-remote-helper-for-https-during-git-clone).
+[git https helper](https://stackoverflow.com/q/8329485).
 Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu or `dnf install curl-devel` in Fedora.
 I haven’t seen this problem on macOS or Windows.
+
+Also set these config options:
+
+!!! info "`git gc` and `git maintenance`"
+
+    [`git gc --auto`](https://git-scm.com/docs/git-gc)
+    is run by many Git commands, such as `git push`.
+    `--auto` tells it to decide whether to run by simple rules, including the number of loose objects.
+    The much newer [`git maintenance`](https://git-scm.com/docs/git-maintenance)
+    employs different strategies, mostly running incrementally and on schedules.
+    You can enable it per repository, which normally disables `gc.auto`.
+    High-level documentation is limited as of early 2025.
+
+```bash
+# Options for `git gc --auto`.
+# Repack if there are > 1000 loose objects (instead of 6700).
+git config --global gc.auto 1000
+```
 
 ## Configure SSH and set up keys
 
@@ -39,7 +57,8 @@ I haven’t seen this problem on macOS or Windows.
     The public key encrypt messages, while the private one is needed to decrypt them.
     This means that you could send your public key out to everyone.
     But your private key must remain on your computer and be secure.
-    For historical reasons, SSH, OpenSSL, and GPG provide independent mechanisms, but they’re similar.
+    For historical reasons, SSH, OpenSSL, and GPG provide independent mechanisms,
+    but they’re similar.
 
 These steps cover hardening SSH, generating keys, adding a key to GitHub.
 
@@ -61,7 +80,8 @@ chmod 644 "~/.ssh/*.pub"
 
 The following instructions will
 
-- Disable SSH agent forwarding, [which](https://security.stackexchange.com/questions/101783/are-there-any-risks-associated-with-ssh-agent-forwarding)
+- Disable SSH agent forwarding,
+  [which](https://security.stackexchange.com/questions/101783/are-there-any-risks-associated-with-ssh-agent-forwarding)
   [is](https://en.wikipedia.org/wiki/Ssh-agent#Security_issues)
   [very](https://github.com/microsoft/vscode-remote-release/issues/1222)
   [insecure](https://manpages.debian.org/buster/openssh-client/ssh.1.en.html#A)
@@ -78,7 +98,8 @@ The following instructions will
 !!! info "Important: How SSH reads `.ssh/config`"
 
     The
-    [ssh config docs](https://man7.org/linux/man-pages/man5/ssh_config.5.html)
+    [ssh config docs](https://manpages.debian.org/bookworm/openssh-client/ssh_config.5.en.html)
+    ([man7 link](https://man7.org/linux/man-pages/man5/ssh_config.5.html))
     neglect to state this explicitly:
     **Options declared at the top of the file** – specifically, before any `Host` specification –
     **are global and non-overridable**.
@@ -131,7 +152,9 @@ You’ll need to generate an SSH key pair and tell GitHub about it.
     [GitHub’s SSH instructions](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/).
 
 1. Generate a new SSH key pair, named `github`, by running this command.
-   I recommend skipping the passphrase; instead, keep your private key safe, and revoke it if it is compromised.
+   Use a reasonable passphrase.
+   It doesn’t need to be overly strong; rely on
+   keeping your private key safe and promptly revoking it if suspect it was is compromised.
 
    ```bash
    ssh-keygen -t ed25519 -C "kerri.johnson@gmail.com" -f ~/.ssh/github
@@ -301,12 +324,17 @@ per their suggestion.
 3.  Then, generate a key pair by running
 
     ```bash
-    gpg --full-generate-key -t ed25519
+    gpg --full-generate-key
     ```
 
-    Use your full name and the email address you used on GitHub.
-    As with SSH keys, you may choose to use a passphrase.
-    Choose a reasonable expiration date.
+    Use the strongest algorithms.
+    As of 2024, those are `ECC (sign and encrypt)` followed by `Curve 25519`.
+    If GPG is up-to-date, these should be the default.
+
+4.  Follow the rest of the instructions.
+    Choose a reasonable expiration date (e.g. 1 year),
+    set a passphrase (but don’t rely on it),
+    and use the full name and the email address you used on GitHub,
 
 ### Tell Git to use your GPG key
 

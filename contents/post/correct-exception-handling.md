@@ -71,7 +71,8 @@ Apart from lazily initialized fields, exceptions should almost always be immutab
 1. Build the message in the constructor and pass it to the superclass; or
 2. Override `getMessage` (and `getLocalizedMessage`, if needed).
 
-Use Option 2 only if building the message is slow – for example, if it performs analysis to identify the cause.
+Use Option 2 only if building the message is slow –
+for example, if it performs analysis to identify the cause.
 
 ## Custom exception examples
 
@@ -168,7 +169,7 @@ Use Option 2 only if building the message is slow – for example, if it perform
                 return line == obj.line && lineNumber == obj.lineNumber;
             }
             // multiversal equality for safety
-            throw new IllegalArgumentException(STR."Cannot compare to \{obj.getClass().getName()}.");
+            throw new IllegalArgumentException(STR."Can't compare to \{obj.getClass().getName()}.");
         }
 
         @Nonnull

@@ -1,6 +1,6 @@
 site_name: "Gaslit by a computer"
 docs_dir: "contents"
-site_dir: "~docs"
+site_dir: ".site"
 
 copyright: "Copyright 2024, Douglas Myers-Turnbull"
 site_description: "Software guides, reference docs, and more."

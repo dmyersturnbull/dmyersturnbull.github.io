@@ -1,11 +1,11 @@
-# SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
-# SPDX-PackageHomePage: https://dmyersturnbull.github.io
-# SPDX-License-Identifier: CC-BY-SA-4.0
+# SPDX-FileCopyrightText: Copyright 2020-2025, Contributors to Tyrannosaurus
+# SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
+# SPDX-License-Identifier: Apache-2.0
 
 # Check out https://pre-commit.com/ for documentation
-minimum_pre_commit_version: 4.0.1
+minimum_pre_commit_version: 4.2.0
 repos:
-  # Standard hooks (`pre-commit-hooks`)
+  # Standard hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v5.0.0
     hooks:
@@ -19,21 +19,36 @@ repos:
         args:
           - --assume-in-merge # otherwise skipped in rebase
       - id: check-symlinks # ban *broken* symlinks
+      # - id: check-shebang-scripts-are-executable # ensures all shebangs are executable
       - id: end-of-file-fixer # auto-add final \n
       - id: fix-byte-order-marker # auto-remove BOMs
       - id: trailing-whitespace # auto-remove end-of-line whitespace
 
-  # UV lock
-  - repo: https://github.com/astral-sh/uv-pre-commit
-    rev: 0.6.14
+  - repo: local
     hooks:
-      - id: uv-sync
+      - id: check-filenames
+        name: Enforce file and directory naming conventions.
+        entry: Paths may only use 'A-Za-z0-9_.,+=-' and cannot start with '-' or end with '.'.
+        language: fail
+        files: '[^/\w.,+=-]|^-|\.$'
+
+  - repo: https://github.com/python-jsonschema/check-jsonschema
+    rev: 0.33.0
+    hooks:
+      - id: check-github-workflows
+      - id: check-compose-spec
+
+  # UV lock and sync
+  - repo: https://github.com/astral-sh/uv-pre-commit
+    rev: 0.7.6
+    hooks:
+      - id: uv-sync # first locks (without `--upgrade`)
 
   # Format and lint Python with Ruff
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.11.5
+    rev: v0.11.10
     hooks:
-      - id: ruff
+      - id: ruff-check
         args:
           - --fix-only
       - id: ruff-format
@@ -58,3 +73,12 @@ repos:
         # It's ok to list unused suffixes, but Prettier or a plugin must understand them.
         # See: https://prettier.io/docs/en/plugins.html
         files: \.(md|mdx|json|yaml|yml|toml|ini|cfg|properties|sh|ts|js|html|less|css)$|^Dockerfile$|^\..+ignore$
+
+  - repo: https://github.com/tcort/markdown-link-check
+    rev: v3.13.7
+    hooks:
+      - id: markdown-link-check
+        args:
+          - -q
+        stages:
+          - manual

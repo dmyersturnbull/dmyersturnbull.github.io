@@ -8,6 +8,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 Software guides and reference docs.
 By [Douglas Myers-Turnbull](https://dmyersturnbull.com).
+Many are just notes for myself, but some may be useful for others.
 
 <strong class="index">Contents</strong>
 

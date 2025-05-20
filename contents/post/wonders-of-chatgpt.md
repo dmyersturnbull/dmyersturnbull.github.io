@@ -6,7 +6,7 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-A collection of ChatGPT responses that were useful, great, strange, strange, or just unparsable nonsense.
+A collection of ChatGPT responses that are useful, strange, strange, or utter nonsense.
 
 ## Mathematics of subtractive color spaces
 
@@ -33,6 +33,15 @@ ChatGPT 4 saw through my scheme.
 > > 6 apples (today) - 4 apples (ate yesterday) = 2 apples
 > > So, you would have 2 apples today.
 
+<b>ChatGPT 4:</b>
+
+> > I have 6 apples today. I ate 4 apples yesterday. How many apples do I have today?
+
+> You still have 4 apples today.
+> Eating the apples yesterday doesn't change the number of apples you have today.
+
+<b>Bonus – following up with 3.5:</b>
+
 > > Am I an apple?
 
 > No, you're not an apple.
@@ -40,9 +49,3 @@ ChatGPT 4 saw through my scheme.
 > I misunderstood your question.
 > If you're referring to yourself, then the number of apples you have today would still be 1,
 > assuming you haven't acquired or consumed any additional apples since yesterday.
-
-<b>ChatGPT 4:</b>
-
-> > I have 6 apples today. I ate 4 apples yesterday. How many apples do I have today?
-
-> You still have 4 apples today. Eating the apples yesterday doesn't change the number of apples you have today.

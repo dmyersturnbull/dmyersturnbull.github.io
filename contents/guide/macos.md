@@ -40,13 +40,17 @@ brew install bash zsh coreutils
 
 ## Configure your shell
 
+First, navigate to _Settings... ➤ Privacy & Security ➤ Full Disk Access_.
+Add _Terminal_ to the list of apps that can access all files.
+
 **Follow: _[Shell setup :fontawesome-solid-terminal:](nix-shells.md)_.**
 
 ### `brew-refill` alias
 
 !!! prerequisites
 
-    This uses [`commonrc-config.sh`](files/commonrc-config.sh) functions, which `~/.commonrc` should source.
+    This uses [`commonrc-config.sh`](files/commonrc-config.sh) functions,
+    which `~/.commonrc` should source.
     `commonrc::add_line <line>` simply adds `<line>` in `~/.commonrc` if it doesn’t exist.
 
 Add a `brew-refill` command:
@@ -166,7 +170,7 @@ gnu_brew gawk
 
 ### Additional utilities
 
-These are useful utilities that macOS doesn’t provide, optional but recommended.
+These are useful utilities that macOS doesn’t provide, optional but **strongly recommended**.
 
 - [eza](https://github.com/eza-community/eza) (`ls` replacement)
 - [ydiff](https://github.com/ymattw/ydiff) (`diff` replacement)
@@ -176,13 +180,21 @@ These are useful utilities that macOS doesn’t provide, optional but recommende
 - [fd](https://github.com/sharkdp/fd) (`find` replacement)
 - [fzw](https://github.com/junegunn/fzf) (fuzzy finder)
 - [jq](https://jqlang.github.io/jq/) (like `sed`/`awk` but for JSON)
+- [yq](https://mikefarah.gitbook.io/yq) (same as `jq` but for YAML)
 - [btop](https://github.com/aristocratos/btop) (`top`/`htop` replacement)
 
 To install them all, run
 
 ```bash
-brew install eza ydiff bat ripgrep fd fzw jq
+brew install eza ydiff bat ripgrep fd fzw jq yq
 ```
+
+??? tip "Suggested packages"
+
+    These packages may be useful:
+
+    - [ack](https://github.com/beyondgrep/ack3/)
+    - [difftastic](https://github.com/Wilfred/difftastic)
 
 ## Security and connections
 
@@ -237,29 +249,51 @@ Make a few adjustments to Finder settings.
 - Add your home folder to the SideBar: _File ➤ Add to sidebar_.
 - Show full filenames: Check _Finder ➤ Settings... ➤ Advanced ➤ Show all filename extensions_.
 - (Optional) Show folders on top: Check _Finder ➤ Settings... ➤ Advanced ➤ Keep folders on top_.
-- Show directory size: Check _View ➤ Show View Options ➤ Show item info_, then click _Use as Defaults_.
-  (Optional: Set _Sort By_ to _Name_.)
+- Show directory size: Check _View ➤ Show View Options ➤ Show item info ➤ Use as Defaults_.
 
-### Other UI tweaks
+### Use 24-hour time and yyyy-mm-dd.
 
-- Use 24-hour time and yyyy-mm-dd:
-  Under _System Settings ➤ General ➤ Date & Time_, enable _24-hour time_ and _Show 24-hour time on Lock Screen_.
-  Under _System Settings ➤ General ➤ Language & Region_, change _Date Format_.
-  You can also change _Number Format_ to the
-  [IEEE-](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/conferences/style_references_manual.pdf),
-  [NIST-](https://www.nist.gov/pml/nist-technical-note-1297),
-  and [JCGM-](https://www.bipm.org/en/committees/jc/jcgm/publications) recommended
-  `1 234 567.89`.
-- Review Shortcuts and Hot Corners:
-  Under _System Settings ➤ Desktop & Dock_, see (at the very bottom) _Shortcuts..._ and _Hot Corners..._.
-  (I have hot corners for Launchpad in the top right and Mission Control on the bottom right.)
-- Stop macOS from adding `.` after two spaces:
-  Annoyingly, this happens even when typing code in an IDE.
-  Under _System Settings ➤ Keyboard ➤ Text Input ➤ Input Sources ➤ Edit..._, uncheck _Add period with double-space_.
-- Repurpose the useless 🌐︎ key:
-  You can do this under
-  _System Settings ➤ Keyboard ➤ Keyboard Shortcuts... ➤ Modifier Keys ➤ Globe (🌐︎) key_.
-  (I mapped it to ⌘ (retaining ⌘) to make it easier to switch to/from Windows, where CTRL is in the same position.)
+Under _System Settings ➤ General ➤ Date & Time_, enable _24-hour time_ and _Show 24-hour time on Lock Screen_.
+Under _System Settings ➤ General ➤ Language & Region_, change _Date Format_.
+You can also change _Number Format_ to the
+[IEEE-](https://www.ieee.org/content/dam/ieee-org/ieee/web/org/conferences/style_references_manual.pdf),
+[NIST-](https://www.nist.gov/pml/nist-technical-note-1297),
+and [JCGM-](https://www.bipm.org/en/committees/jc/jcgm/publications) recommended
+`1 234 567.89`.
+
+### Make the Dock show/hide instantly.
+
+You can have the Dock auto-hide but pop up instantly by running
+
+```bash
+defaults write com.apple.dock autohide-delay -float 0
+defaults write com.apple.dock autohide-time-modifier -int 0
+killall Dock
+```
+
+### Set shortcuts and Hot Corners.
+
+Under _System Settings ➤ Desktop & Dock_,
+see (at the very bottom) _Shortcuts..._ and _Hot Corners..._.
+I use this:
+
+- top right: _Launchpad_
+- bottom right: _Mission Control_
+- bottom left: _Application Windows_
+
+### Stop macOS from adding `.` after two spaces.
+
+Annoyingly, this happens even when typing code in an IDE.
+Under _System Settings ➤ Keyboard ➤ Text Input ➤ Input Sources ➤ Edit..._,
+uncheck _Add period with double-space_.
+
+### Repurpose the mostly useless 🌐︎ key.
+
+_**Caution:** This has the unfortunate downside of disabling the F1 … F12 keys._
+You can do this under
+_System Settings ➤ Keyboard ➤ Keyboard Shortcuts... ➤ Modifier Keys ➤ Globe (🌐︎) key_.
+I mapped it to ⌘ (retaining ⌘) to make it easier to switch to/from Windows,
+where CTRL is in the same position.
 
 ### Cleanup
 
@@ -270,6 +304,18 @@ Make a few adjustments to Finder settings.
 
 - Terminal: For the much-loved [iTerm2](https://iterm2.com/), run `brew install --cask iterm2`.
 - Text editor: For [Sublime](https://www.sublimetext.com/), run `brew install --cask sublime-text`.
+
+### Aliases to find things
+
+I keep forgetting where macOS puts certain files, so I use aliases to find them:
+
+```bash
+# List my notes in the Stickies app.
+alias ls-stickies= 'eza -l -s created $HOME/Library/Containers/com.apple.Stickies/Data/Library/Stickies/*.rtfd/TXT.rtf'
+
+# List screenshots I just took.
+alias ls-screenshots= 'eza -l -s created $HOME/Desktop/Screenshot *.png'
+```
 
 ---
 

@@ -18,8 +18,8 @@
 *-lock.json           -diff
 *.ipynb               -diff
 
-# To include docs in the statistics, uncomment these lines:
-contents/**/*         linguist-detectable -linguist-documentation
+# To include docs in the statistics, uncomment this line:
+# docs/**/*           linguist-detectable -linguist-documentation
 
 # Never let linguist detect files starting with `.` or `_`.
 [_.]*                 linguist-vendor

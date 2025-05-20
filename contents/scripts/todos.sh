@@ -3,11 +3,10 @@
 # SPDX-PackageHomePage: https://github.com/dmyersturnbull/dmyersturnbull.github.io
 # SPDX-License-Identifier: Apache-2.0
 
-set -o errexit -o nounset -o pipefail # "strict mode" # "strict mode"
+set -o errexit -o nounset -o pipefail # "strict mode"
 
 script_path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
 declare -r script_name="${script_path##*/}"
-declare -r script_dir="${script_path%/*}"
 declare -r script_vr=v0.2.0
 
 # Declare options with their defaults.
@@ -16,7 +15,7 @@ declare files='*.*'
 declare todo='(TODO|FIXME)([^A-Za-z0-9_]|$)'
 declare recurse=false
 declare regex=auto
-declare -i log_level=1
+declare -i log_level=2
 declare -i width=0
 
 # Define usage, help info, etc.
@@ -44,8 +43,8 @@ Options:
   -w, --widen      Widen the columns; can pass multiple times (default: $width).
                    Column widths for --widen passed <n> times are
                    File path: 30/60/90/120/120/...; Line: 4/4/6/8/8/...; Comment:  60×2^(<n>+1)
-  -v  --verbose    Decrease log level (DEBUG, INFO (default), WARN, ERROR). Repeat to lower more.
-  -q  --quiet      Increase log level (DEBUG, INFO (default), WARN, ERROR). Repeat to raise more.
+  -v  --verbose    Decrement log level threshold, repeatable (default level: INFO).
+  -q  --quiet      Increment log level threshold, repeatable (default level: INFO).
 
 Examples:
   $script_name -R -d src/main/java/ -f '*.java'
@@ -105,10 +104,10 @@ Notes:
 
 # Set up logging.
 
-if [[ -f "$script_dir"/apprise.sh ]]; then
-  source "$script_dir"/apprise.sh
+if [[ -f "$HOME"/bin/apprise.sh ]]; then
+  source "$HOME"/bin/apprise.sh
   apprise() {
-    apprise::log "$log_level" "$1" "$2"
+    apprise::log "$1" "$2"
   }
 else
   apprise() {
@@ -117,13 +116,10 @@ else
 fi
 
 usage_error() {
-  apprise ERROR "$1" || true
-  printf >&2 '%s\n' "$usage" || true
+  apprise ERROR "$1"
+  printf >&2 '%s\n' "$usage"
   exit 2
 }
-
-declare -i n_verbose=0
-declare -i n_quiet=0
 
 # Parse arguments.
 
@@ -176,10 +172,10 @@ while (($# > 0)); do
       recurse=true
       ;;
     -v | --verbose)
-      n_verbose=$((n_verbose + 1))
+      ((log_level--))
       ;;
     -q | --quiet)
-      n_quiet=$((n_quiet + 1))
+      ((log_level++))
       ;;
     --color=*)
       use_color="${1#--color=}"
@@ -198,8 +194,7 @@ while (($# > 0)); do
   shift
 done
 
-log_level=$(apprise::process_log_args $n_verbose $n_quiet) || exit $?
-use_color=$(apprise::process_color_arg "$use_color") || exit $?
+apprise::config $log_level "$use_color" || exit $?
 
 # $recurse --> --directories <recurse|skip>
 if [[ "$recurse" == true ]]; then
@@ -220,15 +215,15 @@ elif [[ "$regex" == false ]]; then
 fi
 
 # --wide
-# the help string explains this
+# The help string explains this.
 declare -r _col1_width _col2_width _col3_width
 _col1_width=$((30 * (width + 1)))
 _col2_width=$((width < 4 ? 2 * ((width + 4) / 2) : 8))
 _col3_width=$((60 * 2 ** (width + 1) - 2))
 
-# Start the Markdown table
-# We'll pass $format to awk so we get nicely aligned columns
-# https://stackoverflow.com/questions/4409399/padding-characters-in-printf
+# Start the Markdown table.
+# We'll pass $format to awk so we get nicely aligned columns.
+# https://stackoverflow.com/q/4409399
 _bar="$(printf '%0.1s' "-"{1..10000})"
 col_format="%-${_col1_width}s | %-${_col2_width}s | %-${_col3_width}s\n"
 # shellcheck disable=SC2059

@@ -12,11 +12,14 @@ Take it, modify it, use it. (CC-BY-SA)
 
 **An advanced BNF derivative.**
 
-Standards for specifying grammars are a mess, as [Wirth et al. describe](https://dl.acm.org/doi/10.1145/359863.359883).
+Standards for specifying grammars are a mess, as
+[Wirth et al. describe](https://dl.acm.org/doi/10.1145/359863.359883).
 David A. Wheeler also wrote a
 [complaint about current grammar standards](https://dwheeler.com/essays/dont-use-iso-14977-ebnf.html),
-particularly objecting to [ISO’s EBNF (ISO/IEC 14977:1996)](https://www.iso.org/standard/26153.html).
-[ABNF (RFC5234)](https://datatracker.ietf.org/doc/html/rfc5234) is an improvement,
+particularly objecting to
+[ISO’s EBNF (ISO/IEC 14977:1996)](https://www.iso.org/standard/26153.html).
+[ABNF (RFC5234)](https://datatracker.ietf.org/doc/html/rfc5234)
+is an improvement,
 but it doesn’t use regex and has a non-obvious syntax for repetitions.
 The [W3C XML EBNF](https://www.w3.org/TR/xml/#sec-notation) is better,
 but it still lacks some functionality and the expressiveness that regex can provide.
@@ -29,7 +32,8 @@ but it still lacks some functionality and the expressiveness that regex can prov
     It’s maintained as of early 2025.
 
 In the spirit of [XKCD #927](https://xkcd.com/927/), here is a new proposal.
-It’s a hybrid between ABNF, W3C XML EBNF, and syntax from parser generators, including [ANTLR](https://www.antlr.org/).
+It’s a hybrid between ABNF, W3C XML EBNF, and syntax from parser generators, including
+[ANTLR](https://www.antlr.org/).
 Use it to describe
 [PEGs](https://en.wikipedia.org/wiki/Parsing_expression_grammar)
 and
@@ -62,7 +66,7 @@ The formal grammar for regex-bnf is presented in both itself and in
 
 === "in itself"
 
-    ```text
+    ```ebnf
     grammar         = statement+
     statement       = (START | LF+) (SP* comment? | rule-defn) (SP | LF)*
     comment         = ';' (! LF)*=comment-text
@@ -316,7 +320,7 @@ inline-label  = label-1 ([^ ]+)=my-label
 - Use `=` instead of `::=`.
 - Align the `=` at a generous column, with plenty of space to rename rules for clarity
   (or to add new rules, if the grammar is still being designed).
-- Limit lines to 120 characters, breaking before `|` (preferably) or another operator as needed.
+- Limit lines to 100 characters, breaking before `|` (preferably) or another operator as needed.
   On the continued line, put the operator on the same column as the `=`.
   The goal here is to limit the number of lines unnecessarily included in a diff.
 - Align `;` comments to 2 characters after the `=`.

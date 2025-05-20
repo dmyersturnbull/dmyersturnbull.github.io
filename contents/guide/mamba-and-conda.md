@@ -6,7 +6,7 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-!!! warning "Warning: Not recommended"
+!!! warning "Warning: not recommended"
 
     I have recommended against the Conda/Mamba ecosystem for many years.
     Consider using the PyPi ecosystem and tools like

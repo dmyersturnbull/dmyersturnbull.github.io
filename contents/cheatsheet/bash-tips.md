@@ -13,7 +13,8 @@ This lists some tips, and details how to do certain common-but-difficult things 
 ### Use printf, not echo
 
 [POSIX recommends against `echo`](https://pubs.opengroup.org/onlinepubs/9699919799/)
-because it has serious limitations, including platform-specific behavior, inconsistent `\n` handling,
+because it has serious limitations,
+including platform-specific behavior, inconsistent `\n` handling,
 and an n-ary argument list
 [not terminated by `--`](https://pubs.opengroup.org/onlinepubs/9699919799/).
 
@@ -37,3 +38,49 @@ But this would cause more serious problems, and if you’re naming files like th
 ```bash
 this_dir=$(dirname "$(readlink -f -- "$0" || exit $?)") || exit $?
 ```
+
+## Tables
+
+### Test operators
+
+| operator | syntax            | meaning                                  |
+| -------- | ----------------- | ---------------------------------------- |
+| `==`     | `str1 == str2`    | `str1` **equals** `str2`                 |
+| `!=`     | `str1 != str2`    | `str1` does **not equal** `str2`         |
+| `<`      | `str1 < str2`     | `str1` **precedes** `str2`               |
+| `>`      | `str1 > str2`     | `str` **succeeds** `str2`                |
+| `=~`     | `str =~ regex`    | `str` **matches** `regex` pattern        |
+| `-z`     | `-z str`          | `str` is **empty**                       |
+| `-n`     | `-n str`          | `str` is **nonempty**                    |
+| `-e`     | `-e path`         | `path` **exists**                        |
+| `-f`     | `-f path`         | `path` is a **regular file**             |
+| `-d`     | `-d path`         | `path` is a **directory**                |
+| `-L`     | `-L path`         | `path` is a **symbolic link**            |
+| `-h`     | `-h path`         | (alias for `-L`)                         |
+| `-b`     | `-b path`         | `path` is a **block device**             |
+| `-c`     | `-c path`         | `path` is a **character device**         |
+| `-p`     | `-p path`         | `path` is a **named pipe**               |
+| `-S`     | `-S path`         | `path` is a **socket**                   |
+| `-u`     | `-u path`         | `path` has **set-user-ID** bit           |
+| `-g`     | `-g path`         | `path` has **set-group-ID** bit          |
+| `-k`     | `-k path`         | `path` has **sticky** bit                |
+| `-O`     | `-O path`         | `path` is **owned** by effective user    |
+| `-G`     | `-G path`         | `path` is **owned** by effective group   |
+| `-s`     | `-s file`         | `file` is **nonempty**                   |
+| `-r`     | `-r file`         | `file` is **readable**                   |
+| `-w`     | `-w file`         | `file` is **writable**                   |
+| `-x`     | `-x file`         | `file` is **executable**                 |
+| `-t`     | `-t descriptor`   | `descriptor` **is a tty**                |
+| `-nt`    | `path1 -nt path2` | `path1` is **newer** than `path2`        |
+| `-ot`    | `path1 -ot path2` | `path1` is **older** than `path2`        |
+| `-ef`    | `path1 -ef path2` | `path1` is the **same inode** as `path2` |
+| `-N`     | `-N path`         | `path` has **mtime > atime**             |
+
+## Miscellaneous notes
+
+- `man builtin` covers all builtins for your shell.
+
+- `my_func() { }` fails in Bash but not ZSH.
+  Bash requires functions to have contents, so use `my_func() { true }`.
+- For security, be extremely careful with `env`, `export`, and `declare`.
+  Calling them without arguments may leak secrets.

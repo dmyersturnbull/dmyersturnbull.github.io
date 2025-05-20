@@ -243,7 +243,14 @@ First, install some important packages:
 
 Install the GitHub CLI per the
 [official GH Linux install instructions](https://github.com/cli/cli/blob/trunk/docs/install_linux.md).
-After following the instructions, run `gh auth login`.
+After following the instructions, run
+
+```bash
+gh config set pager cat                    # Recommended -- stops pagination (use `| less` if wanted)
+gh config set editor "$(which vim)"        # Recommended -- if using vim
+gh config set prefer_editor_prompt enabled # Optional
+gh auth login
+```
 
 ### Configure firewall
 
