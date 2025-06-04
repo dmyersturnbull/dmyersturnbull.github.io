@@ -173,20 +173,58 @@ For usage errors, exit with code 2
 Use 1 for other general errors.
 When types of errors need to be distinguished, use codes in the range 3–125.
 It may be helpful to reference
-[`sysexits.h` in the C standard library](https://manpages.ubuntu.com/manpages/lunar/man3/sysexits.h.3head.html)
-(ignoring `EX__BASE` and `EX_USAGE`).
+[`sysexits.h`](https://manpages.ubuntu.com/manpages/lunar/man3/sysexits.h.3head.html)
+in the C standard library (ignoring `EX__BASE` and `EX_USAGE`).
 
 #### Paths
 
 Use the
 [XDG Base Directory Standard](https://specifications.freedesktop.org/basedir-spec/latest/),
-even on macOS.
+including on macOS.
 For example:
 
 ```bash
 declare -r config_dir="${XDG_CONFIG_HOME:-$HOME/some-app/}"
 mkdir -p -m 0700 "$config_dir"
 ```
+
+??? info "Full XDG directory handling"
+
+    You can use the following for full parsing of
+    `XDG_DATA_HOME`, `XDG_CONFIG_HOME`, `XDG_STATE_HOME`, `XDG_CACHE_HOME`,
+    `XDG_DATA_DIRS`, `XDG_CONFIG_DIRS`, `~/.local/bin`, and `XDG_RUNTIME_DIR`.
+
+    ```bash
+    declare -r app=...
+
+    # `XDG_*_HOME` variables:
+    declare -r data_home="${XDG_DATA_HOME:-$HOME/.local/share}"/"$app"
+    declare -r config_home="${XDG_CONFIG_HOME:-$HOME/.config}"/"$app"
+    declare -r state_home="${XDG_STATE_HOME:-$HOME/.local/state}"/"$app"
+    declare -r cache_home="${XDG_CACHE_HOME:-$HOME/.cache}"/"$app"
+
+    # `:`-separated config dirs (in order of decreasing priority):
+    IFS=: read -a data_dirs <<< "${XDG_DATA_DIRS:-/usr/local/share:/usr/share}"
+    for i in "${!data_dirs[@]}"; do
+      data_dirs[i]="${data_dirs[i]}"/"$app"
+    done
+
+    # `:`-separated config dirs (in order of decreasing priority):
+    IFS=: read -a config_dirs <<< "${XDG_CONFIG_DIRS:-/etc/xdg}"
+    for i in "${!config_dirs[@]}"; do
+      config_dirs[i]="${config_dirs[i]}"/"$app"
+    done
+
+    # User executables (which doesn't have a corresponding XDG env var):
+    declare -r user_bin="$HOME/.local/bin"
+
+    # `XDG_RUNTIME_DIR`, a per-user temp dir (normally `/run/{user-id}/`):
+    declare -r runtime_dir="${XDG_RUNTIME_DIR:-${TMPDIR:-/tmp}/$(id -u)}"
+    if [[ -z "$XDG_RUNTIME_DIR" ]]; then
+      printf >&2 "[WARN] XDG_RUNTIME_DIR is not set; defaulting to '%s'.\n" "$runtime_dir"
+      [[ ! -e "$runtime_dir" ]] && mkdir "$runtime_dir"
+    fi
+    ```
 
 !!! warning
 
