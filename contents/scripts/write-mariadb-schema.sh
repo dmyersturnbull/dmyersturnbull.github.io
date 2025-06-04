@@ -201,5 +201,5 @@ if ((n_lines > 0)); then
 fi
 
 # Remove `auto_increment` -- we don't care.
-sed -r 's/auto_increment=[0-9]+ //g' "$out_file"
+sed -E 's/auto_increment=[0-9]+ //g' "$out_file"
 apprise INFO "Wrote to '%s'." "$out_file"

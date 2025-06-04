@@ -172,10 +172,10 @@ while (($# > 0)); do
       recurse=true
       ;;
     -v | --verbose)
-      ((log_level--))
+      log_level=$((log_level-1))
       ;;
     -q | --quiet)
-      ((log_level++))
+      log_level=$((log_level+1))
       ;;
     --color=*)
       use_color="${1#--color=}"

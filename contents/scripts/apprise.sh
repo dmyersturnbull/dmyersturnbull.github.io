@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # SPDX-FileCopyrightText: Copyright 2024, Contributors to dmyersturnbull.github.io
 # SPDX-PackageHomePage: https://github.com/dmyersturnbull/dmyersturnbull.github.io
 # SPDX-License-Identifier: Apache-2.0
@@ -41,7 +42,7 @@ apprise::define_levels() {
 
 # Clear all styles and colors (probably not needed).
 # Use `apprise::define_styles` to set new ones.
-apprise:clear_styles() {
+apprise::clear_styles() {
   declare -g -A styles=()
 }
 
@@ -55,7 +56,7 @@ apprise::define_styles() {
   for style in "$@"; do
     name=${apprise_names[$num]}
     styles[$name]=$style
-    ((num++))
+    num=$((num+1))
   done
 }
 
@@ -63,10 +64,10 @@ apprise::define_styles() {
 # Usage: `apprise::log <name|number> <msg>`.
 # Example: `apprise::log ERROR Failed.`
 apprise::log() {
-  local name=${apprise_names[${1,,}]}
-  local level=${apprise_levels[${1,,}]}
+  local name=${apprise_names[$1]}
+  local level=${apprise_levels[$1]}
   local message=$2
-  local style="${styles[$level]}"
+  local style="${styles[$name]}"
   ((level < apprise_level)) && return
   if [[ $apprise_use_color == true ]]; then
     printf >&2 "%b[%s] %s\e[0m\n" "$style" "$name" "$message"
@@ -114,10 +115,10 @@ apprise::set_level() {
 apprise::set_use_color() {
   local v="$1"
   if [[ "$v" == auto ]]; then
-    apprise_use_color=$([[ -t 2 ]] || echo true || echo false)
-  elif [[ "$v" =~ true|yes ]]; then
+    apprise_use_color=$([[ -t 2 ]] && echo true || echo false)
+  elif [[ "$v" =~ ^(true|yes)$ ]]; then
     apprise_use_color=true
-  elif [[ "$v" =~ false|no ]]; then
+  elif [[ "$v" =~ ^(false|no)$ ]]; then
     apprise_use_color=false
   else
     apprise::log ERROR "Invalid --color value; must be auto, true/yes, or false/no (got: '$v')."
@@ -145,3 +146,4 @@ apprise::reset() {
 }
 
 apprise::reset
+apprise::set_use_color auto
