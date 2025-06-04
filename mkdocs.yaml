@@ -48,7 +48,7 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
-  # :tyranno: repo_url: ${project.urls.Source}
+  # :tyranno: repo_url: $<<project.urls.Source>>
   repo_url: https://github.com/dmyersturnbull/dmyersturnbull.github.io
 
 # Extensions
@@ -91,9 +91,9 @@ markdown_extensions:
       social_url_shorthand: true
       normalize_issue_symbols: true
       provider: github
-      # :tyranno: user: ${.vendor}
+      # :tyranno: user: $<<~.vendor>>
       user: dmyersturnbull
-      # :tyranno: repo: ${project.name}
+      # :tyranno: repo: $<<project.name>>
       repo: dmyersturnbull.github.io
   - pymdownx.saneheaders
   - pymdownx.smartsymbols
