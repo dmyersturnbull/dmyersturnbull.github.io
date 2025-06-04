@@ -34,6 +34,12 @@ Here are the important points.
 
 - Forgo comments that are superfluous or included out of habit or convention.
 
+<b>Quantities:</b>
+
+- Prefer this format: `123<NNBSP>456.123<NNBSP>456<NBSP>kW`; e.g. `123 456.123 456 kW`.
+- For uncertainties, state what the numbers mean.
+  E.g.: _1 ± 1 (SD)_, _1 ± 1 (SE)_, _1 (0–2, 90% CI)_, or _0–2 over 100 trials_.
+
 ## Filenames
 
 This section can apply to naming of URI nodes, database IDs, and similar constructs.
@@ -55,10 +61,29 @@ Restrict to `-`, `.`, `[a-z]`, and `[0-9]`, unless there is a compelling reason 
 If necessary, `--`, `+`, and `~` can be used as specialized word separators.
 For example, `+` could denote joint authorship in `mary-johnson+kerri-swanson-document.pdf`.
 
+Limit names to 255 characters, and don’t use reserved names, including
+[Windows reserved filenames](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions).
+
 Always use one or more filename extensions, except for executable files;
 e.g. `LICENSE.txt` or `LICENSE.md`, **not** `LICENSE`.
 Where possible, use `.yaml` for YAML, `.html` for HTML, and `.jpeg` for JPEG.
 In particular, **do not** use `.yml`, `.htm`, `.jpg`, or `.jfif`.
+
+!!! info "Want plain English?"
+
+    Path components MUST be legal in major filesystems and MUST NOT exceed 255 characters.
+
+    They SHOULD match
+
+    ```regexp
+    [A-Za-z0-9]([A-Za-z0-9_,()+~-]|\.(?!\.))++
+    ```
+
+    It is RECOMMENDED for them to match
+
+    ```regexp
+    [a-z0-9_]([a-z0-9+~.-]++(\.[a-z0-9]+))(?!\.)
+    ```
 
 ## Comments
 
@@ -510,7 +535,7 @@ Use:
 
 - A normal space **or**
   a no-breaking space
-  (` `/[U+00A0](https://www.fileformat.info/info/unicode/char/00A0/index.htm)/`&nbsp;`)
+  (` `/[U+00A0](https://www.fileformat.info/info/unicode/char/00A0/index.htm)/`&nbsp;`)
   to separate magnitude and units.
 - A middle dot
   (`·`/[U+00B7](https://www.fileformat.info/info/unicode/char/00B7/index.htm)/`&middot;`)
@@ -570,21 +595,50 @@ From the
 
 ### Uncertainty measurements
 
-State whether a value means standard error or standard deviation.
-Do **not** write `5.0 ±0.1` – that’s ambiguous.
-You may use the abbreviations
-_standard error (SE)_, _standard deviation (SD)_, and _confidence interval (CI)_,
-or spell them out.
+#### Mean ± error
 
-Use one of these formats:
+State whether a value means standard error or standard deviation.
+You can use the abbreviations _standard error (SE)_ and _standard deviation (SD)_.
+
+!!! example
+
+    **Is `0.1` standard deviation or standard error?**
+
+    - **❌ Incorrect** `5.0 ±0.1`
+    - **✅ Correct** `5.0 ±0.1 (SE)`
+    - **✅ Also correct** `5.0 ±0.1 (SD)`
+
+**Use one of these formats:**
 
 - Standard error: _7.65 ±1.2 (SE)_
 - Standard deviation: _7.65 ±0.54 (SD)_
-- Confidence interval: _7.65 (4.0–12.5, 95% CI)_
 - SE/SD with units: _(7.65 ±0.54) J·m⁻² (SD)_
-- CI with units: _7.65 (4.0–12.5, 95% CI) J·m⁻²_
-- CI with units (alt): _7.65 J·m⁻² (4.0–12.5, 95% CI)_
-- CI with units (2nd alt): _7.65 J·m⁻² (4.0 to 12.5, 95% CI)_
+
+#### Ranges and confidence intervals
+
+Don’t just write `56–81`.
+Is that an exact range from a sample or a confidence interval?
+
+- If it’s over a sample, where values ranged between `56` and `81`, explain that.
+  Include the sample size or number of measurements;
+  e.g.  _n = 100 machines_ or _n = 100 repeat measurements_.
+- If it’s a confidence interval, include the level of confidence.
+  You can use the abbreviation _confidence interval (CI)_.
+
+!!! example
+
+    **What does _1–2 hours_ mean?**
+
+    - **❌ Incorrect** _Half-life is 1–2 hours._
+    - **✅ Correct – range** _Half-life was 1–2 hours among 58 participants.
+    - **✅ Correct – CI** _Mean half-life is 1.4 hours (0.9–1.9, 80% CI).
+
+**Use one of these formats:**
+
+- CI: _7.65 (4.0–12.5, 95% CI)_
+- CI with units (variant 1, simplest): _7.65 (4.0–12.5, 95% CI) J·m⁻²_
+- CI with units (variant 2): _7.65 J·m⁻² (4.0–12.5, 95% CI)_
+- CI with units (variant 3): _7.65 J·m⁻² (4.0 to 12.5, 95% CI)_
 
 ### Dates and times
 
