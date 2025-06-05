@@ -379,3 +379,7 @@ To fulfill our uniqueness requirement, `rotate=0` is not allowed.
 | `flip-y`         | flip vertically               |
 | `flip-top-left`  | flip top-left to bottom-right |
 | `flip-top-right` | flip top-right to bottom-left |
+
+/// table-caption
+<b>Permitted values for `rotate=`</b>
+///

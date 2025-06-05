@@ -252,33 +252,35 @@ and the
 Note that PyData defers to a
 [2018 Angular revision](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type).
 
-| thing               | Angular               | this spec        | rationale                          |
-| ------------------- | --------------------- | ---------------- | ---------------------------------- |
-| multiple scopes?    | no                    | comma-separated  | Often multiple apply               |
-| dev scope (main)    | `dev-infra`           | ←                |                                    |
-| dev scope (docs)    | `docs-infra`          | ←                |                                    |
-| deprecation footer  | `DEPRECATED:`         | ←                |                                    |
-| issue close footer  | GH-recognized §       | only `Closes #`  | Prefer single keyword              |
-| PR footer           | yes, like issue       | no               | Handle in issue, not PR/commit     |
-| pseudo-footers ♯    | footers               | body             | Conform to Git trailer format      |
-| pseudo-footers text | ≥ 2 paragraphs        | ≥ 1 paragraph    | Keep thing simple                  |
-| `revert` type       | yes                   | no               | Treat it as a normal commit        |
-| revert hash (body)  | `This commit reverts` | ←                | Prominent keyword                  |
-| `depr` type         | no                    | yes              | Changelog section                  |
-| `drop` type         | no                    | yes              | Changelog section                  |
-| `security` type     | no                    | yes              | Changelog section                  |
-| `style` type        | removed (2017)        | `style` type     | Clearly different from `refactor`  |
-| `chore` type        | removed (2017)        | discouraged      | Preferred to an incorrect type     |
-| body mood           | imperative            | non-imperative   | More readable; de facto in Angular |
-| body format         | plain                 | CommonMark       | More flexible; rendered on GitHub  |
-| `!` required        | no                    | yes              | Important, so specify in subject   |
-| line length         | n.s.                  | ≤ 100 encouraged | Consistency and readability        |
+| thing                  | Angular               | this spec        | rationale                          |
+|------------------------|-----------------------|------------------|------------------------------------|
+| multiple scopes?       | no                    | comma-separated  | Often multiple apply               |
+| dev scope (main)       | `dev-infra`           | ← _(unchanged)_  |                                    |
+| dev scope (docs)       | `docs-infra`          | ←                |                                    |
+| deprecation footer     | `DEPRECATED:`         | ←                |                                    |
+| issue close footer     | GH-recognized †       | only `Closes #`  | Prefer single keyword              |
+| PR footer              | yes, like issue       | no               | Handle in issue, not PR/commit     |
+| has `revert` type      | yes                   | no               | Treat it as a normal commit        |
+| revert hash (body)     | `This commit reverts` | ←                | Prominent keyword                  |
+| has `depr` type        | no                    | yes              | Changelog section                  |
+| has `drop` type        | no                    | yes              | Changelog section                  |
+| has `security` type    | no                    | yes              | Changelog section                  |
+| has `style` type       | removed (2017)        | retained         | Clearly different from `refactor`  |
+| has `chore` type       | removed (2017)        | discouraged      | Preferred to an incorrect type     |
+| body mood              | imperative            | non-imperative   | More readable; de facto in Angular |
+| body format            | plain                 | CommonMark       | More flexible; rendered on GitHub  |
+| `!` required           | no                    | yes              | Important, so specify in subject   |
+| line length            | not specified         | ≤ 100 encouraged | Consistency and readability        |
+| special paragraphs ‡   | footers               | body paragraphs  | Conform to Git trailer format      |
+| special paragraph text | ≥ 2 paragraphs        | ≥ 1 paragraph    | Keep thing simple                  |
+
+/// table-caption
+<b>Differences from the Angular commit guidelines</b>
+///
 
 <small>
-<b>†</b>`←` means the previous column’s value.\
-<b>‡</b>_n.s._ means not specified.
-<b>§</b> _GH-recognized_ means any phrase that GitHub sees as
+<b>†</b> _GH-recognized_ means any phrase that GitHub sees as
 [PR-to-issue links](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword).\
-<b>♯</b> Whether `BREAKING CHANGES` and (if defined) `DEPRECATED`
+<b>‡</b> Whether `BREAKING CHANGES` and (if defined) `DEPRECATED`
 are footers or special body paragraphs.
 </small>

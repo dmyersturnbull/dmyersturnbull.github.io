@@ -41,8 +41,6 @@ Labels are organized into are 8 groups.
   `help needed` (to request help),
   and `bookmark` (for issues that contain important information)
 
-## Table
-
 | Label                       | Commit part    | Changelog section   | Bump  | Icon | Description                  | Color     |
 | --------------------------- | -------------- | ------------------- | ----- | ---- | ---------------------------- | --------- |
 | `breaking`                  | `!`            | 💥 Breaking changes | major | 💥   | Breaking change              | `000000`  |
@@ -81,6 +79,10 @@ Labels are organized into are 8 groups.
 | `type: security`            | `security:`    | 🔒️ Security        | minor | 🔒️  | Fix vulnerability or harden  | `90e0ff`  |
 | `type: style`               | `style:`       | skipped             | none  | 🎨   | Modify code style            | `90e0ff`  |
 | `type: test`                | `test:`        | 🍒 Miscellaneous    | none  | 🚨   | Add or modify tests          | `90e0ff`  |
+
+/// table-caption
+<b>Labels for issues and PRs, with associated commit types</b>
+///
 
 ???+ rationale
 

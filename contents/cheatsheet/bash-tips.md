@@ -39,9 +39,7 @@ But this would cause more serious problems, and if you’re naming files like th
 this_dir=$(dirname "$(readlink -f -- "$0" || exit $?)") || exit $?
 ```
 
-## Tables
-
-### Test operators
+## Comparisons
 
 | operator | syntax            | meaning                                  |
 | -------- | ----------------- | ---------------------------------------- |
@@ -75,6 +73,10 @@ this_dir=$(dirname "$(readlink -f -- "$0" || exit $?)") || exit $?
 | `-ot`    | `path1 -ot path2` | `path1` is **older** than `path2`        |
 | `-ef`    | `path1 -ef path2` | `path1` is the **same inode** as `path2` |
 | `-N`     | `-N path`         | `path` has **mtime > atime**             |
+
+/// table-caption
+<b>Test operators (`[[ ]]`).</b>
+///
 
 ## Miscellaneous notes
 

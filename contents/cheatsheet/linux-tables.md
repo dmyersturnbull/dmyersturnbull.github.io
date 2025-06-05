@@ -16,6 +16,10 @@ Useful cheatsheet tables for Linux and Bash.
 | socket            | `s`     | UNIX domain socket for IPC                       |
 | named pipe (FIFO) | `p`     | named pipe for IPC                               |
 
+/// table-caption
+<b>Inode types with associated symbols in `ls -l`</b>
+///
+
 ### Attributes of inodes
 
 | attribute    | applies to                | **Description**                     |

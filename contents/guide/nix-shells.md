@@ -55,8 +55,12 @@ You should now have a colorful shell, complete with a plugin for Git.
     | `.common-profile` | multi  | N/A (sourced)             | set env vars                   |
     | `.commonrc`       | multi  | N/A (sourced)             | add aliases, etc.              |
 
-    <b>Footnotes:</b>
+    /// table-caption
+    <b>`*.bashrc` and similar files.</b>
+    ///
 
+    <small>
+    <!-- -->
     - <b>†</b>
       `.profile` is the original Bourne shell config file,
       but Bash will also read it if `.bash_profile` doesn’t exist.
@@ -68,6 +72,8 @@ You should now have a colorful shell, complete with a plugin for Git.
     - [`~/.zsh*` files](https://unix.stackexchange.com/q/71253)
     - [`~/.zsh*` files on macOS](https://apple.stackexchange.com/q/388622)
     - [`~/.profile` file](https://unix.stackexchange.com/q/83742)
+    <!-- -->
+    </small>
 
 Create a new file, `~/.commonrc`, and have `~/.bashrc`, `~/.zshrc`,
 and any other Bash-compatible `~/.*rc` files source it.

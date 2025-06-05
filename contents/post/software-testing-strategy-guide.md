@@ -30,6 +30,10 @@ and [non‐functional](https://en.wikipedia.org/wiki/Non-functional_testing) tes
 | verification | functional (_F_)      | software does what it says (we built it right)          |
 | validation   | non-functional (_NF_) | software does what it should (we built the right thing) |
 
+/// table-caption
+<b>Verification vs. validation</b>
+///
+
 ### Testing <em>layers</em>
 
 We can also consider testing in layers.
