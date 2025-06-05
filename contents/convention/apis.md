@@ -204,13 +204,13 @@ Do not separate times with `/` or use a start-time/duration pair.
 ### Methods
 
 | Method   | Symbol | Request body     | Response body |
-|----------|--------|------------------|---------------|
+| -------- | ------ | ---------------- | ------------- |
 | `HEAD`   | 🎩     | ∅                | ∅             |
 | `GET`    | 🔻     | ∅                | JSON          |
 | `POST`   | ✉️     | JSON             | JSON          |
-| `PUT`    | 🗃️    | JSON             | JSON or ∅     |
+| `PUT`    | 🗃️     | JSON             | JSON or ∅     |
 | `PATCH`  | 🩹     | JSON Merge Patch | JSON or ∅     |
-| `DELETE` | 🗑️    | ∅                | JSON or ∅     |
+| `DELETE` | 🗑️     | ∅                | JSON or ∅     |
 
 /// table-caption
 HTTP methods with request/response body formats, assuming a JSON-only API.
@@ -234,27 +234,27 @@ servers must not use status codes, methods, responses, or conditions not listed 
 
     Refer to the HTTP Method symbols defined above.
 
-| Code | Name                   | Methods       | Response  | Condition(s)                                  |
-|------|------------------------|---------------|-----------|-----------------------------------------------|
-| 200  | OK                     | 🎩🔻🩹        | resource  | Requested resource is being returned          |
-| 201  | Created                | ✉️ 🗃️        | ∅         | Resource has been created                     |
+| Code | Name                   | Methods     | Response  | Condition(s)                                  |
+| ---- | ---------------------- | ----------- | --------- | --------------------------------------------- |
+| 200  | OK                     | 🎩🔻🩹      | resource  | Requested resource is being returned          |
+| 201  | Created                | ✉️ 🗃️       | ∅         | Resource has been created                     |
 | 202  | Accepted               | 🔻✉️🗃️🩹🗑️† | ticket ‡  | Request is being processed asynchronously     |
-| 204  | No Content             | 🗑️           | ∅         | Deletion was successful                       |
-| 308  | Permanent Redirect     | ✉️🗃️🩹🗑     | resource  | Non-canonical URI was used                    |
-| 400  | Bad Request            | any           | problem § | Invalid endpoint, params, or body syntax      |
-| 401  | Unauthorized           | any           | problem   | Authentication was not provided               |
-| 403  | Forbidden              | any           | problem   | Authentication with insufficient privileges   |
-| 404  | Not Found              | 🔻🩹🗑️       | problem   | Resource does not exist                       |
-| 406  | Not Acceptable         | 🎩🔻          | problem   | `Accept` headers are unsatisfiable            |
-| 409  | Conflict               | ✉️🗃️🩹       | problem   | Resource already exists                       |
-| 409  | Conflict               | 🗑️           | problem   | Can’t delete resource because it’s referenced |
-| 410  | Gone                   | 🔻🩹🗑️       | problem   | Resource doesn’t exist, although it used to   |
-| 413  | Content Too Large      | ✉️🗃️🩹       | problem   | Request payload is too large                  |
-| 415  | Unsupported Media Type | ✉️🗃️🩹       | problem   | Request payload’s media type is unsupported   |
-| 422  | Unprocessable Entity   | ✉️🗃️🩹       | problem   | Request has semantic errors                   |
-| 429  | Too Many Requests      | any           | problem   | Client has exceeded the rate limit            |
-| 500  | Server Error           | any           | problem   | Server encountered an internal error          |
-| 503  | Service Unavailable    | any           | problem   | Overloaded or down for maintenance            |
+| 204  | No Content             | 🗑️          | ∅         | Deletion was successful                       |
+| 308  | Permanent Redirect     | ✉️🗃️🩹🗑    | resource  | Non-canonical URI was used                    |
+| 400  | Bad Request            | any         | problem § | Invalid endpoint, params, or body syntax      |
+| 401  | Unauthorized           | any         | problem   | Authentication was not provided               |
+| 403  | Forbidden              | any         | problem   | Authentication with insufficient privileges   |
+| 404  | Not Found              | 🔻🩹🗑️      | problem   | Resource does not exist                       |
+| 406  | Not Acceptable         | 🎩🔻        | problem   | `Accept` headers are unsatisfiable            |
+| 409  | Conflict               | ✉️🗃️🩹      | problem   | Resource already exists                       |
+| 409  | Conflict               | 🗑️          | problem   | Can’t delete resource because it’s referenced |
+| 410  | Gone                   | 🔻🩹🗑️      | problem   | Resource doesn’t exist, although it used to   |
+| 413  | Content Too Large      | ✉️🗃️🩹      | problem   | Request payload is too large                  |
+| 415  | Unsupported Media Type | ✉️🗃️🩹      | problem   | Request payload’s media type is unsupported   |
+| 422  | Unprocessable Entity   | ✉️🗃️🩹      | problem   | Request has semantic errors                   |
+| 429  | Too Many Requests      | any         | problem   | Client has exceeded the rate limit            |
+| 500  | Server Error           | any         | problem   | Server encountered an internal error          |
+| 503  | Service Unavailable    | any         | problem   | Overloaded or down for maintenance            |
 
 /// table-caption
 HTTP Response Codes with allowed methods, responses, and uses.
@@ -272,6 +272,7 @@ Use the same response format for both.
 The response SHOULD include a URI for polling and a suggested time or duration to poll.
 Info about the progress (e.g. `"current-task": "post-process"`) may be included if helpful.
 These keys are SUGGESTED:
+
 ```json
 {
   "poll-uri": "https://api.tld/api/jobs/20od7-sk9khz",
@@ -283,23 +284,24 @@ These keys are SUGGESTED:
 <b>§</b> Use
 [RFC 9457](https://datatracker.ietf.org/doc/rfc9457/#name-members-of-a-problem-detail)
 problem details; see the [problem details section](#problem-details).
+
 <!-- -->
 </small>
 
 #### Specialized status codes
 
-| Code | Name                            | Methods    | Response | Use case                                   |
-|------|---------------------------------|------------|----------|--------------------------------------------|
-| 100  | Continue ♯                      | ✉️🗃️🩹    | ∅        | `100-continue` request succeeded (rare)    |
-| 206  | Partial Content                 | 🔻         | part     | Range was requested and is being returned  |
-| 304  | Not Modified                    | 🎩 🔻      | ∅        | `If-None-Match` condition has match.       |
+| Code | Name                            | Methods  | Response | Use case                                   |
+| ---- | ------------------------------- | -------- | -------- | ------------------------------------------ |
+| 100  | Continue ♯                      | ✉️🗃️🩹   | ∅        | `100-continue` request succeeded (rare)    |
+| 206  | Partial Content                 | 🔻       | part     | Range was requested and is being returned  |
+| 304  | Not Modified                    | 🎩 🔻    | ∅        | `If-None-Match` condition has match.       |
 | 412  | Precondition Failed ♯           | ✉️🗃️🩹🗑️ | problem  | Edit collision (`If-...` header)           |
-| 416  | Range Not Satisfiable           | 🔻         | problem  | Requested range is out of bounds.          |
-| 417  | Expectation Failed ♯            | ✉️🗃️🩹    | problem  | `Expect: 100-continue` expectation failed. |
-| 418  | I'm a Teapot                    | any        | problem  | Blocked due to suspicious activity         |
+| 416  | Range Not Satisfiable           | 🔻       | problem  | Requested range is out of bounds.          |
+| 417  | Expectation Failed ♯            | ✉️🗃️🩹   | problem  | `Expect: 100-continue` expectation failed. |
+| 418  | I'm a Teapot                    | any      | problem  | Blocked due to suspicious activity         |
 | 423  | Locked                          | ✉️🗃️🩹🗑️ | problem  | Needed resource is in use _(discouraged)_  |
 | 428  | Precondition Required ♯         | ✉️🗃️🩹🗑️ | problem  | `If-...` header required                   |
-| 431  | Request Header Fields Too Large | any        | problem  | Headers are too large.                     |
+| 431  | Request Header Fields Too Large | any      | problem  | Headers are too large.                     |
 
 <small>
 <b>♯</b> These statuses are only applicable to modifiable resources.

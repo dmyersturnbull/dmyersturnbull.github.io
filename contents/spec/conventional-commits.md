@@ -253,7 +253,7 @@ Note that PyData defers to a
 [2018 Angular revision](https://github.com/angular/angular/blob/22b96b9/CONTRIBUTING.md#type).
 
 | thing                  | Angular               | this spec        | rationale                          |
-|------------------------|-----------------------|------------------|------------------------------------|
+| ---------------------- | --------------------- | ---------------- | ---------------------------------- |
 | multiple scopes?       | no                    | comma-separated  | Often multiple apply               |
 | dev scope (main)       | `dev-infra`           | ← _(unchanged)_  |                                    |
 | dev scope (docs)       | `docs-infra`          | ←                |                                    |

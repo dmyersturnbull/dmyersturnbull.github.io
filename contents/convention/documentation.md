@@ -621,7 +621,7 @@ Is that an exact range from a sample or a confidence interval?
 
 - If it’s over a sample, where values ranged between `56` and `81`, explain that.
   Include the sample size or number of measurements;
-  e.g.  _n = 100 machines_ or _n = 100 repeat measurements_.
+  e.g. _n = 100 machines_ or _n = 100 repeat measurements_.
 - If it’s a confidence interval, include the level of confidence.
   You can use the abbreviation _confidence interval (CI)_.
 

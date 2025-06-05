@@ -127,10 +127,10 @@ while (($# > 0)); do
       shift
       ;;
     -v | --verbose)
-      log_level=$((log_level-1))
+      log_level=$((log_level - 1))
       ;;
     -q | --quiet)
-      log_level=$((log_level+1))
+      log_level=$((log_level + 1))
       ;;
     --color=*)
       use_color="${1#--color=}"

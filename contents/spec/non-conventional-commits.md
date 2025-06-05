@@ -14,7 +14,7 @@ This nascent specification simply explores alternatives.
     - [Restricted conventional commits spec](conventional-commits.md).
 
 | Type         | Category | Description                     | Bump      | Section         |
-|--------------|----------|---------------------------------|-----------|-----------------|
+| ------------ | -------- | ------------------------------- | --------- | --------------- |
 | replace      | main     | a feature with another          | **major** | `Changes`       |
 | change       | main     | the behavior in public API      | **major** | `Changes`       |
 | rename       | main     | a part of the public API        | **major** | `Changes`       |
@@ -34,7 +34,7 @@ This nascent specification simply explores alternatives.
 | cover        | tests    | some behavior with tests        | -         | `Internal`      |
 | repair       | tests    | a broken test                   | -         | `Internal`      |
 | refactor     | main     | code without affecting behavior | -         | `Internal`      |
-| reorganize   | infra/*  | files (not just code)           | -         | `Internal`      |
+| reorganize   | infra/\* | files (not just code)           | -         | `Internal`      |
 | format       | -        | files to improve style          | -         | -               |
 | release      | -        | a new version (bumping it)      | -         | -               |
 
@@ -43,7 +43,7 @@ This nascent specification simply explores alternatives.
 ///
 
 | Tag / scope   | Description                    | Bump      | Section    |
-|---------------|--------------------------------|-----------|------------|
+| ------------- | ------------------------------ | --------- | ---------- |
 | <b>Tags</b>   | <b>―</b>                       | <b>―</b>  | <b>―</b>   |
 | `infra/build` | Makefiles, file layout, etc.   | ≤ patch   | `Internal` |
 | `infra/dev`   | Developer tools (e.g. scripts) | 🚫        | `Internal` |

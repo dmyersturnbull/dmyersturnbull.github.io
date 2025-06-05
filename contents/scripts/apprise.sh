@@ -56,7 +56,7 @@ apprise::define_styles() {
   for style in "$@"; do
     name=${apprise_names[$num]}
     styles[$name]=$style
-    num=$((num+1))
+    num=$((num + 1))
   done
 }
 
