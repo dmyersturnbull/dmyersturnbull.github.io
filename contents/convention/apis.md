@@ -201,6 +201,25 @@ Do not separate times with `/` or use a start-time/duration pair.
 
 ## HTTP APIs
 
+### Methods
+
+| Method   | Symbol | Request body     | Response body |
+|----------|--------|------------------|---------------|
+| `HEAD`   | 🎩     | ∅                | ∅             |
+| `GET`    | 🔻     | ∅                | JSON          |
+| `POST`   | ✉️     | JSON             | JSON          |
+| `PUT`    | 🗃️    | JSON             | JSON or ∅     |
+| `PATCH`  | 🩹     | JSON Merge Patch | JSON or ∅     |
+| `DELETE` | 🗑️    | ∅                | JSON or ∅     |
+
+/// table-caption
+HTTP methods with request/response body formats, assuming a JSON-only API.
+///
+
+[JSON Merge Patch](https://datatracker.ietf.org/doc/rfc7396/)
+SHOULD be used for all PATCH requests.
+See the [JSON Merge Patch section](#json-merge-patch) for details and discussion.
+
 ### Status codes
 
 This section applies to REST-like HTTP APIs.
@@ -211,50 +230,79 @@ servers must not use status codes, methods, responses, or conditions not listed 
 
 #### General status codes
 
-| Code | Name                   | Methods                   | Response      | Condition(s)                                            |
-| ---- | ---------------------- | ------------------------- | ------------- | ------------------------------------------------------- |
-| 200  | OK                     | HEAD, GET, PATCH          | resource      | Requested resource is being returned                    |
-| 201  | Created                | POST, PUT                 | canonical URI | Resource has been created                               |
-| 202  | Accepted               | POST, PUT, PATCH¹, DELETE | ∅             | Request will be processed asynchronously                |
-| 204  | No Content             | DELETE                    | ∅             | Deletion was successful                                 |
-| 308  | Permanent Redirect     | any                       | resource      | Non-canonical URI was used (canonical in `Location`)    |
-| 400  | Bad Request            | any                       | problem²      | Invalid endpoint, params, or body syntax                |
-| 401  | Unauthorized           | any                       | problem       | Authentication was required but not provided            |
-| 403  | Forbidden              | any                       | problem       | Provided authentication carries insufficient privileges |
-| 404  | Not Found              | GET, PATCH, DELETE        | problem       | Resource does not exist                                 |
-| 406  | Not Acceptable         | HEAD, GET                 | problem       | `Accept` headers are unsatisfiable                      |
-| 409  | Conflict               | POST, PUT, PATCH          | problem       | Resource already exists                                 |
-| 409  | Conflict               | DELETE                    | problem       | Can’t delete resource because others reference it       |
-| 410  | Gone                   | GET, PATCH, DELETE        | problem       | Resource does not exist, although it used to            |
-| 413  | Content Too Large      | POST, PUT, PATCH          | problem       | Request payload is too large                            |
-| 415  | Unsupported Media Type | POST, PUT, PATCH          | problem       | Request payload’s media type is unsupported             |
-| 422  | Unprocessable Entity   | POST, PUT, PATCH          | problem       | Request has semantic errors, such as invalid references |
-| 429  | Too Many Requests      | any                       | problem       | Client has exceeded the rate limit                      |
-| 500  | Server Error           | any                       | problem       | Server encountered an internal error                    |
-| 503  | Service Unavailable    | any                       | problem       | Service is overloaded or down for maintenance           |
+!!! prerequisites "Legend"
 
-1. Use [JSON Merge Patch](https://datatracker.ietf.org/doc/rfc7396/) for all PATCH requests;
-   see the [JSON Merge Patch section](#json-merge-patch).
-2. Use [RFC 9457](https://datatracker.ietf.org/doc/rfc9457/#name-members-of-a-problem-detail) problem details;
-   see the [problem details section](#problem-details).
+    Refer to the HTTP Method symbols defined above.
+
+| Code | Name                   | Methods       | Response  | Condition(s)                                  |
+|------|------------------------|---------------|-----------|-----------------------------------------------|
+| 200  | OK                     | 🎩🔻🩹        | resource  | Requested resource is being returned          |
+| 201  | Created                | ✉️ 🗃️        | ∅         | Resource has been created                     |
+| 202  | Accepted               | 🔻✉️🗃️🩹🗑️† | ticket ‡  | Request is being processed asynchronously     |
+| 204  | No Content             | 🗑️           | ∅         | Deletion was successful                       |
+| 308  | Permanent Redirect     | ✉️🗃️🩹🗑     | resource  | Non-canonical URI was used                    |
+| 400  | Bad Request            | any           | problem § | Invalid endpoint, params, or body syntax      |
+| 401  | Unauthorized           | any           | problem   | Authentication was not provided               |
+| 403  | Forbidden              | any           | problem   | Authentication with insufficient privileges   |
+| 404  | Not Found              | 🔻🩹🗑️       | problem   | Resource does not exist                       |
+| 406  | Not Acceptable         | 🎩🔻          | problem   | `Accept` headers are unsatisfiable            |
+| 409  | Conflict               | ✉️🗃️🩹       | problem   | Resource already exists                       |
+| 409  | Conflict               | 🗑️           | problem   | Can’t delete resource because it’s referenced |
+| 410  | Gone                   | 🔻🩹🗑️       | problem   | Resource doesn’t exist, although it used to   |
+| 413  | Content Too Large      | ✉️🗃️🩹       | problem   | Request payload is too large                  |
+| 415  | Unsupported Media Type | ✉️🗃️🩹       | problem   | Request payload’s media type is unsupported   |
+| 422  | Unprocessable Entity   | ✉️🗃️🩹       | problem   | Request has semantic errors                   |
+| 429  | Too Many Requests      | any           | problem   | Client has exceeded the rate limit            |
+| 500  | Server Error           | any           | problem   | Server encountered an internal error          |
+| 503  | Service Unavailable    | any           | problem   | Overloaded or down for maintenance            |
+
+/// table-caption
+HTTP Response Codes with allowed methods, responses, and uses.
+///
+
+<small>
+<!-- -->
+<b>†</b> Use 202 Accepted in response to both
+(1) A POST, PUT, PATCH, or (rarely) DELETE
+to indicate that the request was accepted for asynchronous processing; and
+(2) A GET sent before the resource is ready.
+Use the same response format for both.
+
+<b>‡</b>
+The response SHOULD include a URI for polling and a suggested time or duration to poll.
+Info about the progress (e.g. `"current-task": "post-process"`) may be included if helpful.
+These keys are SUGGESTED:
+```json
+{
+  "poll-uri": "https://api.tld/api/jobs/20od7-sk9khz",
+  "wait-for": "2025-05-30T12:34:56Z",
+  "wait-until": "2025-05-30T12:34:56Z"
+}
+```
+
+<b>§</b> Use
+[RFC 9457](https://datatracker.ietf.org/doc/rfc9457/#name-members-of-a-problem-detail)
+problem details; see the [problem details section](#problem-details).
+<!-- -->
+</small>
 
 #### Specialized status codes
 
-| Code | Name                            | Methods                  | Response | Use case                                                |
-| ---- | ------------------------------- | ------------------------ | -------- | ------------------------------------------------------- |
-| 100  | Continue¹                       | POST, PUT, PATCH         | ∅        | `100-continue` request has succeeded (rare).            |
-| 206  | Partial Content                 | GET                      | part     | Range was requested and is being returned.              |
-| 304  | Not Modified                    | HEAD, GET                | ∅        | `If-None-Match` condition has matched.                  |
-| 412  | Precondition Failed¹            | POST, PUT, PATCH, DELETE | problem  | Mid-air edit condition (using `If-...` headers) failed. |
-| 416  | Range Not Satisfiable           | GET                      | problem  | Requested range is out of bounds.                       |
-| 417  | Expectation Failed¹             | POST, PUT, PATCH         | problem  | `Expect: 100-continue` expectation failed.              |
-| 418  | I'm a Teapot                    | any                      | problem  | Blocked due to suspicious or excessive activity         |
-| 423  | Locked                          | POST, PUT, PATCH, DELETE | problem  | Needed resource is in use _(discouraged)_               |
-| 428  | Precondition Required¹          | POST, PUT, PATCH, DELETE | problem  | Precondition (using `If-...` headers) is required.      |
-| 431  | Request Header Fields Too Large | any                      | problem  | Headers are too large.                                  |
+| Code | Name                            | Methods    | Response | Use case                                   |
+|------|---------------------------------|------------|----------|--------------------------------------------|
+| 100  | Continue ♯                      | ✉️🗃️🩹    | ∅        | `100-continue` request succeeded (rare)    |
+| 206  | Partial Content                 | 🔻         | part     | Range was requested and is being returned  |
+| 304  | Not Modified                    | 🎩 🔻      | ∅        | `If-None-Match` condition has match.       |
+| 412  | Precondition Failed ♯           | ✉️🗃️🩹🗑️ | problem  | Edit collision (`If-...` header)           |
+| 416  | Range Not Satisfiable           | 🔻         | problem  | Requested range is out of bounds.          |
+| 417  | Expectation Failed ♯            | ✉️🗃️🩹    | problem  | `Expect: 100-continue` expectation failed. |
+| 418  | I'm a Teapot                    | any        | problem  | Blocked due to suspicious activity         |
+| 423  | Locked                          | ✉️🗃️🩹🗑️ | problem  | Needed resource is in use _(discouraged)_  |
+| 428  | Precondition Required ♯         | ✉️🗃️🩹🗑️ | problem  | `If-...` header required                   |
+| 431  | Request Header Fields Too Large | any        | problem  | Headers are too large.                     |
 
 <small>
-<b>†</b> These statuses are only applicable to modifiable resources.
+<b>♯</b> These statuses are only applicable to modifiable resources.
 </small>
 
 #### 404 Not Found
@@ -404,7 +452,8 @@ that’s fine.
 
 #### Links
 
-If [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS) links are used, they should be limited to direct connections.
+If [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS)
+links are used, they should be limited to direct connections.
 For example, if a `species` resource links to its `genus`, which links to `family`,
 `species` should **not** link to `family`.
 To avoid polluting JSON response bodies, put the links in
@@ -418,10 +467,11 @@ Similarly, provide `Content-Type:` on `POST` – for example, `Content-Type: tex
 
 #### Rate-limiting
 
-Use [draft IETF rate-limiting headers](https://www.ietf.org/archive/id/draft-polli-ratelimit-headers-02.html):
+Use the
+[draft RateLimit headers](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/):
 `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`.
-These should always be included for 429 (Too Many Requests) responses
-along with a [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header.
+These should always be included for 429 (Too Many Requests) responses along with a
+[`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header.
 `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`
 MAY be included for other responses as well.
 
@@ -450,8 +500,8 @@ Warning: <description>{; <key>="<value>"}
 
 ??? example "Examples"
 
-    - `"Warning: deprecated endpoint; use-instead="https://domain.tld/api/v2/endpoint"`
-    - `"Warning: non-canonical URI; canonical-uri="https://domain.tld/api/v2/search?filter[1]=color:eq:red|name:eq:apple"`
+    - `"Warning: deprecated endpoint; use-instead="https://domain.tld/api/endpoint"`
+    - `"Warning: non-canonical URI; canonical="https://domain.tld/api/search?filter=color:eq:red"`
 
 #### Other headers
 
