@@ -13,39 +13,56 @@ This nascent specification simply explores alternatives.
 
     - [Restricted conventional commits spec](conventional-commits.md).
 
-<b>Types:</b>
+| Type         | Category | Description                     | Bump      | Section         |
+|--------------|----------|---------------------------------|-----------|-----------------|
+| replace      | main     | a feature with another          | **major** | `Changes`       |
+| change       | main     | the behavior in public API      | **major** | `Changes`       |
+| rename       | main     | a part of the public API        | **major** | `Changes`       |
+| remove       | main     | a feature                       | **major** | `Removals`      |
+| modify build | build    | or install in a breaking way    | **major** | `Build/install` |
+| end support  | build    | for a platform, etc.            | **major** | `Platforms`     |
+| add support  | build    | for a platform, etc.            | minor     | `Platforms`     |
+| introduce    | main     | a new feature                   | minor     | `New features`  |
+| deprecate    | main     | a feature                       | minor     | `Deprecations`  |
+| fix          | main     | a non-security bug              | patch     | `Bug fixes`     |
+| patch        | main     | a vulnerability                 | patch     | `Security`      |
+| optimize     | main     | performance                     | patch     | `Performance`   |
+| update       | main     | pinned dependencies             | patch     | `Dependencies`  |
+| document     | docs     | a feature, concept, etc.        | -         | `Documentation` |
+| revise       | docs     | existing documentation          | -         | `Documentation` |
+| correct      | docs     | a mistake in docs               | -         | `Documentation` |
+| cover        | tests    | some behavior with tests        | -         | `Internal`      |
+| repair       | tests    | a broken test                   | -         | `Internal`      |
+| refactor     | main     | code without affecting behavior | -         | `Internal`      |
+| reorganize   | infra/*  | files (not just code)           | -         | `Internal`      |
+| format       | -        | files to improve style          | -         | -               |
+| release      | -        | a new version (bumping it)      | -         | -               |
 
-| Type      | Description (with no scope)              | Bump  | Section       |
-| --------- | ---------------------------------------- | ----- | ------------- |
-| add       | a new feature                            | minor | New features  |
-| change    | an existing feature                      | major | Changes       |
-| remove    | an existing feature                      | major | Removals      |
-| end       | support for something 3rd-party          | major | Removals      |
-| deprecate | functionality                            | minor | Deprecations  |
-| fix       | a regular bug                            | patch | Bug fixes     |
-| patch     | a vulnerability                          | patch | Security      |
-| optimize  | performance                              | patch | Performance   |
-| update    | pinned dependencies                      | patch | Dependencies  |
-| document  | a feature, concept, etc.                 | none  | Documentation |
-| correct   | an error in documentation                | none  | Documentation |
-| refactor  | code, etc., without affecting behavior   | none  | Internal      |
-| format    | code, configuration, etc.                | none  | (none)        |
-| release   | a new version (after bumping the number) | none  | (none)        |
+/// table-caption
+<b>Change types, assuming no scope applies</b>
+///
 
-<b>Key scopes:</b>
+| Tag / scope   | Description                    | Bump      | Section    |
+|---------------|--------------------------------|-----------|------------|
+| <b>Tags</b>   | <b>―</b>                       | <b>―</b>  | <b>―</b>   |
+| `infra/build` | Makefiles, file layout, etc.   | ≤ patch   | `Internal` |
+| `infra/dev`   | Developer tools (e.g. scripts) | 🚫        | `Internal` |
+| `infra/tests` | E.g. test fixtures             | 🚫        | `Internal` |
+| `infra/cicd`  | CI/CD pipelines                | 🚫        | `Internal` |
+| `infra/docs`  | E.g. config                    | 🚫        | `Internal` |
+| `trivial`     | Ignore in versioning and notes | 🚫        | 🚫         |
+| `breaking`    | Treat as a breaking change     | major     | no effect  |
+| `minor`       | Treat as a minor change        | minor     | no effect  |
+| `patch`       | Treat as a patch change        | patch     | no effect  |
+| `section={x}` | Override release notes section | no effect | _{x}_      |
+| `wip`         | Work in progress (don’t merge) | N/A       | N/A        |
+| <b>Scopes</b> | <b>―</b>                       | <b>―</b>  | <b>―</b>   |
+| `i18n`        | Internationalization           | ≤ patch   | icon       |
+| `a11y`        | Accessibility                  | ≤ patch   | icon       |
 
-| Scope       | Description                                | Bump      | Section       |
-| ----------- | ------------------------------------------ | --------- | ------------- |
-| build       | Makefiles, etc.                            | no change | Build changes |
-| tests       | Test cases                                 | no        | Internal      |
-| infra       | Structure, scripts, internal docs, etc.    | no        | Internal      |
-| infra/tests | Organization, fixtures, etc.               | no        | Internal      |
-| infra/cicd  | CI/CD pipelines                            | no        | Internal      |
-| infra/docs  | Organization, scripts, configuration, etc. | no        | Internal      |
-| i18n        | Internationalization                       | no change | Miscellaneous |
-| a11y        | Accessibility                              | no change | Miscellaneous |
-| mention:on  | Include in release notes                   | no change | Miscellaneous |
-| mention:off | Exclude from release notes                 | no change | (exclude)     |
+/// table-caption
+<b>Tags/scopes, with associated changes to versioning and release notes</b>
+///
 
 Then you could use the type as part of the subject and better distinguish kinds of changes.
 For example:
