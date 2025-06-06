@@ -1,3 +1,8 @@
+---
+tags:
+  - science
+---
+
 # Sunlight
 
 ## Visible light by time of day and month

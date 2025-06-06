@@ -1,3 +1,11 @@
+---
+tags:
+  - Markdown
+  - HTML
+  - TeX
+  - data-representation
+---
+
 # Documentation conventions
 
 <!--

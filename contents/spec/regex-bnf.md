@@ -1,3 +1,9 @@
+---
+tags:
+  - DSL
+  - BNF
+---
+
 # Advanced BNF with regex
 
 <!--
@@ -6,9 +12,36 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-<b>Spec status: Use with caution.</b>
-Although useful, applying it in practice might cause confusion.
+<b>Spec status: stable; use with caution.</b>
 Take it, modify it, use it. (CC-BY-SA)
+Although potentially useful, applying this specification in practice might cause confusion.
+It allows for dramatically shorter and more readable specifications.
+However, abusing features like intersections and complements
+could actually make specifications less readable.
+In addition, it does contribute to the
+[proliferation of standards "XKCD comic #927 about standards"](https://xkcd.com/927/).
+
+## Summary
+
+| Feature                     | regex-bnf         | W3C XML EBNF  | EBNF          | ABNF      |
+|-----------------------------|-------------------|---------------|---------------|-----------|
+| regex                       | **ECMA 262**      | minimal       | no            | no        |
+| exclusion                   | **yes** (`-`)     | **yes** (`-`) | **yes** (`-`) | yes       |
+| complement                  | **yes** (`!`)     | indirectly    | indirectly    | no        |
+| exclusive disjunction       | **yes** (`^`)     | indirectly    | indirectly    | no        |
+| intersection                | **yes** (`&`)     | no            | no            | no        |
+| ordered alternation         | **yes** (`/`)     | no            | no            | no        |
+| UTF codepoints by name      | **yes** (`#'␣'`)  | no            | no            | no        |
+| inline definitions          | **yes** (`=`)     | no            | no            | no        |
+| explicit start token        | **yes** (`START`) | no            | no            | no        |
+| lazy quantifiers            | **yes** (`??`)    | no            | no            | no        |
+| core rules                  | **50**            | 0             | 0             | **16**    |
+| well-formedness constraints | `[ wfc: ␣ ]`      | `[ wfc: ␣ ]`  | `? ␣ ?`       | no        |
+| validity constraints        | `[ vc: ␣ ]`       | `[ vc: ␣ ]`   | no            | no        |
+| definition syntax           | `:=`/`::=`/`=`    | `::=`         | `=`           | `=`       |
+| comment syntax              | `/* */`/`;`       | `/* */`       | `;`           | `	(* *)	` |
+| concatenation symbol        | implicit          | implicit      | `,`           | `.`       |
+| alternation symbol          | `\|`              | `\|`          | `\|`/`/`/`?`  | `/`       |
 
 **An advanced BNF derivative.**
 

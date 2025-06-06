@@ -1,3 +1,9 @@
+---
+tags:
+  - macOS
+  - OS-setup
+---
+
 # macOS setup
 
 <!--

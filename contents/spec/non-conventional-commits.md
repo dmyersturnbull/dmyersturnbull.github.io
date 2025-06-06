@@ -1,3 +1,10 @@
+---
+tags:
+  - Git
+  - GitHub
+  - BNF
+---
+
 # Non-conventional commits
 
 <!--
@@ -6,12 +13,14 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
+<b>Spec status: draft; not usable.</b>
+
 There are significant well-recognized problems with Conventional Commits.
 This nascent specification simply explores alternatives.
 
 !!! related
 
-    - [Restricted conventional commits spec](conventional-commits.md).
+    - [Restricted conventional commits spec](commit-messages.md).
 
 | Type         | Category | Description                     | Bump      | Section         |
 | ------------ | -------- | ------------------------------- | --------- | --------------- |

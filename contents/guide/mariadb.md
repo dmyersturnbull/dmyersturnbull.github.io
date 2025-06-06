@@ -1,3 +1,8 @@
+---
+tags:
+  - software-setup
+---
+
 # MariaDB setup
 
 <!--

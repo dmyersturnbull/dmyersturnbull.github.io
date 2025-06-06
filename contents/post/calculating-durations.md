@@ -1,3 +1,11 @@
+---
+tags:
+  - datetimes
+  - ISO-8601
+  - RFC-3339
+  - DSL
+---
+
 # Calculation durations
 
 <!--

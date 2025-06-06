@@ -1,3 +1,9 @@
+---
+tags:
+  - HTTP
+  - BNF
+---
+
 # HTTP `See` header
 
 <!--
@@ -6,7 +12,7 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-<b>Spec status: Useful and ready to go.</b>
+<b>Spec status: stable; finalized; useful.</b>
 Take it, modify it, use it. (CC-BY-SA)
 
 [HAL/HAL-JSON](https://stateless.group/hal_specification.html),

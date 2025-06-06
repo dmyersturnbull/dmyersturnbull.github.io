@@ -1,3 +1,12 @@
+---
+tags:
+  - datetimes
+  - ISO-8601
+  - RFC-3339
+  - data-representation
+  - JSONSchema
+---
+
 # Fixed ISO 8601
 
 <!--
@@ -5,6 +14,9 @@ SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
+
+<b>Spec status: stable; useful.</b>
+Take it, modify it, use it. (CC-BY-SA)
 
 !!! related
 

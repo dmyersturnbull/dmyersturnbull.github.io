@@ -1,3 +1,10 @@
+---
+tags:
+  - coding
+  - JavaScript
+  - TypeScript
+---
+
 # Frontends for time travelers
 
 <!--
@@ -6,9 +13,9 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-!!! warning
+!!! warning "Note"
 
-    This document is extremely incomplete.
+    This document is a draft.
 
 I had a few jobs doing web development circa 12–15 years ago.
 HTML 4, CSS 2, pre‐ECMAScript 4 JavaScript, and PHP, Python, or ASP.

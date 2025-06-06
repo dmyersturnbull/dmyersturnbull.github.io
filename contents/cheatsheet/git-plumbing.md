@@ -1,3 +1,9 @@
+---
+tags:
+  - Git
+  - Bash
+---
+
 # Git plumbing
 
 <!--

@@ -25,7 +25,7 @@ Simple `See` HTTP header to link to resources without polluting the body.
 [:fontawesome-solid-clock: **Fixed ISO 8601**](fixed-iso-8601.md):
 Unambiguous subset of ISO 8601 durations and related types.
 
-[:fontawesome-solid-cloud: **(restricted) Conventional Commits**](conventional-commits.md):
+[:fontawesome-solid-cloud: **(restricted) Conventional Commits**](commit-messages.md):
 Angular commit message guidelines with refinements and a less ambiguous grammar.
 
 [:fontawesome-solid-cloud: **Non-Conventional Commits**](non-conventional-commits.md):

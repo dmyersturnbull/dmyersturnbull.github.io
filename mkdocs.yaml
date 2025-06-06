@@ -140,6 +140,7 @@ plugins:
       minify_js: true
       minify_css: true
       cache_safe: true
+  - tags
 
 validation:
   absolute_links: relative_to_docs

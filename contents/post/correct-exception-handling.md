@@ -1,3 +1,9 @@
+---
+tags:
+  - coding
+  - Java
+---
+
 # Correct exception handling
 
 <!--

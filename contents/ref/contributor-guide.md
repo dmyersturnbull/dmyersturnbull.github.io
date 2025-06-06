@@ -1,3 +1,9 @@
+---
+tags:
+  - Git
+  - GitHub
+---
+
 # Contributor guide
 
 <!--

@@ -1,3 +1,9 @@
+---
+tags:
+  - CI/CD
+  - Python
+---
+
 # Retooling Python builds
 
 <!--

@@ -1,3 +1,9 @@
+---
+tags:
+  - science
+  - JSON
+---
+
 # Research projects
 
 <!--

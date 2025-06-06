@@ -1,3 +1,10 @@
+---
+tags:
+  - Git
+  - GitHub
+  - regex
+---
+
 # Conventional commits
 
 <!--
@@ -7,6 +14,9 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
 ## Abstract
+
+<b>Spec status: stable; useful.</b>
+Take it, modify it, use it. (CC-BY-SA)
 
 !!! related
 
@@ -104,36 +114,55 @@ CC: Amelia Johnson <amelia@dev.com>
 ### Core grammar
 
 ```regexp
-(?<type> feat|fix|security|docs|style|refactor|perf|test|drop|depr|ci|build|chore )
-(?: \( (?<scopes> ([a-z]++(?:-[a-z]++)*+)(,([a-z]++(?:-[a-z]++)*+))*+ ) \) )?+
+(?x)
+(?<type>
+  feat|fix|security|docs|style|refactor|perf|test|drop|depr|ci|build|chore
+)
+(?:
+  \(
+  (?<scopes>
+    ([a-z]++(?:-[a-z]++)*+)(,([a-z]++(?:-[a-z]++)*+))*+
+  )
+  \)
+)?+
 (?<is_breaking> ! )?+
 :\u0020
 (?<subject> \S[\S\u0020]*+ )
 
 (?:
-\n\nThis commit reverts (?<reverts> [0-9a-f]{7}(?:, [0-9a-f]{7})++ ).
-)?+
-(?<body>
-(?: \n{2}? (?: \S[\S\u0020]*+ | \n(?!\n) )++ )*?
-)??
+\n\n
 
-(?:
-\n\nBREAKING\u0020CHANGE:\u0020
-(?<breaking_change> \S[\S\u0020]*+ )
-)?
+  (?:
+    This commit reverts
+    (?<reverts> [0-9a-f]{7}(?: ,\u0020[0-9a-f]{7})++ ).
+  )?+
 
-(?:
-\n\nDEPRECATED:\u0020
-(?<deprecated> \S[\S\u0020]*+ )
-)?
+  (?<body>
+    (?: \n{0,2} (?: \S[\S\u0020]*+ | \n(?!\n) )+ )*?
+  )??
 
-(?>
-\n
-(?>
-\nCloses \u0020# (?<closes> \d++ )
-|
-\n(?<key> [^\s:]++) (?:\u0020|\u0020#) (?<value> \S[\S\u0020]*+ )
-)*+
+  (?:
+    \n\nBREAKING\u0020CHANGE:\u0020
+    (?<breaking_change> \S[\S\u0020]*+ )
+  )?+
+
+  (?:
+    \n\nDEPRECATED:\u0020
+    (?<deprecated> \S[\S\u0020]*+ )
+  )?+
+
+  (?:
+    \n
+    (?>
+      \nCloses \u0020\# (?<closes> \d++ )
+      |
+      \n
+      (?<key> [^\s:]++)
+      (?: :\u0020 | \u0020\# )
+      (?<value> \S[\S\u0020]*+ )
+    )*+
+  )?+
+
 )?+
 ```
 

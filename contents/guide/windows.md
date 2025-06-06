@@ -1,3 +1,9 @@
+---
+tags:
+  - Windows
+  - OS-setup
+---
+
 # Windows setup
 
 <!--

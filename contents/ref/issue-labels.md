@@ -1,3 +1,9 @@
+---
+tags:
+  - Git
+  - GitHub
+---
+
 # Supplemental – issue labels
 
 <!--
@@ -40,6 +46,8 @@ Labels are organized into are 8 groups.
   `question` (for user questions in issues),
   `help needed` (to request help),
   and `bookmark` (for issues that contain important information)
+
+## Table
 
 | Label                       | Commit part    | Changelog section   | Bump  | Icon | Description                  | Color     |
 | --------------------------- | -------------- | ------------------- | ----- | ---- | ---------------------------- | --------- |

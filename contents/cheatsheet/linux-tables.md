@@ -1,3 +1,9 @@
+---
+tags:
+  - Linux
+  - Bash
+---
+
 # Linux and Bash tables
 
 Useful cheatsheet tables for Linux and Bash.

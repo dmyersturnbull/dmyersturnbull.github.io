@@ -1,3 +1,10 @@
+---
+tags:
+  - Bash
+  - CLI
+  - Docker
+---
+
 # Scripts and build files
 
 <!--

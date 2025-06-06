@@ -1,3 +1,8 @@
+---
+tags:
+  - data-representation
+---
+
 # YAML is terrible
 
 People have already written about this, but... **YAML is absolutely terrible.**

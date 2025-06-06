@@ -1,3 +1,8 @@
+---
+tags:
+  - AI
+---
+
 # Wonders of ChatGPT
 
 <!--

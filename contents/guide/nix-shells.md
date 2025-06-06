@@ -1,3 +1,11 @@
+---
+tags:
+  - Bash
+  - Linux
+  - macOS
+  - OS-setup
+---
+
 # Nix shells
 
 <!--

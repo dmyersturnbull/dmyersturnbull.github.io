@@ -2,6 +2,7 @@
 
 <!-- prettier-ignore -->
 - [Home](index.md)
+- [Tag index](tags.md)
 - Setup guides
     - [⟨index⟩](guide/index.md)
     - [Linux](guide/linux.md)

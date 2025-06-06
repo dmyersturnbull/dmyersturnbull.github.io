@@ -1,3 +1,10 @@
+---
+tags:
+  - coding
+  - Python
+  - testing
+---
+
 # Duck typing is quackery
 
 <!--

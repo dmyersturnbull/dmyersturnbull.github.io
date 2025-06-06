@@ -1,3 +1,9 @@
+---
+tags:
+  - GitHub
+  - CI/CD
+---
+
 # GitHub Actions
 
 ## Coercion to boolean

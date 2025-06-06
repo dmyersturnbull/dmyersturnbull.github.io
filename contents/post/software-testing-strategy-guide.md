@@ -1,3 +1,9 @@
+---
+tags:
+  - testing
+  - coding
+---
+
 # Software testing strategy guide
 
 <!--
@@ -15,7 +21,10 @@ teal { color: Teal }
 purple { color: Purple }
 </style>
 
-_<b>Note:</b> This document is a draft._
+
+!!! warning "Note"
+
+    This document is a draft.
 
 ## Layers of tests
 

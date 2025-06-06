@@ -1,3 +1,11 @@
+---
+tags:
+  - JSON
+  - HTTP
+  - REST
+  - data-representation
+---
+
 # API conventions
 
 <!--

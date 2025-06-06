@@ -1,3 +1,12 @@
+---
+tags:
+  - HTTP
+  - REST
+  - DSL
+  - BNF
+  - JSONSchema
+---
+
 # HTTP GET search DSL
 
 <!--
@@ -6,9 +15,8 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-<b>Spec status: Useful and ready to go.</b>
+<b>Spec status: stable; useful.</b>
 Take it, modify it, use it. (CC-BY-SA)
-_Note: The image extension is experimental._
 
 ## Summary
 

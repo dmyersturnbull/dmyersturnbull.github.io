@@ -1,3 +1,8 @@
+---
+tags:
+  - Git
+---
+
 # Git recipes
 
 Sticky notes for commands that I keep forgetting.

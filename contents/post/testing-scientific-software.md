@@ -1,3 +1,10 @@
+---
+tags:
+  - testing
+  - science
+  - coding
+---
+
 # Testing scientific software
 
 <!--

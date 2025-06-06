@@ -1,3 +1,8 @@
+---
+tags:
+  - Bash
+---
+
 # Bash tricks
 
 <!--

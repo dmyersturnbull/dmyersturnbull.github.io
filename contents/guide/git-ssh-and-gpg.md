@@ -1,3 +1,10 @@
+---
+tags:
+  - Git
+  - OS-setup
+  - security
+---
+
 # Git, SSH, and GPG
 
 <!--

@@ -1,3 +1,9 @@
+---
+tags:
+  - Linux
+  - OS-setup
+---
+
 # Linux setup
 
 <!--

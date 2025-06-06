@@ -1,3 +1,8 @@
+---
+tags:
+  - SQL
+---
+
 # SQL conventions
 
 <!--
