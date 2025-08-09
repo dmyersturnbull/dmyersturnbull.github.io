@@ -43,9 +43,13 @@ Most importantly, this enables simple and reliable parsing.
 ## Definitions
 
 The key words _MUST_, _MUST NOT_, _REQUIRED_, _SHALL_, _SHALL NOT_,
-_SHOULD_, _SHOULD NOT_, _RECOMMENDED_, _MAY_, and _OPTIONAL_ in this
-document are to be interpreted as described in
-[RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119).
+_SHOULD_, _SHOULD NOT_, _RECOMMENDED_, _MAY_, and _OPTIONAL_
+in this document are to be interpreted as described in
+[BCP 14](https://datatracker.ietf.org/doc/bcp14/)
+(which includes
+[RFC 2119](https://datatracker.ietf.org/doc/html/rfc2119)
+and [RFC 8174](https://datatracker.ietf.org/doc/html/rfc8174))
+when, and only when, they appear in all capitals, as shown here.
 
 ## Example
 

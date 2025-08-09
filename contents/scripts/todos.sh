@@ -15,8 +15,10 @@ declare files='*.*'
 declare todo='(TODO|FIXME)([^A-Za-z0-9_]|$)'
 declare recurse=false
 declare regex=auto
-declare -i log_level=2
 declare -i width=0
+# Logging
+declare use_color=auto
+declare -i log_level=2
 
 # Define usage, help info, etc.
 

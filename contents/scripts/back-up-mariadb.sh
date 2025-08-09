@@ -17,6 +17,8 @@ declare socket_path=
 # Using >1 thread for compression is probably just a waste.
 declare -i zstd_level=2
 declare -i zstd_threads=1
+# Logging
+declare use_color=auto
 declare -i log_level=2
 
 # Define usage, help info, etc.
@@ -58,8 +60,10 @@ declare -r help=""
 
 # Set up logging.
 
-if [[ -f "$HOME"/bin/apprise.sh ]]; then
-  source "$HOME"/bin/apprise.sh
+opt_apprise="${APPRISE_SCRIPT:-$HOME/.local/bin/apprise.sh}"
+if [[ -f "$opt_apprise" ]]; then
+  # shellcheck disable=SC1090
+  source "$opt_apprise"
   apprise() {
     apprise::log "$1" "$2"
   }
@@ -67,10 +71,12 @@ else
   apprise() {
     printf >&2 "[%s] %s\n" "$1" "$2"
   }
+  apprise WARN "File '$opt_apprise' was not found."
+  unset opt_apprise
 fi
 
 usage_error() {
-  apprise ERROR "$1"
+  apprise ERROR "${1-}"
   printf >&2 '%s\n' "$usage"
   exit 2
 }
@@ -106,25 +112,31 @@ while (($# > 0)); do
       shift
       ;;
     --port=*)
-      port="${1#--port=}"
+      port=$(("${1#--port=}")) || usage_error "Invalid port"
       ;;
     -p | --port)
-      port="$2"
+      port=$(("$2")) || usage_error "Invalid port"
       shift
       ;;
     --zstd-level=*)
-      zstd_threads="${1#--zstd-level=}"
+      zstd_threads=$(("${1#--zstd-level=}"))
       ;;
     --zstd-level)
-      zstd_level="$2"
+      zstd_level=$(("$2"))
       shift
       ;;
     --zstd-threads=*)
-      zstd_threads="${1#--zstd-threads=}"
+      zstd_threads=$(("${1#--zstd-threads=}"))
       ;;
     --zstd-threads)
-      zstd_threads="$2"
+      zstd_threads=$(("$2"))
       shift
+      ;;
+    --log-level=*)
+      log_level="${1#--log-level=}"
+      ;;
+    --log-level)
+      log_level="$1"
       ;;
     -v | --verbose)
       log_level=$((log_level - 1))
@@ -143,8 +155,11 @@ while (($# > 0)); do
       usage_error "Unknown option: '$1'."
       ;;
     *)
-      if [[ -n "$db" ]]; then
+      if [[ -v db ]]; then
         usage_error "Unexpected positional argument: '$1'."
+      fi
+      if [[ -z "$1" ]]; then
+        usage_error "DB value must be non-empty."
       fi
       db="$1"
       ;;
@@ -152,20 +167,30 @@ while (($# > 0)); do
   shift
 done
 
-apprise::config $log_level "$use_color" || exit $?
+if [[ -v db ]]; then
+  usage_error "Missing required positional argument 'db'."
+fi
+if [[ -v opt_apprise ]]; then
+  apprise::config "$log_level" "$use_color" || exit $?
+fi
 
-declare protocol_arg socket_arg host_arg port_arg user_arg password_arg
+protocol_arg=
+socket_arg=
+host_arg=
+port_arg=
+user_arg=
+password_arg=
 if [[ -n "$socket_path" ]]; then
   protocol_arg=--protocol=socket
   socket_arg=--socket=$socket_path
 else
   host_arg=--host=127.0.0.1
   port_arg=--port=$port
-  if [[ -n "$DB_USER" ]]; then
-    user_arg=--user=$DB_USER
+  if [[ -v DB_USER ]]; then
+    user_arg=--user="$DB_USER"
   fi
-  if [[ -n "$DB_PASSWORD" ]]; then
-    password_arg=--password=$DB_PASSWORD
+  if [[ -v DB_PASSWORD ]]; then
+    password_arg=--password="$DB_PASSWORD"
   fi
 fi
 
@@ -181,14 +206,14 @@ tables=$(
     --batch \
     --disable-auto-rehash \
     --database="$db" \
-    --execute='show tables'
+    --execute='show tables' \
 )
 
 n_tables=$(($(wc -w <<< "$tables")))
 apprise INFO "Backing up $n_tables tables to '$backup_dir'."
 apprise INFO "Tables: [ $tables ]."
 mkdir -p "$backup_dir"
-dt=$(date +%Y-%m-%dT%H:%M:%S%z)
+dt=$(date +%Y-%m-%dT%H%M%S%z)
 
 for table in $tables; do
   table_path=$backup_dir/$db/$table.sql.zst
@@ -207,8 +232,7 @@ for table in $tables; do
     --log-error "$error_log"
   "$db" \
     "$table" \
-    | zstd -z "-$zstd_level" "--threads=$zstd_threads" \
-      > "$table_path" \
+    | zstd -z "-$zstd_level" "--threads=$zstd_threads" > "$table_path" \
     || exit $?
   apprise INFO "Wrote table $table."
   n_lines=$(wc -l <<< "$error_log")

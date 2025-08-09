@@ -71,23 +71,22 @@ Follow
 the
 [Google shell guide](https://google.github.io/styleguide/shellguide.html),
 and this guide’s rules (below).
-These three are mostly complimentary, but there are a few contradictions;
+These three are mostly complimentary, but there are a few disagreements;
 this guide’s rules take precedence.
 
-??? info "What are the specific contradictions?"
+??? info "What are the specific disagreements?"
 
     - **Prefer `$var` over `${var}`.**
        (bertvv’s cheat sheet mandates `{var}`.)
     - **Use `stderr` for all logging; use stdout only for pipeable output.**
       (The Google guide is unclear on this.)
-    - **Choose a max line length**, per your discretion.
-      (The Google guide requires ≤80.)
+    - **Choose a max line length** per your discretion.
+      (The Google guide requires 80.)
     - **Format function headers (comments) as you see fit.**
       (Google doesn’t specify a format, but the examples use one.)
-    - **`TODO: ` is sufficient to indicate a TODO comment**.
-      (Google requires `TODO(author):`.)
-      An author name is unnecessary, especially if the script is under version control.
-      Use `FIXME: ` for things like unfinished or placeholder code.
+    - **`TODO: ...` is sufficient for TODO comment**.
+      (Google requires `TODO(author):`, but assume the script is under version control.)
+      Use `FIXME:` for unfinished or placeholder code.
 
 #### Shebang, header, and `set` options
 
@@ -159,7 +158,10 @@ Other structured data may be included (e.g. date-time, time elapsed, % progress,
 
 If desired, you can distinguish logging levels with ANSI color and/or style codes.
 This is ok **only** if stderr is a [TTY] as determined by `[[ -t 2 ]]`
-or with a `--color` (e.g.) command-line switch.
+or if requested by a `--color` (e.g.) command-line switch or the
+[`FORCE_COLOR` environment variable](https://force-color.org/).
+Always respect the [`NO_COLOR` environment variable](https://no-color.org/)
+(unless `FORCE_COLOR` is set).
 Terminal color schemes can vary, so prefer fewer colors.
 See [`todos.sh`](../scripts/todos.sh) for an example.
 

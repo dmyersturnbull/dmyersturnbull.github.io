@@ -18,11 +18,11 @@ This details exactly what characters must be percent-encoded in URIs.
 ### Relevant specifications
 
 - [RFC 1738](https://datatracker.ietf.org/doc/html/rfc1738),
-  “Uniform Resource Locators (URL)” (RFC Proposed Standard, obsolete)
+  “Uniform Resource Locators (URL)” (Proposed Standard, obsolete)
 - [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986),
-  “Uniform Resource Identifier (URI): Generic Syntax” (RFC Standard)
+  “Uniform Resource Identifier (URI): Generic Syntax” (Internet Standard)
 - [RFC 6920](https://datatracker.ietf.org/doc/html/rfc3986),
-  “Naming Things with Hashes” (RFC Proposed Standard)
+  “Naming Things with Hashes” (Proposed Standard)
 - [IANA-recognized URI schemes](https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml)
 
 RFC 3986 is the main specification.

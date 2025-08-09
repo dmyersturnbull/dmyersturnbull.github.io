@@ -11,7 +11,11 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-This lists some tips, and details how to do certain common-but-difficult things in Bash correctly.
+<b>Contents:</b>
+
+- How to do certain common-but-difficult things correctly
+- Reminders of commands I routinely forget
+- Reference tables
 
 ## General
 
@@ -46,13 +50,16 @@ this_dir=$(dirname "$(readlink -f -- "$0" || exit $?)") || exit $?
 
 ## Comparisons
 
+### `[[ ]]` test operators
+
 | operator | syntax            | meaning                                  |
-| -------- | ----------------- | ---------------------------------------- |
+|----------|-------------------|------------------------------------------|
 | `==`     | `str1 == str2`    | `str1` **equals** `str2`                 |
 | `!=`     | `str1 != str2`    | `str1` does **not equal** `str2`         |
 | `<`      | `str1 < str2`     | `str1` **precedes** `str2`               |
 | `>`      | `str1 > str2`     | `str` **succeeds** `str2`                |
 | `=~`     | `str =~ regex`    | `str` **matches** `regex` pattern        |
+| `-v`     | `-v var`          | `var` is a **defined variable**          |
 | `-z`     | `-z str`          | `str` is **empty**                       |
 | `-n`     | `-n str`          | `str` is **nonempty**                    |
 | `-e`     | `-e path`         | `path` **exists**                        |
@@ -82,6 +89,56 @@ this_dir=$(dirname "$(readlink -f -- "$0" || exit $?)") || exit $?
 /// table-caption
 <b>Test operators (`[[ ]]`).</b>
 ///
+
+### Testing whether a name is defined
+
+| syntax                          | meaning                  | notes                |
+|---------------------------------|--------------------------|----------------------|
+| `type name > /dev/null`         | `name` is defined        | general              |
+| `alias name > /dev/null`        | `name` is an alias       |                      |
+| ~~`declare -F name`~~           | ~~`name` is a function~~ | always `true` in ZSH |
+| `typeset -f myfunc > /dev/null` | `name` is a function     |                      |
+
+/// table-caption
+<b>Other common tests.</b>
+///
+
+This function seems to work in Bash 5.2 on Ubuntu 25.04 and macOS 24.
+
+```bash
+get_type() {
+  local v re
+  v="$(type "$1" || true)"
+  re="[[:space:]]is[[:space:]]an?[[:space:]]"
+  if [[ ! "$v" =~ $re ]]; then
+    echo command
+    return
+  fi
+  case "$v" in
+    *alias* )
+      echo alias
+      ;;
+    *function* )
+      echo 'function'
+      ;;
+    *builtin* )
+      echo builtin
+      ;;
+    *reserved* )
+      echo keyword
+      ;;
+    *is* )
+      echo command
+      ;;
+    *not* )
+      echo undefined
+      ;;
+    *)
+      echo unknown
+      ;;
+  esac
+}
+```
 
 ## Miscellaneous notes
 

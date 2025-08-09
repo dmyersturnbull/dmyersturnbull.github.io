@@ -17,6 +17,8 @@ declare socket_path=
 # Using >1 thread for compression is probably just a waste.
 declare -i zstd_level=2
 declare -i zstd_threads=1
+# Logging
+declare use_color=auto
 declare -i log_level=2
 
 # Define usage, help info, etc.
@@ -130,10 +132,10 @@ while (($# > 0)); do
       shift
       ;;
     -v | --verbose)
-      n_verbose=$((n_verbose + 1))
+      log_level=$((log_level - 1))
       ;;
     -q | --quiet)
-      n_quiet=$((n_quiet + 1))
+      log_level=$((log_level + 1))
       ;;
     --color=*)
       use_color="${1#--color=}"

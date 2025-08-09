@@ -5,23 +5,26 @@
 
 # How to use:
 # 1.  Source this file.
-# 2a. Declare `log_level=1`. Increment for every `-q` and decrement for every `v` (−∞ to +∞).
-# 2b. Declare `use_color=auto`, then replace with any `--color` option value.
-# 3.  Call `apprise::config <log_level> <use_color`.
+# 2a. Declare `log_level=1`.
+#     - Increment for every `-q` and decrement for every `v` (−∞ to +∞).
+#     - Optionally, set `log_level` with any `--log-level` option value.
+# 2b. Declare `use_color=auto`.
+#     - Replace with any `--color` option value.
+# 3.  Call `apprise::config <log_level> <use_color>`.
 # 4.  Call `apprise::log` to log.
 # S1: To modify the colors/styles, call `apprise::define_styles`.
 # S2: To modify level names, call `apprise::define_levels`, then `apprise::define_styles`.
 
-declare -r -i apprise_default_level=2 # INFO
-
 # Key mutable state:
-declare -i apprise_level=$apprise_default_level
+declare -i apprise_level=2 # INFO
 declare apprise_use_color=false # Whether to actually use color (i.e., not `auto`).
 
 # Additional mutable state (initialized at bottom):
 declare -A apprise_levels=() # Maps names and numbers to numbers.
 declare -A apprise_names=()  # Maps names and numbers to names.
 declare -A styles=()         # Maps names to ANSI escape sequences.
+
+##### Functions to define styles and levels #####
 
 # Define a new ordered list of levels with the provided names, from lowest to highest.
 # Passing no arguments will cause every call to `apprise::log` to fail.
@@ -51,7 +54,7 @@ apprise::clear_styles() {
 # See also: `apprise::define_levels`.
 apprise::define_styles() {
   # Previous styles are not removed.
-  local style, name
+  local style name
   local -i num=1
   for style in "$@"; do
     name=${apprise_names[$num]}
@@ -59,6 +62,8 @@ apprise::define_styles() {
     num=$((num + 1))
   done
 }
+
+##### Logging functions #####
 
 # Writes a log at level $1, if $1 is ≥ `apprise_level`.
 # Usage: `apprise::log <name|number> <msg>`.
@@ -68,7 +73,9 @@ apprise::log() {
   local level=${apprise_levels[$1]}
   local message=$2
   local style="${styles[$name]}"
-  ((level < apprise_level)) && return
+  if ((level < apprise_level)); then
+    return
+  fi
   if [[ $apprise_use_color == true ]]; then
     printf >&2 "%b[%s] %s\e[0m\n" "$style" "$name" "$message"
   else
@@ -96,54 +103,88 @@ apprise::error() {
   apprise::log 4 "$1" || return $?
 }
 
-# Writes a message at the highest level (normally ERROR), then exits.
-# Usage: `apprise::exit <exit code> <msg>`.
-apprise::exit() {
-  local -i code=$1
-  local msg=$2
-  apprise::log ${#apprise_levels[@]} "$msg" || true
-  exit $code
+# Calls `apprise::log` at the highest configured level (normally ERROR).
+apprise::max() {
+  apprise::log ${#apprise_levels[@]} "$1" || return $?
 }
 
-# Sets the current log level, clamping the numeric level `$1`.
-apprise::set_level() {
-  n=${#apprise_levels[@]}
-  apprise_level=$(($1 < 1 ? 1 : ($1 > n ? n : $1)))
-}
+##### Functions that parse args #####
 
-# Sets whether to use color from `$1` (either `auto`, `true/yes`, or `false/no`).
-apprise::set_use_color() {
-  local v="$1"
-  if [[ "$v" == auto ]]; then
-    apprise_use_color=$([[ -t 2 ]] && echo true || echo false)
-  elif [[ "$v" =~ ^(true|yes)$ ]]; then
-    apprise_use_color=true
-  elif [[ "$v" =~ ^(false|no)$ ]]; then
-    apprise_use_color=false
-  else
-    apprise::log ERROR "Invalid --color value; must be auto, true/yes, or false/no (got: '$v')."
+apprise::parse_level() {
+  if ! echo "${apprise_levels[$1]}"; then
+    apprise::log_max "Invalid log level '$1'." || return $?
     return 2
   fi
 }
 
-# Sets the current log level and color option.
-# Usage: `apprise::config <level number> <auto|true/yes|false/no>`.
-apprise::config() {
-  apprise::set_level "${1:-$apprise_level}"
-  apprise::set_use_color "${2:-$apprise_use_color}"
+# Parses the `--color` arg `$1` to 'auto', 'true', or 'false'.
+# `$1` must be `auto`, `true`|`yes`|`on`, or `false|no|off`.
+# Returns: 0 normally; 2 if `$1` is invalid.
+# STDERR: An ERROR-level log message if `$1` is invalid.
+apprise::parse_use_color() {
+  local v="$1"
+  if [[ "$v" =~ ^(true|yes|on)$ ]]; then
+    echo true
+  elif [[ "$v" =~ ^(false|no|off)$ ]]; then
+    echo false
+  elif [[ "$v" == auto ]]; then
+    echo auto
+  else
+    apprise::log_max "Invalid log color option '$v'." || return $?
+    return 2
+  fi
 }
+
+# Writes either 'true' or 'false' based on `$1` and the env vars `NO_COLOR` and `FORCE_COLOR`.
+# `$1` should be the string passed to e.g. `--color`.
+# Returns: 0 normally; 2 if `$1` is invalid.
+# STDERR: An ERROR-level log message if `$1` is invalid.
+apprise::_config_use_color() {
+  local v
+  v="$(apprise::parse_use_color "$1")" || return $?
+  if [[ "${FORCE_COLOR:-}" == 1 ]]; then
+    echo true
+  elif [[ "${NO_COLOR:-}" == 1 ]]; then
+    echo false
+  elif [[ "$v" == auto ]] && [[ -t 2 ]]; then
+    echo true
+  elif [[ "$v" == auto ]]; then
+    echo false
+  else
+    echo "$v"
+  fi
+}
+
+# Clamps the numeric level `$1` (writes the clamped number to stdout).
+apprise::_config_level() {
+  local -i n max
+  if ! n=${apprise_levels[$1]}; then
+    apprise::log_max "Invalid log level '$1'." || return $?
+    return 2
+  fi
+  max=${#apprise_levels[@]}
+  echo $((n < 1 ? 1 : (n > max ? max : n)))
+}
+
+# Sets the current log level and color option.
+# Usage: `apprise::config <level number> <auto|true/yes/on|false/no/off>.
+apprise::config() {
+  apprise_level=$(apprise::_config_level "$1") || return $?
+  apprise_use_color="$(apprise::_config_use_color "$2")" || return $?
+}
+
+##### Defaults #####
 
 # Resets the levels and styles (but not the current level or color option).
 apprise::reset() {
   apprise::define_levels DEBUG INFO WARN ERROR
   # Equivalent to apprise::define_styles "${DEBUG_COLOR:-'\e[0;2m'}", ...
   declare -g -A styles=(
-    [DEBUG]="${DEBUG_COLOR:-'\e[0;2m'}"    # dim
-    [INFO]="${INFO_COLOR:-'\e[0;1;2m'}"    # dim bold
-    [WARN]="${WARN_COLOR:-'\e[0;31m'}"     # plain red
-    [ERROR]="${ERROR_COLOR:-'\e[0;1;31m'}" # bold red
+    [DEBUG]="${APPRISE_DEBUG_COLOR:-'\e[0;2m'}"    # dim
+    [INFO]="${APPRISE_INFO_COLOR:-'\e[0;1;2m'}"    # dim bold
+    [WARN]="${APPRISE_WARN_COLOR:-'\e[0;31m'}"     # plain red
+    [ERROR]="${APPRISE_ERROR_COLOR:-'\e[0;1;31m'}" # bold red
   )
 }
 
 apprise::reset
-apprise::set_use_color auto

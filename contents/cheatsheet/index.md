@@ -14,11 +14,8 @@ Tables of Unicode symbols that you click on to copy
 [:fontawesome-solid-terminal: **Bash tips**](bash-tips.md):
 Tips for writing good Bash, and how to do some common but tricky things
 
-[:fontawesome-solid-thumbtack: **Git recipes**](git-recipes.md):
-List of prewritten Git commands and I keep forgetting
-
-[:fontawesome-solid-person-swimming: **Git plumbing**](git-plumbing.md):
-Tips and miniature scripts for processing Git command output
+[:fontawesome-solid-thumbtack: **Git recipes**](git.md):
+Git recipes, plumbing techniques, and reference tables
 
 [:fontawesome-solid-person-running: **GitHub Actions**](github-actions.md):
 Notes for writing GitHub workflows

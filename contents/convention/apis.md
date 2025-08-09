@@ -243,13 +243,13 @@ servers must not use status codes, methods, responses, or conditions not listed 
     Refer to the HTTP Method symbols defined above.
 
 | Code | Name                   | Methods     | Response  | Condition(s)                                  |
-| ---- | ---------------------- | ----------- | --------- | --------------------------------------------- |
+| ---- | ---------------------- | ----------- |-----------| --------------------------------------------- |
 | 200  | OK                     | 🎩🔻🩹      | resource  | Requested resource is being returned          |
 | 201  | Created                | ✉️ 🗃️       | ∅         | Resource has been created                     |
-| 202  | Accepted               | 🔻✉️🗃️🩹🗑️† | ticket ‡  | Request is being processed asynchronously     |
+| 202  | Accepted               | 🔻✉️🗃️🩹🗑️ | †         | Request is being processed asynchronously     |
 | 204  | No Content             | 🗑️          | ∅         | Deletion was successful                       |
 | 308  | Permanent Redirect     | ✉️🗃️🩹🗑    | resource  | Non-canonical URI was used                    |
-| 400  | Bad Request            | any         | problem § | Invalid endpoint, params, or body syntax      |
+| 400  | Bad Request            | any         | problem ‡ | Invalid endpoint, params, or body syntax      |
 | 401  | Unauthorized           | any         | problem   | Authentication was not provided               |
 | 403  | Forbidden              | any         | problem   | Authentication with insufficient privileges   |
 | 404  | Not Found              | 🔻🩹🗑️      | problem   | Resource does not exist                       |
@@ -270,28 +270,9 @@ HTTP Response Codes with allowed methods, responses, and uses.
 
 <small>
 <!-- -->
-<b>†</b> Use 202 Accepted in response to both
-(1) A POST, PUT, PATCH, or (rarely) DELETE
-to indicate that the request was accepted for asynchronous processing; and
-(2) A GET sent before the resource is ready.
-Use the same response format for both.
+<b>†</b> See [the 202 Created section](#202-accepted).
 
-<b>‡</b>
-The response SHOULD include a URI for polling and a suggested time or duration to poll.
-Info about the progress (e.g. `"current-task": "post-process"`) may be included if helpful.
-These keys are SUGGESTED:
-
-```json
-{
-  "poll-uri": "https://api.tld/api/jobs/20od7-sk9khz",
-  "wait-for": "2025-05-30T12:34:56Z",
-  "wait-until": "2025-05-30T12:34:56Z"
-}
-```
-
-<b>§</b> Use
-[RFC 9457](https://datatracker.ietf.org/doc/rfc9457/#name-members-of-a-problem-detail)
-problem details; see the [problem details section](#problem-details).
+<b>‡</b> See the [problem details section](#problem-details).
 
 <!-- -->
 </small>
@@ -300,27 +281,48 @@ problem details; see the [problem details section](#problem-details).
 
 | Code | Name                            | Methods  | Response | Use case                                   |
 | ---- | ------------------------------- | -------- | -------- | ------------------------------------------ |
-| 100  | Continue ♯                      | ✉️🗃️🩹   | ∅        | `100-continue` request succeeded (rare)    |
+| 100  | Continue §                      | ✉️🗃️🩹   | ∅        | `100-continue` request succeeded (rare)    |
 | 206  | Partial Content                 | 🔻       | part     | Range was requested and is being returned  |
 | 304  | Not Modified                    | 🎩 🔻    | ∅        | `If-None-Match` condition has match.       |
-| 412  | Precondition Failed ♯           | ✉️🗃️🩹🗑️ | problem  | Edit collision (`If-...` header)           |
+| 412  | Precondition Failed §           | ✉️🗃️🩹🗑️ | problem  | Edit collision (`If-...` header)           |
 | 416  | Range Not Satisfiable           | 🔻       | problem  | Requested range is out of bounds.          |
-| 417  | Expectation Failed ♯            | ✉️🗃️🩹   | problem  | `Expect: 100-continue` expectation failed. |
+| 417  | Expectation Failed §            | ✉️🗃️🩹   | problem  | `Expect: 100-continue` expectation failed. |
 | 418  | I'm a Teapot                    | any      | problem  | Blocked due to suspicious activity         |
 | 423  | Locked                          | ✉️🗃️🩹🗑️ | problem  | Needed resource is in use _(discouraged)_  |
-| 428  | Precondition Required ♯         | ✉️🗃️🩹🗑️ | problem  | `If-...` header required                   |
+| 428  | Precondition Required §         | ✉️🗃️🩹🗑️ | problem  | `If-...` header required                   |
 | 431  | Request Header Fields Too Large | any      | problem  | Headers are too large.                     |
 
 <small>
-<b>♯</b> These statuses are only applicable to modifiable resources.
+<b>§</b> Only applicable to modifiable resources.
 </small>
+
+#### 202 Accepted
+
+Use 202 Accepted for both
+
+- A POST or less commonly PUT/PATCH/DELETE to an async service,
+  to indicate that the request was accepted for asynchronous processing; **and**
+- A GET to a pending resource
+
+Include a `Retry-After` header with a suggested number of seconds to wait
+alongside a JSON body containing **at least keys `uri` and `retry-after`.**
+Example:
+
+```json
+{
+  "id": "20od7-sk9khz",
+  "uri": "https://api.tld/api/jobs/20od7-sk9khz",
+  "retry-after": "120",
+  "status": "pending",
+  "percent-complete": 64.2
+}
+```
 
 #### 404 Not Found
 
 404 Not Found is reserved for resources that _could_ exist but do not;
 attempts to access an invalid endpoint must always generate a 400 (Bad Request).
-For example, if `id` must be hexadecimal for `/machine/{id}`,
-then `/machine/zzz` should generate a 400.
+For example, if `id` must be hexadecimal for `/machine/{id}`, then `/machine/zzz` should generate a 400.
 The response body in
 [RFC 9457](https://datatracker.ietf.org/doc/rfc9457/#name-members-of-a-problem-detail)
 problem details should describe the problem;
@@ -335,15 +337,18 @@ You can indicate the resource’s status in the problem details (`detail` and/or
 #### 422 Unprocessable Entity and 409 Conflict
 
 Use 422 Unprocessable Entity for errors with respect to the model semantics and/or data.
-For example, in `{"robot: "22-1-44", "action": "sit"}`, a 422 might be sent
-if robot `22-1-44` does not exist or lacks sit/stand functionality.
+For example, in `{"robot: "22-1-44", "action": "sit"}`,
+a 422 might be sent if robot `22-1-44` does not exist or lacks sit/stand functionality.
 A 409 Conflict might result if `22-1-44` is currently handling another command.
 Respond 409 Conflict for conflicting <em>state</em>,
 most notably to a request to delete a resource that other resources reference.
 
 #### 418 I'm a Teapot
 
-**This is an optional response.**
+!!! note
+
+    This is optional and rarely needed response, so I suggest skipping this section.
+
 418 I'm a Teapot may be used to communicate with a client that has been locked out,
 for reasons other than ratelimiting.
 Although this status is nonstandard, some servers use it for similar reasons.
@@ -460,7 +465,27 @@ that’s fine.
 
 ### Response headers
 
+#### Custom headers
+
+Custom headers should **not** be prefixed with `X-`, a convention deprecated by
+[RFC 6648](https://datatracker.ietf.org/doc/html/rfc6648).
+
+!!! note
+
+    Unfortunately, RFC 9651 is non-intuitive and overly complex.
+    However, it is an IETF Proposed Standard.
+
+Headers should normally follow
+[RFC 9651, “Structured Field Values for HTTP”](https://datatracker.ietf.org/doc/html/rfc9651).
+Aim to make your header as simple as possible for clients to understand and parse.
+In particular, consider avoiding Inner Lists and Display Strings.
+
 #### Links
+
+!!! note
+
+    This section serves to strongly discourage including links in JSON bodies;
+    no opinion on HATEOAS or discoverable links is intended.
 
 If [HATEOAS](https://en.wikipedia.org/wiki/HATEOAS)
 links are used, they should be limited to direct connections.
@@ -477,10 +502,15 @@ Similarly, provide `Content-Type:` on `POST` – for example, `Content-Type: tex
 
 #### Rate-limiting
 
+!!! warning "Caution"
+
+    The IETF, understandably, doesn’t love people referencing and implementing Internet Drafts
+    (see [RFC 2026](https://datatracker.ietf.org/doc/html/rfc2026#section-2.2)).
+
 Use the
 [draft RateLimit headers](https://datatracker.ietf.org/doc/draft-ietf-httpapi-ratelimit-headers/):
 `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`.
-These should always be included for 429 (Too Many Requests) responses along with a
+These should always be included for 429 Too Many Requests responses along with a
 [`Retry-After`](https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Retry-After) header.
 `RateLimit-Limit`, `RateLimit-Remaining`, and `RateLimit-Reset`
 MAY be included for other responses as well.
@@ -501,29 +531,45 @@ Content-Disposition: attachment; filename="store-item-5221-3q.parquet"
 
 #### Warnings
 
-Use the nonstandard header `Warning` for non-fatal issues.
+!!! note
+
+    There is an HTTP
+    [`Warning` header](https://www.rfc-editor.org/rfc/rfc9111#field.warning),
+    which mandates specific codes and is deprecated.
+
+Use the nonstandard header `Admonition` for non-fatal issues.
 The header should follow this format:
 
 ```text
-Warning: <description>{; <key>="<value>"}
+Admonition: <description>{; <key>="<value>"}
 ```
 
-??? example "Examples"
+Examples:
 
-    - `"Warning: deprecated endpoint; use-instead="https://domain.tld/api/endpoint"`
-    - `"Warning: non-canonical URI; canonical="https://domain.tld/api/search?filter=color:eq:red"`
+- `"Admonition: deprecated endpoint; prefer="https://domain.tld/api/endpoint"`
+- `"Admonition: non-canonical URI; canonical="https://domain.tld/api/search?filter=color:eq:red"`
 
 #### Other headers
 
-Include:
+**Include:**
 
 - `Content-Length`
 - `Content-Range` for 206 Partial Response responses
-- `Location` for 201 Created responses
-- `ETag` for modifiable resources
-- `Last-Modified` for modifiable resources (optionally)
-- `Vary` (optionally)
-- `Cache-Control` (optionally)
+- `Location` for 201 Created and 202 Accepted responses
 
-You can omit `Date`, `Age`, `Origin`, `Host`, `Server`, and `From`.
-If they’re already being sent, that’s also fine.
+**For modifiable resources:**
+- `ETag`
+- `Last-Modified`
+
+**Omit:**
+
+- `Age`
+- `Origin`
+- `Server`
+- `Date`
+
+**Optional:**
+
+- `Vary`
+- `Cache-Control`
+- `Content-Language` for natural language

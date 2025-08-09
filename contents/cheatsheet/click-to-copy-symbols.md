@@ -53,6 +53,8 @@ _Click on a symbol to copy it._
   <span onclick="copyToClipboard('⌥', this)" style="cursor: pointer;">`⌥`</span>
 - globe / fn (on macOS):
   <span onclick="copyToClipboard('🌐', this)" style="cursor: pointer;">`🌐`</span>
+- half star ⯪ **(caution: most fonts lack glyphs)**
+  <span onclick="copyToClipboard('⯪', this)" style="cursor: pointer;">`⯪`</span>
 
 ## Punctuation
 
@@ -229,6 +231,13 @@ _Click on a symbol to copy it._
   <span onclick="copyToClipboard('⟷', this)" style="cursor: pointer;">`⟷`</span>
 - double left–right arrow:
   <span onclick="copyToClipboard('⇔', this)" style="cursor: pointer;">`⇔`</span>
+
+#### Arrow-like
+
+- triple < (technically, very much less):
+  <span onclick="copyToClipboard('⋘', this)" style="cursor: pointer;">`⋘`</span>
+- triple > (technically, very much greater):
+  <span onclick="copyToClipboard('⋙', this)" style="cursor: pointer;">`⋙`</span>
 
 ## Superscript and subscript
 
@@ -442,7 +451,7 @@ _Click on a symbol to copy it._
   <span onclick="copyToClipboard('∧', this)" style="cursor: pointer;">`∧`</span>
 - or (vee):
   <span onclick="copyToClipboard('∨', this)" style="cursor: pointer;">`∨`</span>
-- xor (wedge):
+- xor (vee bar):
   <span onclick="copyToClipboard('⊻', this)" style="cursor: pointer;">`⊻`</span>
 - nand:
   <span onclick="copyToClipboard('⊼', this)" style="cursor: pointer;">`⊼`</span>
@@ -463,6 +472,15 @@ _Click on a symbol to copy it._
 - iff (long, double):
   <span onclick="copyToClipboard('⟺', this)" style="cursor: pointer;">`⟺`</span>
 
+- turnstile / proves / syntactic consequence:
+  <span onclick="copyToClipboard('⊢', this)" style="cursor: pointer;">`⊢`</span>
+- double turnstile / entails / semantic consequence:
+  <span onclick="copyToClipboard('⊨', this)" style="cursor: pointer;">`⊨`</span>
+- bidirectional turnstile / syntactic equivalence:
+  <span onclick="copyToClipboard('⟛', this)" style="cursor: pointer;">`⟛`</span>
+- bidirectional double turnstile / semantic equivalence:
+  <span onclick="copyToClipboard('⟚', this)" style="cursor: pointer;">`⟚`</span>
+
 #### Set theory
 
 - empty set:
@@ -471,6 +489,7 @@ _Click on a symbol to copy it._
   <span onclick="copyToClipboard('∈', this)" style="cursor: pointer;">`∈`</span>
 - not element of:
   <span onclick="copyToClipboard('∉', this)" style="cursor: pointer;">`∉`</span>
+
 - union:
   <span onclick="copyToClipboard('⋃', this)" style="cursor: pointer;">`⋃`</span>
 - intersection:
@@ -637,6 +656,11 @@ _Click on a symbol to copy it._
   <span onclick="copyToClipboard('∑', this)" style="cursor: pointer;">`∑`</span>
 - n-ary product:
   <span onclick="copyToClipboard('∏', this)" style="cursor: pointer;">`∏`</span>
+
+#### Miscellaneous operators
+
+- star operator:
+  <span onclick="copyToClipboard('⋆', this)" style="cursor: pointer;">`⋆`</span>
 
 #### Calculus
 

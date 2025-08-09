@@ -22,33 +22,43 @@ This nascent specification simply explores alternatives.
 
     - [Restricted conventional commits spec](commit-messages.md).
 
-| Type         | Category | Description                     | Bump      | Section         |
-| ------------ | -------- | ------------------------------- | --------- | --------------- |
-| replace      | main     | a feature with another          | **major** | `Changes`       |
-| change       | main     | the behavior in public API      | **major** | `Changes`       |
-| rename       | main     | a part of the public API        | **major** | `Changes`       |
-| remove       | main     | a feature                       | **major** | `Removals`      |
-| modify build | build    | or install in a breaking way    | **major** | `Build/install` |
-| end support  | build    | for a platform, etc.            | **major** | `Platforms`     |
-| add support  | build    | for a platform, etc.            | minor     | `Platforms`     |
-| introduce    | main     | a new feature                   | minor     | `New features`  |
-| deprecate    | main     | a feature                       | minor     | `Deprecations`  |
-| fix          | main     | a non-security bug              | patch     | `Bug fixes`     |
-| patch        | main     | a vulnerability                 | patch     | `Security`      |
-| optimize     | main     | performance                     | patch     | `Performance`   |
-| update       | main     | pinned dependencies             | patch     | `Dependencies`  |
-| document     | docs     | a feature, concept, etc.        | -         | `Documentation` |
-| revise       | docs     | existing documentation          | -         | `Documentation` |
-| correct      | docs     | a mistake in docs               | -         | `Documentation` |
-| cover        | tests    | some behavior with tests        | -         | `Internal`      |
-| repair       | tests    | a broken test                   | -         | `Internal`      |
-| refactor     | main     | code without affecting behavior | -         | `Internal`      |
-| reorganize   | infra/\* | files (not just code)           | -         | `Internal`      |
-| format       | -        | files to improve style          | -         | -               |
-| release      | -        | a new version (bumping it)      | -         | -               |
+| Phrase     | Syntax (prefix)       | Description                     | Group | Bump  | Section         |
+|------------|-----------------------|---------------------------------|-------|-------|-----------------|
+| modify     | `modify {T} {X}: {s}` | behavior in public API          | main  | major | `Changes`       |
+| move       | `move {T} {A} to {B}` | a part of the public API        | main  | major | `Changes`       |
+| remove     | `remove {T} {A}`      | a feature, endpoint, etc.       | main  | major | `Removals`      |
+| change     | `change {what}`       | and break the install process   | build | major | `Install`       |
+| drop       | `drop {T} {X}`        | a platform, etc.                | build | major | `Platforms`     |
+| support    | `support {ST} {X}`    | a platform, etc.                | build | minor | `Platforms`     |
+| introduce  | `introduce {ST} {X}`  | a new feature                   | main  | minor | `New features`  |
+| deprecate  | `deprecate {ST} {X}`  | a feature                       | main  | minor | `Deprecations`  |
+| fix        | `fix {T} {X} #{I}`    | a non-security bug              | main  | patch | `Bug fixes`     |
+| patch      | `patch {T} {X} #{I}`  | a vulnerability                 | main  | patch | `Security`      |
+| optimize   | `optimize {T} {X}`    | performance                     | main  | patch | `Performance`   |
+| update     | `update {realm}`      | pinned dependencies             | main  | patch | `Dependencies`  |
+| write      | `write {doc}`         | a new documentation file        | docs  | -     | `Documentation` |
+| revise     | `revise {doc}`        | existing documentation          | docs  | -     | `Documentation` |
+| correct    | `correct {doc}`       | mistake(s) in docs              | docs  | -     | `Documentation` |
+| add        | `add {TT} {X}`        | some test(s)                    | tests | -     | `Internal`      |
+| repair     | `repair {TT} {X}`     | broken test(s)                  | tests | -     | `Internal`      |
+| refactor   | `refactor {X}`        | code without affecting behavior | main  | -     | `Internal`      |
+| reorganize | `reorganize {files}`  | files (not just code)           | infra | -     | `Internal`      |
+| format     | `format {files}`      | files to improve style          | N/A   | -     | -               |
+| release    | `release {tag}`       | a new version                   | N/A   | -     | -               |
 
 /// table-caption
-<b>Change types, assuming no scope applies</b>
+<b>Change phrases</b>
+
+- `T` – type; `feature | endpoint | command | API | class | method | function | ...`
+- `ST` – support type; `platform | {tool} version | ...`
+- `TT` – test type; normally `test` (but values like `integration test` could be defined)
+- `X`, `A`, `B` – names, endpoints, paths, packages, systems, platforms, etc.
+- `what` – what was changed; perhaps `install`, `project name`, etc.
+- `I` – issue/ticket: number
+- `realm` – group of pinned dependencies; `dev deps | `
+- `doc` – document file
+- `files` – a short phrase, directory, or filename
+- `tag` – a semver version prefixed with `v`
 ///
 
 | Tag / scope   | Description                    | Bump      | Section    |

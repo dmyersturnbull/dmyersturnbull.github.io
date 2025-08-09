@@ -46,7 +46,12 @@ I used these steps on 6 Intel+NVIDIA workstation builds.
 First, update Windows to the newest feature release.
 In the security settings, enable Core Isolation and Trusted Platform Module in security settings.
 Restart your computer.
-If appropriate, enable BitLocker and restart again.
+
+!!! danger
+
+    Remember to save your encryption key securely!
+
+Enable BitLocker disk encryption and restart again.
 
 ### Built-in apps
 

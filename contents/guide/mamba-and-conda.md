@@ -24,7 +24,7 @@ These instructions should work on Linux, macOS, and Windows.
 
 ## Install and configure Micromamba
 
-[Install Micromamba](https://mamba.readthedocs.io/en/latest/micromamba-installation.html).
+[Install Micromamba](https://mamba.readthedocs.io/en/latest/installation/micromamba-installation.html).
 Then add this to `~/.condarc`:
 
 ```yaml

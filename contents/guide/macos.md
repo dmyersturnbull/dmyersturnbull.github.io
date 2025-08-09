@@ -27,11 +27,11 @@ First, upgrade macOS by running
 softwareupdate --install --all --agree-to-license
 ```
 
-Enable FileVault.
-
 !!! danger
 
-    Remember to save your encryption key!
+    Remember to save your encryption key securely!
+
+Enable FileVault.
 
 ### Homebrew
 
@@ -188,11 +188,12 @@ These are useful utilities that macOS doesn’t provide, optional but **strongly
 - [jq](https://jqlang.github.io/jq/) (like `sed`/`awk` but for JSON)
 - [yq](https://mikefarah.gitbook.io/yq) (same as `jq` but for YAML)
 - [btop](https://github.com/aristocratos/btop) (`top`/`htop` replacement)
+- [p7zip](https://formulae.brew.sh/formula/p7zip) ([7zip](https://www.7-zip.org/))
 
 To install them all, run
 
 ```bash
-brew install eza ydiff bat ripgrep fd fzw jq yq
+brew install eza ydiff bat ripgrep fd fzw jq yq p7zip
 ```
 
 ??? tip "Suggested packages"
@@ -203,6 +204,38 @@ brew install eza ydiff bat ripgrep fd fzw jq yq
     - [difftastic](https://github.com/Wilfred/difftastic)
 
 ## Security and connections
+
+### Disable quarantining downloads
+
+!!! tip "FYI"
+
+    To remove the attribute from a single file, use `xattr -d com.apple.quarantine <path>`.
+
+Some applications on macOS choose to mark all downloaded files with the extended file attribute
+([xattr](https://en.wikipedia.org/wiki/Extended_file_attributes))
+`com.apple.quarantine`.
+That includes mainstream browsers.
+
+```bash
+defaults write com.apple.LaunchServices LSQuarantine -bool NO
+```
+
+### Optionally, disable Gatekeeper
+
+Run this to enable the option to disable Gatekeeper:
+
+```bash
+sudo spctl --master-disable
+```
+
+!!! warning
+
+    Gatekeeper also does useful things like code signing.
+    Only disable it if it’s still getting in the way after disabling the auto-quarantine.
+
+Then, if needed, you can disable Gatekeeper altogether by navigating to
+_System Settings ➤ Privacy & Security ➤ Security ➤ Allow applications from_
+and choosing the newly appearing option _Anywhere_.
 
 ### Configure Git, SSH, and GPG
 
@@ -317,10 +350,10 @@ I keep forgetting where macOS puts certain files, so I use aliases to find them:
 
 ```bash
 # List my notes in the Stickies app.
-alias ls-stickies= 'eza -l -s created $HOME/Library/Containers/com.apple.Stickies/Data/Library/Stickies/*.rtfd/TXT.rtf'
+alias ls-stickies='eza -l -s created $HOME/Library/Containers/com.apple.Stickies/Data/Library/Stickies/*.rtfd/TXT.rtf'
 
 # List screenshots I just took.
-alias ls-screenshots= 'eza -l -s created $HOME/Desktop/Screenshot *.png'
+alias ls-screenshots='eza -l -s created $HOME/Desktop/Screenshot *.png'
 ```
 
 ---

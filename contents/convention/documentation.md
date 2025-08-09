@@ -6,6 +6,8 @@ tags:
   - data-representation
 ---
 
+---
+
 # Documentation conventions
 
 <!--
@@ -14,83 +16,93 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-### Summary points / highlights
+## Summary points / highlights
 
-These guidelines are aggressive and lengthy (more than originally intended).
-Skip the details gloss over the details.
-Here are the important points.
+**Refer to the [Google documentation guide](https://google.github.io/styleguide/docguide/);**
+**this document only extends Google’s.**
+This document is longer than originally planned, so you can ignore most of it.
+The crucial points are highlighted below.
 
 <b>Filenames:</b>
 
-- Use _lowercase-kebab-case_, limiting characters to `[a-z0-9-]`.
-- Use `LICENSE.txt` and`config.yaml` over `LICENSE` and `config.yml`.
+- Use _lowercase-kebab-case_, limiting characters to `[a-z0-9-]` (and `.` for filename extensions).
+- Use `LICENSE.txt` over `LICENSE` and `config.yaml` over `config.yml`.
 
-<b>Language:</b>
+  <b>Language:</b>
 
-- Keep language simple, and be explicit.
-- Sometimes an example is sufficient.
+- Be explicit and precise, especially about edge cases.
+- An example, code sample, table, or accessible diagram is often sufficient.
 
 <b>Markdown:</b>
 
-- Start a new line for every sentence (it helps with diffs).
-- Limit lines to 100 characters, breaking at sensible places.
-- Use `**bold**` for emphasis, `_italics_` as the
-  [`<i>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i),
-  and `<b></b>` for non-emphasized but bold text; e.g. `<b>Score:</b> 12.5`.
+- Start a new line for each sentence (it helps with diffs).
+  Aim to keep lines under 100 characters, by breaking at sensible places.
+- Use `**bold**` for emphasis; and use`_italics_` as the
+  [`<i>` element](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/i).
 
 <b>Comments (in code):</b>
 
-- Forgo comments that are superfluous or included out of habit or convention.
+- Don’t write useless comments just to follow a convention.
 
 <b>Quantities:</b>
 
-- Prefer this format: `123<NNBSP>456.123<NNBSP>456<NBSP>kW`; e.g. `123 456.123 456 kW`.
+- Use `54 kg`, **not** `54kg`.
 - For uncertainties, state what the numbers mean.
   E.g.: _1 ± 1 (SD)_, _1 ± 1 (SE)_, _1 (0–2, 90% CI)_, or _0–2 over 100 trials_.
 
+---
+
 ## Filenames
 
-This section can apply to naming of URI nodes, database IDs, and similar constructs.
 These are general guidelines: Alternatives should be used in some situations.
 For example, if camelCase is used in your JSON Schema, use camelCase for schema document filenames.
 
 ??? rationale
 
-    The [official YAML extension is `.yaml`](https://yaml.org/faq.html).
-    Moreover, the IANA media types are `application/yaml`, `text/html`, and `image/jpeg`.
-    `.yml`, `.htm`, and `.jpg` are relics of DOS.
-    Extensions prominently show essential information, and ommitting them can cause confusion.
-    For example, a file named `info` could be a plain-text info document
-    or a shell script that writes the info.
-    Instead, write it as `info.txt` or `info.sh`.
+    - The [official YAML extension is `.yaml`](https://yaml.org/faq.html).
+      The IANA media types are `application/yaml`, `text/html`, and `image/jpeg`.
+      `.yml`, `.htm`, and `.jpg` are relics of DOS.
+    - Extensions prominently show essential information.
+      For example, a file named `info` could be a plain-text info document
+      or a shell script that writes the info.
 
-Prefer kebab-case (e.g. `full-document.pdf`), treating `-` as a space.
-Restrict to `-`, `.`, `[a-z]`, and `[0-9]`, unless there is a compelling reason otherwise.
-If necessary, `--`, `+`, and `~` can be used as specialized word separators.
+### Preferred
+
+!!! tip
+
+    Also apply this section to URI nodes, database IDs, and similar constructs.
+
+Use kebab-case (e.g. `full-document.pdf`), treating `-` as a space.
+If necessary, `--`, `+`, `,`, and/or `~` can be used as specialized word separators.
 For example, `+` could denote joint authorship in `mary-johnson+kerri-swanson-document.pdf`.
+If you can, restrict to `[a-z0-9]`.
+Capital letters may be useful in some cases, but use them with reservation.
 
-Limit names to 255 characters, and don’t use reserved names, including
-[Windows reserved filenames](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions).
-
-Always use one or more filename extensions, except for executable files;
+Always include filename extensions (except perhaps for Unix executable files);
 e.g. `LICENSE.txt` or `LICENSE.md`, **not** `LICENSE`.
-Where possible, use `.yaml` for YAML, `.html` for HTML, and `.jpeg` for JPEG.
-In particular, **do not** use `.yml`, `.htm`, `.jpg`, or `.jfif`.
+Use `.yaml` for YAML, `.html` for HTML, and `.jpeg` for JPEG.
 
-!!! info "Want plain English?"
+### Strongly recommended
 
-    Path components MUST be legal in major filesystems and MUST NOT exceed 255 characters.
+Never start a name with `-`/`~` or end it with `.`/`~`.
+Don’t use problematic characters such as quotation marks, semicolons, or colons.
+Also don’t use reserved names, including `.`, `..`, or
+[Windows reserved filenames](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions).
+Limit names to 255 characters.
 
-    They SHOULD match
+!!! tip "Pro-tip – pathvalidate"
 
-    ```regexp
-    [A-Za-z0-9]([A-Za-z0-9_,()+~-]|\.(?!\.))++
-    ```
+    The PyPi package [pathvalidate](https://pypi.org/project/pathvalidate/)
+    will validate paths for all major operating systems and filesystem types by default.
+    You can use the CLI, [pathvalidate-cli](https://github.com/thombashi/pathvalidate-cli)
+    (which returns nonzero on error).
+    Example:
 
-    It is RECOMMENDED for them to match
-
-    ```regexp
-    [a-z0-9_]([a-z0-9+~.-]++(\.[a-z0-9]+))(?!\.)
+    ```prompt
+    $ touch CON
+    $ uvx --from pathvalidate-cli pathvalidate --max-len 255 validate **/*
+    [PV1002] found a reserved name by a platform: 'CON' is a reserved name, platform=universal, reusable_name=False
+    uvx --from pathvalidate-cli pathvalidate validate **/*
     ```
 
 ## Comments
@@ -185,7 +197,6 @@ and it generally has more phonetic and shorter spellings.
 ### Grammar and punctuation
 
 Use 1 space between sentences.
-
 Use sentence case for titles and table headers (e.g. _This is a title_).
 Capitalize the first word after a colon only if it begins a complete sentence;
 do not capitalize the first word after a semicolon.
@@ -218,6 +229,20 @@ and
 !!! rationale
 
     Keeping each sentence on its own line dramatically simplifies diffs.
+
+!!! note
+
+    Apparently, I’m not the only one who figured out how helpful this is.
+    Developer Brandon Rhodes named this
+    [_semantic linefeeds_](https://rhodesmill.org/brandon/2012/one-sentence-per-line/).
+    He traced the idea to an excerpt from Brian Kernighan’s
+    [UNIX for beginners](hhttp://commons.princeton.edu/motorcycledesign/wp-content/uploads/sites/70/2018/06/bell_labs_1368_001.pdf)
+    that discusses manual editing rather than computational diffs:
+
+    > Start each sentence on a new line.
+    > Make lines short, and break lines at natural places, such as after commas and semicolons, rather than randomly.
+    > Since most people change documents by rewriting phrases and adding, deleting and rearranging sentences,
+    > these precautions simplify any editing you have to do later.
 
 ??? bug "Incorrect `\n` treatment in GitHub Issues, Discussions, and PRs"
 
@@ -252,6 +277,11 @@ particularly
 and
 § 470ii, “Rules and regulations; intergovernmental coordination”.
 ```
+
+!!! note
+
+    Don’t obsess over line lengths!
+    A line of 120 characters is unlikely to kill or dismemeber anyone.
 
 ### Text styles and semantics
 
@@ -332,7 +362,8 @@ For math, use LaTeX inline `$`/`$` for single-line and `$$`/`$$` for multi-line.
 
 #### Menu navigation
 
-To describe menu navigation, use [`➤`](https://www.fileformat.info/info/unicode/char/27A4/index.htm) in italics; e.g.
+To describe menu navigation, use
+[`➤`](https://www.fileformat.info/info/unicode/char/27A4/index.htm) in italics; e.g.
 _File ➤ Export ➤ Export as Text_.
 Try to use the exact words, capitalization, and punctuation.
 For example, write _File ➤ Settings... ➤ Advanced_ if the menu uses
@@ -445,8 +476,7 @@ This statement is false. †
 The symbols don’t need to be superscripted.
 Placement is discretionary: position before or after punctuation, with or without a space.
 These symbols are recommended, in order:
-`†` (dagger), `‡` (double dagger), `§` (section mark), `♯` (musical sharp), `♮` (musical natural),
-and `◊` (lozenge).
+`†` (dagger), `‡` (double dagger), `§` (section mark), `♯` (musical sharp), `♮` (musical natural), and `◊` (lozenge).
 
 You can modify this list if needed,
 or use another scheme like superscript numbers, superscript lowercase letters, etc.
@@ -596,7 +626,8 @@ From the
 > and U+2126 Ω OHM SIGN in the Letterlike Symbols character block.
 > The ohm sign is canonically equivalent to the capital omega,
 > and normalization would remove any distinction.
-> <mark>The Ohm sign's use is therefore discouraged in favor of capital omega.</mark> > <mark>The same equivalence does not exist between micro sign and mu</mark>,
+> <mark>The Ohm sign's use is therefore discouraged in favor of capital omega.</mark>
+> <mark>The same equivalence does not exist between micro sign and mu</mark>,
 > and use of either character as a micro sign is common.
 
 </small>
