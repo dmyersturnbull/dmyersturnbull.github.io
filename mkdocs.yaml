@@ -1,9 +1,11 @@
-site_name: "Gaslit by a computer"
-docs_dir: "contents"
-site_dir: ".site"
+site_name: Gaslit by a computer
+site_url: https://dmyersturnbull.github.io/
+copyright: Copyright 2024, Douglas Myers-Turnbull
+site_description: Software guides, reference docs, and more.
 
-copyright: "Copyright 2024, Douglas Myers-Turnbull"
-site_description: "Software guides, reference docs, and more."
+# Dirs
+docs_dir: contents
+site_dir: .site
 
 # Exclude from nav
 not_in_nav: _*.md
