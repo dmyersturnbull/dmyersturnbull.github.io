@@ -30,8 +30,9 @@ theme:
   font:
     text: Noto Sans
     code: Noto Sans Mono
-  static_templates:
-    - 404.html
+  # TODO
+  # static_templates:
+  #   - 404.html
   palette:
     # Palette toggle for automatic mode
     - media: "(prefers-color-scheme)"

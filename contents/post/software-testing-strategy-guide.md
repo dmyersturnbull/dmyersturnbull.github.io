@@ -21,7 +21,6 @@ teal { color: Teal }
 purple { color: Purple }
 </style>
 
-
 !!! warning "Note"
 
     This document is a draft.
@@ -107,18 +106,20 @@ The contract for a function or class covers:
 
 ### 1 - Input
 
-First, the input is part of the contract. This includes the **types and meanings of parameters**,
-and **invariants that must hold** (ex a matrix is invertible, or the input lengths should match).
-In most modern understandings of software development, a **function should balk on invalid input**
-because the contract is not fulfilled, and as part of its own contract (to throw errors).
+First, the input is part of the contract.
+This includes the **types and meanings of parameters** and **invariants that must hold**
+(e.g. a matrix is invertible, or the input lengths should match).
+Functions should balk when they receive invalid input, per their contracts.
+In other words, rejecting input should be considered part of the contract.
 
 ### (ii) Output
 
-The output is part of the contract. This covers the type of output and the meanings with
-respect to the inputs. Edge cases are crucial in this. Good edge cases include empty arrays,
-null values, 0, negative numbers, infinite values, NaN, incorrect types, invalid paths,
-and strings containing control characters. Also test numbers likely to underflow (1E-300)
-and overflow (1E300).
+The output is part of the contract. This covers the type of output and the meanings with respect to the inputs.
+Edge cases are crucial in this.
+Good edge cases include
+empty arrays, null values, 0, negative numbers, infinite values, NaN, incorrect types, invalid paths,
+and strings containing control characters.
+Also test numbers likely to underflow (1E-300) and overflow (1E300).
 Your unit test documents this contract by including these edge cases.
 
 ### (iii) Side effects
@@ -126,9 +127,8 @@ Your unit test documents this contract by including these edge cases.
 The side effects. This includes files written to or modified. Equally importantly,
 it includes any **modification to the object’s state or the state of an input**.
 If your function is supposed to return a copy, check that it does not modify the original’s state.
-Using completely immutable objects can save some pain here and reduce difficult‐to‐find bugs,
-especially for concurrent code. It also has some formal advantages and works great with functional
-programming.
+Using completely immutable objects can save some pain here and reduce difficult‐to‐find bugs, especially for concurrent code.
+It also has some formal advantages and works great with functional programming.
 
 ### (iv) Errors
 
@@ -138,8 +138,7 @@ and the conditions under which they are raised. This is easy in JUnit, scalatest
 
 ### Mocking
 
-[Mocking](https://stackoverflow.com/q/2665812) is a crucial part of
-writing unit tests.
+[Mocking](https://stackoverflow.com/q/2665812) is a crucial part of writing unit tests.
 
 However, it is often better to focus on writing units (classes and functions)
 that are modular enough that you don’t even need to mock an object: Your function
@@ -191,8 +190,6 @@ For example, I found a bug affecting only quad‐width Unicode characters
 
 ## Layer 2 - Integration
 
-**Summary:** TODO
-
 Integration tests use multiple classes or functions and make sure that your high‐level
 code uses them correctly in concert.
 You should know the expected output beforehand, and the tests should run under automation.
@@ -225,16 +222,27 @@ Not handling timezones correctly can introduce errors for users outside your reg
 
 ## Layer 3 - System
 
-**Summary:** TODO
+These test that the system functions correctly with real data or in realistic environments.
 
 ### End-to-end tests
 
 End-to-end (E2E) tests simulate real user scenarios to validate the complete flow of an application.
 They test how different parts of the system work together, from the user interface to the backend.
-E2E tests ensure that the integrated system meets requirements
-and behaves as expected in real-world scenarios.
+E2E tests ensure that the integrated system meets requirements and behaves as expected in real-world scenarios.
 
-_Example scenario:_ User logs in, updates their profile, and logs out.
+Input data can be real or mocked.
+For example, an E2E test could
+
+For these tests, any services your system uses should be real, not mocked.
+Service lifecycles should be managed by tests scaffolds.
+Read-only data services (pure _sources_) can be spun up once and re-used for multiple tests,
+but write-only and read–write data services (_sinks_ and bidirectional pipes)
+must be cleared or restarted between tests.
+
+**Example:**
+
+**Scenario:** User logs in, updates their profile, and logs out.\
+**Services:**
 
 ### Sanity checks
 
@@ -269,8 +277,8 @@ handles the failure well. For example, without losing data or catching fire.
 
 **Example:**
 
-- **Scenario:** User logs in, updates their profile, and logs out.
-- **Tools used:** [Cypress](https://www.cypress.io/), [Selenium](https://www.selenium.dev/).
+**Scenario:** User logs in, updates their profile, and logs out.\
+**Tools used:** [Cypress](https://www.cypress.io/), [Selenium](https://www.selenium.dev/)
 
 ### Recovery
 
@@ -290,8 +298,8 @@ This helps ensure the system can gracefully recover from unexpected issues.
 
 **Example:**
 
-- **Scenario:** Introducing network latency.
-- **Tools used:** [Chaos Monkey](https://netflix.github.io/chaosmonkey/)
+**Scenario:** Introducing network latency.\
+**Tools used:** [Chaos Monkey](https://netflix.github.io/chaosmonkey/)
 
 ### Compatibility and localization
 
@@ -310,9 +318,8 @@ This includes checking date formats, currency symbols, and translated content.
 
 **Example:**
 
-- **Scenario:** Verifying that a web application correctly displays dates, times,
-  and text in various languages.
-- **Tools:** [Globalize.js](https://github.com/globalizejs/globalize).
+**Scenario:** Verifying that a website correctly displays dates, times, and translated text.\
+**Tools:** [Globalize.js](https://github.com/globalizejs/globalize)
 
 ### Accessibility
 
@@ -322,8 +329,8 @@ It checks for compliance with accessibility standards such as
 
 **Example:**
 
-- **Scenario:** Ensuring a web application is navigable using a screen reader and keyboard.
-- **Tools:** [Wave](https://wave.webaim.org/).
+**Scenario:** Ensuring a web application is navigable using a screen reader and keyboard.\
+**Tools:** [Wave](https://wave.webaim.org/)
 
 ### Usability
 
@@ -332,8 +339,8 @@ It involves real users performing tasks and providing feedback on their experien
 
 **Example:**
 
-- **Scenario:** Observing how users navigate a new feature.
-- **Tools:** [Prometheus](https://prometheus.io/)
+**Scenario:** Observing how users navigate a new feature\
+**Tools:** [Prometheus](https://prometheus.io/)
 
 ## Automation and DevOps
 

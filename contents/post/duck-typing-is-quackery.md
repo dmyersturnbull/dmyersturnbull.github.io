@@ -14,7 +14,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
 Apologies for the pun and to
-\_[Phil Haack](https://haacked.com/archive/2014/01/04/duck-typing/),
+[Phil Haack](https://haacked.com/archive/2014/01/04/duck-typing/),
 who beat me to it.
 
 ## What is duck typing?

@@ -43,6 +43,63 @@ Useful cheatsheet tables for Linux and Bash.
 | `st_blocks`  | all                       | number of 512-byte blocks allocated |
 | `st_rdev`    | char device, block device | device id (major+minor)             |
 
+## Bash
+
+### Bash `[[ ]]` test operators
+
+| operator | syntax            | meaning                                  |
+| -------- | ----------------- | ---------------------------------------- |
+| `==`     | `str1 == str2`    | `str1` **equals** `str2`                 |
+| `!=`     | `str1 != str2`    | `str1` does **not equal** `str2`         |
+| `<`      | `str1 < str2`     | `str1` **precedes** `str2`               |
+| `>`      | `str1 > str2`     | `str` **succeeds** `str2`                |
+| `=~`     | `str =~ regex`    | `str` **matches** `regex` pattern        |
+| `-v`     | `-v var`          | `var` is a **defined variable**          |
+| `-z`     | `-z str`          | `str` is **empty**                       |
+| `-n`     | `-n str`          | `str` is **nonempty**                    |
+| `-e`     | `-e path`         | `path` **exists**                        |
+| `-f`     | `-f path`         | `path` is a **regular file**             |
+| `-d`     | `-d path`         | `path` is a **directory**                |
+| `-L`     | `-L path`         | `path` is a **symbolic link**            |
+| `-h`     | `-h path`         | (alias for `-L`)                         |
+| `-b`     | `-b path`         | `path` is a **block device**             |
+| `-c`     | `-c path`         | `path` is a **character device**         |
+| `-p`     | `-p path`         | `path` is a **named pipe**               |
+| `-S`     | `-S path`         | `path` is a **socket**                   |
+| `-u`     | `-u path`         | `path` has **set-user-ID** bit           |
+| `-g`     | `-g path`         | `path` has **set-group-ID** bit          |
+| `-k`     | `-k path`         | `path` has **sticky** bit                |
+| `-O`     | `-O path`         | `path` is **owned** by effective user    |
+| `-G`     | `-G path`         | `path` is **owned** by effective group   |
+| `-s`     | `-s file`         | `file` is **nonempty**                   |
+| `-r`     | `-r file`         | `file` is **readable**                   |
+| `-w`     | `-w file`         | `file` is **writable**                   |
+| `-x`     | `-x file`         | `file` is **executable**                 |
+| `-t`     | `-t descriptor`   | `descriptor` **is a tty**                |
+| `-nt`    | `path1 -nt path2` | `path1` is **newer** than `path2`        |
+| `-ot`    | `path1 -ot path2` | `path1` is **older** than `path2`        |
+| `-ef`    | `path1 -ef path2` | `path1` is the **same inode** as `path2` |
+| `-N`     | `-N path`         | `path` has **mtime > atime**             |
+
+/// table-caption
+<b>Test operators (`[[ ]]`).</b>
+///
+
+#### Testing whether a name is defined
+
+| syntax                          | meaning                  | notes                |
+| ------------------------------- | ------------------------ | -------------------- |
+| `type name > /dev/null`         | `name` is defined        | general              |
+| `alias name > /dev/null`        | `name` is an alias       |                      |
+| ~~`declare -F name`~~           | ~~`name` is a function~~ | always `true` in ZSH |
+| `typeset -f myfunc > /dev/null` | `name` is a function     |                      |
+
+/// table-caption
+<b>Other common tests.</b>
+///
+
+## Core utilities
+
 ### Format specifiers by printf flavor
 
 !!! note

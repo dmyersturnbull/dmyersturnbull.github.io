@@ -309,7 +309,6 @@ Note that PyData defers to a
 
 /// table-caption
 <b>Differences from the Angular commit guidelines</b>
-///
 
 <small>
 <b>†</b> _GH-recognized_ means any phrase that GitHub sees as
@@ -317,3 +316,4 @@ Note that PyData defers to a
 <b>‡</b> Whether `BREAKING CHANGES` and (if defined) `DEPRECATED`
 are footers or special body paragraphs.
 </small>
+///

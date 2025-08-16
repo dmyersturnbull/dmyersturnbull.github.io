@@ -3,7 +3,7 @@ tags:
   - Bash
 ---
 
-# Bash tricks
+# Bash tips
 
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
@@ -11,11 +11,8 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-<b>Contents:</b>
-
-- How to do certain common-but-difficult things correctly
-- Reminders of commands I routinely forget
-- Reference tables
+How to do certain common-but-difficult things correctly.
+Plus reminders of commands I routinely forget.
 
 ## General
 
@@ -47,61 +44,6 @@ But this would cause more serious problems, and if you’re naming files like th
 ```bash
 this_dir=$(dirname "$(readlink -f -- "$0" || exit $?)") || exit $?
 ```
-
-## Comparisons
-
-### `[[ ]]` test operators
-
-| operator | syntax            | meaning                                  |
-|----------|-------------------|------------------------------------------|
-| `==`     | `str1 == str2`    | `str1` **equals** `str2`                 |
-| `!=`     | `str1 != str2`    | `str1` does **not equal** `str2`         |
-| `<`      | `str1 < str2`     | `str1` **precedes** `str2`               |
-| `>`      | `str1 > str2`     | `str` **succeeds** `str2`                |
-| `=~`     | `str =~ regex`    | `str` **matches** `regex` pattern        |
-| `-v`     | `-v var`          | `var` is a **defined variable**          |
-| `-z`     | `-z str`          | `str` is **empty**                       |
-| `-n`     | `-n str`          | `str` is **nonempty**                    |
-| `-e`     | `-e path`         | `path` **exists**                        |
-| `-f`     | `-f path`         | `path` is a **regular file**             |
-| `-d`     | `-d path`         | `path` is a **directory**                |
-| `-L`     | `-L path`         | `path` is a **symbolic link**            |
-| `-h`     | `-h path`         | (alias for `-L`)                         |
-| `-b`     | `-b path`         | `path` is a **block device**             |
-| `-c`     | `-c path`         | `path` is a **character device**         |
-| `-p`     | `-p path`         | `path` is a **named pipe**               |
-| `-S`     | `-S path`         | `path` is a **socket**                   |
-| `-u`     | `-u path`         | `path` has **set-user-ID** bit           |
-| `-g`     | `-g path`         | `path` has **set-group-ID** bit          |
-| `-k`     | `-k path`         | `path` has **sticky** bit                |
-| `-O`     | `-O path`         | `path` is **owned** by effective user    |
-| `-G`     | `-G path`         | `path` is **owned** by effective group   |
-| `-s`     | `-s file`         | `file` is **nonempty**                   |
-| `-r`     | `-r file`         | `file` is **readable**                   |
-| `-w`     | `-w file`         | `file` is **writable**                   |
-| `-x`     | `-x file`         | `file` is **executable**                 |
-| `-t`     | `-t descriptor`   | `descriptor` **is a tty**                |
-| `-nt`    | `path1 -nt path2` | `path1` is **newer** than `path2`        |
-| `-ot`    | `path1 -ot path2` | `path1` is **older** than `path2`        |
-| `-ef`    | `path1 -ef path2` | `path1` is the **same inode** as `path2` |
-| `-N`     | `-N path`         | `path` has **mtime > atime**             |
-
-/// table-caption
-<b>Test operators (`[[ ]]`).</b>
-///
-
-### Testing whether a name is defined
-
-| syntax                          | meaning                  | notes                |
-|---------------------------------|--------------------------|----------------------|
-| `type name > /dev/null`         | `name` is defined        | general              |
-| `alias name > /dev/null`        | `name` is an alias       |                      |
-| ~~`declare -F name`~~           | ~~`name` is a function~~ | always `true` in ZSH |
-| `typeset -f myfunc > /dev/null` | `name` is a function     |                      |
-
-/// table-caption
-<b>Other common tests.</b>
-///
 
 This function seems to work in Bash 5.2 on Ubuntu 25.04 and macOS 24.
 
