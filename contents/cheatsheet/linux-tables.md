@@ -43,6 +43,38 @@ Useful cheatsheet tables for Linux and Bash.
 | `st_blocks`  | all                       | number of 512-byte blocks allocated |
 | `st_rdev`    | char device, block device | device id (major+minor)             |
 
+### Timestamp types per OS
+
+| OS        | `atime` | `mtime` | `ctime` | `birthtime`/`crtime` | “Date Added” † |
+| --------- | ------- | ------- | ------- | -------------------- | -------------- |
+| POSIX     | ✔      | ✔      | ✔      | ✗                    | ✗              |
+| Linux     | ○ ‡     | ✔      | ✔      | ○ §                  | ✗              |
+| BSD       | ○ ‡     | ✔      | ✔      | ✔                   | ✗              |
+| macOS     | ○ ‡     | ✔      | ✔      | ✔                   | ○ †            |
+| Windows ♯ | ○ ‡     | ✔ ◊    | ✔ ◊    | ✔ ◊                 | ✗              |
+
+/// table-caption
+<b>Timestamp types per OS. ✔: mandatory; ○: optional.</b>
+
+<small>
+<b>†</b>
+“Date Added” is macOS-specific and is not filesystem metadata (including xattr);
+instead, it’s a Spotlight property of the containing directory.
+The Spotlight server, mds, subscribes to APFS events, and tags the values immediately.
+Incorrect and/or missing values occur if Spotlight is disabled or its database is rebuilt.\
+<b>‡</b>
+`atime` updates can be disabled or delayed (e.g. `noatime`, `relatime`).\
+<b>§</b>
+`birthtime` (`crtime` in ZFS) available via `statx` on at least Btrfs, ext4, XFS. Not portable.\
+<b>§</b>
+[NTFS](https://en.wikipedia.org/wiki/NTFS) and [ReFS](https://en.wikipedia.org/wiki/ReFS)
+define timestamps relative to the Windows Epoch, `1601-01-01T00:00:00Z`.\
+<b>◊</b>
+NTFS and ReFS store access, modified, change, and birth times.
+Unfortunately, **they call modified time `ctime` and birth time `ctime`.**
+</small>
+///
+
 ## Bash
 
 ### Bash `[[ ]]` test operators
