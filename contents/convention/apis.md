@@ -221,7 +221,7 @@ Do not separate times with `/` or use a start-time/duration pair.
 | `DELETE` | 🗑️     | ∅                | JSON or ∅     |
 
 /// table-caption
-HTTP methods with request/response body formats, assuming a JSON-only API.
+<b>HTTP methods with request/response body formats, assuming a JSON-only API.</b>
 ///
 
 [JSON Merge Patch](https://datatracker.ietf.org/doc/rfc7396/)
@@ -242,30 +242,30 @@ servers must not use status codes, methods, responses, or conditions not listed 
 
     Refer to the HTTP Method symbols defined above.
 
-| Code | Name                   | Methods     | Response  | Condition(s)                                  |
-| ---- | ---------------------- | ----------- |-----------| --------------------------------------------- |
-| 200  | OK                     | 🎩🔻🩹      | resource  | Requested resource is being returned          |
-| 201  | Created                | ✉️ 🗃️       | ∅         | Resource has been created                     |
+| Code | Name                   | Methods    | Response  | Condition(s)                                  |
+| ---- | ---------------------- | ---------- | --------- | --------------------------------------------- |
+| 200  | OK                     | 🎩🔻🩹     | resource  | Requested resource is being returned          |
+| 201  | Created                | ✉️ 🗃️      | ∅         | Resource has been created                     |
 | 202  | Accepted               | 🔻✉️🗃️🩹🗑️ | †         | Request is being processed asynchronously     |
-| 204  | No Content             | 🗑️          | ∅         | Deletion was successful                       |
-| 308  | Permanent Redirect     | ✉️🗃️🩹🗑    | resource  | Non-canonical URI was used                    |
-| 400  | Bad Request            | any         | problem ‡ | Invalid endpoint, params, or body syntax      |
-| 401  | Unauthorized           | any         | problem   | Authentication was not provided               |
-| 403  | Forbidden              | any         | problem   | Authentication with insufficient privileges   |
-| 404  | Not Found              | 🔻🩹🗑️      | problem   | Resource does not exist                       |
-| 406  | Not Acceptable         | 🎩🔻        | problem   | `Accept` headers are unsatisfiable            |
-| 409  | Conflict               | ✉️🗃️🩹      | problem   | Resource already exists                       |
-| 409  | Conflict               | 🗑️          | problem   | Can’t delete resource because it’s referenced |
-| 410  | Gone                   | 🔻🩹🗑️      | problem   | Resource doesn’t exist, although it used to   |
-| 413  | Content Too Large      | ✉️🗃️🩹      | problem   | Request payload is too large                  |
-| 415  | Unsupported Media Type | ✉️🗃️🩹      | problem   | Request payload’s media type is unsupported   |
-| 422  | Unprocessable Entity   | ✉️🗃️🩹      | problem   | Request has semantic errors                   |
-| 429  | Too Many Requests      | any         | problem   | Client has exceeded the rate limit            |
-| 500  | Server Error           | any         | problem   | Server encountered an internal error          |
-| 503  | Service Unavailable    | any         | problem   | Overloaded or down for maintenance            |
+| 204  | No Content             | 🗑️         | ∅         | Deletion was successful                       |
+| 308  | Permanent Redirect     | ✉️🗃️🩹🗑   | resource  | Non-canonical URI was used                    |
+| 400  | Bad Request            | any        | problem ‡ | Invalid endpoint, params, or body syntax      |
+| 401  | Unauthorized           | any        | problem   | Authentication was not provided               |
+| 403  | Forbidden              | any        | problem   | Authentication with insufficient privileges   |
+| 404  | Not Found              | 🔻🩹🗑️     | problem   | Resource does not exist                       |
+| 406  | Not Acceptable         | 🎩🔻       | problem   | `Accept` headers are unsatisfiable            |
+| 409  | Conflict               | ✉️🗃️🩹     | problem   | Resource already exists                       |
+| 409  | Conflict               | 🗑️         | problem   | Can’t delete resource because it’s referenced |
+| 410  | Gone                   | 🔻🩹🗑️     | problem   | Resource doesn’t exist, although it used to   |
+| 413  | Content Too Large      | ✉️🗃️🩹     | problem   | Request payload is too large                  |
+| 415  | Unsupported Media Type | ✉️🗃️🩹     | problem   | Request payload’s media type is unsupported   |
+| 422  | Unprocessable Entity   | ✉️🗃️🩹     | problem   | Request has semantic errors                   |
+| 429  | Too Many Requests      | any        | problem   | Client has exceeded the rate limit            |
+| 500  | Server Error           | any        | problem   | Server encountered an internal error          |
+| 503  | Service Unavailable    | any        | problem   | Overloaded or down for maintenance            |
 
 /// table-caption
-HTTP Response Codes with allowed methods, responses, and uses.
+<b>HTTP Response Codes with allowed methods, responses, and uses.</b>
 ///
 
 <small>
@@ -558,6 +558,7 @@ Examples:
 - `Location` for 201 Created and 202 Accepted responses
 
 **For modifiable resources:**
+
 - `ETag`
 - `Last-Modified`
 

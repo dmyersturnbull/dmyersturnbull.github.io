@@ -19,14 +19,20 @@ Writing and maintaining documentation
 [:fontawesome-solid-mug-hot: **Java**](java.md):
 Java and Kotlin conventions
 
-[:fontawesome-solid-code: **JavaScript and TypeScript**](javascript-and-typescript.md):
-JavaScript and TypeScript conventions
-
 [:fontawesome-solid-dragon: **Python**](python.md):
 Python conventions
 
-[:fontawesome-solid-terminal: **Scripts and build files**](scripts-and-build-files.md):
-Conventions for shell scripts, build files, etc.
+[:fontawesome-solid-keyboard: **CLI**](cli.md):
+Conventions for all CLI apps and scripts
+
+[:fontawesome-solid-terminal: **Bash**](bash.md):
+Bash script conventions
+
+[:fontawesome-solid-box: **Docker**](docker.md):
+Docker file conventions
+
+[:fontawesome-solid-code: **TypeScript**](typescript.md):
+TypeScript and JavaScript conventions
 
 [:fontawesome-solid-database: **SQL**](sql.md):
 SQL conventions
