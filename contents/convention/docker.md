@@ -31,7 +31,7 @@ thereby keeping final images small.
 For example, when using Maven, Maven is only needed to assemble, not to run.
 
 Here, `maven:3-eclipse-temurin-25` is used as a base image,
-maven is used to compile and build a JAR artifact,
+Maven is used to compile and build a JAR artifact,
 and everything but the JAR is discarded.
 `eclipse-temurin:25` is used as the runtime base image, and only the JAR file is needed.
 

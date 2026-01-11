@@ -152,7 +152,7 @@ a.orientation = "y"
 
 ### IoC
 
-**Apply inversion of control, and do so ruthlessly.**
+**Apply inversion of control ruthlessly.**
 
 ### `@staticmethod` and `@abstractmethod`
 
@@ -267,13 +267,7 @@ enabled type parameterization for the concrete types
 
 !!! warning
 
-    Don’t thoughtlessly replace `Set` with `set`.
-    `frozenset` $\sqsubseteq$ `Set`, but
-    `frozenset` $\not\sqsubseteq$ `set`.
-    Replacing `List` with `List` is less problematic because there’s only one builtin `List` type,
-    but doing that will break typing for types that inherit from or
-    [register](https://docs.python.org/3/library/abc.html#abc.ABCMeta.register) with `List`.
-    Consider disabling [Ruff UP006](https://docs.astral.sh/ruff/rules/non-pep585-annotation/).
+    Use caution with [Ruff UP006](https://docs.astral.sh/ruff/rules/non-pep585-annotation/).
 
 It also enabled parameterization on types from `collections.abc` like `Set`,
 and made corresponding types in `typing` deprecated aliases.
@@ -285,6 +279,8 @@ Similarly, `typing.Sequence` is a deprecated alias to `collections.abc.Sequence`
 and `typing.List` is a deprecated alias to `list`.
 `typing.Mapping` is a deprecated alias to `collections.abc.Mapping`,
 and `typing.Dict` is a deprecated alias to `dict`.
+
+Importantly, `frozenset` $\sqsubseteq$ `Set`, but `frozenset` $\not\sqsubseteq$ `set`.
 
 - To annotate a parameter, `Sequence` is usually better than the concrete type `list`,
   but `list` is so ubiquitous that it’s acceptable.

@@ -28,7 +28,7 @@ The crucial points are highlighted below.
 - Use _lowercase-kebab-case_, limiting characters to `[a-z0-9-]` (and `.` for filename extensions).
 - Use `LICENSE.txt` over `LICENSE` and `config.yaml` over `config.yml`.
 
-  <b>Language:</b>
+<b>Language:</b>
 
 - Be explicit and precise, especially about edge cases.
 - An example, code sample, table, or accessible diagram is often sufficient.

@@ -73,10 +73,10 @@ the [Ruff formatter](https://docs.astral.sh/ruff/formatter/)
 (which is equivalent to [Black](https://github.com/psf/black)).
 
 Prettier handles all the formatting for JavaScript, TypeScript, HTML, and CSS,
-and some of the formatting for Markdown and some other languages.
+and some formatting for Markdown and some other languages.
 For Java and Kotlin, the
 [IntelliJ formatter settings](intellij-style.xml)
-can handle some of the formatting conventions for those languages.
+can handle some formatting conventions for those languages.
 
 These auto-formatters are meant to be run via
 [pre-commit](https://pre-commit.com/)

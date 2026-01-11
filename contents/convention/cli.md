@@ -27,7 +27,7 @@ Distinguish between optional arguments (_options_ or _switches_) and required, p
     - _option_ (whose name starts with `-` or `--`)
     - _flag_ (preferred term for nullary options)
 
-Prefer named options over positional arguments, and limit positional argument lists to ≤ 3 items.
+Prefer named options over positional arguments and limit positional argument lists to ≤ 3 items.
 Arbitrary-length lists are fine as long as all positions (1–∞) carry the same meaning.
 
 This table summarizes:
@@ -143,6 +143,6 @@ Most other codes are rarely supported and should be avoided.
 
 Never rely exclusively on color or style;
 all essential information must be parsable from visible characters (for humans and machines).
-Also, d’t go overboard: 4 colors is nice, 8 is confusing, and 16 sends users to ophthalmologists.
+Also, don’t go overboard: 4 colors is nice, 8 is confusing, and 16 sends users to ophthalmologists.
 
-\*[TTY]: [TeleTYpe device](<https://en.wikipedia.org/wiki/Tty_(Unix)>)
+*[TTY]: [TeleTYpe device](<https://en.wikipedia.org/wiki/Tty_(Unix)>)
