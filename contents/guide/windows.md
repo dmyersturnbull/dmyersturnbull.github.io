@@ -61,6 +61,17 @@ Err on the side of assuming they’re useless and shouldn’t be there.
 [Kill it with fire](https://tvtropes.org/pmwiki/pmwiki.php/Main/KillItWithFire)
 ([1](https://www.wired.com/2013/10/why-kill-it-with-fire-is-a-terrible-terrible-idea/)).
 
+### Game Bar
+
+Run this to disable Game Bar:
+
+```powershell
+Get-AppxPackage Microsoft.XboxGamingOverlay | Remove-AppxPackage
+Get-AppxProvisionedPackage -Online |`
+    Where-Object {$_.PackageName -like "*XboxGamingOverlay*"} |`
+    Remove-AppxProvisionedPackage -Online
+```
+
 ### Optional Features
 
 Install the Windows Developer Mode.
@@ -69,7 +80,7 @@ Navigate to
 _Apps and Features ➤ Manage optional features ➤ add feature ➤ Windows Developer Mode ➤ install_.
 
 Also enable OpenSSH, uninstall Notepad and Wordpad, and disable other unnecessary Optional Features
-(most of them are unnecessary).
+(most are unnecessary).
 These include the Telnet Client, Windows Media Player, and PowerShell 2.0.
 
 ??? example "Example Optional Features"
@@ -115,49 +126,26 @@ These include the Telnet Client, Windows Media Player, and PowerShell 2.0.
 Next, open the Services app.
 Disable unnecessary services (set them to _Manual_ start).
 However, set Windows Time Service to _Automatic_ to force an NTP sync every startup.
-Otherwise, your system clock can drift seconds or even minutes after a small number of restarts.
+Otherwise, your system clock can drift seconds or even minutes after a few restarts.
 
 ### Power settings
 
-In the power settings, disable hibernation, automatic sleep mode, and USB connection suspending.
-Although these can save power, they’re likely to interfere with a long‐running job or backup.
+Configure your Power Plan.
 
-In some cases, you will want to disable scanning in a drive. This can drop performance.
-It can even cause issues because it can open file handles, temporarily preventing writes;
-this case it to interfered with data collection on our custom hardware.
+In some cases, you should disable scanning in a drive to avoid the performance drops.
+Scanning can also cause errors because it opens file handles.
 
 ### Update settings
-
-#### How Windows manages updates
-
-Although I understand Microsoft’s rationale,
-it’s frustrating that Windows automatically downloads updates.
-The updates **share bandwidth** with everything else.
-In an important meeting or a remote interview?
-If you don’t see the notification (e.g. in Focus Mode), it’s going to be rough.
-
-Even more frustrating is that it forces restarts, providing only a short window to postpone.
-That’s a serious problem for any **non-interruptable or time-sensitive task** you leave running
-because you can’t postpone a restart if you’re not there.
-Apps often won’t block the restart.
-Worse, Windows eventually stops further postponing.
 
 #### Configuring via _Settings_
 
 First, review the settings under _Settings ➤ Windows Updates ➤ Advanced options_.
 Set _Active hours_ and make sure _Get me up to date_ is unchecked.†
 
-<small>
-<b>†</b>
-Although you can throttle download speeds,
-but that applies even when you’re idle and would want to download updates
-(and may, in fact, want it to finish quickly).
-I recommend keeping this option disabled and instead make sure
-</small>
+!!! tip
+    Although you can throttle download speeds, that setting applies even when you explicitly download updates.
 
 #### Making updates non-automatic
-
-_Note: The following section was reviewed and updated as of April 2025._
 
 You may want to disable automatic updates to manage them yourself,
 something Windows doesn’t normally allow.
@@ -166,7 +154,7 @@ The GitHub repo
 [Aetherinox/pause-windows-updates](https://github.com/Aetherinox/pause-windows-updates)
 has a pair of registry keys, one to pause and another to resume.
 It worked flawlessly on my laptop, but I have only tested it on that machine.
-Alternatively you can search for
+Alternatively, you can search for
 [other apps on GitHub](https://github.com/search?q=disable+windows+11+updates&type=repositories).
 
 !!! warning
@@ -174,51 +162,67 @@ Alternatively you can search for
     Make sure that any app includes an on/off toggle or that it doesn’t prevent manual updates.
     Additionally, check that it can be fully uninstalled.
 
-## Chocolatey and Powershell Core
+## Packages and package managers
 
-Install [Chocolatey](https://chocolatey.org/), a fantastic package manager.
-After installing, run `choco upgrade all -Y`.
-Install powershell-core (`choco install powershell-core -Y`)
-and restart your terminal, choosing PowerShell Core.
+### WinGet
 
-Set powershell-core as your default shell.
-Check the PowerShell version using: `Get-Host | Select-Object Version`. Make sure it’s 7+.
+Review the documentation for
+[WinGet](https://learn.microsoft.com/en-us/windows/package-manager/).
 
-!!! tip "Tip: PowerShell"
-
-    Although I’m used to shell scripting Linux, Powershell is actually quite good.
-    Instead of needing to parse text from stdout when piping between commands, the data structures
-    passed around in PowerShell are _tables_. It’s a much better approach, and I recommend
-    [learning it](https://devblogs.microsoft.com/powershell/getting-started-with-powershell-core-on-windows-mac-and-linux/).
-    You can install it in Linux and macOS.
-
-Install some essential packages by running
+### Powershell Core
 
 ```powershell
-choco install -Y poshgit gh libressl gnupg rsync
+winget install --exact --id Microsoft.PowerShell
 ```
 
-??? tip "Tip: Other packages"
+Set powershell-core as your default shell in Terminal.
+Check the PowerShell version using: `Get-Host | Select-Object Version`.
+Make sure it’s 7+.
 
-    Applications like Zoom, Spotify, DropBox, Chrome, and Firefox are also available.
-    Here is a set of popular developer-oriented packages:
+### Chocolatey, Scoop, and Snappy
 
-    ```powershell
-    choco install -Y \
-      chocolatey-core.extension \
-      sysinternal notepadplusplus 7zip \
-      googlechrome firefox teamviewer \
-      vlc ffmpeg pandoc treesizefree
-    ```
+Install three other package managers:
+[Chocolatey](https://chocolatey.org/),
+[Scoop](https://scoop.sh/),
+and [SnapPy](https://snappy.computop.org/installing.html#windows).
+After installing Scoop, run
+```powershell
+scoop bucket add main
+scoop install main/scoop-search
+```
 
-Keep packages up-to-date by occasionally running `choco upgrade all`.
+!!! tip "Which should I use?"
 
-## Other package managers (Snappy & Scoop)
+    Apps may be available via multiple package managers.
 
-Install [Snappy](https://snappy.computop.org/installing.html#windows),
-a cross-platform package manager.
-Then install [Scoop](https://scoop.sh/),
-another package manager specialized for software development.
+    Chocolatey runs complex, package-provided configuration as root.
+    This allows apps to be integrated into your system to provide
+    environment variables, file associations, context menu items, and services.
+
+    I recommend using WinGet by default,
+    Scoop for development packages (e.g. Node),
+    Chocolatey when required,
+    and Snappy for packages not available elsewhere.
+
+### PowerShell Gallery
+
+Also see the
+[PowerShell Gallery](https://www.powershellgallery.com/).
+
+You can access it with the built-in
+[PSResourceGet](https://learn.microsoft.com/en-us/powershell/module/microsoft.powershell.psresourceget)
+module.
+Note that PowerShellGet is deprecated.
+
+### Install packages
+
+Install Git, the GH CLI, and GnuPG:
+
+```powershell
+winget install --exact --id Git.Git
+winget install --exact --id GitHub.cli
+winget install --exact --id GnuPG.GnuPG
+```
 
 ## Git, SSH, & GPG
 
@@ -226,100 +230,159 @@ another package manager specialized for software development.
 The SSH key and config instructions work in PowerShell because OpenSSH is installed.
 Note that GitHub CLI was installed via Chocolatey (in the steps above).
 
+## Long paths
+
+Enable system support for paths with ≥ 260 characters by executing this command:
+
+```powershell
+Set-ItemProperty -Path "HKLM:\SYSTEM\CurrentControlSet\Control\FileSystem" `
+    -Name LongPathsEnabled `
+    -Type DWord `
+    -Value 1
+```
+
+!!! info "Equivalent registry changes"
+
+    ```reg
+    [HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\FileSystem]
+    "LongPathsEnabled"=hex(1)
+    ```
+
+Next, enable support in Git by running
+
+```powershell
+git config --global core.longpaths true
+```
+
+!!! bug "This doesn’t guarantee application support"
+
+    Some apps will need to be configured (like Git was), and others simply lack support.
+
 ## Programming languages and frameworks
 
-**Note:** Before installing a package,
+### Build tools
+
+Install the
+[Build Tools for Visual Studio](https://visualstudio.microsoft.com/visual-cpp-build-tools/),
+**This is not the same as the “redistributable” package.**
+You can use WinGet:
+
+```powershell
+winget install --exact --id Microsoft.VisualStudio.BuildTools
+```
+
+Also install CMake and MSYS2:
+
+```powershell
+winget install --exact --id Kitware.CMake
+winget install --exact --id MSYS2.MSYS2
+```
+
+**Before installing any package,**
 check for and uninstall any existing copy under _Add or Remove Programs_.
 For example, you’ll want to uninstall the copy of Java that ships with Windows.
 
-### Java, Rust, and Python
+!!! tip "Pro-tip: Rust, Python, and Java"
 
-!!! tip "Tip: automate with a package manager"
+    Install Rust:
 
-    Install Rust and Java via either Scoop or Chocolatey:
+    ```powershell
+    scoop install main/rust
+    cargo install cargo-update
+    ```
 
-    === "Scoop"
+    Installl Java UV (for Python):
 
-        ```powershell
-        scoop install main/rust
-        scoop bucket add java
-        scoop install java/temurin-jdk
-        ```
-
-    === "Chocolatey"
-
-        ```powershell
-        choco install -Y temurin rust
-        ```
-
-<!--     Toolkits; e.g. Java and Rust     -->
+    ```powershell
+    scoop install main/uv
+    scoop bucket add java
+    scoop install java/temurin-jdk
+    ```
 
 {%
   include-markdown './includes/_toolkits.md'
   heading-offset=2
 %}
 
-??? bug "If the JDK is not on your `$PATH`"
+### JavaScript
 
-    This may happen if you install the JDK manually.
-    Confirm where it was installed; t’s likely to be (e.g.) `C:\Program Files\Java\jdk-21`.
-    In an administrator console, run this:
+!!! note "Note: NVM"
 
-    ```powershell
-    [Environment]::SetEnvironmentVariable( \
-      "Path", \
-      [Environment]::GetEnvironmentVariable("Path", [EnvironmentVariableTarget]::Machine) \
-      + ";C:\Program Files\Java\jdk-21", \
-      [EnvironmentVariableTarget]::Machine \
-    )
-    ```
+    I’ve assumed you’ll stick with the latest Node.
+    If you’ll need to switch Node versions (not just in containers),
+    see [NVM](https://github.com/nvm-sh/nvm)
+    or [NVM-Windows](https://github.com/coreybutler/nvm-windows).
 
-### JavaScript ecosystem
-
-Install Node.js:
+Install Node and [pnpm](https://pnpm.io/) with Scoop:
 
 ```powershell
 scoop bucket add main
-scoop install nodejs
+scoop install nodejs pnpm
 ```
-
-Finally, install [pnpm](https://pnpm.io/), a faster alternative to npm:
-
-```powershell
-iwr https://get.pnpm.io/install.ps1 -useb | iex
-```
-
-### Visual C++ Build Tools
-
-**Note: This step is essential.**
-Install the [Visual C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/)
-**This is not the same as the “redistributable” package.**
-Install the package without optional packages (unless they’re wanted).
-
-!!! bug "Troubleshooting: Building packages from source"
-
-    Some packages do not publish wheels for Windows.
-    Uv, as well as Pip and Poetry, will fall back to compiling on Windows
-    if suitable wheels are not found.
-    You may also need to install older versions of the Visual C++ Build Tools for this to work.
-    Also take a look at
-    [Christopher Golhlke’s wheel archive](https://www.lfd.uci.edu/~gohlke/pythonlibs/).
-    It often has Windows wheels much earlier than the packages officially release them.
 
 ## Windows Linux Subsystem
 
 Follow [Microsoft’s instructions](https://learn.microsoft.com/en-us/windows/wsl/install)
-to install the WLS.
+to install the Windows Subsystem for Linux (WSL).
 Then follow the [Linux setup guide](linux.md).
 
 ## Final steps
+
+### Install system utils
+
+First, install
+[Sysinternals](https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite).
+
+Install the command-line utils FZF and Bat:
+
+```powershell
+winget install --exacte --id junegunn.fzf
+winget install --exact --id sharkdp.bat
+```
+
+Finally, install
+[PowerToys](https://learn.microsoft.com/en-us/windows/powertoys/),
+[TreeSize free](https://www.jam-software.com/treesize),
+[UniGetUI](https://github.com/marticliment/UniGetUI),
+[7-zip with ZSTD support](https://github.com/mcmilk/7-Zip-zstd),
+and, of course,
+[Notepad++](https://notepad-plus-plus.org/).
+Optionally include
+[Files](https://files.community/),
+[Pandoc](https://pandoc.org/),
+[ImageMagick](https://imagemagick.org),
+and [VLC](https://www.videolan.org/vlc/):
+
+```powershell
+winget install --exact --id Microsoft.PowerToys
+winget install --exact --id JAMSoftware.TreeSize.Free
+winget install --exact --id MartiCliment.UniGetUI
+winget install --exact --id mcmilk.7zip-zstd
+winget install --exact --id Notepad++.Notepad++
+winget install --exact --id FilesCommunity.Files
+winget install --exact --id JohnMacFarlane.Pandoc
+winget install --exact --id ImageMagick.ImageMagick
+winget install --exact --id VideoLAN.VLC
+```
 
 ### Disable startup apps
 
 Disable unnecessary startup apps, which are listed under _Settings ➤ Apps ➤ Startup_.
 You should periodically review this list because apps love to add themselves.
 
-\*[WLS]: Windows Linux Subsystem
+### Organize the applications menu
+
+Organize these two locations:
+
+- `%ProgramData%\Microsoft\Windows\Start Menu\Programs`
+- `%AppData%\Microsoft\Windows\Start Menu\Programs`
+
+Some apps end up in the parent directories (i.e. in `Start Menu\`);
+you can move them.
+
+### Organize the context menus
+
+TODO
 
 ---
 

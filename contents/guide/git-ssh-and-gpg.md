@@ -32,10 +32,12 @@ git config --global user.name "your-username"
 git config --global user.email "email-associated-with-github@address.tld"
 ```
 
-To clone with https, you may need to add the
-[git https helper](https://stackoverflow.com/q/8329485).
-Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu or `dnf install curl-devel` in Fedora.
-I haven’t seen this problem on macOS or Windows.
+!!! bug "Cloning with HTTPS"
+
+    To clone with https, you may need to add the
+    [git https helper](https://stackoverflow.com/q/8329485).
+    Run `sudo apt install libcurl4-openssl-dev ` in Ubuntu or `dnf install curl-devel` in Fedora.
+    I haven’t seen this problem on macOS or Windows.
 
 Also set these config options:
 
@@ -47,12 +49,14 @@ Also set these config options:
     The much newer [`git maintenance`](https://git-scm.com/docs/git-maintenance)
     employs different strategies, mostly running incrementally and on schedules.
     You can enable it per repository, which normally disables `gc.auto`.
-    High-level documentation is limited as of early 2025.
 
 ```bash
 # Options for `git gc --auto`.
 # Repack if there are > 1000 loose objects (instead of 6700).
 git config --global gc.auto 1000
+
+# Get nicer diffs with the "histogram" diff algorithm.
+git config --global diff.algorithm histogram
 ```
 
 ## Configure SSH and set up keys
@@ -143,8 +147,8 @@ by adding this section to the **end** of the file:
 
 ```text
 Host *
-ServerAliveInterval 60  # If no data was received for 1 minute, send a KeepAlive.
-ServerAliveCountMax 360 # If no KeepAlive response was received, retry up to 360 times.
+	ServerAliveInterval 60  # If no data was received for 1 minute, send a KeepAlive.
+	ServerAliveCountMax 360 # If no KeepAlive response was received, retry up to 360 times.
 ```
 
 ### Generate keys for GitHub
