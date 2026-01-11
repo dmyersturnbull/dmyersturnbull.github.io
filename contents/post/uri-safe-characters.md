@@ -13,6 +13,22 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 This details exactly what characters must be percent-encoded in URIs.
 
+!!! abstract "Highlights"
+
+    Don’t percent-encode these characters in _query_ parameter values:
+    `-`, `_`, `.`, `~`, `!`, `$`, `'`, `(`, `)`, `:`, `@`, `/`, `,`, `;`, `?`, and `=`.
+
+    To parse query parameters, follow this table:
+
+    | to match                       | use regex                   |
+    |--------------------------------|-----------------------------|
+    | full _query_ URI component     | `?[-\w.~!$'()*+:@/?;,&=]*+` |
+    | form-urlencoded key            | `[-\w.~!$'()*+:@/,;?]++`    |
+    | form-urlencoded value          | `[-\w.~!$'()*+:@/;,?=]*+`   |
+    | OpenAPI _simple_-encoded value | `[-\w.~!$'()*+:@/;?=]*+`    |
+    | OpenAPI _form_-encoded value   | same as _simple_-encoded    |
+    | OpenAPI _matrix_-encoded value | `[-\w.~!$'()*+:@/?=]*+`     |
+
 ## The basics
 
 ### Relevant specifications
@@ -21,8 +37,10 @@ This details exactly what characters must be percent-encoded in URIs.
   “Uniform Resource Locators (URL)” (Proposed Standard, obsolete)
 - [RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986),
   “Uniform Resource Identifier (URI): Generic Syntax” (Internet Standard)
-- [RFC 6920](https://datatracker.ietf.org/doc/html/rfc3986),
+- [RFC 6920](https://datatracker.ietf.org/doc/html/rfc6920),
   “Naming Things with Hashes” (Proposed Standard)
+- [RFC 6570](https://datatracker.ietf.org/doc/html/rfc6920),
+  “URI Template” (Proposed Standard)
 - [IANA-recognized URI schemes](https://www.iana.org/assignments/uri-schemes/uri-schemes.xhtml)
 
 RFC 3986 is the main specification.
@@ -102,29 +120,18 @@ unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
 
 The following tables show the components in which a reserved delimiter
 can be used for its literal meaning without percent-encoding.
-(Note that `%` must also be encoded.)
+Note that `%` must also be encoded.
 
 | component | `:` | `/` | `?` | `#` | `[` | `]` | `@` |
-| --------- | --- | --- | --- | --- | --- | --- | --- |
+|-----------|-----|-----|-----|-----|-----|-----|-----|
 | scheme    |     |     |     |     |     |     |     |
 | authority | ¹   |     |     |     |     |     |     |
-| path      | ²   |     |     |     |     |     | y   |
+| path      | y²  |     |     |     |     |     | y   |
 | query     | y   | y   | y   |     |     |     | y   |
 | fragment  | y   | y   | y   | ³   |     |     | y   |
 
 /// table-caption
 <b>General delimiters (_y_ where valid)</b>
-///
-
-| component | `!` | `$` | `&` | `'` | `(` | `)` | `*` | `+` | `,` | `;` | `=` |
-| --------- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| authority | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
-| path      | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
-| query     | y   | y   | y⁴  | y   | y   | y   | y   | y   | y   | y   | y⁴  |
-| fragment  | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
-
-/// table-caption
-<b>Sub-delimiters (_y_ where valid)</b>
 ///
 
 ??? info "Footnotes"
@@ -139,34 +146,83 @@ can be used for its literal meaning without percent-encoding.
       (e.g. `https://google.com/:` but `google.com/:` is not).
 
     - <b>³</b> Perhaps surprisingly, fragments cannot contain `#`.
+      This is in contrast to `?`, which can occur in _query_ components.
 
-    - <b>⁴</b> `&` and `=` are typically used for key–value parameters.
-      Sub-delimiters `,` and `;` (also `.` and `|`) are used as delimiters for some
-      [OpenAPI query parameter _styles_](https://spec.openapis.org/oas/v3.1.1.html#style-values):
+| component | `!` | `$` | `'` | `(` | `)` | `*` | `&` | `=` | `,` | `;` | `+` |
+|-----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
+| authority | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
+| path      | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
+| query     | y   | y   | y   | y   | y   | y   | y¹  | y¹  | y³  | y³  | y²  |
+| fragment  | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
 
-      - _`simple`_ and _`form`_ use `,`
-      - _`label`_ uses `.` and `,`
-      - _`matrix`_ uses `,` and `;`
-      - _`pipeDelimited`_ uses `|`
+/// table-caption
+<b>Sub-delimiters (_y_ where valid)</b>
+///
 
-## More on query strings
+??? info "Footnotes"
 
-Despite having a formal grammar (ABNF), RFC 3986 buries some important details in text.
-That includes some notes on syntax that many implementations handle incorrectly.
-The following sections go through some of that for the _query_ component.
+    - <b>¹</b> `&` and `=` are typically used for key–value parameters.
 
-### `/` and `?` are allowed
+    - <b>²</b> `,` and `;` are delimiters for some
+      [OpenAPI query parameter _styles_](https://spec.openapis.org/oas/v3.2.0.html#style-values):
+
+      - _`simple` and `form` use `,`
+      - `matrix` and `cookie` use `,` and `;`
+
+      (Note that `cookie` actually uses `; `.
+      `label` uses `.`, which is unreserved;
+      and `spaceDelimited`, and `pipeDelimited` use ` ` and `|`, which must be percent-encoded.)
+
+    - <b>³</b> `+` is used in place of a space in
+      [`x-www-form-urlencoded`](https://url.spec.whatwg.org/#application/x-www-form-urlencoded),
+      as used in HTML forms.
+
+## The _query_ component
+
+RFC 3986 buries some important details,
+including aspects that many implementations handle incorrectly.
+
+### From the ABNF
+
+Tracing through the ABNF definitions for `query` yields this:
+
+```abnf
+query           = *( pchar / "/" / "?" )
+pchar           = unreserved / pct-encoded / sub-delims / ":" / "@"
+unreserved      = ALPHA / DIGIT / "-" / "." / "_" / "~"
+pct-encoded     = "%" HEXDIG HEXDIG
+sub-delims      = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+```
+
+Which is equivalent to:
+
+```abnf
+query  = ALPHA / DIGIT                                                    ; from `unreserved`
+       / "-" / "." / "_" / "~"                                            ; also from `unreserved`
+       / "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="  ; from `sub-delims`
+       / ":" / "@"                                                        ; from `pchar`
+       / "/" / "?"                                                        ; from `query`
+       / "%" HEXDIG HEXDIG                                                ; from `pct-encoded`
+```
+
+And to this regex (using the inline _verbose_ flag, `(?x)`):
+
+```regexp
+(?x)
+[A-Za-z0-9] | [-._~] | [!$&'()*+,;=] | [:@] | [/?]
+|
+%[A-Fa-f0-9]{2}
+```
+
+And, when no percent-encoding is used, to
+`[-\w.~!$&'()*+,;=:@/?]`.
+
+### Yes, `/` and `?` are allowed
 
 RFC 3986 says this about query strings:
 
 > The characters slash ("/") and question mark ("?") may represent data within the query component.
 > Beware that some older, erroneous implementations may not handle such data correctly […]
-
-So, the full set of allowed characters in URI queries is
-
-```abnf
-unreserved / sub-delims / "/" / "?"`.
-```
 
 [RFC 6920 §3](https://datatracker.ietf.org/doc/rfc6920/#section-3),
 “Naming Things with Hashes” affirms these conclusions:
@@ -179,7 +235,7 @@ unreserved / sub-delims / "/" / "?"`.
 > As an example, a slash ('/') does not have any reserved function in a query part
 > and therefore does not have to be escaped.
 
-### No scheme-specific restrictions
+### There are no HTTP-specific restrictions
 
 Ok, fine.
 Technically, RFC 3986 also says:
@@ -196,69 +252,43 @@ Fortunately, the HTTP-specific part of RFC 1738 states (where `(<searchpart>` me
 
 That means there is no HTTP-specific ban on our `sub-delims`, either.
 
-### Reaffirming: characters allowed in _query_
+## _query_ component parameters
 
-The characters
-`&`, `-`, `~`, `.`, `_`, `=`, `?`, `/`, `!`, `$`, `+`, `'`, `(`, `)`, `*`, `+`, and `,`
-do **not** require percent encoding inside a
-[URI query](https://datatracker.ietf.org/doc/html/rfc3986#section-3.4),
-according to its specification, RFC 3986.
-
-A query can contain any literal character except `:`, `#`, `[`, `]`, `@`, and `%`.
-(Note: `?` begins a query but can also be used elsewhere, unescaped.)
-
-This regex matches exactly the set of valid query strings (_spaces added for clarity_):
-
-```
-?( [^:#[]@%]+ | %[A-Za-z\d]{2} )*
-```
-
-### Parameters and key–value pairs
-
-Queries often follow more structure, by convention and some standards.
-The idea of passing key–value pairs in URIs is elegant,
-but the history and resulting standards are a mess.
-In particular, WHATWG defines
+Queries often follow more structure by convention and some standards.
+Passing key–value pairs in URIs is elegant, but the standards are a mess.
+In their document for
 [`x-www-form-urlencoded`](https://url.spec.whatwg.org/#application/x-www-form-urlencoded),
-stating:
+WHATWG writes:
 
 > The application/x-www-form-urlencoded format is in many ways an aberrant monstrosity,
 > the result of many years of implementation accidents and compromises
 > leading to a set of requirements necessary for interoperability,
 > but in no way representing good design practices.
 
-The following grammars are simple and may be helpful.
-
 !!! note "Note: WHATWG"
 
-    _WHATWG_ does not seem to be in the habit of writing short, precise docs for their specs.
+    _WHATWG_ is not in the habit of writing short, precise docs for their specs.
     To describe a [“URL string”](https://url.spec.whatwg.org/#valid-url-string),
     at no point are we shown a formal grammar.
     Instead, we get 20 pages of “basic URL parser” and “URL serializing” algorithms.
 
-#### Parameter lists
-
-This ABNF grammar recognizes a _query_ component and captures its `&`-delimited parameters.
-Note that empty parameters are not allowed.
-
-```abnf
-query    = param *('&' param)
-param    = 1*(LITERAL / ESCAPE)
-LITERAL  = *('^' / '#' / '[' / ']' / '@' / '%')
-ESCAPE   = '%' 2HEXDIG
-```
+Note that OpenAPI's query parameter styles reference
+[RFC 6570](https://datatracker.ietf.org/doc/html/rfc6920),
+**not** the `x-www-form-urlencoded` used in HTML5.
 
 #### Key–value pairs
 
-We can further restrict to `key=value` pairs.
-We’ll allow `=` inside a `value`.
+This ABNF grammar recognizes a _query_ component and captures its key–value parameters.
+I’ve chosen to disallow empty values.
 
-```
-query    = param *('&' param)
+```abnf
+query    = '?' param *('&' param)
 param    = key '=' value
 key      = 1*(LITERAL / ESCAPE)
 value    = 1*(LITERAL / ESCAPE / '=')
-LITERAL  = 0*('^' / '#' / '[' / ']' / '@' / '%')
+LITERAL  = ALPHA / DIGIT / "-" / "." / "_" / "~"
+         / "!" / "$" / "'" / "(" / ")" / "*" / "+" / "," / ";"  ; removed `&` and '='
+         / ":" / "@" / "/" / "?"
 ESCAPE   = '%' 2HEXDIG
 ```
 
@@ -266,14 +296,14 @@ ESCAPE   = '%' 2HEXDIG
 
 ### Some implementations encode more than needed
 
-Many `urlencode` implementations will encode characters that don't need to be encoded.
+Many `urlencode` implementations will encode characters that don’t need to be encoded.
 
 This is because the 1994
 [RFC 1738](https://datatracker.ietf.org/doc/html/rfc1738) for URLs,
 which RFC 3986 obsoletes, had this language
 
 > Thus, only alphanumerics, the special characters "$-\_.+!\*'(),",
-> and reserved characters used for their reserved purposes may be used unencoded within a URL.
+>, and reserved characters used for their reserved purposes may be used unencoded within a URL.
 
 RFC 3986 instead says
 
@@ -315,3 +345,111 @@ You should set `allowReserved: true` for
 [OpenAPI _parameter_ objects](https://spec.openapis.org/oas/v3.1.1.html#parameter-object).
 There is no reason not to.
 As described earlier, also be aware that `style` controls whether additional characters must be encoded.
+
+## Full ABNF from RFC 3986
+
+The following are the ABNF lines, copied in order, from
+[RFC 3986](https://datatracker.ietf.org/doc/html/rfc3986#appendix-A).
+Only minor formatting changes were made (specifically line breaks, indentation, and comments).
+
+```abnf
+; ---------------------------  characters  ---------------------------------------------------------
+
+pct-encoded     = "%" HEXDIG HEXDIG
+reserved        = gen-delims / sub-delims
+gen-delims      = ":" / "/" / "?" / "#" / "[" / "]" / "@"
+sub-delims      = "!" / "$" / "&" / "'" / "(" / ")" / "*" / "+" / "," / ";" / "="
+unreserved      = ALPHA / DIGIT / "-" / "." / "_" / "~"
+
+; ---------------------------  URI structure  ------------------------------------------------------
+
+URI             = scheme ":" hier-part [ "?" query ] [ "#" fragment ]
+
+hier-part       = "//" authority path-abempty
+                / path-absolute
+                / path-rootless
+                / path-empty
+
+scheme          = ALPHA *( ALPHA / DIGIT / "+" / "-" / "." )
+
+authority       = [ userinfo "@" ] host [ ":" port ]
+
+userinfo        = *( unreserved / pct-encoded / sub-delims / ":" )
+
+host            = IP-literal / IPv4address / reg-name
+
+IP-literal      = "[" ( IPv6address / IPvFuture  ) "]"
+IPvFuture       = "v" 1*HEXDIG "." 1*( unreserved / sub-delims / ":" )
+; IPv6address and IPv4address are defined in the code block below.
+reg-name        = *( unreserved / pct-encoded / sub-delims )
+
+port            = *DIGIT
+
+; ---------------------------  path  ---------------------------------------------------------------
+
+path            = path-abempty    ; begins with "/" or is empty
+                / path-absolute   ; begins with "/" but not "//"
+                / path-noscheme   ; begins with a non-colon segment
+                / path-rootless   ; begins with a segment
+                / path-empty      ; zero characters
+
+path-abempty    = *( "/" segment )
+path-absolute   = "/" [ segment-nz *( "/" segment ) ]
+path-noscheme   = segment-nz-nc *( "/" segment )
+path-rootless   = segment-nz *( "/" segment )
+path-empty      = 0<pchar>
+
+segment         = *pchar
+segment-nz      = 1*pchar
+segment-nz-nc   = 1*( unreserved / pct-encoded / sub-delims / "@" )
+                ; non-zero-length segment without any colon ":"
+
+pchar           = unreserved / pct-encoded / sub-delims / ":" / "@"
+
+; ---------------------------  query and fragment  -------------------------------------------------
+
+query           = *( pchar / "/" / "?" )
+
+fragment        = *( pchar / "/" / "?" )
+
+; ---------------------------  reference and absolute URI  ------------------------------------------
+
+URI-reference   = URI / relative-ref
+relative-ref    = relative-part [ "?" query ] [ "#" fragment ]
+relative-part   = "//" authority path-abempty
+                / path-absolute
+                / path-noscheme
+                / path-empty
+
+absolute-URI    = scheme ":" hier-part [ "?" query ]
+```
+
+IP address grammars:
+
+```abnf
+; ---------------------------  IPV6 address  ------------------------------------------------------
+
+IPv6address     =                            6( h16 ":" ) ls32
+                /                       "::" 5( h16 ":" ) ls32
+                / [               h16 ] "::" 4( h16 ":" ) ls32
+                / [ *1( h16 ":" ) h16 ] "::" 3( h16 ":" ) ls32
+                / [ *2( h16 ":" ) h16 ] "::" 2( h16 ":" ) ls32
+                / [ *3( h16 ":" ) h16 ] "::"    h16 ":"   ls32
+                / [ *4( h16 ":" ) h16 ] "::"              ls32
+                / [ *5( h16 ":" ) h16 ] "::"              h16
+                / [ *6( h16 ":" ) h16 ] "::"
+
+ls32            = ( h16 ":" h16 ) / IPv4address
+                ; least-significant 32 bits of address
+h16             = 1*4HEXDIG
+                ; 16 bits of address represented in hexadecimal
+
+; ---------------------------  IPv4 address  -------------------------------------------------------
+
+IPv4address     = dec-octet "." dec-octet "." dec-octet "." dec-octet
+dec-octet       = DIGIT                 ; 0-9
+                / %x31-39 DIGIT         ; 10-99
+                / "1" 2DIGIT            ; 100-199
+                / "2" %x30-34 DIGIT     ; 200-249
+                / "25" %x30-35          ; 250-255
+```
