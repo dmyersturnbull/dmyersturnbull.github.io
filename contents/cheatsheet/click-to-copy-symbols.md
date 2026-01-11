@@ -1,6 +1,6 @@
 # Click-to-copy symbols
 
-This is here because I sometimes used Windows and don’t know the shortcuts.
+This is here because I sometimes use Windows and don’t remember the shortcuts.
 
 _Click on a symbol to copy it._
 
@@ -440,6 +440,8 @@ _Click on a symbol to copy it._
   <span onclick="copyToClipboard('∀', this)" style="cursor: pointer;">`∀`</span>
 - there exists:
   <span onclick="copyToClipboard('∃', this)" style="cursor: pointer;">`∃`</span>
+- there does not exist:
+  <span onclick="copyToClipboard('∄', this)" style="cursor: pointer;">`∄`</span>
 - complement:
   <span onclick="copyToClipboard('∁', this)" style="cursor: pointer;">`∁`</span>
 - negation / not:

@@ -8,8 +8,6 @@ tags:
 
 ## Coercion to boolean
 
-It’s really easy to confuse
-
 | type   | coerced value | mnemonic                       | **true** values | **false** values |
 | ------ | ------------- | ------------------------------ | --------------- | ---------------- |
 | string | `!= ''`       | true if **nonempty**           | `'false'`       | `''` (only)      |
