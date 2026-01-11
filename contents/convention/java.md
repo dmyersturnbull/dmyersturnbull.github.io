@@ -145,6 +145,103 @@ public class Claz {
 }
 ```
 
+??? tip "IntelliJ tip (`hashCode`)"
+
+    <b>`hashCode()` template:</b>
+
+    ```velocity
+    public int hashCode() {
+
+    ## Simple case 0A: no fields and no `super.hashCode`.
+    #if($fields.isEmpty() && !$superHasHashCode)
+      return 0;
+    ## Simple case 0B: `super.hashCode` but no fields.
+    #elseif($fields.isEmpty())
+      return super.hashCode();
+    #end
+
+    ## Simple case 1: one array field and no `super.hashCode`.
+    #if ($fields.size()==1 && $fields[0].array && !$superHasHashCode)
+      return java.util.Arrays.hashCode($fields[0].accessor);
+
+    ## Remaining cases:
+    #else
+
+      ## Determine whether there are any arrays and any non-arrays.
+      #set($hasArrays = false)
+      #set($hasNonArrays = false)
+      #foreach($field in $fields)
+        #if ($field.array)
+          #set($hasArrays = true)
+        #else
+          #set($hasNonArrays = true)
+        #end
+      #end
+
+      # Choose a safe variable name.
+      #set($resultVar = $helper.getUniqueLocalVarName("result", $fields, $settings))
+      #set($isDefined = false)
+
+      ## We'll need to define `result` if there are array fields.
+      ## Otherwise, we'll just `return Objects.hash(...)` directly.
+      #if($hasArrays)
+        int $resultVar = ##
+      #else
+        return ##
+      #end
+
+      ## If there are non-array fields, capture them in `Objects.hash(...)`.
+      ## If `super.hashCode` is defined, include that, too.
+      #if($hasNonArrays)
+
+        java.util.Objects.hash(##
+
+        #set($i = 0)
+        #if($superHasHashCode)
+          super.hashCode() ##
+          #set($i = 1)
+        #end
+
+        #foreach($field in $fields)
+          #if(!$field.array)
+            #if($i > 0)
+              , ##
+            #end
+            $field.accessor ##
+            #set($i = $i + 1)
+          #end
+        #end
+
+        ); ## end of `Objects.hash(`.
+
+      ## If there are no non-array fields, just initialize `result = super.hashCode()`.
+      #elseif($superHasHashCode)
+        super.hashCode(); ##
+      #end
+
+      ## Fold array fields into the hash with successive statements like:
+      ##   `result = 31 * result + Arrays.hashCode(field);`
+      ## If we didn't define `$result` above
+      ## (because there are no non-array fields nor a `super.hashCode`)
+      ## then omit the `31 * result + `.
+      #foreach($field in $fields)
+        #if($field.array)
+          $resultVar = ##
+          #if ($isDefined)
+            31 * $resultVar + ##
+          #end
+          java.util.Arrays.hashCode($field.accessor);
+          #set($isDefined = true)
+        #end
+      #end
+
+      ## Return the accumulated hash.
+      return $resultVar;
+
+    #end
+    }
+    ```
+
 ## Overriding `equals`
 
 !!! tip "IntelliJ tip"
@@ -204,119 +301,45 @@ public class Claz {
 
     <b>`equals()` template:</b>
 
-    ```text
+    ```velocity
     #parse("equalsHelper.vm")
+
     @Override
     public boolean equals(final Object obj) {
+    ## Fast-path identity check
     if (obj == this) {
     return true;
     }
+
+    ## Null check and strict type check.
     if (obj == null || getClass() != obj.getClass()) {
     return false;
     }
+
     final var o = (${class.getName()}) obj;
     return ##
     #set($i = 0)
     #foreach($field in $fields)
-    #if ($i > 0)
-    && ##
-    #end
-    #set($i = $i + 1)
-    #if ($field.primitive)
-    #if ($field.double || $field.float)
-    #addDoubleFieldComparisonConditionDirect($field) ##
-    #else
-    #addPrimitiveFieldComparisonConditionDirect($field) ##
-    #end
-    #elseif ($field.enum)
-    #addPrimitiveFieldComparisonConditionDirect($field) ##
-    #elseif ($field.array)
-    java.util.Arrays.equals($field.accessor, obj.$field.accessor)##
-    #else
-    java.util.Objects.equals($field.accessor, obj.$field.accessor)##
-    #end
+      #if ($i > 0)
+        && ##
+      #end
+      #set($i = $i + 1)
+
+      #if ($field.primitive)
+        #if ($field.double || $field.float)
+          #addDoubleFieldComparisonConditionDirect($field) ##
+        #else
+          #addPrimitiveFieldComparisonConditionDirect($field) ##
+        #end
+      #elseif ($field.enum)
+        #addPrimitiveFieldComparisonConditionDirect($field) ##
+      #elseif ($field.array)
+        java.util.Arrays.equals($field.accessor, obj.$field.accessor)##
+      #else
+        java.util.Objects.equals($field.accessor, obj.$field.accessor)##
+      #end
     #end
     ;
-    }
-    ```
-
-    <b>`hashCode()` template:</b>
-
-    ```
-    public int hashCode() {
-    #if (!$superHasHashCode && $fields.size()==1 && $fields[0].array)
-    return java.util.Arrays.hashCode($fields[0].accessor);
-    #else
-    #set($hasArrays = false)
-    #set($hasNoArrays = false)
-    #foreach($field in $fields)
-    #if ($field.array)
-    #set($hasArrays = true)
-    #else
-    #set($hasNoArrays = true)
-    #end
-    #end
-    #if (!$hasArrays)
-    return java.util.Objects.hash(##
-    #set($i = 0)
-    #if($superHasHashCode)
-    super.hashCode() ##
-    #set($i = 1)
-    #end
-    #foreach($field in $fields)
-    #if ($i > 0)
-    , ##
-    #end
-    $field.accessor ##
-    #set($i = $i + 1)
-    #end
-    );
-    #else
-    #set($resultName = $helper.getUniqueLocalVarName("result", $fields, $settings))
-    #set($resultAssigned = false)
-    #set($resultDeclarationCompleted = false)
-    int $resultName ##
-    #if($hasNoArrays)
-    = java.util.Objects.hash(##
-    #set($i = 0)
-    #if($superHasHashCode)
-    super.hashCode() ##
-    #set($i = 1)
-    #end
-    #foreach($field in $fields)
-    #if(!$field.array)
-    #if ($i > 0)
-    , ##
-    #end
-    $field.accessor ##
-    #set($i = $i + 1)
-    #end
-    #end
-    );
-    #set($resultAssigned = true)
-    #set($resultDeclarationCompleted = true)
-    #elseif($superHasHashCode)
-    = super.hashCode(); ##
-    #set($resultAssigned = true)
-    #set($resultDeclarationCompleted = true)
-    #end
-    #foreach($field in $fields)
-    #if($field.array)
-    #if ($resultDeclarationCompleted)
-    $resultName ##
-    #end
-    = ##
-    #if ($resultAssigned)
-    31 * $resultName + ##
-    #end
-    java.util.Arrays.hashCode($field.accessor);
-    #set($resultAssigned = true)
-    #set($resultDeclarationCompleted = true)
-    #end
-    #end
-    return $resultName;
-    #end
-    #end
     }
     ```
 
@@ -363,7 +386,7 @@ public class Claz {
 
     <b>`equals()` template:</b>
 
-    ```text
+    ```velocity
     #parse("equalsHelper.vm")
     @Override
     public final boolean equals(final Object obj) {
@@ -376,114 +399,35 @@ public class Claz {
     if (getClass() != obj.getClass()) {
     throw new IllegalArgumentException(
     "Type "
-    + obj.getClass().getName()
-    + " is incompatible with "
-    + getClass().getName()
+        + obj.getClass().getName()
+        + " is incompatible with "
+        + getClass().getName()
     );
     }
+
     final var o = (${class.getName()}) obj;
     return ##
     #set($i = 0)
     #foreach($field in $fields)
-    #if ($i > 0)
-    && ##
-    #end
-    #set($i = $i + 1)
-    #if ($field.primitive)
-    #if ($field.double || $field.float)
-    #addDoubleFieldComparisonConditionDirect($field) ##
-    #else
-    #addPrimitiveFieldComparisonConditionDirect($field) ##
-    #end
-    #elseif ($field.enum)
-    #addPrimitiveFieldComparisonConditionDirect($field) ##
-    #elseif ($field.array)
-    java.util.Arrays.equals($field.accessor, obj.$field.accessor)##
-    #else
-    java.util.Objects.equals($field.accessor, obj.$field.accessor)##
-    #end
+      #if ($i > 0)
+        && ##
+      #end
+      #set($i = $i + 1)
+      #if ($field.primitive)
+        #if ($field.double || $field.float)
+          #addDoubleFieldComparisonConditionDirect($field) ##
+        #else
+          #addPrimitiveFieldComparisonConditionDirect($field) ##
+        #end
+      #elseif ($field.enum)
+        #addPrimitiveFieldComparisonConditionDirect($field) ##
+      #elseif ($field.array)
+        java.util.Arrays.equals($field.accessor, obj.$field.accessor)##
+      #else
+        java.util.Objects.equals($field.accessor, obj.$field.accessor)##
+      #end
     #end
     ;
-    }
-    ```
-
-    <b>`hashCode()` template:</b>
-
-    ```
-    public int hashCode() {
-    #if (!$superHasHashCode && $fields.size()==1 && $fields[0].array)
-    return java.util.Arrays.hashCode($fields[0].accessor);
-    #else
-    #set($hasArrays = false)
-    #set($hasNoArrays = false)
-    #foreach($field in $fields)
-    #if ($field.array)
-    #set($hasArrays = true)
-    #else
-    #set($hasNoArrays = true)
-    #end
-    #end
-    #if (!$hasArrays)
-    return java.util.Objects.hash(##
-    #set($i = 0)
-    #if($superHasHashCode)
-    super.hashCode() ##
-    #set($i = 1)
-    #end
-    #foreach($field in $fields)
-    #if ($i > 0)
-    , ##
-    #end
-    $field.accessor ##
-    #set($i = $i + 1)
-    #end
-    );
-    #else
-    #set($resultName = $helper.getUniqueLocalVarName("result", $fields, $settings))
-    #set($resultAssigned = false)
-    #set($resultDeclarationCompleted = false)
-    int $resultName ##
-    #if($hasNoArrays)
-    = java.util.Objects.hash(##
-    #set($i = 0)
-    #if($superHasHashCode)
-    super.hashCode() ##
-    #set($i = 1)
-    #end
-    #foreach($field in $fields)
-    #if(!$field.array)
-    #if ($i > 0)
-    , ##
-    #end
-    $field.accessor ##
-    #set($i = $i + 1)
-    #end
-    #end
-    );
-    #set($resultAssigned = true)
-    #set($resultDeclarationCompleted = true)
-    #elseif($superHasHashCode)
-    = super.hashCode(); ##
-    #set($resultAssigned = true)
-    #set($resultDeclarationCompleted = true)
-    #end
-    #foreach($field in $fields)
-    #if($field.array)
-    #if ($resultDeclarationCompleted)
-    $resultName ##
-    #end
-    = ##
-    #if ($resultAssigned)
-    31 * $resultName + ##
-    #end
-    java.util.Arrays.hashCode($field.accessor);
-    #set($resultAssigned = true)
-    #set($resultDeclarationCompleted = true)
-    #end
-    #end
-    return $resultName;
-    #end
-    #end
     }
     ```
 
