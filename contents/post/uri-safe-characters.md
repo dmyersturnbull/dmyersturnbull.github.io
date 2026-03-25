@@ -15,7 +15,8 @@ This details exactly what characters must be percent-encoded in URIs.
 
 !!! abstract "Highlights"
 
-    Don’t percent-encode these characters in _query_ parameter values:
+    This document got surprisingly long, so here are the basics.
+    Don’t percent-encode these characters in _query_ parameter values:\
     `-`, `_`, `.`, `~`, `!`, `$`, `'`, `(`, `)`, `:`, `@`, `/`, `,`, `;`, `?`, and `=`.
 
     To parse query parameters, follow this table:
@@ -303,7 +304,7 @@ This is because the 1994
 which RFC 3986 obsoletes, had this language
 
 > Thus, only alphanumerics, the special characters "$-\_.+!\*'(),",
->, and reserved characters used for their reserved purposes may be used unencoded within a URL.
+> and reserved characters used for their reserved purposes may be used unencoded within a URL.
 
 RFC 3986 instead says
 

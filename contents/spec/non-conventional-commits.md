@@ -13,7 +13,7 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-<b>Spec status: draft; not usable.</b>
+<b>Spec status: unstable.</b>
 
 There are significant well-recognized problems with Conventional Commits.
 This nascent specification simply explores alternatives.
@@ -22,80 +22,141 @@ This nascent specification simply explores alternatives.
 
     - [Restricted conventional commits spec](commit-messages.md).
 
-| Phrase     | Syntax (prefix)       | Description                     | Group | Bump  | Section         |
-|------------|-----------------------|---------------------------------|-------|-------|-----------------|
-| modify     | `modify {T} {X}: {s}` | behavior in public API          | main  | major | `Changes`       |
-| move       | `move {T} {A} to {B}` | a part of the public API        | main  | major | `Changes`       |
-| remove     | `remove {T} {A}`      | a feature, endpoint, etc.       | main  | major | `Removals`      |
-| change     | `change {what}`       | and break the install process   | build | major | `Install`       |
-| drop       | `drop {T} {X}`        | a platform, etc.                | build | major | `Platforms`     |
-| support    | `support {ST} {X}`    | a platform, etc.                | build | minor | `Platforms`     |
-| introduce  | `introduce {ST} {X}`  | a new feature                   | main  | minor | `New features`  |
-| deprecate  | `deprecate {ST} {X}`  | a feature                       | main  | minor | `Deprecations`  |
-| fix        | `fix {T} {X} #{I}`    | a non-security bug              | main  | patch | `Bug fixes`     |
-| patch      | `patch {T} {X} #{I}`  | a vulnerability                 | main  | patch | `Security`      |
-| optimize   | `optimize {T} {X}`    | performance                     | main  | patch | `Performance`   |
-| update     | `update {realm}`      | pinned dependencies             | main  | patch | `Dependencies`  |
-| write      | `write {doc}`         | a new documentation file        | docs  | -     | `Documentation` |
-| revise     | `revise {doc}`        | existing documentation          | docs  | -     | `Documentation` |
-| correct    | `correct {doc}`       | mistake(s) in docs              | docs  | -     | `Documentation` |
-| add        | `add {TT} {X}`        | some test(s)                    | tests | -     | `Internal`      |
-| repair     | `repair {TT} {X}`     | broken test(s)                  | tests | -     | `Internal`      |
-| refactor   | `refactor {X}`        | code without affecting behavior | main  | -     | `Internal`      |
-| reorganize | `reorganize {files}`  | files (not just code)           | infra | -     | `Internal`      |
-| format     | `format {files}`      | files to improve style          | N/A   | -     | -               |
-| release    | `release {tag}`       | a new version                   | N/A   | -     | -               |
+<b>Syntax:</b>
+
+Written in [regex-bnf](regex-bnf.md); `*?` is lazy 0-or-more, and `!` is complement.
+
+```ebnf
+message        = subject (body footer?)?
+subject        = scopes? change extra?
+scopes         = '[' scope (',' scope)* '] '
+scope          = SCOPE-KEY SCOPE-SIG?
+SCOPE-KEY      = [a-z0-9]+(?:-[a-z0-9]+)*          ; e.g. `web-api`
+SCOPE-SIG      = [^a-z0-9\n\t]+                    ; e.g. `!`
+change         = STD-VERB TYPE ENTITY              ; e.g. `fix class Abc`
+               | MOVE-VERB TYPE ENTITY 'to' ENTITY ; e.g. `move class Abc to Xyz`
+               | 'update' REALM                    ; e.g. `update dev-deps`
+               | 'release' TAG                     ; e.g. `release v0.1.2`
+STD-VERB       = [a-z]+                            ; listed in table below
+MOVE-VERB      = 'move' | 'rename'
+ENTITY         = [^\n]+
+REALM          = [a-z-]+                           ; e.g. 'dev-deps'
+TAG            = [a-z0-9.+=,_-]+
+extra          = ' ' TEXT
+TEXT           = [^\n\t]+
+
+body           = ('\n\n' PARAGRAPH)+
+PARAGRAPH      = `[^\n](?!.*\n\n).*?(?<!\n)`       ; no '.*\n\n.*', `\n.*`, or `.*\n`
+
+footer         = '\n' ('\n' trailer)*
+trailer        = T-KEY (':' | ' #') T-VALUE
+
+T-KEY          = [A-Z][A-Za-z]*+(?:-[a-z]+)*+      ; e.g. `Signed-off-by`
+T-VALUE        = [^\s]+
+```
+
+## _scope_
+
+`scopes` states how users may be affected or care about the changes,
+including whether the changes are breaking for those users.
+Reach values MUST be restricted to an enum defined by the project.
+Conceptually, each scope is the intersection of
+(1) a usage type (`SCOPE-KEY`) and
+(2) how the changes affect that usage (`SCOPE-SIG`).
+
+Projects SHOULD use `!` as the scope significance to denote breaking changes.
+Projects MAY define other scope signifiance values.
+Projects MAY restrict some significance values to some keys
+and MAY restrict the combinations of scope values allowed together.
+Projects SHOULD assume that any change without a scope list is only relevant to internal developers.
+
+For example, a JavaScript-based HTTP service might define these:
+
+```ebnf
+scope  = 'http'   ; OpenAPI service
+       | 'http!'  ; Breaking changes increment the OpenAPI version.
+       | 'js'     ; JavaScript API published to NPM
+       | 'js!'    ; Breaking changes increment major version of NPM package.
+       | 'helm!'  ; Any change to the Helm charts (always assumed breaking)
+```
+
+This allows the HTTP API, NPM package, and Helm charts to be versioned separately and automatically.
+Separate release note sets can also be generated.
+
+## _summary_
+
+<b>`summary`</b>` is defined by this table:
+
+| Phrase    | Syntax (prefix)                | Description                    | Bump? | Section?        |
+|-----------|--------------------------------|--------------------------------|-------|-----------------|
+| modify    | `modify {api-type} {x}`        | modify a class, endpoint, etc. | major | `Changes`       |
+| rename ♮  | `rename {api-type} {a} to {b}` | rename a class, endpoint, etc. | major | `Changes`       |
+| move ♮    | `move {api-type} {a} to {b}`   | move a class, endpoint, etc.   | major | `Changes`       |
+| remove    | `remove {api-type} {x}`        | remove a class, endpoint, etc. | major | `Removals`      |
+| support   | `support {support-type} {x}`   | support an OS, browser, etc.   | minor | `Install`       |
+| drop      | `drop {support-type} {x}`      | drop an OS, browser, etc.      | major | `Install`       |
+| alter     | `alter {process-type} {x}`     | alter a build process          | major | `Install`       |
+| introduce | `introduce {api-type} {x}`     | introduce a new feature        | minor | `New features`  |
+| add       | `add {api-type} {x}`           | add a new feature _(alias)_    | minor | `New features`  |
+| deprecate | `deprecate {api-type} {x}`     | deprecate a feature            | minor | `Deprecations`  |
+| fix       | `fix {api-type} {x}`           | fix a non-security bug         | patch | `Bug fixes`     |
+| patch     | `patch {api-type} {x}`         | patch a vulnerability          | patch | `Security`      |
+| optimize  | `optimize {api-type} {x}`      | optimize performance           | patch | `Performance`   |
+| document  | `document {api-type} {x}`      | document something             | -     | `Documentation` |
+| revise    | `revise {doc-type} {x}`        | existing documentation         | -     | `Documentation` |
+| correct   | `correct {doc-type} {x}`       | mistake(s) in docs             | -     | `Documentation` |
+| test      | `test {api-type} {x}`          | test something                 | -     | `Internal`      |
+| repair    | `repair {test-type} {x}`       | repair broken test(s)          | -     | `Internal`      |
+| refactor  | `refactor {api-type} {x}`      | refactor code                  | -     | `Internal`      |
+| organize  | `organize {path-type} {x}`     | organize repo files            | -     | `Internal`      |
+| format    | `format {path-type} {x}`       | format file(s)                 | -     | `Internal`      |
+| update ♮  | `update {realm}`               | update lockfile                | patch | `Internal`      |
+| release ♮ | `release {tag}`                | release a new version          | -     | -               |
 
 /// table-caption
 <b>Change phrases</b>
 
-- `T` – type; `feature | endpoint | command | API | class | method | function | ...`
-- `ST` – support type; `platform | {tool} version | ...`
-- `TT` – test type; normally `test` (but values like `integration test` could be defined)
-- `X`, `A`, `B` – names, endpoints, paths, packages, systems, platforms, etc.
-- `what` – what was changed; perhaps `install`, `project name`, etc.
-- `I` – issue/ticket: number
-- `realm` – group of pinned dependencies; `dev deps | `
-- `doc` – document file
-- `files` – a short phrase, directory, or filename
-- `tag` – a semver version prefixed with `v`
+<b>♮</b> ― different/unique structure
+
+Terminology:
+
+- `api-type`: `feature | endpoint | command | class | method | function | ...`
+- `support-type`: `platform | browser | {tool} version | ...`
+- `process-type`: `install | build | ...`
+- `doc-type`: `document | guide | ...`
+- `test-type`: `test | unit test | ...`
+- `path-type`: `file | files`
+- `x`: entity (name, endpoint, path, package, system, platform, etc.)
+- `a`, `b`: source and destination, respectively
+- `realm`: `runtime-deps | dev-deps | ...`
+- `tag`: semver Git tag
 ///
 
-| Tag / scope   | Description                    | Bump      | Section    |
-| ------------- | ------------------------------ | --------- | ---------- |
-| <b>Tags</b>   | <b>―</b>                       | <b>―</b>  | <b>―</b>   |
-| `infra/build` | Makefiles, file layout, etc.   | ≤ patch   | `Internal` |
-| `infra/dev`   | Developer tools (e.g. scripts) | 🚫        | `Internal` |
-| `infra/tests` | E.g. test fixtures             | 🚫        | `Internal` |
-| `infra/cicd`  | CI/CD pipelines                | 🚫        | `Internal` |
-| `infra/docs`  | E.g. config                    | 🚫        | `Internal` |
-| `trivial`     | Ignore in versioning and notes | 🚫        | 🚫         |
-| `breaking`    | Treat as a breaking change     | major     | no effect  |
-| `minor`       | Treat as a minor change        | minor     | no effect  |
-| `patch`       | Treat as a patch change        | patch     | no effect  |
-| `section={x}` | Override release notes section | no effect | _{x}_      |
-| `wip`         | Work in progress (don’t merge) | N/A       | N/A        |
-| <b>Scopes</b> | <b>―</b>                       | <b>―</b>  | <b>―</b>   |
-| `i18n`        | Internationalization           | ≤ patch   | icon       |
-| `a11y`        | Accessibility                  | ≤ patch   | icon       |
+## Trailers
 
-/// table-caption
-<b>Tags/scopes, with associated changes to versioning and release notes</b>
-///
+| Syntax                        | Meaning                         |
+|-------------------------------|---------------------------------|
+| `Closes #{ticket}`            | Issue to close (repeatable)     |
+| `Reverts: {hash-12-digits}`   | Commit being reverted           |
+| `Signed-off-by` (and similar) | Attribution (repeatable)        |
+| Repo-defined                  | Any purpose                     |
 
-Then you could use the type as part of the subject and better distinguish kinds of changes.
-For example:
+## Examples
 
 <b>Commit history:</b>
 
 ```text
-patch(infra/docs) XSS vulnerability in docs playground tool
-remove! v1 API endpoints
-end! support for macOS Yosemite
-correct typo in intro
-refactor(infra) developer utility scripts
-add(i18n) Japanese translation
-add endpoint to compare structures
+[http!] remove endpoints deprecated in v2
+[http!] drop platform macOS Yosemite
+[http] patch XSS vulnerability in docs playground tool
+[http] correct API guide (fix typo)
+[http] support language Japanese
+[http] add endpoints /undo and /redo
+fix script prep-release.py
+update dev-deps
+remove script for docker deploy (was unused)
+refactor class ErrorRoutes
+test class DeltaCalc
 ```
 
 <b>Release notes:</b>
@@ -105,19 +166,27 @@ add endpoint to compare structures
 
 ### New features
 
-- Added endpoint to compare structures (PR #11)
+- Support language Japanese (PR #15)
+- Add endpoints /undo and /redo (PR #16)
+
+### Security
+
+- Patch XSS vulnerability in docs playground tool (PR #13)
 
 ### Removals
 
-- Removed v1 API endpoints (PR #12)
-- Ended support for macOS Yosemite (PR #13)
+- Remove endpoints deprecated in v2 (PR #11)
+- Drop platform macOS Yosemite (PR #12)
 
 ### Miscellaneous
 
-- Added Japanese translation (PR #10)
+- Correct API guide (fix typo) (PR #14)
 
 ### Internal
 
-- Patched XSS vulnerability (PR #15)
-- Refactored developer utility scripts (PR #22)
+- Fix internal utility scripts (PR #17)
+- Update dev-deps (PR #18)
+- Remove script for docker deploy (was unused) (PR #19)
+- Refactor class ErrorRoutes (PR #20)
+- Test class DeltaCalc (PR #21)
 ```

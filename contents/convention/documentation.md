@@ -317,7 +317,7 @@ This table summarizes how to use them in HTML and in Markdown.
 
 <a id="non-uses-of-__"></a>**Non-uses of `_`/`_`:**
 
-- Ubiquitous foreign phrases like _in vivo_, _in sitro_, _in silico_, and \_et al.; no markup is needed.
+- Ubiquitous foreign phrases like _in vivo_, _in sitro_, _in silico_, and _et al._; no markup is needed.
 - Emphasis or importance. Instead, use bold `**`/`**`.
 - Stress (e.g. to distinguish `<<I>> will go there` and `I will go <<there>>`.).
   (Refer to the following section.)
@@ -578,7 +578,7 @@ Use:
 - A middle dot
   (`·`/[U+00B7](https://www.fileformat.info/info/unicode/char/00B7/index.htm)/`&middot;`)
   to multiply units.
-- [Unicode superscript](../cheatsheet/click-to-copy-symbols.md#superscript)
+- [Unicode superscript](../cheatsheet/symbols.md#superscript)
   digits (`⁰¹²³⁴⁵⁶⁷⁸⁹`) and minus sign (`⁻`) for unit exponents.
 
 <b>Examples:</b>
@@ -701,7 +701,7 @@ Also do **not** use the ISO 8601’s `P`/`PT` duration syntax (e.g. `PT45M55S`) 
 Always use `/` as a path separator in documentation, and denote directories with a trailing `/`.
 
 For filesystem trees, use
-[Unicode box-drawing characters](https://www.w3.org/TR/xml-entity-names/025.html).
+[these Unicode box-drawing characters](../cheatsheet/box-drawing.md).
 Refer to the
 [research projects guide](../guide/research-projects.md/#example)
 for an example.

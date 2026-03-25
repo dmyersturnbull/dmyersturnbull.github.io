@@ -1,4 +1,4 @@
-# Click-to-copy symbols
+# Symbols
 
 This is here because I sometimes use Windows and don’t remember the shortcuts.
 
@@ -71,7 +71,7 @@ _Click on a symbol to copy it._
 
 #### Bullets
 
-- middle dot:
+- middle dot (cdot):
   <span onclick="copyToClipboard('·', this)" style="cursor: pointer;">`·`</span>
 - bullet:
   <span onclick="copyToClipboard('•', this)" style="cursor: pointer;">`•`</span>

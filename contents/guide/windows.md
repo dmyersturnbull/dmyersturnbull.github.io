@@ -121,16 +121,20 @@ These include the Telnet Client, Windows Media Player, and PowerShell 2.0.
 !!! warning
 
     Be careful when disabling services.
-    When in doubt, leave a service alone.
+    When in doubt, leave a service alone,
+    or prefer using _Manual_ over _Disabled_.
 
 Next, open the Services app.
-Disable unnecessary services (set them to _Manual_ start).
-However, set Windows Time Service to _Automatic_ to force an NTP sync every startup.
-Otherwise, your system clock can drift seconds or even minutes after a few restarts.
+Disable unnecessary services by setting them to _Manual_ startup.
+_Automatic (Delayed Start)_ may be preferred for some services (e.g. Google Updater Service).
+Set Windows Time Service to _Automatic_ to force an NTP sync every startup;
+otherwise, your system clock can drift seconds or even minutes after a few restarts.
 
 ### Power settings
 
 Configure your Power Plan.
+
+### Scanning
 
 In some cases, you should disable scanning in a drive to avoid the performance drops.
 Scanning can also cause errors because it opens file handles.
@@ -222,6 +226,45 @@ Install Git, the GH CLI, and GnuPG:
 winget install --exact --id Git.Git
 winget install --exact --id GitHub.cli
 winget install --exact --id GnuPG.GnuPG
+```
+
+`Git.Git` includes a lot of nice GNU-style tools, such as `gzip`, `sha1sum`, and `less`.
+These are normally located under `C:\Program Files\Git\usr\bin\`.
+There are also some less generally useful tools; deally, you would symlink the tools you want.
+Alternatively, you can just add them to your PATH.
+
+This PowerShell function may be helpful.
+(Small caveat: It does not check the `User` scope if you use `System`, and vice versa.)
+
+```powershell
+function Add-ToPath {
+    param(
+        [Parameter(Mandatory)]
+        [string] $Dir,
+
+        [ValidateSet("User", "Machine")]
+        [string] $Scope = "User",
+
+        [switch] $Prefix
+    )
+
+    $dir = (Resolve-Path $Dir).Path
+    $old = [Environment]::GetEnvironmentVariable("PATH", $Scope) -split ';'
+    if ($old -contains $dir) {
+        Write-Verbose "'$dir' already in $Scope PATH."
+    } else {
+        $new = if ($Prefix) { $dir + $old } else { $old + $dir }
+        $new = $new.Where({ $_ -ne "" }) -join ';'
+        [Environment]::SetEnvironmentVariable("PATH", $new, $Scope)
+        Write-Host "Added '$dir' to $Scope PATH."
+    }
+}
+```
+
+Add the Git tools to your System PATH:
+
+```powershell
+Add-ToPath -Scope System 'C:\Program Files\Git\usr\bin'
 ```
 
 ## Git, SSH, & GPG
@@ -320,15 +363,15 @@ scoop bucket add main
 scoop install nodejs pnpm
 ```
 
-## Windows Linux Subsystem
+## Windows Subsystem for Linux
 
 Follow [Microsoft’s instructions](https://learn.microsoft.com/en-us/windows/wsl/install)
 to install the Windows Subsystem for Linux (WSL).
 Then follow the [Linux setup guide](linux.md).
 
-## Final steps
+## Apps
 
-### Install system utils
+### System utils
 
 First, install
 [Sysinternals](https://learn.microsoft.com/en-us/sysinternals/downloads/sysinternals-suite).
@@ -336,39 +379,85 @@ First, install
 Install the command-line utils FZF and Bat:
 
 ```powershell
-winget install --exacte --id junegunn.fzf
+winget install --exact --id junegunn.fzf
 winget install --exact --id sharkdp.bat
 ```
 
-Finally, install
+### Other apps
+
+Install
 [PowerToys](https://learn.microsoft.com/en-us/windows/powertoys/),
-[TreeSize free](https://www.jam-software.com/treesize),
-[UniGetUI](https://github.com/marticliment/UniGetUI),
 [7-zip with ZSTD support](https://github.com/mcmilk/7-Zip-zstd),
 and, of course,
 [Notepad++](https://notepad-plus-plus.org/).
-Optionally include
+
+```powershell
+winget install --exact --id Microsoft.PowerToys
+winget install --exact --id mcmilk.7zip-zstd
+winget install --exact --id Notepad++.Notepad++
+```
+
+Optionally, also install
+the [GitHub Desktop](https://desktop.github.com/),
+[TreeSize free](https://www.jam-software.com/treesize),
+[UniGetUI](https://github.com/marticliment/UniGetUI),
 [Files](https://files.community/),
 [Pandoc](https://pandoc.org/),
 [ImageMagick](https://imagemagick.org),
 and [VLC](https://www.videolan.org/vlc/):
 
 ```powershell
-winget install --exact --id Microsoft.PowerToys
+winget install --exact --id GitHub.GitHubDesktop
 winget install --exact --id JAMSoftware.TreeSize.Free
 winget install --exact --id MartiCliment.UniGetUI
-winget install --exact --id mcmilk.7zip-zstd
-winget install --exact --id Notepad++.Notepad++
 winget install --exact --id FilesCommunity.Files
 winget install --exact --id JohnMacFarlane.Pandoc
 winget install --exact --id ImageMagick.ImageMagick
 winget install --exact --id VideoLAN.VLC
 ```
 
+## Tweaks
+
 ### Disable startup apps
 
 Disable unnecessary startup apps, which are listed under _Settings ➤ Apps ➤ Startup_.
 You should periodically review this list because apps love to add themselves.
+
+### Better command history
+
+To get ZSH-style command-by-prefix history scrolling with the up/down arrow keys, run
+
+```powershell
+@'
+Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward
+Set-PSReadLineKeyHandler -Key DownArrow -Function HistorySearchForward
+'@ | Add-Content -Path $PROFILE
+```
+
+## File Explorer options
+
+Under _Explorer ➤ Options ➤ View_, use these options.
+_Launch folder windows in a separate process_ provides isolation,
+often preventing the desktop environment from crashing.
+
+| Option                                      | On? |
+|---------------------------------------------|-----|
+| Display the full path in the title bar      | ☑   |
+| Launch folder windows in a separate process | ☑   |
+| Show hidden files, folders, and drives      | ☑   |
+| Hide extensions for known file types        | ☐   |
+| Hide folder merge conflicts                 | ?   |
+| Hide protected operating system files       | ?   |
+
+/// table-caption
+<b>File Explorer view option recommendations</b>
+
+<b>Legend:</b>
+
+- ☑ ― turn on
+- ☐ ― turn off
+- ? ― up to you
+///
 
 ### Organize the applications menu
 

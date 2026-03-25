@@ -15,8 +15,8 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-<b>Spec status: stable; useful.</b>
-Take it, modify it, use it. (CC-BY-SA)
+<b>Spec status: semi-stable.</b>
+(CC-BY-SA)
 
 ## Summary
 
@@ -28,9 +28,9 @@ An example is worth 10k words:
 ```
 GET https://things.tld/foods\
   ?where=name:regex:.+?apple\
-  &where=type:eq:fruit|measurements.grams:le:5.0\
+  &where=type:eq:fruit/measurements.grams:le:5.0\
   &return=name
-  &sort-by=name|-purchase_date
+  &sort-by=name/-purchase_date
 ```
 
 The query above finds `foods` with `name` ending in "apple"
@@ -77,13 +77,13 @@ filter:
   description: |
     Array of filter expressions.
     Returned values must match **all** filter expressions.
-    _Example_: `type:eq:fruit|grams:lt:5&filter=name:regex:.+?apple`
+    _Example_: `type:eq:fruit/grams:lt:5&filter=name:regex:.+?apple`
   allowReserved: true
   style: form
   explode: true
   schema:
     type: string
-    example: "type:eq:fruit|grams:lt:5"
+    example: "type:eq:fruit/grams:lt:5"
 
 return:
   in: query
@@ -97,7 +97,7 @@ return:
   explode: true
   schema:
     type: string
-    pattern: '^([a-z][a-z0-9,;=+~_-]*+)(?:\.([a-z][a-z0-9,;=+~_-]*+))*+$'
+    pattern: '^([a-z][\w-]*)(?:\.([a-z][\w-]*))*$'
 
 sort:
   in: query
@@ -109,7 +109,7 @@ sort:
   allowReserved: true
   schema:
     type: string
-    pattern: '^(-?[a-z][a-z0-9,;=+~_-]*+)(?:\.(-?[a-z][a-z0-9,;=+~_-]*+))*+$'
+    pattern: '^(~?[a-z][\w-]*)(?:\.(~?[a-z][\w-]*))*$'
 
 jmespath:
   in: query
@@ -157,11 +157,8 @@ By reducing the number of ways to write a query, it also increases the likelihoo
 
 ```text
 param          = where | return | sort
-where          = 'where[' INDEX ']=' condition ('|' condition)*
-where          = param-defn condition ('|' condition)*
-param-defn     = 'where' '(' INDEX ')' '='
+where          = WHERE condition (OR condition)*
 condition      = spec(KEY-VERB) key
-condition      = key ':' STR-VERB ':' STR
                | spec(STR-VERB) STR
                | spec(INT-VERB) INT
                | spec(FLOAT-VERB) FLOAT
@@ -172,10 +169,14 @@ condition      = key ':' STR-VERB ':' STR
                | spec(SIZE-VERB) LITERAL-NONNEG-INT
 
 spec(verb)     = key ':' verb ':'
-return         = 'return=' key ('|' key)*
-sort           = 'sort-by=' sort-spec ('|' sort-spec)*
+return         = RETURN key (OR key)*
+sort           = SORT sort-spec (OR sort-spec)*
 sort-spec      = ASCENDING? key
 key            = KEY-NODE ( '.' KEY-NODE )*
+WHERE          = 'where='
+SORT           = 'sort-by='
+RETURN         = 'return='
+OR             = '/'
 STR-VERB       = 'eq' | 'neq' | 'regex'
 INT-VERB       = 'eq' | 'neq' | 'lt' | 'gt' | 'le' | 'ge'
 FLOAT-VERB     = 'lt' | 'gt' | 'le' | 'ge'
@@ -184,13 +185,12 @@ DEFINED-VERB   = 'defined'
 CONTAINS-VERB  = 'has-value' | 'lacks-value'
 SIZE-VERB      = 'has-size' | 'has-min-size' | 'has-max-size'
 KEY-VERB       = 'eq-key' | 'neq-key' | 'lt-key' | 'gt-key' | 'le-key' | 'ge-key' | 'in-key'
-KEY-NODE       = [A-Za-z0-9_-]+
-INDEX          = LITERAL-POSITIVE-INT
-ASCENDING      = '-'
+KEY-NODE       = [\w-]+
+ASCENDING      = '~'
 STR            = ( NORMAL-CHAR | SPECIAL-CHAR | '%' OCTET )+
 INT            = LITERAL-INT | E-NOTATION-INT
 FLOAT          = LITERAL-FLOAT | E-NOTATION-FLOAT
-NORMAL-CHAR    = ALPHANUM | [_.~-]
+NORMAL-CHAR    = [\w.,;+~-]
 SPECIAL-CHAR   = [=!$()*+,/?]
 ```
 
@@ -214,17 +214,10 @@ FLIP           = 'flip-x' | 'flip-y' | 'flip-top-left' | 'flip-top-right'
 ## Example
 
 ```http
-GET https://things.tld/food?where=type:eq:fruit|grams:lt:5.0&where=name:regex:.+?apple
+GET https://things.tld/food?where=type:eq:fruit/grams:lt:5.0&where=name:regex:.+?apple
 HTTP/3
 Content-Type: text/json
 ```
-
-!!! tip "Tip: `where(1)` instead of `where[1]`"
-
-    If you dislike exploded query paramters (i.e. `key=value-1&key=value-2`),
-    consider appending `(n)` to the each key; e.g. `where(1)=...&where(2)=...`.
-    This is differs from the form-field paramter convention of `[]`,
-    but there’s really no need to follow that, and `()` doesn’t need percent-encoding.
 
 ## Normalization
 
@@ -233,18 +226,17 @@ To normalize a URI:
 1. Extract the query arguments (key–value pairs).
    These must, of course, be order-independent.
 2. Sort the arguments lexicographically (per the order in Unicode).
-3. Re-number any `where(.)` parameters.
-4. Stitch the URI back together.
+3. Stitch the URI back together.
 
 !!! example
 
     Returning to the fruit example:
 
-    1. Extract `type:eq:fruit|grams:lt:5.0` and `name:regex:.+?apple`.
+    1. Extract `type:eq:fruit/grams:lt:5.0` and `name:regex:.+?apple`.
     2. Sort. `n` comes before `t`, so the order should be reversed.
-    3. Set `where=name:regex:.+?apple` and `where=type:eq:fruit|grams:lt:5.0`.
+    3. Set `where=name:regex:.+?apple` and `where=type:eq:fruit/grams:lt:5.0`.
     4. Concatentate to get
-         `https://things.tld/food?where=name:regex:.+?apple&where=type:eq:fruit|grams:lt:5.0`
+         `https://things.tld/food?where=name:regex:.+?apple&where=type:eq:fruit/grams:lt:5.0`
 
 ## Caching
 
@@ -257,7 +249,7 @@ To normalize a URI:
 ### Client
 
 The client can cache each GET request and response.
-If queries area always written the same way, this works well.
+If queries are always written the same way, this works well.
 However, a client may GET `/resource?where=<<1>>&where=<<2>>`,
 then later `/resource?where=<<2>>&where=<<1>>`, thereby bypassing the cache.
 No recommendation is made to avoid that.
@@ -308,26 +300,26 @@ Starting at nesting level $L=0$, the operator is _AND_ for even $L$ and _OR_ for
 
 Choose to implement one or both of these:
 
-- `where=<<1>>&where=<<2>>`
-- `where(1)=<<1>>&where(2)=<<2>>`
+- `where={1}&where={2}`
+- `where(1)={1}&where(2)={2}`
 
-Refer to the grammar for details on this parameter.
+Refer to the grammar for other details on this parameter.
 
 ### `return`
 
 List the fields to return ala GraphQL.
-Field names are delimited by `|`, which signals union.
+Field names are delimited by `/`, which signals union.
 
 !!! example
 
-    `return=author|metadata.version`
+    `return=author/metadata.version`
     requests the JSON object `author` and the string `version` under `metadata`.
 
 ### `sort-by`
 
-Sort by one or more keys, delimited by `|` and listed from high to low precedence.
-Prepending `-` to a key reverses the sort order.
-For `sort-by=-author.name|author.email`:
+Sort by one or more keys, delimited by `/` and listed from high to low precedence.
+Prepending `~` to a key reverses the sort order.
+For `sort-by=~author.name/author.email`:
 `author.name` is in descending order, and `author.email` is used to break ties.
 A total ordering is guaranteed if and only if at least one field is unique for all records.
 

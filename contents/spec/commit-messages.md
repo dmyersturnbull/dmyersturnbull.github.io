@@ -15,8 +15,8 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 ## Abstract
 
-<b>Spec status: stable; useful.</b>
-Take it, modify it, use it. (CC-BY-SA)
+<b>Spec status: stable.</b>
+(CC-BY-SA)
 
 !!! related
 

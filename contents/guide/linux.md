@@ -79,7 +79,7 @@ If mounted as separate partitions, mount with `noexec`.
 ??? example "Example 1: single 4 TB NVMe SSD"
 
     | drive(s) | mount point | size (GB) | format | purpose               |
-    |----------|-------------|-----------|--------|-----------------------|
+    |----------|-------------|----------:|--------|-----------------------|
     | nvme0    | (efi)       | 2         | FAT32  |                       |
     | nvme0    | (swap)      | 54        | swap   |                       |
     | nvme0    | `/`         | 256       | btrfs  |                       |
@@ -90,7 +90,7 @@ If mounted as separate partitions, mount with `noexec`.
 ??? example "Example 2: two 4 TB NVMe SSDs"
 
     | drive(s) | mount point | size (GB) | format | purpose            |
-    |----------|-------------|-----------|--------|--------------------|
+    |----------|-------------|----------:|--------|--------------------|
     | nvme0    | (efi)       |     2     | FAT32  |                    |
     | nvme0    | (swap)      |    54     | swap   |                    |
     | nvme0    | `/`         |   256     | btrfs  |                    |
@@ -104,7 +104,7 @@ If mounted as separate partitions, mount with `noexec`.
 ??? example "Example 3: three 2 TB NVMe and two 4 TB SATA SSDs"
 
     | drive(s) | mount point  | size (GB) | format | purpose               |
-    |----------|--------------|-----------|--------|-----------------------|
+    |----------|--------------|----------:|--------|-----------------------|
     | nvme0    | (efi)        |     1     | FAT32  |                       |
     | nvme0    | (swap)       |   128     | swap   |                       |
     | nvme0    | `/`          | 1 408     | btrfs  |                       |
@@ -458,4 +458,4 @@ Example: `~/bin/add-bookmarks.sh data=/data/ docs=/docs/`
 After running it, restart Nautilus to apply the settings by running
 `nautilus -q`.
 
-\_[UEFI]: Unified Extensible Firmware Interface
+*[UEFI]: Unified Extensible Firmware Interface

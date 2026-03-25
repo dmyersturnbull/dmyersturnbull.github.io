@@ -418,4 +418,4 @@ main || exit 1 # (3)!
 3. If `main` errored, exit 1.
 4. You can use `|| exit $?` to forward `main`’s return code.
 
-\*[TTY]: [TeleTYpe device](<https://en.wikipedia.org/wiki/Tty_(Unix)>)
+*[TTY]: [TeleTYpe device](https://en.wikipedia.org/wiki/Tty_(Unix))

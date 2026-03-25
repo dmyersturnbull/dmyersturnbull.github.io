@@ -164,7 +164,7 @@ T
 ```
 
 But it (1) doesn’t allow leading 0s;
-(2) requires _sec < 60_, _min < 60_, _hr < 24_, _day < 32_, and \_month < 12; and
+(2) requires _sec < 60_, _min < 60_, _hr < 24_, _day < 32_, and _month < 12_; and
 (3) allows (e.g.) February 31.
 Compare with this pattern for `hh:mm:ss[.iiiiiiiii]`:
 

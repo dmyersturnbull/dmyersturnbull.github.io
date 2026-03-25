@@ -38,3 +38,9 @@ Frontend development for those traveling from 2005
 
 [:fontawesome-solid-panorama: **Wonders of ChatGPT**](wonders-of-chatgpt.md):
 Wrong, absurd, and wondrous things from ChatGPT
+
+[:fontawesome-solid-percent: **URI-safe characters**](uri-safe-characters.md):
+Which characters must be encoded in which parts of an HTTP URI
+
+[:fontawesome-person-falling: **YAML is terrible**](yaml-is-terrible.md):
+Reiterating how extremely bad YAML really is

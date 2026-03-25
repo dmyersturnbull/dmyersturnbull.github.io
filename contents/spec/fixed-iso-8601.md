@@ -15,8 +15,8 @@ SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-<b>Spec status: stable; useful.</b>
-Take it, modify it, use it. (CC-BY-SA)
+<b>Spec status: stable.</b>
+(CC-BY-SA)
 
 !!! related
 
