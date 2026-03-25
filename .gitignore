@@ -84,9 +84,6 @@ Thumbs.db
 /vendor/
 
 # Auto-generated docs
-/docs/html/
-/docs/_build/
-/docs/autoapi/
 /site/
 
 ### Language-specific paths ###

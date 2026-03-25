@@ -1,0 +1,106 @@
+# Documentation config.
+# https://zensical.org/docs/setup/
+
+[project]
+
+# ::tyranno:: site_name = "$<<project>>"
+site_name = "tyranno-sandbox"
+# ::tyranno:: LABEL site_url = "$<<project.urls.Documentation>>"
+site_url = "https://dmyersturnbull.github.io/"
+# ::tyranno:: repo_url = "$<<project.urls.Homepage>>"
+repo_url = "https://github.com/dmyersturnbull/dmyersturnbull.github.io"
+# ::tyranno:: copyright = "$<<.copyright>>"
+copyright = "Copyright 2017-2026, Douglas Myers-Turnbull"
+# ::tyranno:: site_description = "$<<project.description>>"
+site_description = "Software guides, reference docs, and more."
+# ::tyranno:: site_author = "The $<<project.name>> team"
+site_author = "Douglas Myers-Turnbull"
+language = "en"
+
+# Navigation
+# https://zensical.org/docs/setup/navigation/#navigation-sections
+
+# Keep the default `site_dir` of `site/`.
+extra_javascript = [
+  "javascripts/mathjax.js",
+  "https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js",
+  "javascripts/tablesort.js",
+  "https://unpkg.com/tablesort@5.3.0/dist/tablesort.min.js",
+]
+
+# Some Zensical features are pending, including API documentation:
+# https://zensical.org/about/roadmap/#api-documentation
+# Some of this config was ported from the preceeding `mkdocs.yaml`:
+# https://github.com/dmyersturnbull/tyranno-sandbox/blob/2fa3ff8296f3a9c194540e80438dcc79ab2fa5b7/mkdocs.yaml
+
+# **Most** of these built-in extensions are enabled by default:
+# https://zensical.org/docs/setup/extensions/
+# **Some** PyMdownX extensions are enabled by default:
+# https://zensical.org/docs/setup/extensions/python-markdown-extensions/
+
+# PyMdownX blocks extensions:
+# https://facelessuser.github.io/pymdown-extensions/extensions/blocks/
+[project.markdown_extensions.pymdownx.blocks.admonition]
+[project.markdown_extensions.pymdownx.blocks.caption]
+[project.markdown_extensions.pymdownx.blocks.details]
+[project.markdown_extensions.pymdownx.blocks.html]
+[project.markdown_extensions.pymdownx.blocks.tab]
+
+# Other PyMdownX extensions:
+
+# https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/
+[project.markdown_extensions.pymdownx.arithmatex]
+inline_syntax = ["dollar"]
+block_syntax = ["dollar", "begin"]
+
+# https://facelessuser.github.io/pymdown-extensions/extensions/fancylists/
+[project.markdown_extensions.pymdownx.fancylists]
+
+# https://facelessuser.github.io/pymdown-extensions/extensions/keys/
+[project.markdown_extensions.pymdownx.keys]
+
+# https://facelessuser.github.io/pymdown-extensions/extensions/highlight/
+[project.markdown_extensions.pymdownx.highlight]
+anchor_linenums = true
+linenums_style = "pymdownx-inline"
+pygments_lang_class = true
+line_spans = "line"
+
+# https://facelessuser.github.io/pymdown-extensions/extensions/magiclink/
+[project.markdown_extensions.pymdownx.magiclink]
+repo_url_shortener = true
+repo_url_shorthand = true
+
+[project.theme]
+features = [
+  "navigation.expand",            # https://zensical.org/docs/setup/navigation/#navigation-expansion
+  "navigation.footer",            # https://zensical.org/docs/setup/footer/#navigation
+  "navigation.indexes",           # https://zensical.org/docs/setup/navigation/#section-index-pages
+  "navigation.instant",           # https://zensical.org/docs/setup/navigation/#instant-navigation
+  "navigation.instant.progress",  # https://zensical.org/docs/setup/navigation/#progress-indicator
+  "navigation.path",              # https://zensical.org/docs/setup/navigation/#navigation-path
+  "navigation.sections",          # https://zensical.org/docs/setup/navigation/#navigation-sections_1
+  "navigation.tracking",          # https://zensical.org/docs/setup/navigation/#anchor-tracking
+  "search.highlight",             # https://zensical.org/docs/setup/search/#search-highlighting
+  "toc.follow",                   # https://zensical.org/docs/setup/navigation/#anchor-following
+]
+
+# Palette toggle for automatic mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme)"
+toggle.icon = "lucide/sun-moon"
+toggle.name = "Switch to light mode"
+
+# Palette toggle for light mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: light)"
+scheme = "default"
+toggle.icon = "lucide/sun"
+toggle.name = "Switch to dark mode"
+
+# Palette toggle for dark mode
+[[project.theme.palette]]
+media = "(prefers-color-scheme: dark)"
+scheme = "slate"
+toggle.icon = "lucide/moon"
+toggle.name = "Switch to system preference"

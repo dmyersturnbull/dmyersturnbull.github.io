@@ -4,6 +4,7 @@
 #
 # https://just.systems/man/en/
 # https://cheatography.com/linux-china/cheat-sheets/justfile/
+# Needs: Just 1.43
 # CAUTION – Quotes aren't quotes.
 # This doesn't do what you'd expect:
 # ```
@@ -16,6 +17,7 @@
 set dotenv-load := true
 set ignore-comments := true
 
+# set windows-powershell := true # an option
 # Confusingly, Python has a default warning filter, which is **different** from `-W default`.
 
 export PYTHONWARNINGS := env('PYTHONWARNINGS', 'default')
@@ -26,14 +28,10 @@ export PYTHONDEVMODE := env('PYTHONDEVMODE', '1')
 
 # To complain when `encoding=` is omitted (in addition to Ruff rule):
 # export PYTHONWARNDEFAULTENCODING := env('PYTHONWARNDEFAULTENCODING', '1')
-
-git_sha := `git rev-parse --short=16 HEAD`
-git_ref := `git rev-parse --abbrev-ref HEAD`
-git_rev_date := `git --no-pager log -1 --format=%cd`
-
 ###################################################################################################
 
 # List available recipes.
+[default]
 [group('help')]
 list:
     @just --list --unsorted --list-prefix "  "
@@ -42,22 +40,35 @@ alias help := list
 
 # Print info for a bug report.
 [group('help')]
-info:
+[unix]
+info: _info
+    @echo "os_ver: {{ `uname -r` }}"
+    @echo "lang: {{ env('LANG', '?') }}"
+
+# Print info for a bug report.
+[group('help')]
+[windows]
+info: _info
+    # We're running MSYS2 sh, so we need to cross back into Windows.
+    # Note that `uname -r` would run, but it would only report the MSYS2 kernel version.
+    @echo "os_ver: `powershell.exe -NoProfile -Command '(Get-CimInstance Win32_OperatingSystem).Version'`"
+    @echo "lang: `powershell.exe -NoProfile -Command '(Get-Culture).Name'`"
+
+# Print info we can get the same way on Unix-like and Windows.
+[group('help')]
+_info:
+    @echo "git_ref: {{ `git rev-parse --short=16 HEAD` }}"
+    @echo "git_sha: {{ `git rev-parse --abbrev-ref HEAD` }}"
+    @echo "git_rev: {{ `git --no-pager log -1 --format=%cd` }}"
     @echo "just_ver: {{ replace_regex(`just --version`, '^[^ ]+ ([^ ]+)$', '$1') }}"
     @echo "uv_ver: {{ replace_regex(`uv --version`, '^uv ([^ ]+) .+$', '$1') }}"
     @echo "git_ver: {{ replace_regex(`git --version`, '^git version ([^ ]+)$', '$1') }}"
     @echo "os: {{ os() }}"
-    -@echo "os_ver: {{ `uname -r` }}"
     @echo "cpu_arch: {{ arch() }}"
     @echo "cpu_count: {{ num_cpus() }}"
-    @echo "shell: {{ env('SHELL', '?') }}"
-    @echo "lang: {{ env('LANG', '?') }}"
     @echo "repo_dir: {{ file_name(justfile_directory()) }}"
     @echo "project_name: {{ replace_regex(`uv version`, '^([^ ]+) .+$', '$1') }}"
     @echo "project_ver: {{ `uv version --short` }}"
-    @echo "git_ref: {{ git_ref }}"
-    @echo "git_sha: {{ git_sha }}"
-    @echo "git_rev: {{ git_rev_date }}"
 
 ###################################################################################################
 
@@ -84,8 +95,9 @@ alias upgrade := update
 
 # Update the lock file and sync the venv.
 [group('project')]
-update-lock: sync
-    uv run pre-commit gc
+update-lock:
+    uv lock --upgrade
+    uv sync --all-extras --exact
 
 alias upgrade-lock := update-lock
 
@@ -106,6 +118,7 @@ alias lock := sync
 
 # Prune temp data, including from uv, pre-commit, and git.
 [group('project')]
+[parallel]
 clean: delete-temp clean-main clean-git
 
 # Delete unused uv and pre-commit cache data.
@@ -129,7 +142,7 @@ clean-git:
 [group('project')]
 delete-temp:
     # Generated docs:
-    -rm -f -r .site/
+    -rm -f -r site/
     # Python temp files:
     -rm -f -r .ruff_cache/
     -rm -f -r .hypothesis/
@@ -209,7 +222,8 @@ _format *args:
     -uv run pre-commit run fix-byte-order-marker {{ args }}
     -uv run pre-commit run trailing-whitespace {{ args }}
     -uv run pre-commit run ruff-format {{ args }}
-    -uv run pre-commit run prettier {{ args }}
+    -uv run pre-commit run biome-check {{ args }}
+    -uv run pre-commit run format-justfile {{ args }}
 
 ###################################################################################################
 
@@ -248,6 +262,7 @@ _stage_precommit:
 
 # `just check-simple check-ruff check-ty check-links` (slow)
 [group('check')]
+[parallel]
 check-all: check-core check-ruff check-ty check-schemas check-links
 
 # Check basic rules (via pre-commit).
@@ -306,78 +321,15 @@ _check_ruff *args: (ruff "check --no-fix --config 'output-format=\"grouped\"'" a
 
 ###################################################################################################
 
-# Run tests not marked ux.
-[group('test')]
-[no-exit-message]
-test-non-ux *args: (pytest "-m 'not ux'" args)
-
-alias test := test-non-ux
-
-# Run tests marked ux for manual interaction or verification.
-[group('test')]
-[no-exit-message]
-test-ux *args: (pytest "-m ux" args)
-
-# Run tests not marked ux, e2e, slow, or net.
-[group('test')]
-[no-exit-message]
-test-fast *args: (pytest "-m 'not (ux or e2e or slow or net)'" args)
-
-# Run doctest tests via PyTest.
-[group('test')]
-[no-exit-message]
-test-doctest *args: (pytest "--doctest-modules src/" args)
-
-alias doctest := test-doctest
-
-# Run tests not marked ux, reporting coverage.
-[group('test')]
-[no-exit-message]
-test-with-cov *args: (pytest "-m 'not ux' --cov" args)
-
-alias test-cov := test-with-cov
-
-# Run PyTest tests, highlighting test durations. ☆
-[group('test')]
-[no-exit-message]
-test-durations *args: (pytest "--durations=0 --durations-min=0" args)
-
-# Run tests marked hypothesis with explain phase enabled. ☆
-[group('test')]
-[no-exit-message]
-test-hypothesis *args: (pytest "-m hypothesis --hypothesis-explain" args)
-
-# Run PyTest tests stepwise, starting at last failure. ☆
-[group('test')]
-[no-exit-message]
-test-stepwise *args: (pytest "--stepwise" args)
-
-# Run PyTest tests, showing minimal output. ☆
-[group('test')]
-[no-exit-message]
-test-quietly *args: (pytest "--capture=no --tb=line --quiet" args)
-
-# Run PyTest tests, showing tracebacks, locals, and INFO. ☆
-[group('test')]
-[no-exit-message]
-test-loudly *args: (pytest "--showlocals --full-trace --log-level=INFO --verbose" args)
-
-# Run PyTest tests with pdb debugger. ☆
-[group('test')]
-[no-exit-message]
-test-with-pdb *args: (pytest "--pdb" args)
-
-###################################################################################################
-
-# Build mkdocs docs from scratch, failing for warnings.
+# Build docs from scratch, failing for warnings.
 [group('docs')]
 [no-exit-message]
-build-docs *args: (run "mkdocs build --clean --strict" args)
+build-docs: (run "zensical build --clean")
 
-# Locally serve the mkdocs docs.
+# Locally serve the docs.
 [group('docs')]
 [no-exit-message]
-serve-docs *args: (run "mkdocs serve" args)
+serve-docs: (run "zensical serve -o")
 
 ###################################################################################################
 
@@ -424,9 +376,3 @@ serve-docs *args: (run "mkdocs serve" args)
 [group('alias')]
 [no-exit-message]
 pytest *args: (run "pytest" args)
-
-# `gh pr create --fill-verbose`
-[group('alias')]
-[no-exit-message]
-pr *args="--web":
-    gh pr create --fill-verbose {{ args }}

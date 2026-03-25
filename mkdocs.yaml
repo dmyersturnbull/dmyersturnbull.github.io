@@ -2,6 +2,8 @@ site_name: Gaslit by a computer
 site_url: https://dmyersturnbull.github.io/
 copyright: Copyright 2024, Douglas Myers-Turnbull
 site_description: Software guides, reference docs, and more.
+# :tyranno: repo_url: $<<project.urls.Source>>
+repo_url: https://github.com/dmyersturnbull/dmyersturnbull.github.io
 
 # Dirs
 docs_dir: contents
@@ -51,8 +53,6 @@ theme:
       toggle:
         icon: material/brightness-4
         name: Switch to system preference
-  # :tyranno: repo_url: $<<project.urls.Source>>
-  repo_url: https://github.com/dmyersturnbull/dmyersturnbull.github.io
 
 # Extensions
 markdown_extensions:
@@ -70,6 +70,7 @@ markdown_extensions:
   - footnotes
   #- markdown_include.include:
   #    base_path: contents
+  - markdown-gfm-admonition
   - md_in_html
   - meta
   - pymdownx.arithmatex:

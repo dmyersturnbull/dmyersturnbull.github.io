@@ -1,64 +1,118 @@
-# SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
-# SPDX-PackageHomePage: https://dmyersturnbull.github.io
+# SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
+# SPDX-PackageHomePage: https://github.com/dmyersturnbull/dmyersturnbull.github.io
 # SPDX-License-Identifier: CC-BY-SA-4.0
 
-# ---------------------------- [build-system] ---------------------------------
-[build-system]
-build-backend = "hatchling.build"
-requires = ["hatchling~=1.25"]
+#
+####################################################################################################
+#                                      [build-system]
+####################################################################################################
 
-# ------------------------------ [project] ------------------------------------
+[build-system]
+
+build-backend = "uv_build"
+requires = ["uv-build>=0.11, <1.0"]
+
+#
+####################################################################################################
+#                                      [project]
+####################################################################################################
+
 [project]
+
 name = "dmyersturnbull.github.io"
-version = "0.1.0"
-requires-python = "~=3.13.0"
+version = "0.2.0"
+requires-python = "~=3.14.0"
 readme = { file = "README.md", content-type = "text/markdown" }
 description = "GitHub Pages https://dmyersturnbull.github.io"
-maintainers = [ { name = "Douglas Myers-Turnbull", email = " dmyersturnbull@gmail.com" } ]
+maintainers = [ { name = "Douglas Myers-Turnbull", email = "dmyersturnbull@gmail.com" } ]
 authors = [ { name = "Douglas Myers-Turnbull", email = " dmyersturnbull@gmail.com" } ]
 license = { text = "CC-BY-SA-4.0" }
-dependencies = [
-  "mkdocs-include-markdown-plugin>=7.1",
-  "mkdocs>=1.6",
-  "mkdocs-material>=9.6",
-  "mkdocs-minify-plugin>=0.8",
-  "mkdocstrings[python]>=0.30",
-  "mkdocs-literate-nav>=0.6",
+
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Environment :: Console",
+  "Intended Audience :: Developers",
+  "Natural Language :: English",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: 3.14",
+  "Programming Language :: Python :: 3 :: 3.15",
+  "Topic :: Software Development :: Build Tools",
+  "Topic :: Software Development :: Code Generators",
+  "Typing :: Typed",
 ]
 
-# -------------------------- [dependency-groups] ------------------------------
+# -------------------------- dependencies -------------------------------------
+dependencies = [
+  "zensical>=0.0.29",
+]
+
+# -------------------------- project URIs -------------------------------------
+[project.urls]
+# ::tyranno:: "https://github.com/$<<.frag>>"
+Homepage = "https://github.com/dmyersturnbull/dmyersturnbull.github.io"
+# ::tyranno:: "https://github.com/$<<.frag>>"
+Source = "https://github.com/dmyersturnbull/dmyersturnbull.github.io"
+# ::tyranno:: Documentation = https://$<<.vendor>>.github.io/$<<project.name>>
+Documentation = "https://dmyersturnbull.github.io/dmyersturnbull.github.io"
+# ::tyranno:: "Issue Tracker" = $<<.home>>/issues
+Tracker = "https://github.com/dmyersturnbull/dmyersturnbull.github.io/issues"
+#
+####################################################################################################
+#                                      [dependency-groups]
+####################################################################################################
+
 # See https://docs.astral.sh/uv/concepts/projects/dependencies/#dependency-groups
 [dependency-groups]
+
+# uv includes `dev` by default and has dedicated `--only-dev` / `--no-dev` / etc. switches.
+# The other groups are used in CI.
 dev = [
-  "pre-commit>=4.2",
-  "ruff>=0.12.8",
-  "ty>=0.0.1a16",
+  {include-group = "test"},
+  {include-group = "docs"},
+  {include-group = "sbom"},
+  {include-group = "lint"},
+  {include-group = "git-hooks"},
 ]
 
-# ----------------------------- [tool.hatch] ----------------------------------
-[tool.hatch.build.targets.wheel]
-packages = ["contents"]
+# Python-ecosystem lint tools that can be called directly
+lint = [
+  "ruff>=0.15.7",
+  "ty>=0.0.25", # Astral's fledgling type checker.
+]
 
-# ------------------------------ [tool.ruff] ----------------------------------
+# pre-commit and any dependencies for local hooks
+git-hooks = [
+  "pathvalidate>=3.3", # Needed for local pre-commit hook.
+  "pre-commit>=4.5",
+]
+
+#
+####################################################################################################
+#                                      [tool.ruff]
+####################################################################################################
+
 [tool.ruff]
 exclude = [] # Rely on https://docs.astral.sh/ruff/settings/#respect-gitignore
 src = ["src"] # Needed for import sorting
 line-length = 100 # Keep consistent with `.editorconfig`.
 
-# -------------------------- [tool.ruff.format] -------------------------------
+# -------------------------- Ruff formatter -----------------------------------
 [tool.ruff.format]
 docstring-code-format = true
 skip-magic-trailing-comma = true
 
-# -------------------------- [tool.ruff.lint] ---------------------------------
+# -------------------------- Ruff linter --------------------------------------
 [tool.ruff.lint]
 
+# It's simpler to select all rules and ignore the few we don't want.
 preview = true
 select = ["ALL"]
 
 #          >>>#<<< align to col 15 (max possible width)
 ignore = [
-  # Conflicts with the formatter:
+  # Rules that conflict with the formatter:
   # (See https://docs.astral.sh/ruff/formatter/#conflicting-lint-rules)
   "W191",     # indented with tabs
   "D206",     # docstring indented with tabs
@@ -70,39 +124,40 @@ ignore = [
   "COM819",   # has trailing comma
   "D300",     # triple single quotes
   "ISC002",   # implicit string concatentation
-  "Q",        # quotes (formatter should cover completely)
   # ---
   # Other ignored rules:
-  "D1",       # Undocumented public __ (don't write useless comments)
-  "D401",     # Imperative mood
-  "D417",     # Undocumented param (again, don't write useless text)
-  "DOC201",   # Missing `Returns:`
-  "DOC402",   # Missing `Yields:`
-  "DOC501",   # Missing `Raises:` exception
-  "DOC502",   # `Raises` lists exeption not raised directly (often ok)
+  # Syntax of comments: <rule-description> '(' <reason-ignored> ')'
+  "D1",       # undocumented public __ (omit useless comments)
+  "D401",     # imperative mood (nitpicky rule)
+  "D417",     # undocumented param (mit useless comments)
+  "DOC201",   # missing `Returns:` (omit useless comments)
+  "DOC402",   # missing `Yields:` (omit useless comments)
+  "DOC501",   # missing `Raises:` exception (omit useless comments)
+  "DOC502",   # `Raises` lists exeption not raised directly (often helpful to list anyway)
   "E722",     # "bare-except" (use "blind-except" BLE001 instead)
-  "FIX002",   # T*O*D*O (consider these to be non-critical)
+  "FIX002",   # T*O*D*O (consider T*O*D*O non-crucial tasks, whereas F*I*X*M*E are crucial)
   "PLR2004",  # magic value (includes 2, 256, 404, etc.)
-  "PLR6301",  # 'self' not used (correct for overrides)
-  "RUF001",   # confusable characters (would ban en dash, etc.)
-  "RUF002",   # confusable characters
-  "RUF003",   # confusable characters
-  "RUF021",   # `or x and y` without parens (unnecessary)
-  "S403",     # import of pickle (S301 on pickle calls is sufficient)
-  "S404",     # import of subprocess (S602/S603 on subprocess calls is sufficient)
+  "PLR6301",  # 'self' not used (total non-issue and unavoidable when overriding)
+  "RUF001",   # confusable characters in strings (bans useful chars like en dashes)
+  "RUF002",   # confusable characters in docstrings (bans useful chars like en dashes)
+  "RUF003",   # confusable characters in comments (bans useful chars like en dashes)
+  "RUF021",   # `or x and y` without parentheses (unnecessary)
+  "S403",     # import of pickle (S301 on pickle calls is enough)
+  "S404",     # import of subprocess (S602/S603 on subprocess calls is enough)
   "TD",       # flake8-to*do (requires a specific format)
+  "Q",        # quotes (formatter should cover completely)
 ]
 
+# Syntax of comments: <rule-description> '(' <reason-for-change> ')'
 unfixable = [
-  "TC007",    # Quotes type alias definitions (move needed imports outside `TYPE_CHECKING` instead)
+  "TC007",    # quotes type alias definitions (move needed imports outside `TYPE_CHECKING` instead)
 ]
 extend-safe-fixes = [
-  "LOG004",   # Converts `.exception` to `.error` outside `except` blocks
+  "LOG004",   # converts `.exception()` to `.error()` outside `except` (only stops `NoneType: None`)
 ]
 extend-unsafe-fixes = [
-  "B905",     # Adds `strict=False` to `zip` (normally `strict=True` is wanted)
-  "PLW1510",  # Adds `check=False` to `subprocess.run` (normally `check=True` is wanted)
-  "RUF102",   # Removes invalid `noqa`
+  "PLW1510",  # adds `check=False` to `subprocess.run` (normally `check=True` is wanted)
+  "RUF102",   # removes invalid `noqa` (should review manually)
 ]
 
 # Delegated options
@@ -110,8 +165,8 @@ flake8-bandit.check-typed-exception = true
 flake8-copyright.min-file-size = 2048
 flake8-copyright.notice-rgx = "(?m)^# SPDX-License-Identifier: "
 flake8-tidy-imports.ban-relative-imports = "all"
-isort.detect-same-package = false # Use `tool.ruff.src` instead.
-isort.split-on-trailing-comma = false # would conflict with formatter
+isort.detect-same-package = false # use `tool.ruff.src` instead
+isort.split-on-trailing-comma = false # conflicts with the formatter
 pycodestyle.max-doc-length = 100 # match tool.ruff.line-length
 pydocstyle.convention = "google"
 
@@ -123,19 +178,3 @@ max-bool-expr = 10 # default is 5
 max-public-methods = 30 # default is 20
 max-nested-blocks = 4 # default is 5
 allow-dunder-method-names = ["__rich_repr__"] # allow custom dunders
-
-[tool.ruff.lint.per-file-ignores]
-"**/__init__.py" = [
-  "F401",    # unused import
-]
-"tests/**/*" = [
-  "D10",      # missing docstrings
-  "INP001",   # missing __init__
-  "PLC2701",  # import of private module
-  "S101",     # assert
-  "S105",     # possible password in string
-  "S106",     # ...in function arg
-  "S107",     # ...in function default
-  "S108",     # harcoded temp file
-  "TID252",   # relative import
-]
