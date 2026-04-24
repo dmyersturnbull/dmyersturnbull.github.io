@@ -1,22 +1,33 @@
-# SPDX-FileCopyrightText: Copyright 2020-2025, Contributors to Tyrannosaurus
+# SPDX-FileCopyrightText: Copyright 2020-2026, Contributors to Tyrannosaurus
 # SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
 # SPDX-License-Identifier: Apache-2.0
 
-# .gitignore for Python, Java/Scala/Kotlin, C/C++, JavaScript/TypeScript, and Julia.
-# It also covers some common tools and IDEs, but it isn't meant to be comprehensive.
-# Note that it doesn't cover obsolete Python files like Eggs (`*.egg`).
+# gitignore for Python, Java/Scala/Kotlin, C/C++, JavaScript/TypeScript, and Julia.
+# This works well for many other languages, but it is NOT one-size-fits-all.
+# It covers some common tools and IDEs, but it again isn't comprehensive.
+# It also disregards obsolete files like Python `*.egg`.
 #
 # The approach is to blacklist `.*` and similar patterns, then to whitelist specific files.
 # This approach makes the file much simpler and easier to understand.
 # Some of the rules are derived from <https://github.com/github/gitignore/>.
 #
+# Whether to use a more universal or more tailored gitignore is debatable.
+# I recommend:
+# - Tailor to per-repo languages, build tools, and runtime systems.
+#   E.g. it's reasonable to remove the sqlite and Cmake sections.
+# - Be more universal for popular IDEs and tools.
+#   E.g. if vim starts prefixing temp files with `%`, you should probably add it.
+#   Yes, developers should use `core.excludesfile`, but many don't.
+# - Be more universal for clearly unwanted files.
+#   E.g. `aws-private-key.pem` should probably never be inside the repo,
+#   but make sure it's ignored anyway.
+#
 # Notes:
-#   - `x` is equivalent to `**/x`, in contrast to `.dockerignore` and `.prettierignore`.
-#   - Always mark directories with a `/` suffix.
-#   - Per section, place directories above files; then sort lexicographically.
-#     (Order (using regex): `/` ≺ `*` ≺ `[^A-Za-z0-9]` ≺ `[0-9]` ≺ `[A-Za-z]`.)
-
-# Note: Patterns are relative, unlike `.dockerignore` and `.prettierignore`.
+# - Unlike  in `.dockerignore` and `.prettierignore`, patterns are relative.
+#  `x` is equivalent to `**/x`, in contrast to `.dockerignore` and `.prettierignore`.
+# - Always mark directories with a `/` suffix.
+# - Per section, place directories above files; then sort lexicographically.
+#   (Order (using regex): `/` ≺ `*` ≺ `[^A-Za-z0-9]` ≺ `[0-9]` ≺ `[A-Za-z]`.)
 
 ### Temporary paths ###
 
@@ -32,11 +43,12 @@
 # Temp and misc. unwanted files
 *[.~]bak
 *[.~]out
-*[.~]swp
+*[.~]sw[opn]
 *[.~]temp
 *[.~]tmp
 *.log
 *.pid
+*.pid.lock
 Thumbs.db
 
 ### Large binary files ###
@@ -84,6 +96,9 @@ Thumbs.db
 /vendor/
 
 # Auto-generated docs
+/docs/html/
+/docs/_build/
+/docs/autoapi/
 /site/
 
 ### Language-specific paths ###
@@ -110,6 +125,7 @@ cython_debug/
 *.lib
 *.lo
 *.o
+pch.h
 
 ### Temporary files for tools ###
 
@@ -124,23 +140,13 @@ _deps
 # JavaScript and TypeScript
 node_modules/
 tsconfig.tsbuildinfo
+__snapshots__/
 
 # Julia
 *.jl.*.cov
 *.jl.cov
 *.jl.mem
 deps/deps.jl
-
-# IDEs
-*.iml
-pch.h
-
-# IPython
-profile_default/
-ipython_config.py
-
-# Django
-/local_settings.py
 
 # Celery
 celerybeat-schedule
@@ -159,7 +165,7 @@ override.tf.json
 !/.gitmodules
 
 # Template files
-/.env.template
+!/.env.template
 
 # `.ignore` files (e.g. `.dockerignore`, `.npmignore`)
 !/.*ignore
@@ -173,15 +179,9 @@ override.tf.json
 !/.editorconfig
 !/.prettierrc*
 
-# mkdocs
-!.meta.yaml
-!.meta.yml
-
 # External service config
 !/.*.toml
 !/.*.yaml
-!/.*.yml
 !/.*/[a-z0-9_-]*.toml
 !/.*/[a-z0-9_-]*.yaml
-!/.*/[a-z0-9_-]*.yml
 !/.circleci/
