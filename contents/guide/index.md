@@ -30,6 +30,12 @@ ZSH, shell config, and dot files _(referenced by other guides)_
 [:fontawesome-solid-laptop-code: **Git, SSH, and GPG**](git-ssh-and-gpg.md):
 Git, GitHub, SSH, GPG, and signed commits _(referenced by other guides)_
 
+[:fontawesome-solid-desktop: **GNOME**](gnome.md):
+GNOME (desktop environment) _(referenced by other guides)_
+
+[:fontawesome-solid-desktop: **KDE**](kde.md):
+KDE (desktop environment) _(referenced by other guides)_
+
 ---
 
 <strong class="index">General</strong>

@@ -13,7 +13,8 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
 A setup guide for programmers, etc., on Linux and the Windows Linux Subsystem.
-Alternatives for Ubuntu/Debian-like and Fedora/RedHat-like are shown.
+Contains specific instructions for Ubuntu and Fedora,
+which may work for other Debian-like and RedHat-like distros.
 
 !!! related
 
@@ -47,6 +48,12 @@ I have not tested it.
 Btrfs is a copy-on-write option and is now much more robust than ext4.
 See the [btrfs documentation](https://btrfs.readthedocs.io/en/latest).
 
+!!! can "Btrfs subvolumes"
+
+    If preferred, you can use
+    [Btrfs subvolumes](https://btrfs.readthedocs.io/en/latest/Subvolumes.html)
+    instead of regular partitions.
+
 ### Use a swap partition the same size as your RAM.
 
 There’s an adage that it’s important for emergency memory – in case your main memory runs out.
@@ -55,16 +62,16 @@ pointing out that using it for emergency memory would render a system excessivel
 Linux uses swap space as a **complement** to memory by swapping out infrequently used pages.
 You should definitely use it, but it probably doesn’t need to fit more than your memory.
 
-### For single-user systems, skip `/home` in favor of `/files`.
+### Skip the `/boot` partition.
+
+It’s not needed on a modern UEFI system.
+
+### For single-user systems, skip `/home` in favor of (e.g.) `/files`.
 
 `/home` will probably fill with miscellaneous configuration
 and even temp data that doesn’t need to be backed up.
 It’s probably even best to discard such files when upgrading or installing a new distro.
 So, leave `/home` in the root partition and use another mount point like `/data` or `/files` instead.
-
-### Skip the `/boot` partition.
-
-It’s not needed on a modern UEFI system.
 
 ### For workstations, consider separate `/tmp` and `/var/tmp`.
 
@@ -282,12 +289,12 @@ sudo ufw allow 22
 
 ### Sudoers
 
-See
-[Fedora’s sudoers guide](https://docs.fedoraproject.org/en-US/quick-docs/adding_user_to_sudoers_file/)
-for more info.
+!!! related
 
-If you don’t have sudo access, add your username to
-`sudo` (Ubuntu), `wheel` (Fedora), or `admin` (macOS):
+    - [sudoers for macOS](macos.md#sudoers)
+    - [Fedora’s sudoers guide](https://docs.fedoraproject.org/en-US/quick-docs/adding_user_to_sudoers_file/)
+
+If you don’t have sudo access, add your username to the needed user group:
 
 === "Ubuntu"
 
@@ -295,16 +302,10 @@ If you don’t have sudo access, add your username to
 sudo usermod --append --groups sudo
 ```
 
-=== "Fedora"
+=== "Fedora, OpenSUSE"
 
 ```bash
 sudo usermod --append --groups wheel
-```
-
-=== "macOS"
-
-```bash
-sudo dseditgroup -o edit -a $USER -t user admin
 ```
 
 For a personal machine, requiring a password is probably unnecessary.
@@ -323,12 +324,6 @@ The line will probably look like this:
 
     ```text
     %wheel ALL=(ALL) NOPASSWD:ALL
-    ```
-
-=== "macOS"
-
-    ```text
-    %admin ALL=(ALL) NOPASSWD:ALL
     ```
 
 !!! warning "Important: how sudo reads"
@@ -367,95 +362,28 @@ This may not work through some company and university firewalls.
 
 ## Cosmetics and UI
 
+Tweak your desktop environment.
+
+- For GNOME, follow the [GNOME instructions](gnome.md).
+- For KDE, follow the [KDE instructions](kde.md).
+
 ### Eza icons and Nerd fonts
 
 Download one or more [Nerd fonts](https://www.nerdfonts.com/font-downloads).
 Then run
 
 ```bash
-gh release download --dir nerd/ --repo ryanoasis/nerd-fonts/ -p '*.zip'
-for f in 'nerd/*.zip'; do sudo unzip '$f' -d /usr/local/share/fonts; done
+gh release download --dir nerd/ --repo ryanoasis/nerd-fonts -p '*.zip'
+for f in 'nerd/*.zip'; do
+  sudo unzip '$f' -d /usr/local/share/fonts
+done
 fc-cache
 ```
 
 Set your terminal font to your preferred Nerd font.
-(I personally recommend Source Code Pro, Noto, JetBrains Mono, Ubuntu Mono, or IBM Plex Mono.)
+(I recommend Source Code Pro, Noto, JetBrains Mono, Ubuntu Mono, or IBM Plex Mono.)
 Now you can run
 
 ```Bash
 eza --icons
 ```
-
-### Gnome extensions and date/time
-
-In GNOME’s settings, set the time format to 24-hour and make sure _Automatic Data and Time_ is selected.
-Also install the `gnome-tweaks` utility and Gnome extensions:
-
-=== "Ubuntu"
-
-    ```bash
-    sudo apt-get install -y gnome-tweaks gnome-browser-connector
-    ```
-
-=== "Fedora"
-
-    ```bash
-    sudo dnf install -y gnome-tweaks gnome-browser-connector
-    ```
-
-Then open https://extensions.gnome.org/ and install the browser extension.
-I recommend installing these extensions:
-
-- **Force Quit.**
-- **Panel Date Format.**
-  To get YYYY-MM-DD HH:MM formatting, run
-
-  ```bash
-  dconf write \
-    /org/gnome/shell/extensions/panel-date-format/format \
-    "'%Y-%m-%d %H:%M'"
-  ```
-
-### Nautilus favorites
-
-To remove the favorites for Videos, Music, etc. that Nautilus forces on you, run this script.
-
-??? info "Script to remove built-in bookmarks"
-
-    ```bash
-    cat >> ~/.config/user-dirs.dirs << EOF
-    # This file was created manually.
-
-    # Keep these:
-    XDG_DESKTOP_DIR="$HOME/Desktop"
-    XDG_DOWNLOAD_DIR="$HOME/Downloads"
-
-    # Exclude these:
-    #XDG_DOCUMENTS_DIR="$HOME/Documents"
-    #XDG_TEMPLATES_DIR="$HOME/Templates"
-    #XDG_PUBLICSHARE_DIR="$HOME/Public"
-    #XDG_MUSIC_DIR="$HOME/Music"
-    #XDG_PICTURES_DIR="$HOME/Pictures"
-    #XDG_VIDEOS_DIR="$HOME/Videos"
-    EOF
-
-    cat >> ~/.config/user-dirs.conf << EOF
-    # Create a user-dirs.conf file to prevent automatic updates
-    # We created ~/.config/user-dirs.dirs manually
-    # Prevent xdg-user-dirs-update from overwriting it
-    enabled=False
-    EOF
-    ```
-
-If that didn’t work, try replacing the commented-out lines with real links; e.g.
-`XDG_VIDEOS_DIR="$HOME/.junk/"`.
-
-For convenience, use
-[`add-bookmarks.sh`](files/add-bookmarks.sh)
-to add bookmarks.
-Example: `~/bin/add-bookmarks.sh data=/data/ docs=/docs/`
-
-After running it, restart Nautilus to apply the settings by running
-`nautilus -q`.
-
-*[UEFI]: Unified Extensible Firmware Interface

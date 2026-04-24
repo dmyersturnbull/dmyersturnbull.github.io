@@ -205,6 +205,29 @@ brew install eza ydiff bat ripgrep fd fzw jq yq p7zip
 
 ## Security and connections
 
+### Sudoers
+
+!!! related
+
+    - [sudoers in the Linux guide](linux.md#sudoers)
+
+If you don’t have sudo access, add your username to
+the `admin` group:
+
+```bash
+sudo dseditgroup -o edit -a $USER -t user admin
+```
+
+If you use `sudo visudo` to edit `/etc/sudoers`, the file is checked for syntax before save.
+You can also check syntax with `visudo -c my-sudoers.txt`.
+Find the line covering the relevant group (`sudo`, `wheel`, or `admin`), and prepend `NOPASSWD:` to `ALL`.
+The line will probably look like this:
+
+```text
+%admin ALL=(ALL) NOPASSWD:ALL
+```
+
+
 ### Disable quarantining downloads
 
 !!! tip "FYI"
