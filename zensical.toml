@@ -1,10 +1,10 @@
 # Documentation config.
-# https://zensical.org/docs/setup/
+# https://zensical.org/docs/setup/basics/
 
 [project]
 
 # ::tyranno:: site_name = "$<<project>>"
-site_name = "tyranno-sandbox"
+site_name = "dmyersturnbull"
 # ::tyranno:: LABEL site_url = "$<<project.urls.Documentation>>"
 site_url = "https://dmyersturnbull.github.io/"
 # ::tyranno:: repo_url = "$<<project.urls.Homepage>>"
