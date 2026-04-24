@@ -30,22 +30,14 @@ license = { text = "CC-BY-SA-4.0" }
 
 classifiers = [
   "Development Status :: 3 - Alpha",
-  "Environment :: Console",
-  "Intended Audience :: Developers",
+  "Environment :: Web Environment",
   "Natural Language :: English",
   "Operating System :: OS Independent",
   "Programming Language :: Python",
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: 3.14",
   "Programming Language :: Python :: 3 :: 3.15",
-  "Topic :: Software Development :: Build Tools",
-  "Topic :: Software Development :: Code Generators",
   "Typing :: Typed",
-]
-
-# -------------------------- dependencies -------------------------------------
-dependencies = [
-  "zensical>=0.0.29",
 ]
 
 # -------------------------- project URIs -------------------------------------
@@ -69,17 +61,19 @@ Tracker = "https://github.com/dmyersturnbull/dmyersturnbull.github.io/issues"
 # uv includes `dev` by default and has dedicated `--only-dev` / `--no-dev` / etc. switches.
 # The other groups are used in CI.
 dev = [
-  {include-group = "test"},
   {include-group = "docs"},
-  {include-group = "sbom"},
   {include-group = "lint"},
   {include-group = "git-hooks"},
 ]
 
+docs = [
+  "zensical>=0.0.34", # https://zensical.org/
+]
+
 # Python-ecosystem lint tools that can be called directly
 lint = [
-  "ruff>=0.15.7",
-  "ty>=0.0.25", # Astral's fledgling type checker.
+  "ruff>=0.15.12",
+  "ty>=0.0.32", # Astral's fledgling type checker.
 ]
 
 # pre-commit and any dependencies for local hooks

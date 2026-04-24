@@ -1,10 +1,10 @@
-# SPDX-FileCopyrightText: Copyright 2020-2025, Contributors to Tyrannosaurus
+# SPDX-FileCopyrightText: Copyright 2020-2026, Contributors to Tyrannosaurus
 # SPDX-PackageHomePage: https://github.com/dmyersturnbull/tyrannosaurus
 # SPDX-License-Identifier: Apache-2.0
 #
 # https://just.systems/man/en/
 # https://cheatography.com/linux-china/cheat-sheets/justfile/
-# Needs: Just 1.43
+# Needs: Just 1.48
 # CAUTION – Quotes aren't quotes.
 # This doesn't do what you'd expect:
 # ```
@@ -14,8 +14,8 @@
 # ```
 # This results in `git -m style: reformat code` !
 
-set dotenv-load := true
-set ignore-comments := true
+set dotenv-load
+set ignore-comments
 
 # set windows-powershell := true # an option
 # Confusingly, Python has a default warning filter, which is **different** from `-W default`.
@@ -158,45 +158,49 @@ delete-temp:
     -rm -f **/.DS_Store
     -rm -f **/.localized
     -rm -f **/Thumbs.db
+    # Paths from other tools:
+    -rm -f -r .cache/
 
-# Run 'git remote prune --all' and 'git maintenance run gc'. ❗
+# Run 'git remote prune --all' and 'git maintenance run gc'. ⚠️
 [group('project')]
+[metadata('caution')]
 prune-git:
     # Needed on macOS.
     @-chflags -R nouchg .git/*
     # Prune tracked refs first because it's a foreground task.
-    git remote prune --all
+    git remote prune origin
     # Uses 'gc.pruneExpire'.
     git maintenance run --task gc
 
 # Delete files that are probably temporary. 🧨
 [group('project')]
+[metadata('danger')]
 @delete-probable-temp:
     # Log files directly in `/`, `src/`, or `tests/`
     -rm -f *.log
     -rm -f src/*.log
     -rm -f tests/*.log
-    # Directories named exactly `.(bak|junk|temp|tmp|trash)`
+    # Directories named (regex) `\.(bak|junk|temp|tmp|trash)`
     -rm -f -r **/.bak
     -rm -f -r **/.junk
     -rm -f -r **/.temp
     -rm -f -r **/.tmp
     -rm -f -r **/.trash
-    # Files with extensions `.(bak|junk|temp|tmp|trash|swp)`
+    # Files with extensions (regex) `\.(bak|junk|temp|tmp|trash|swp)`
     -rm -f **/*.bak
     -rm -f **/*.junk
     -rm -f **/*.temp
     -rm -f **/*.tmp
     -rm -f **/*.trash
     -rm -f **/*.swp
-    # Files starting or end with `~|#|$` (or starting with `.~`).
+    # Files starting or end with (regex) `\.?[~#$]`.
     -rm -f **/[~#\$]*
-    -rm -f **/*[~#\$]
-    -rm -f **/.~*
+    -rm -f **/.[~#\$]*
+    -rm -f **/*[~#\$] # subsumes `\.[~#$]`
 
 # Minify the repo by deleting nearly all recreatable files. 🧨
 [group('project')]
-[metadata('advanced')]
+[metadata('danger')]
 minify-repo: clean delete-probable-temp
     uv run pre-commit clean
     uv run pre-commit uninstall
@@ -208,7 +212,7 @@ minify-repo: clean delete-probable-temp
 
 # Format STAGED files (via pre-commit).
 [group('format')]
-format-changes: _format
+format-changes: _stage_precommit _format
 
 alias format := format-changes
 
@@ -222,7 +226,7 @@ _format *args:
     -uv run pre-commit run fix-byte-order-marker {{ args }}
     -uv run pre-commit run trailing-whitespace {{ args }}
     -uv run pre-commit run ruff-format {{ args }}
-    -uv run pre-commit run biome-check {{ args }}
+    -uv run pre-commit run --hook-stage manual biome-format {{ args }}
     -uv run pre-commit run format-justfile {{ args }}
 
 ###################################################################################################
@@ -230,24 +234,38 @@ _format *args:
 # Run pre-commit auto-fix hooks on STAGED files.
 [group('fix')]
 [no-exit-message]
-fix-changes: _stage_precommit (hook "ruff-check")
+fix-changes: _stage_precommit fix-ruff fix-biome
 
 alias fix := fix-changes
 
 # Run pre-commit auto-fix hooks on ALL files. ⚠️
 [group('fix')]
+[metadata('caution')]
 [no-exit-message]
-fix-all: _stage_precommit (hook "ruff-check --all-files")
+fix-all: _stage_precommit (fix-ruff "--all-files") (fix-biome "--all-files")
 
-# Preview Ruff auto-fixes. Runs on all files by default.
+# Apply Biome auto-fixes (via pre-commit). 'args' may be '--all-files' or empty.
+[arg("args", pattern="--all-files")]
+[group('fix')]
+[no-exit-message]
+fix-biome *args: (hook "--hook-stage manual biome-lint" args)
+
+# Apply Ruff auto-fixes (via pre-commit). 'args' may be '--all-files' or empty.
+[arg("args", pattern="--all-files")]
+[group('fix')]
+[no-exit-message]
+fix-ruff *args: (hook "ruff-check" args)
+
+# Apply Ruff auto-fixes. Affects all files. ⚠️
+[group('fix')]
+[metadata('caution')]
+[no-exit-message]
+run-ruff-fix *args: (_fix_ruff args)
+
+# Preview Ruff auto-fixes. Affects all files.
 [group('fix')]
 [no-exit-message]
 diff-ruff *args: (_fix_ruff "--diff" args)
-
-# Apply Ruff auto-fixes. (Runs on all files by default.) ⚠️
-[group('fix')]
-[no-exit-message]
-fix-ruff *args: (_fix_ruff args)
 
 # <Internal.> (FYI: Use `--config` so users can still pass `--output-format`.)
 [no-exit-message]
@@ -260,10 +278,17 @@ _stage_precommit:
 
 ###################################################################################################
 
-# `just check-simple check-ruff check-ty check-links` (slow)
+# `just check-fast check-schemas audit check-links` (slow)
 [group('check')]
 [parallel]
-check-all: check-core check-ruff check-ty check-schemas check-links
+check-all: check-fast check-schemas audit check-links
+
+# `just check-core check-ruff check-biome check-schemas`
+[group('check')]
+[parallel]
+check-fast: check-core check-ruff check-biome
+
+alias check := check-fast
 
 # Check basic rules (via pre-commit).
 [group('check')]
@@ -295,25 +320,31 @@ check-schemas:
 [no-exit-message]
 check-ruff *args: (_check_ruff args)
 
-# Show the number of violations per Ruff rule.
-[group('check')]
-[no-exit-message]
-check-ruff-stats *args: (ruff "check --no-fix --statistics" args)
-
-# Check Ruff security (S) rules derived from Bandit.
-[group('check')]
-[no-exit-message]
-check-bandit *args: (_check_ruff "--select S" args)
-
-# Check Astral ty typing rules.
+# Check Astral ty typing rules (without auto-fixing).
 [group('check')]
 [no-exit-message]
 check-ty *args: (run "ty check" args)
 
+# Check Biome rules, format, and import order (without auto-fixing).
+[group('check')]
+[no-exit-message]
+check-biome *args: (hook "--hook-stage manual --all-files biome-ci")
+
 # Detect broken hyperlinks via pre-commit. (slow)
 [group('check')]
 [no-exit-message]
-check-links: (hook "markdown-link-check --hook-stage manual --all-files")
+check-links: (hook "--hook-stage manual --all-files markdown-link-check")
+
+# Show the number of violations per Ruff rule.
+[group('check')]
+[no-exit-message]
+show-ruff-stats *args: (ruff "check --no-fix --statistics" args)
+
+# Check dependencies for vulnerabilities.
+[group('check')]
+[no-exit-message]
+audit *args:
+    uv audit --locked --all-extras --all-groups {{ args }}
 
 # <Internal.> (FYI: Use `--config` so users can still pass `--output-format`.)
 [no-exit-message]
@@ -371,8 +402,3 @@ serve-docs: (run "zensical serve -o")
 [group('alias')]
 [no-exit-message]
 @ty *args: (run "ty" args)
-
-# `uv run --locked pytest`
-[group('alias')]
-[no-exit-message]
-pytest *args: (run "pytest" args)
