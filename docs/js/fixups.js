@@ -1,3 +1,4 @@
+// biome-ignore lint/correctness/noUnusedVariables(copyToClipboard): used by .md files
 function copyToClipboard(symbol, element) {
   navigator.clipboard
     .writeText(symbol)
