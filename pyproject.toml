@@ -172,3 +172,6 @@ max-bool-expr = 10 # default is 5
 max-public-methods = 30 # default is 20
 max-nested-blocks = 4 # default is 5
 allow-dunder-method-names = ["__rich_repr__"] # allow custom dunders
+
+[tool.uv.build-backend]
+module-name = "empty"
