@@ -14,11 +14,6 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  id-token: write
-  pages: write
-
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -26,6 +21,10 @@ concurrency:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+      pages: write
     steps:
       - uses: actions/checkout@v6
       - uses: astral-sh/setup-uv@v8.1.0
@@ -33,10 +32,7 @@ jobs:
         run: |
           uv sync --locked --only-group docs
           uv run --no-sync zensical build
-      # Note that in v4, dot files are excluded, with no way to override.
-      # This is apparently by design.
-      # https://github.com/actions/upload-pages-artifact/issues/129
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
-      - uses: actions/deploy-pages@v4
+      - uses: actions/deploy-pages@v5
