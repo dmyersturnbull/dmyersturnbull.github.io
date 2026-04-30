@@ -1,8 +1,13 @@
+---
+tags:
+- Unicode
+---
+
 # Symbols
 
-This is here because I sometimes use Windows and don’t remember the shortcuts.
+!!! tip "How to use"
 
-_Click on a symbol to copy it._
+    Click on a symbol to copy it.
 
 ## Ultra-common
 
@@ -53,8 +58,9 @@ _Click on a symbol to copy it._
   <span onclick="copyToClipboard('⌥', this)" style="cursor: pointer;">`⌥`</span>
 - globe / fn (on macOS):
   <span onclick="copyToClipboard('🌐', this)" style="cursor: pointer;">`🌐`</span>
-- half star ⯪ **(caution: most fonts lack glyphs)**
-  <span onclick="copyToClipboard('⯪', this)" style="cursor: pointer;">`⯪`</span>
+- half star
+  <span onclick="copyToClipboard('⯪', this)" style="cursor: pointer;">`⯪`</span><br />
+  _(caution: most fonts lack glyphs)_
 
 ## Punctuation
 

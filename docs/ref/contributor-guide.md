@@ -1,5 +1,6 @@
 ---
 tags:
+  - DevOps
   - Git
   - GitHub
 ---
@@ -7,7 +8,7 @@ tags:
 # Contributor guide
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -82,7 +83,7 @@ Limit changes to those needed to close the issue associated with the PR.
 When your PR gets accepted, your commits get squashed into one commit linked to exactly one issue,
 which is automatically closed.
 
-!!! warning "Important: Avoid unnecessary changes"
+!!! warning "Avoid unnecessary changes"
 
     Making unnecessary or unrelated changes in your PR is perhaps the only way to get it rejected.
     The maintainers can reformat code, fix bugs, and rewrite a PR description.

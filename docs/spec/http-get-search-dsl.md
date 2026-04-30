@@ -10,7 +10,7 @@ tags:
 # HTTP GET search DSL
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -194,7 +194,7 @@ NORMAL-CHAR    = [\w.,;+~-]
 SPECIAL-CHAR   = [=!$()*+,/?]
 ```
 
-!!! note "Recommendation"
+!!! warning "Caution"
 
     Avoid using reserved characters in keys when possible.
 
@@ -356,7 +356,7 @@ Examples:
 - `scale=2` doubles the size.
 - `scale=1/2` halves the size.
 
-!!! rationale
+!!! question "Rationale"
 
     This preserves relative magnitudes.
     `1/40` reveals the intent (divide by 40) more  clearly than `0.025`.
@@ -381,5 +381,5 @@ To fulfill our uniqueness requirement, `rotate=0` is not allowed.
 | `flip-top-right` | flip top-right to bottom-left |
 
 /// table-caption
-<b>Permitted values for `rotate=`</b>
+<b>Permitted values for `rotate`.</b>
 ///

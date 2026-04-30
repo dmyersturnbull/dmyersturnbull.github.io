@@ -6,7 +6,7 @@ tags:
 # Python conventions
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -216,7 +216,7 @@ Always read and write text as UTF-8, and pass `encoding="utf-8"` (i.e. not `utf8
 
 ## Typing
 
-??? rationale
+??? question "Rationale"
 
     1. Documentation generators such as [mkdocstrings](https://github.com/mkdocstrings/mkdocstrings)
        (for mkdocs) can use type annotations to provide helpful hints for users;
@@ -302,8 +302,6 @@ Importantly, `frozenset` $\sqsubseteq$ `Set`, but `frozenset` $\not\sqsubseteq$ 
     isinstance(frozenset(), MutableSet)  # False
     isinstance(frozenset(), Set)  # True
     ```
-
-!!! bug
 
 #### Collection hierarchy
 

@@ -1,16 +1,16 @@
 # Gaslit by a computer
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
-Software guides and reference docs.
-By [Douglas Myers-Turnbull](https://dmyersturnbull.com).
-Many are just notes for myself, but some may be useful for others.
+Various notes, guides, cheatsheets, and draft specs by
+[Douglas Myers-Turnbull](https://dmyersturnbull.com).
+Many are just memos to myself, but some may be useful to others.
 
-<strong class="index">Contents</strong>
+## Contents
 
 [:fontawesome-solid-terminal: **Setup guides**](guide/index.md):
 Tutorials for setting up, optimizing, and configuring various software
@@ -29,6 +29,8 @@ Data format specifications, vocabularies, and domain-specific languages
 
 [:fontawesome-solid-message: **Posts**](post/index.md):
 Ideas, summaries, recommendations, notes, etc.
+
+---
 
 !!! note "To anyone actually named Kerri Johnson"
 

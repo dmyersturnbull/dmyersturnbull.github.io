@@ -1,124 +1,21 @@
 /*
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 */
 
-/*
- * See:
- * - https://squidfunk.github.io/mkdocs-material/customization/#additional-css
- * - https://squidfunk.github.io/mkdocs-material/reference/admonitions/#customization
- */
-
-/*
- * New admonition type: 'rationale'
- */
-:root {
-  --md-admonition-icon--rationale: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M240-400h320v-80H240v80Zm0-120h480v-80H240v80Zm0-120h480v-80H240v80ZM80-80v-720q0-33 23.5-56.5T160-880h640q33 0 56.5 23.5T880-800v480q0 33-23.5 56.5T800-240H240L80-80Zm126-240h594v-480H160v525l46-45Zm-46 0v-480 480Z"/></svg>');
+a {
+  text-decoration: none !important;
 }
-.md-typeset .admonition.rationale,
-.md-typeset details.rationale {
-  border-color: rgb(100, 90, 110);
-}
-.md-typeset .rationale > .admonition-title,
-.md-typeset .rationale > summary {
-  background-color: rgba(100, 90, 110, 0.1);
-}
-.md-typeset .rationale > .admonition-title::before,
-.md-typeset .rationale > summary::before {
-  background-color: rgb(100, 90, 110);
-  -webkit-mask-image: var(--md-admonition-icon--rationale);
-  mask-image: var(--md-admonition-icon--rationale);
+a :hover {
+  text-decoration: underline !important;
 }
 
-/*
- * New admonition type: 'background'
- */
-:root {
-  --md-admonition-icon--background: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 512"><path d="M560 160A80 80 0 1 0 560 0a80 80 0 1 0 0 160zM55.9 512l325.2 0 75 0 122.8 0c33.8 0 61.1-27.4 61.1-61.1c0-11.2-3.1-22.2-8.9-31.8l-132-216.3C495 196.1 487.8 192 480 192s-15 4.1-19.1 10.7l-48.2 79L286.8 81c-6.6-10.6-18.3-17-30.8-17s-24.1 6.4-30.8 17L8.6 426.4C3 435.3 0 445.6 0 456.1C0 487 25 512 55.9 512z"/></svg>');
-}
-.md-typeset .admonition.background,
-.md-typeset details.background {
-  border-color: rgb(0, 40, 180);
-}
-.md-typeset .background > .admonition-title,
-.md-typeset .background > summary {
-  background-color: rgba(0, 40, 180, 0.1);
-}
-.md-typeset .background > .admonition-title::before,
-.md-typeset .background > summary::before {
-  background-color: rgb(0, 40, 180);
-  -webkit-mask-image: var(--md-admonition-icon--background);
-  mask-image: var(--md-admonition-icon--background);
-}
-
-/*
- * New admonition type: 'related'
- */
-:root {
-  --md-admonition-icon--related: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" height="24" viewBox="0 -960 960 960" width="24"><path d="M440-400v-360h80v360h-80Zm0 200v-80h80v80h-80Z"/></svg>');
-}
-.md-typeset .admonition.related,
-.md-typeset details.related {
-  border-color: rgb(0, 40, 180);
-}
-.md-typeset .related > .admonition-title,
-.md-typeset .related > summary {
-  background-color: rgba(0, 40, 180, 0.1);
-}
-.md-typeset .related > .admonition-title::before,
-.md-typeset .related > summary::before {
-  background-color: rgb(0, 40, 180);
-  -webkit-mask-image: var(--md-admonition-icon--related);
-  mask-image: var(--md-admonition-icon--related);
-}
-
-/*
- * New admonition type: 'related'
- */
-:root {
-  --md-admonition-icon--prerequisites: url('data:image/svg+xml;charset=utf-8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path d="M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 208c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-176c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 272c0 1.5 0 3.1 .1 4.6L67.6 283c-16-15.2-41.3-14.6-56.6 1.4s-14.6 41.3 1.4 56.6L124.8 448c43.1 41.1 100.4 64 160 64l19.2 0c97.2 0 176-78.8 176-176l0-208c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 112c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-176c0-17.7-14.3-32-32-32s-32 14.3-32 32l0 176c0 8.8-7.2 16-16 16s-16-7.2-16-16l0-208z"/></svg>');
-}
-.md-typeset .admonition.prerequisites,
-.md-typeset details.prerequisites {
-  border-color: rgb(130, 100, 40);
-}
-.md-typeset .prerequisites > .admonition-title,
-.md-typeset .prerequisites > summary {
-  background-color: rgba(130, 100, 0.1);
-}
-.md-typeset .prerequisites > .admonition-title::before,
-.md-typeset .prerequisites > summary::before {
-  background-color: rgb(130, 100, 40);
-  -webkit-mask-image: var(--md-admonition-icon--prerequisites);
-  mask-image: var(--md-admonition-icon--prerequisites);
-}
-
-/*
- * Notice sign that works a bit like an admonition
- */
-.notice-sign {
-  font-weight: 300;
-  outline: 2px dotted black;
-  margin-top: 1.25rem;
-  margin-bottom: 1.25rem;
-}
-.notice-sign:before {
-  color: blue;
-  font-size: x-large;
-  font-weight: 600;
-  content: "ⓘ";
-  margin-right: 2rem;
-}
-
-/*
- * New special 'index' header for index.md files:
- */
-.index {
-  font-size: x-large;
-  font-weight: 300;
-  margin-top: 4rem;
-  margin-bottom: 2rem;
+.experimental {
+  color: #c07050;
+  font-style: italic;
+  font-size: small;
+  padding-left: 0.5rem;
 }
 
 /*

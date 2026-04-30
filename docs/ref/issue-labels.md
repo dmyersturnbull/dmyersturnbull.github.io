@@ -1,13 +1,14 @@
 ---
 tags:
+  - DevOps
   - Git
   - GitHub
 ---
 
-# Supplemental – issue labels
+# Issue labels (supplemental)
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -89,10 +90,10 @@ Labels are organized into are 8 groups.
 | `type: test`                | `test:`        | 🍒 Miscellaneous    | none  | 🚨   | Add or modify tests          | `90e0ff`  |
 
 /// table-caption
-<b>Labels for issues and PRs, with associated commit types</b>
+<b>Issue/PR labels with associated commit types.</b>
 ///
 
-???+ rationale
+??? question "Rationale"
 
     Requirements met:
 

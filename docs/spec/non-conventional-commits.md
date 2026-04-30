@@ -2,13 +2,13 @@
 tags:
   - Git
   - GitHub
-  - BNF
+  - regex-BNF
 ---
 
 # Non-conventional commits
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -18,7 +18,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 There are significant well-recognized problems with Conventional Commits.
 This nascent specification simply explores alternatives.
 
-!!! related
+!!! abstract "Also see"
 
     - [Restricted conventional commits spec](commit-messages.md).
 
@@ -114,11 +114,11 @@ Separate release note sets can also be generated.
 | release ♮ | `release {tag}`                | release a new version          | -     | -               |
 
 /// table-caption
-<b>Change phrases</b>
+<b>Change phrases.</b>
+♮ ― different/unique structure
+///
 
-<b>♮</b> ― different/unique structure
-
-Terminology:
+### Terminology
 
 - `api-type`: `feature | endpoint | command | class | method | function | ...`
 - `support-type`: `platform | browser | {tool} version | ...`
@@ -130,7 +130,6 @@ Terminology:
 - `a`, `b`: source and destination, respectively
 - `realm`: `runtime-deps | dev-deps | ...`
 - `tag`: semver Git tag
-///
 
 ## Trailers
 

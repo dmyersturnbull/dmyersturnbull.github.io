@@ -7,14 +7,14 @@ tags:
 # Windows setup
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
 A setup guide for programmers, etc., on Windows.
 
-!!! related
+!!! abstract "Also see"
 
     - [macOS setup guide](macos.md)
     - [Linux setup guide](linux.md)
@@ -49,7 +49,7 @@ Restart your computer.
 
 !!! danger
 
-    Remember to save your encryption key securely!
+    Remember to save your encryption key securely.
 
 Enable BitLocker disk encryption and restart again.
 
@@ -118,7 +118,7 @@ These include the Telnet Client, Windows Media Player, and PowerShell 2.0.
 
 ### Services
 
-!!! warning
+!!! danger
 
     Be careful when disabling services.
     When in doubt, leave a service alone,
@@ -146,7 +146,8 @@ Scanning can also cause errors because it opens file handles.
 First, review the settings under _Settings ➤ Windows Updates ➤ Advanced options_.
 Set _Active hours_ and make sure _Get me up to date_ is unchecked.†
 
-!!! tip
+!!! bug "Throttling"
+
     Although you can throttle download speeds, that setting applies even when you explicitly download updates.
 
 #### Making updates non-automatic
@@ -303,6 +304,12 @@ git config --global core.longpaths true
 
 ## Programming languages and frameworks
 
+!!! warning "Uninstall pre-existing packages first"
+
+    **Before installing any package,**
+    check for and uninstall any existing copy under _Add or Remove Programs_.
+    For example, you’ll want to uninstall the JDK that ships with Windows.
+
 ### Build tools
 
 Install the
@@ -321,11 +328,9 @@ winget install --exact --id Kitware.CMake
 winget install --exact --id MSYS2.MSYS2
 ```
 
-**Before installing any package,**
-check for and uninstall any existing copy under _Add or Remove Programs_.
-For example, you’ll want to uninstall the copy of Java that ships with Windows.
+### Java, Rust, and Python
 
-!!! tip "Pro-tip: Rust, Python, and Java"
+??? tip "Pro-tip: quick install"
 
     Install Rust:
 
@@ -334,7 +339,7 @@ For example, you’ll want to uninstall the copy of Java that ships with Windows
     cargo install cargo-update
     ```
 
-    Installl Java UV (for Python):
+    Install Java:
 
     ```powershell
     scoop install main/uv
@@ -342,10 +347,13 @@ For example, you’ll want to uninstall the copy of Java that ships with Windows
     scoop install java/temurin-jdk
     ```
 
-{%
-  include-markdown './includes/_toolkits.md'
-  heading-offset=2
-%}
+    Install UV:
+
+    ```powershell
+    scoop install main/uv
+    ```
+
+See the [toolkits guide](toolkits.md).
 
 ### JavaScript
 
@@ -450,13 +458,8 @@ often preventing the desktop environment from crashing.
 | Hide protected operating system files       | ?   |
 
 /// table-caption
-<b>File Explorer view option recommendations</b>
-
-<b>Legend:</b>
-
-- ☑ ― turn on
-- ☐ ― turn off
-- ? ― up to you
+<b>File Explorer view option recommendations.</b>
+☑ ― turn on; ☐ ― turn off; ? ― up to you.
 ///
 
 ### Organize the applications menu

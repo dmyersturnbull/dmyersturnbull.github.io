@@ -1,4 +1,15 @@
+---
+tags:
+- Unicode
+---
+
 # Box-drawing
+
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 
 This table uses 🗸, **✔**, and 🗸🗸 to indicate the styles of joints.
 
@@ -135,11 +146,15 @@ This table uses 🗸, **✔**, and 🗸🗸 to indicate the styles of joints.
 
 
 /// table-caption
-<b>Unicode box-drawing characters</b>
+<b>Unicode box-drawing characters.</b>
+///
 
-<b>Legend for joint columns:</b>
+### Legend for joint columns
+
+<small>
 
 - **✔** (heavy check mark) ― heavy, single-stroke joint
 - 🗸 (light check mark) ― light, single-stroke joint
 - 🗸🗸 (two light check marks) ― double-stroke light joint
-///
+
+- </small>

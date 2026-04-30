@@ -7,7 +7,7 @@ tags:
 # Linux setup
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -16,7 +16,7 @@ A setup guide for programmers, etc., on Linux and the Windows Linux Subsystem.
 Contains specific instructions for Ubuntu and Fedora,
 which may work for other Debian-like and RedHat-like distros.
 
-!!! related
+!!! abstract "Also see"
 
     - [macOS setup guide](macos.md)
     - [Windows setup guide](windows.md)
@@ -48,7 +48,7 @@ I have not tested it.
 Btrfs is a copy-on-write option and is now much more robust than ext4.
 See the [btrfs documentation](https://btrfs.readthedocs.io/en/latest).
 
-!!! can "Btrfs subvolumes"
+!!! tip "Btrfs subvolumes"
 
     If preferred, you can use
     [Btrfs subvolumes](https://btrfs.readthedocs.io/en/latest/Subvolumes.html)
@@ -289,7 +289,7 @@ sudo ufw allow 22
 
 ### Sudoers
 
-!!! related
+!!! abstract "Also see"
 
     - [sudoers for macOS](macos.md#sudoers)
     - [Fedora’s sudoers guide](https://docs.fedoraproject.org/en-US/quick-docs/adding_user_to_sudoers_file/)
@@ -353,12 +353,7 @@ This may not work through some company and university firewalls.
 
 ### Java, Rust, and Python
 
-<!--     Toolkits; e.g. Java and Rust     -->
-
-{%
-  include-markdown './includes/_toolkits.md'
-  heading-offset=2
-%}
+See the [toolkits guide](toolkits.md).
 
 ## Cosmetics and UI
 

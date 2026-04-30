@@ -6,7 +6,7 @@ tags:
 # CLI conventions
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -19,7 +19,7 @@ Distinguish between optional arguments (_options_ or _switches_) and required, p
   `--` for long names and `-` for short (single-letter) names.
 - Required arguments SHOULD be positional unless there are more than 3.
 
-!!! note
+!!! info
 
     For clarity, use these terms in usage and docs:
 
@@ -116,7 +116,7 @@ If your app supports color and/or style, it should be enabled IF AND ONLY IF _EI
   (e.g. as detected by `[[-t 2]]).
 - _OR_ [`FORCE_COLOR`](https://force-color.org/) is **defined and non-empty**.
 
-!!! note
+!!! info
 
     Apps should check only the environment variables `NO_COLOR` and `FORCE_COLOR`.
     and **ignore other environment variables**, including `TERM`, `CLICOLOR`, and `CLICOLOR_FORCE`.

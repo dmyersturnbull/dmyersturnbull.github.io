@@ -1,5 +1,6 @@
 ---
 tags:
+  - DevOps
   - Git
   - GitHub
 ---
@@ -7,7 +8,7 @@ tags:
 # Maintainer guide
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -135,7 +136,7 @@ Instead, just comment.
 Squash the commits into one, and ensure the resulting commit message follows the
 [commit message format](../spec/commit-messages.md) specification.
 
-???+ tip "Tip": GitHub squash and merge"
+!!! tip "GitHub squash and merge"
 
     GitHub has a "Squash and merge" button, but there is nowhere to add a commit body or footer.
     However, you can work around this in the repository settings:
@@ -229,7 +230,7 @@ Follow those headers with a plain-language statement that you have modified the 
 
 ## Commit messages
 
-!!! related "Important"
+!!! abstract "Also see"
 
     **Review:**
 

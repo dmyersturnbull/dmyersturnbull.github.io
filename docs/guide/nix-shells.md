@@ -9,7 +9,7 @@ tags:
 # Nix shells
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -68,11 +68,15 @@ You should now have a colorful shell, complete with a plugin for Git.
     ///
 
     <small>
-    <!-- -->
-    - <b>†</b>
-      `.profile` is the original Bourne shell config file,
-      but Bash will also read it if `.bash_profile` doesn’t exist.
-    - <b>‡</b> The default `.zprofile` sources `.bash_profile` if it exists.
+
+    <b>†</b>
+    `.profile` is the original Bourne shell config file,
+    but Bash will also read it if `.bash_profile` doesn’t exist.
+
+    <b>‡</b>
+    The default `.zprofile` sources `.bash_profile` if it exists.
+
+    </small>
 
     <b>Further reading:</b>
 
@@ -80,8 +84,6 @@ You should now have a colorful shell, complete with a plugin for Git.
     - [`~/.zsh*` files](https://unix.stackexchange.com/q/71253)
     - [`~/.zsh*` files on macOS](https://apple.stackexchange.com/q/388622)
     - [`~/.profile` file](https://unix.stackexchange.com/q/83742)
-    <!-- -->
-    </small>
 
 Create a new file, `~/.commonrc`, and have `~/.bashrc`, `~/.zshrc`,
 and any other Bash-compatible `~/.*rc` files source it.
@@ -111,7 +113,7 @@ commonrc::source_from zshrc
     commonrc::add_to_rc ~/.config/fish/config.fish
     ```
 
-??? info
+??? info "What the script does"
 
     `commonrc-config.sh`’s functions are just idempotent,
     so you won’t end up with multiple `source` lines, etc.

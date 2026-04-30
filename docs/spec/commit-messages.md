@@ -8,7 +8,7 @@ tags:
 # Conventional commits
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -18,7 +18,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 <b>Spec status: stable.</b>
 (CC-BY-SA)
 
-!!! related
+!!! abstract "Also see"
 
     - [“Non-conventional commits” spec](non-conventional-commits.md).
 
@@ -181,14 +181,12 @@ start with a verb,
 not mark the end with `.`,
 and describe the **change made** by the commit (**not** the behavior of the code).
 
-!!! info "Important"
+**Important!** The description is a short summary of the code changes; e.g.:
+> `fix: array parsing issue when multiple spaces were contained in string`
 
-    > The description is a short summary of the code changes; e.g.:
-    > `fix: array parsing issue when multiple spaces were contained in string`
+❌ Incorrect: `fix: raise error when config is missing`
 
-    ❌ Incorrect: `fix: raise error when config is missing`
-
-    ✅ Correct: `fix:
+✅ Correct: `fix:
 
 #### Scopes
 
@@ -308,12 +306,15 @@ Note that PyData defers to a
 | special paragraph text | ≥ 2 paragraphs        | ≥ 1 paragraph    | Keep thing simple                  |
 
 /// table-caption
-<b>Differences from the Angular commit guidelines</b>
+<b>Differences from the Angular commit guidelines.</b>
+///
 
 <small>
+
 <b>†</b> _GH-recognized_ means any phrase that GitHub sees as
-[PR-to-issue links](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword).\
+[PR-to-issue links](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword).
+
 <b>‡</b> Whether `BREAKING CHANGES` and (if defined) `DEPRECATED`
 are footers or special body paragraphs.
+
 </small>
-///

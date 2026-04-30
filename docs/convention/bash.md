@@ -7,6 +7,12 @@ tags:
 
 # Bash conventions
 
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 Follow
 [bertvv’s Bash cheat sheet](https://bertvv.github.io/cheat-sheets/Bash.html),
 the
@@ -83,7 +89,7 @@ It also makes the code more interoperable and shareable.
 Use `UPPERCASE_SNAKE_CASE` for environment variables and `lowercase_snake_case` for others.
 Prefer `$var`; use `${var}` only when needed.
 
-??? rationale
+??? question "Rationale"
 
     I recently (2024-08) changed my mind on `$var` vs. `${var}` per
     [less > more](https://dmyersturnbull.github.io/convention/#principles).
@@ -163,7 +169,7 @@ Always use `$HOME` inside scripts instead.
 
 ## Script directory and name
 
-??? rationale
+??? question "Rationale"
 
     This is the only reasonable solution that:
 
@@ -327,7 +333,7 @@ you can parse the arguments directly with `$1`, etc.
 The [example below](#example) handles `-h` and `--help` correctly.
 Otherwise, use a `case` statement; see [`todos.sh`](../scripts/todos.sh) as an example.
 
-!!! rationale
+!!! question "Rationale"
 
     `getopts`, as well the variant of `getopt` on BSD, cannot parse --long-style options.
     `getopt` has other differences between distributions, as well.
@@ -354,7 +360,7 @@ and `FIXME: short description` for things like unfinished or placeholder code.
 
 ## Example
 
-!!! related
+!!! abstract "Also see"
 
     See [`todos.sh`](../scripts/todos.sh) for a more complex example.
 

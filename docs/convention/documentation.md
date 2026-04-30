@@ -1,17 +1,20 @@
 ---
 tags:
-  - Markdown
+  - ABNF
+  - data-modeling
+  - DSL
+  - EBNF
   - HTML
+  - Markdown
+  - regex
+  - regex-BNF
   - TeX
-  - data-representation
----
-
 ---
 
 # Documentation conventions
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -57,7 +60,7 @@ The crucial points are highlighted below.
 These are general guidelines: Alternatives should be used in some situations.
 For example, if camelCase is used in your JSON Schema, use camelCase for schema document filenames.
 
-??? rationale
+??? question "Rationale"
 
     - The [official YAML extension is `.yaml`](https://yaml.org/faq.html).
       The IANA media types are `application/yaml`, `text/html`, and `image/jpeg`.
@@ -210,7 +213,7 @@ over the terms
 and
 [URN](https://datatracker.ietf.org/doc/rfc8141/).
 
-??? rationale
+??? question "Rationale"
 
     From [RFC 3986 §1.1.3](https://datatracker.ietf.org/doc/html/rfc3986#section-1.1.3):
 
@@ -226,7 +229,7 @@ and
 
 **Start each sentence on a new line.**
 
-!!! rationale
+!!! question "Rationale"
 
     Keeping each sentence on its own line dramatically simplifies diffs.
 
@@ -285,7 +288,7 @@ and
 
 ### Text styles and semantics
 
-!!! rationale
+!!! question "Rationale"
 
     This balancces between ease of writing Markdown, readability of the rendered HTML, and semantic precision.
 
@@ -353,7 +356,7 @@ For example, you might write `<b>Score:</b> 55.3%`.
 
 !!! tip "Tip: Smarty plugin"
 
-    With the Material for mkdocs
+    With the Zensical (or Material for Mkdocs)
     [Smarty plugin](https://squidfunk.github.io/mkdocs-material/reference/formatting/),
     you can use `++`/`++` instead of `<kdb>`/`<kdb>`; e.g. `++ctrl+alt+del++`.
 
@@ -450,7 +453,7 @@ The content should be
 
 ### Footnotes
 
-??? rationale
+??? question "Rationale"
 
     These symbols are easily recognized as indicating footnotes.
     Superscript numbers could be confused with reference numbers or even exponents in some places,
@@ -488,7 +491,7 @@ IEEE style is also encouraged for bibliographies.
 
 ### Quotations
 
-!!! rationale
+!!! question "Rationale"
 
     This preserves the semantic difference between punctuation _inside_ and _outside_ of quotations.
     This rule is always followed when using code in backticks, anyway.
@@ -703,7 +706,7 @@ Always use `/` as a path separator in documentation, and denote directories with
 For filesystem trees, use
 [these Unicode box-drawing characters](../cheatsheet/box-drawing.md).
 Refer to the
-[research projects guide](../guide/research-projects.md/#example)
+[research projects guide](../post/research-projects.md/#example)
 for an example.
 
 ### Accessibility

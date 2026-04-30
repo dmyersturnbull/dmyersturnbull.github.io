@@ -7,14 +7,14 @@ tags:
 # macOS setup
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
 A setup guide for programmers, etc., on macOS.
 
-!!! related
+!!! abstract "Also see"
 
     - [Linux setup guide](linux.md)
     - [Windows setup guide](windows.md)
@@ -53,7 +53,7 @@ Add _Terminal_ to the list of apps that can access all files.
 
 ### `brew-refill` alias
 
-!!! prerequisites
+!!! abstract "Prerequisites"
 
     This uses [`commonrc-config.sh`](files/commonrc-config.sh) functions,
     which `~/.commonrc` should source.
@@ -207,7 +207,7 @@ brew install eza ydiff bat ripgrep fd fzw jq yq p7zip
 
 ### Sudoers
 
-!!! related
+!!! abstract "Also see"
 
     - [sudoers in the Linux guide](linux.md#sudoers)
 
@@ -230,7 +230,7 @@ The line will probably look like this:
 
 ### Disable quarantining downloads
 
-!!! tip "FYI"
+!!! tip
 
     To remove the attribute from a single file, use `xattr -d com.apple.quarantine <path>`.
 
@@ -276,7 +276,7 @@ This may not work through some company and university firewalls.
 
 ### C/C++
 
-!!! prerequisites
+!!! abstract "Prerequisites"
 
     `gnu_brew` is defined in a section above.
 
@@ -287,12 +287,7 @@ brew install autoconf cmake
 
 ### Java, Rust, and Python
 
-<!--     Toolkits; e.g. Java and Rust     -->
-
-{%
-  include-markdown './includes/_toolkits.md'
-  heading-offset=2
-%}
+See the [toolkits guide](toolkits.md).
 
 ## Tweaks
 

@@ -1,15 +1,15 @@
 ---
 tags:
-  - JSON
+  - data-modeling
   - HTTP
+  - JSON
   - REST
-  - data-representation
 ---
 
 # API conventions
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -48,7 +48,7 @@ Let consumers build indices for fast lookup if they need to.
       ]
     ```
 
-??? rationale
+??? question "Rationale"
 
     A consumer may want to search by a different key; e.g. by `email` in the above example.
     Ignoring lookup needs when designing the schema simplifies the design process,
@@ -77,7 +77,7 @@ Permit only 1 type for a given key or array.
 
 ### Null and missing values; numerical range and precision
 
-??? rationale
+??? question "Rationale"
 
     Null values
 
@@ -182,7 +182,7 @@ Example:
 
 #### Durations and intervals
 
-??? rationale
+??? question "Rationale"
 
     ISO 8601’s duration format is quite bad but already widespread.
     **See [problems with ISO 8601 durations](../post/iso-8601-problems.md#durations).**
@@ -199,7 +199,7 @@ A duration may be written these three ways:
 **For intervals**, both `{"start": ..., "end": ...}` and ISO 8601 `T1--T2` syntax are acceptable.
 Do not separate times with `/` or use a start-time/duration pair.
 
-!!! note "Caution: calculating durations"
+!!! warning "Caution"
 
     Be careful when calculating durations.
     Things like NTP synchronization events can cause $T^C_1 - T^C_2$
@@ -221,7 +221,7 @@ Do not separate times with `/` or use a start-time/duration pair.
 | `DELETE` | 🗑️     | ∅                | JSON or ∅     |
 
 /// table-caption
-<b>HTTP methods with request/response body formats, assuming a JSON-only API.</b>
+<b>HTTP methods with request/response body formats for JSON APIs.</b>
 ///
 
 [JSON Merge Patch](https://datatracker.ietf.org/doc/rfc7396/)
@@ -238,7 +238,7 @@ servers must not use status codes, methods, responses, or conditions not listed 
 
 #### General status codes
 
-!!! prerequisites "Legend"
+!!! info "Legend"
 
     Refer to the HTTP Method symbols defined above.
 
@@ -269,12 +269,11 @@ servers must not use status codes, methods, responses, or conditions not listed 
 ///
 
 <small>
-<!-- -->
+
 <b>†</b> See [the 202 Created section](#202-accepted).
 
 <b>‡</b> See the [problem details section](#problem-details).
 
-<!-- -->
 </small>
 
 #### Specialized status codes

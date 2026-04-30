@@ -1,7 +1,7 @@
 # Reference docs
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -9,9 +9,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 Documents for software developers and maintainers to follow.
 Many of my projects contain a `NOTICE.md` file that links to these docs.
 
----
-
-<strong class="index">Contents</strong>
+## Contents
 
 [:fontawesome-solid-list-check: **Maintainers**](maintainer-guide.md):
 Information for repository maintainers

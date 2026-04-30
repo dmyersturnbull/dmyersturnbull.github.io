@@ -1,13 +1,13 @@
 ---
 tags:
-  - CI/CD
+  - DevOps
   - Python
 ---
 
 # Retooling Python builds
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->

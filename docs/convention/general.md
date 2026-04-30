@@ -1,64 +1,10 @@
-# Conventions
+# General
 
 <!--
 SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
-
-## Contents
-
-[:fontawesome-solid-map: **General**](general.md):
-Guidelines that apply everywhere
-
-[:fontawesome-solid-cloud: **APIs**](apis.md):
-REST APIs and data representation
-
-[:fontawesome-solid-book-open: **Documentation**](documentation.md):
-Writing and maintaining documentation
-
-[:fontawesome-solid-mug-hot: **Java**](java.md):
-Java, Kotlin, and Scala conventions
-
-[:fontawesome-solid-dragon: **Python**](python.md):
-Python conventions
-
-[:fontawesome-solid-keyboard: **CLI**](cli.md):
-Conventions for all CLI apps and scripts
-
-[:fontawesome-solid-terminal: **Bash**](bash.md):
-Bash script conventions
-
-[:fontawesome-solid-box: **Docker**](docker.md):
-Docker file conventions
-
-[:fontawesome-solid-code: **TypeScript**](typescript.md):
-TypeScript and JavaScript conventions
-
-[:fontawesome-solid-database: **SQL**](sql.md):
-SQL conventions
-
-## Usage
-
-These docs are meant to be linked to.
-Include a link in your project’s readme or `CONTRIBUTING.md` file.
-
-??? example
-
-    ```markdown
-    See https://dmyersturnbull.github.io/style/java/
-    but disregard the `security:` commit type, which we don’t use.
-    ```
-
-    Or just link to individual sections; e.g.
-
-    ```markdown
-    ### File names: See https://dmyersturnbull.github.io/ref/style/documentation#filenames
-    ```
-
-    These guidelines may be too detailed for most contributors.
-    Rather than pointing contributors here,
-    it may be better for maintainers to enforce these rules by editing contributors’ pull requests.
 
 ## Auto-formatters
 

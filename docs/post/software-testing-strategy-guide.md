@@ -1,13 +1,13 @@
 ---
 tags:
-  - testing
   - coding
+  - testing
 ---
 
 # Software testing strategy guide
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -21,7 +21,7 @@ teal { color: Teal }
 purple { color: Purple }
 </style>
 
-!!! warning "Note"
+!!! warning "Status"
 
     This document is a draft.
 
@@ -39,7 +39,7 @@ and [non‐functional](https://en.wikipedia.org/wiki/Non-functional_testing) tes
 | validation   | non-functional (_NF_) | software does what it should (we built the right thing) |
 
 /// table-caption
-<b>Verification vs. validation</b>
+<b>Verification vs. validation.</b>
 ///
 
 ### Testing <em>layers</em>

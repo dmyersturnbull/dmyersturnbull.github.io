@@ -1,12 +1,13 @@
 ---
 tags:
+  - data-modeling
   - HTTP
 ---
 
 # URI-safe characters
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -109,7 +110,7 @@ unreserved  = ALPHA / DIGIT / "-" / "." / "_" / "~"
   Are used reserved within one or more components but are not general delimiters.
   Whether they must be encoded depends on the component and the scheme.
 
-!!! note "Caution: scheme-specific restrictions"
+!!! warning "Caution: scheme-specific restrictions"
 
     A scheme can restrict URIs in many ways, including whether a sub-delimiter must be encoded.
     (In fact, §2.2 states that you should encode a reserved character
@@ -132,7 +133,8 @@ Note that `%` must also be encoded.
 | fragment  | y   | y   | y   | ³   |     |     | y   |
 
 /// table-caption
-<b>General delimiters (_y_ where valid)</b>
+<b>General delimiters.</b>
+y ― valid.
 ///
 
 ??? info "Footnotes"
@@ -157,7 +159,8 @@ Note that `%` must also be encoded.
 | fragment  | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
 
 /// table-caption
-<b>Sub-delimiters (_y_ where valid)</b>
+<b>Sub-delimiters.</b>
+y ― valid.
 ///
 
 ??? info "Footnotes"

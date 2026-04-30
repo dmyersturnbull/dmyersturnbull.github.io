@@ -1,15 +1,15 @@
 ---
 tags:
-  - datetimes
+  - data-modeling
+  - date-and-time
   - ISO-8601
   - RFC-3339
-  - data-representation
 ---
 
 # ISO 8601 problems
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
@@ -20,7 +20,7 @@ a few problems.
 [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601)
 has a **lot** of problems.
 
-!!! related
+!!! abstract "Also see"
 
     - [Duration specification](../spec/fixed-iso-8601.md)
     - [API conventions](../convention/apis.md#durations-and-intervals)
@@ -99,7 +99,7 @@ This is an unnecessary definition, and it’s non-obvious.
 
 ### Durations
 
-!!! related
+!!! abstract "Also see"
 
     - [calculating durations](calculating-durations.md)
     - [API conventions](../convention/apis.md#durations-and-intervals)
@@ -269,7 +269,7 @@ either of these formats:
 2024-12-16T14:30:55Z[-08:00]
 ```
 
-???+ note "Inconsistent strings"
+??? info "Inconsistent strings"
 
     These strings are considered _inconsistent_,
     and the prefix `!` forces implementations to treat them as erroneous:

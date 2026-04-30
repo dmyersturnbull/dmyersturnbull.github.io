@@ -1,6 +1,7 @@
 ---
 tags:
   - Git
+  - GitHub
   - OS-setup
   - security
 ---
@@ -8,14 +9,14 @@ tags:
 # Git, SSH, and GPG
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
 These instructions should work for Linux, macOS, and Windows.
 
-!!! prerequisites
+!!! abstract "Prerequisites"
 
     Install Git, SSH, GPG, and the [GitHub CLI](https://cli.github.com/) before proceeding.
     Follow the
@@ -157,7 +158,7 @@ Using SSH to access a GitHub repository is preferable to using HTTPS
 where authenticating via the GitHub API or installing the GitHub CLI would be difficult.
 You’ll need to generate an SSH key pair and tell GitHub about it.
 
-!!! info "See also"
+!!! abstract "See also"
 
     For extended instructions with explanations, see
     [GitHub’s SSH instructions](https://docs.github.com/en/authentication/connecting-to-github-with-ssh/).
@@ -397,7 +398,7 @@ Delete the `github.key.private.gpg` file when done.
 
 ### Optionally, publicize your public key
 
-!!! note "Important"
+!!! note "Caution"
 
     This assumes that you used a real email address, not a `@users.noreply.github.com` address.
 

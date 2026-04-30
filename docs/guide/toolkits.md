@@ -1,3 +1,20 @@
+---
+tags:
+  - Java
+  - OS-setup
+  - Python
+  - Rust
+  - software-setup
+---
+
+# Toolkits
+
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 ## Rust
 
 For Rust, just [install the Rust toolchain](https://rustup.rs/).

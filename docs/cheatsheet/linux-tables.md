@@ -6,6 +6,12 @@ tags:
 
 # Linux and Bash tables
 
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
+
 Useful cheatsheet tables for Linux and Bash.
 
 ## Filesystem
@@ -23,7 +29,7 @@ Useful cheatsheet tables for Linux and Bash.
 | named pipe (FIFO) | `p`     | named pipe for IPC                               |
 
 /// table-caption
-<b>Inode types with associated symbols in `ls -l`</b>
+<b>Inode types with associated symbols in `ls -l`.</b>
 ///
 
 ### Attributes of inodes
@@ -54,26 +60,33 @@ Useful cheatsheet tables for Linux and Bash.
 | Windows ♯ | ○ ‡     | ✔ ◊    | ✔ ◊    | ✔ ◊                 | ✗              |
 
 /// table-caption
-<b>Timestamp types per OS. ✔: mandatory; ○: optional.</b>
+<b>Timestamp types per OS.</b>
+✔ ― mandatory; ○ ― optional.
+///
 
 <small>
+
 <b>†</b>
 “Date Added” is macOS-specific and is not filesystem metadata (including xattr);
 instead, it’s a Spotlight property of the containing directory.
 The Spotlight server, mds, subscribes to APFS events, and tags the values immediately.
-Incorrect and/or missing values occur if Spotlight is disabled or its database is rebuilt.\
+Incorrect and/or missing values occur if Spotlight is disabled or its database is rebuilt.
+
 <b>‡</b>
-`atime` updates can be disabled or delayed (e.g. `noatime`, `relatime`).\
+`atime` updates can be disabled or delayed (e.g. `noatime`, `relatime`).
+
 <b>§</b>
-`birthtime` (`crtime` in ZFS) available via `statx` on at least Btrfs, ext4, XFS. Not portable.\
+`birthtime` (`crtime` in ZFS) available via `statx` on at least Btrfs, ext4, XFS. Not portable.
+
 <b>§</b>
 [NTFS](https://en.wikipedia.org/wiki/NTFS) and [ReFS](https://en.wikipedia.org/wiki/ReFS)
-define timestamps relative to the Windows Epoch, `1601-01-01T00:00:00Z`.\
+define timestamps relative to the Windows Epoch, `1601-01-01T00:00:00Z`.
+
 <b>◊</b>
 NTFS and ReFS store access, modified, change, and birth times.
 Unfortunately, **they call modified time `ctime` and birth time `ctime`.**
+
 </small>
-///
 
 ## Bash
 
@@ -114,7 +127,7 @@ Unfortunately, **they call modified time `ctime` and birth time `ctime`.**
 | `-N`     | `-N path`         | `path` has **mtime > atime**             |
 
 /// table-caption
-<b>Test operators (`[[ ]]`).</b>
+<b>Test operators (i.e. `[[ ]]`).</b>
 ///
 
 #### Testing whether a name is defined

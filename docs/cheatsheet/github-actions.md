@@ -1,10 +1,16 @@
 ---
 tags:
   - GitHub
-  - CI/CD
+  - DevOps
 ---
 
 # GitHub Actions
+
+<!--
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
+SPDX-PackageHomePage: https://dmyersturnbull.github.io
+SPDX-License-Identifier: CC-BY-SA-4.0
+-->
 
 ## Coercion to boolean
 

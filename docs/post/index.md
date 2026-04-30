@@ -1,16 +1,17 @@
 # Posts
 
 <!--
-SPDX-FileCopyrightText: Copyright 2017-2025, Douglas Myers-Turnbull
+SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
 SPDX-PackageHomePage: https://dmyersturnbull.github.io
 SPDX-License-Identifier: CC-BY-SA-4.0
 -->
 
 Ideas, summaries, recommendations, notes, etc.
 
----
+## Contents
 
-<strong class="index">Contents</strong>
+[:fontawesome-solid-flask: **Research projects**](research-projects.md):
+Suggestions for organizing computational research projects
 
 [:fontawesome-solid-calendar-days: **ISO 8601 problems**](iso-8601-problems.md):
 Why to use RFC 3339 and restrict ISO 8601 durations, etc.
@@ -30,7 +31,7 @@ A plea for testing scientific software
 [:fontawesome-solid-check: **Software testing strategy guide**](software-testing-strategy-guide.md):
 A summary of test types and guide to testing
 
-[:fontawesome-solid-gear: **Retooling Python builds**](retooling-python-builds.md):
+[:fontawesome-solid-worm: **Retooling Python builds**](retooling-python-builds.md):
 How to replace terrible Python build tools
 
 [:fontawesome-solid-fill-drip: **Frontends for time travelers**](frontends-for-time-travelers.md):
