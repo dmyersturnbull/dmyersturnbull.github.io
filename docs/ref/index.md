@@ -17,5 +17,5 @@ Information for repository maintainers
 [:fontawesome-solid-sign-hanging: **Contributors**](contributor-guide.md):
 Information for contributors, including newcomers
 
-[:fontawesome-solid-table-cells: **Supplemental – issue labels**](issue-labels.md):
+[:fontawesome-solid-table-cells: **Supplemental — issue labels**](issue-labels.md):
 Supplemental table of ticket labels and commit types

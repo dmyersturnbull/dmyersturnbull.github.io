@@ -111,11 +111,11 @@ Global installation is recommended, unless you do not have sudo / administrator 
     brew services start mariadb
     ```
 
-=== "Windows – Chocolatey"
+=== "Windows — Chocolatey"
 
     `choco install mariadb` (as an administrator)
 
-=== "Windows – Scoop"
+=== "Windows — Scoop"
 
     `scoop install main/mariadb`
 

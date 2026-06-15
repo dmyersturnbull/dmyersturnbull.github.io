@@ -30,9 +30,9 @@ Written in [regex-bnf](regex-bnf.md); `*?` is lazy 0-or-more, and `!` is complem
 message        = subject (body footer?)?
 subject        = scopes? change extra?
 scopes         = '[' scope (',' scope)* '] '
-scope          = SCOPE-KEY SCOPE-SIG?
+scope          = SCOPE-KEY SCOPE-EFFECT?
 SCOPE-KEY      = [a-z0-9]+(?:-[a-z0-9]+)*          ; e.g. `web-api`
-SCOPE-SIG      = [^a-z0-9\n\t]+                    ; e.g. `!`
+SCOPE-EFFECT   = [^-a-z0-9\n\t]+                   ; e.g. `!`
 change         = STD-VERB TYPE ENTITY              ; e.g. `fix class Abc`
                | MOVE-VERB TYPE ENTITY 'to' ENTITY ; e.g. `move class Abc to Xyz`
                | 'update' REALM                    ; e.g. `update dev-deps`
@@ -59,10 +59,10 @@ T-VALUE        = [^\s]+
 
 `scopes` states how users may be affected or care about the changes,
 including whether the changes are breaking for those users.
-Reach values MUST be restricted to an enum defined by the project.
+Scope values MUST be restricted to an enum defined by the project.
 Conceptually, each scope is the intersection of
 (1) a usage type (`SCOPE-KEY`) and
-(2) how the changes affect that usage (`SCOPE-SIG`).
+(2) how the changes affect that usage (`SCOPE-EFFECT`).
 
 Projects SHOULD use `!` as the scope significance to denote breaking changes.
 Projects MAY define other scope signifiance values.
@@ -161,7 +161,7 @@ test class DeltaCalc
 <b>Release notes:</b>
 
 ```markdown
-## v1.2.0 – 2025-05-07T14:12:35Z
+## v1.2.0 — 2025-05-07T14:12:35Z
 
 ### New features
 

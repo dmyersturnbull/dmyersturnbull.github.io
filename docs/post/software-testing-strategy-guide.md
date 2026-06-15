@@ -144,7 +144,7 @@ However, it is often better to focus on writing units (classes and functions)
 that are modular enough that you don’t even need to mock an object: Your function
 simply doesn’t use any others. Keep your classes separated from each other as possible.
 
-Focusing on ease of testing immediately – or even before writing code – can improve
+Focusing on ease of testing immediately — or even before writing code — can improve
 your code’s **modularity and thereby clarity, maintainability, and testability**.
 It can be harder in some situations, such as in database‐connected code.
 Try to keep your database separate from the code that doesn’t strictly need it.

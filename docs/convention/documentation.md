@@ -93,7 +93,7 @@ Also don’t use reserved names, including `.`, `..`, or
 [Windows reserved filenames](https://learn.microsoft.com/en-us/windows/win32/fileio/naming-a-file#naming-conventions).
 Limit names to 255 characters.
 
-!!! tip "Pro-tip – pathvalidate"
+!!! tip "Pro-tip — pathvalidate"
 
     The PyPi package [pathvalidate](https://pypi.org/project/pathvalidate/)
     will validate paths for all major operating systems and filesystem types by default.
@@ -327,13 +327,13 @@ This table summarizes how to use them in HTML and in Markdown.
 
 <a id="using-em-for-stress"></a>**Using `<em>` for stress:**
 
-[Linguistic stress](https://en.wikipedia.org/wiki/Stress_(linguistics)
+[Linguistic stress](https://en.wikipedia.org/wiki/Stress_(linguistics))
 is usually marked using italics.
 Consider the difference between `_I_ will go there` and `I will go _there_`.
 The italicization is essential to the meaning.
 This can lead to confusion if read as plaintext or by a screen reader.
 It’s best to make the exact meaning explicit by rephrasing:
-e.g. `I – specifically I – will go there.`
+e.g. `I — specifically I — will go there.`
 If you need to use italics for stress, prefer explicit `<em></em>`.
 
 <a id="using-the-dnf-element"></a>**Using the `<dfn>` element**
@@ -410,11 +410,15 @@ Use the correct Unicode characters for punctuation.
 
 ### Punctuation (prescriptive grammar)
 
-Use an en dash surrounded by spaces (`–`) to mark breaks in thoughts, **not** an em dash.
+!!! question "Rationale"
+
+    An em dash with spaces is the most readable, and it’s becoming more common.
+
+Use an em dash surrounded by spaces (`—`) to mark breaks in thoughts, **not** an em dash.
 For example:
 
 ```markdown
-An en dash – in contrast to an em dash – should be used here.
+An em dash — in contrast to an en dash — should be used here.
 ```
 
 For _i.e._ and _e.g._, skip the comma (British English) and normally introduce with _;_.
@@ -605,8 +609,8 @@ Use:
   which includes prefixes kibi- (Ki), mebi- (Mi), gibi- (Gi), tebi- (Ti), etc.
 - You may use **either** `50%` (widely used) or `50 %` (NIST-recommended).
 - For angles, omit a space before `°` as in `90°`.
-- Prefer [decimal degrees notation](https://en.wikipedia.org/wiki/Decimal_degrees)
-  – e.g. `90° 30′ 15″` – for longitude and latitude.
+- Prefer [decimal degrees notation](https://en.wikipedia.org/wiki/Decimal_degrees);
+  e.g. `90° 30′ 15″` — for longitude and latitude.
   Use no-break spaces
   (` `/[U+00A0](https://www.fileformat.info/info/unicode/char/00A0/index.htm)/`&nbsp;`),
   and proper symbols for
@@ -617,7 +621,8 @@ Use:
 
 <small>
 
-<b>† Why U+00B5 micro and not U+03BC mu?</b>
+<b>†</b>
+**Why U+00B5 micro and not U+03BC mu?**
 
 Use the micro sign instead of the greek letter mu, but capital omega instead of the ohm sign.
 From the
@@ -672,8 +677,8 @@ Is that an exact range from a sample or a confidence interval?
     **What does _1–2 hours_ mean?**
 
     - **❌ Incorrect** _Half-life is 1–2 hours._
-    - **✅ Correct – range** _Half-life was 1–2 hours among 58 participants.
-    - **✅ Correct – CI** _Mean half-life is 1.4 hours (0.9–1.9, 80% CI).
+    - **✅ Correct — range** _Half-life was 1–2 hours among 58 participants.
+    - **✅ Correct — CI** _Mean half-life is 1.4 hours (0.9–1.9, 80% CI).
 
 **Use one of these formats:**
 
@@ -696,7 +701,7 @@ For example: `2023-11-02T14:55:00 -08:00 [America/Los_Angeles]`.
 For durations, use _8.3 s_.
 `hr`, `min`, and `sec`/`s` are acceptable abbreviations, but `M` for minute is not.
 `hh:mm:ss` (e.g. `12:30:55`) is generally ok,
-but do **not** use `mm:ss` or `hh:mm` – these are ambiguous.
+but do **not** use `mm:ss` or `hh:mm` — these are ambiguous.
 Also do **not** use the ISO 8601’s `P`/`PT` duration syntax (e.g. `PT45M55S`) in documentation.
 
 ### Filesystem paths and trees
@@ -734,7 +739,7 @@ it does that to avoid adding extra whitespace.
 #### Closing tags
 
 Always include the `<html>`, `<head>`, and `<body>` elements.
-Also, always close tags – for example, use `<p>The end.</p>`, **not** `<p>The end.`.
+Also, always close tags — for example, use `<p>The end.</p>`, **not** `<p>The end.`.
 
 These two practices improve readability and massively simplify parsing.
 The rules for

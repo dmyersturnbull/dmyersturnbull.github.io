@@ -42,7 +42,7 @@ I’ll discuss these through a real example.
 ## A matrix algorithm
 
 You devised some clever matrix algorithm that operates on two matrices and outputs a third.
-After putting your paper on arXiv, you implement it in three languages—Java, Scala, and Python.
+After putting your paper on arXiv, you implement it in three languages: Java, Scala, and Python.
 
 === "Java"
 
@@ -109,13 +109,15 @@ In fact, you test your code with Numpy `ndarray`,
 [PySpark matrices](https://spark.apache.org/docs/latest/api/python/reference/api/pyspark.mllib.linalg.Matrices.html),
 and [Polars DataFrames](https://pola-rs.github.io/polars/py-polars/html/reference/dataframe/index.html).
 That’s three times the work of your Java and Scala implementations, but at least it’s safe.
+Right?
 
 A year later, a PhD student in a dark room finds your lovely Python library.
 It’s got 450 GitHub stars, so it must be good.
 She incorporates it into her own code, which she’s already written tests for.
-She’s not testing your code—nor should she. She assumes it works.
-She gets an answer—a reasonable-looking matrix, and it gets published.
-Of course, it’s wrong.
+She’s not testing your code — nor should she.
+She assumes it works and gets an answer.
+It’s a reasonable-looking matrix, and it gets published.
+But it’s wrong.
 
 What happened?
 Somewhere in `calculate` is this code:
@@ -151,17 +153,16 @@ def calculate(matrix_a, matrix_b):
         A matrix
     """
     # some fancy things...
-    #
     return matrix_a * matrix_b
 ```
 
 Ok, it got out of hand.
 We’ve made a lot of work for ourselves writing docs and tests,
 made an unreadable mess of documentation,
-and still failed to over all possible libraries that follow the documented semantics.
-But it really wasn’t your fault; you were writing Pythonic code and following duck typing.
+and still failed to cover all possible libraries that follow the documented semantics.
+But it wasn’t entirely your fault; you were writing Pythonic code and following duck typing.
 
-In contrast, our Scala code was easy to test, and it’s easy to understand how to use at a glance.
+In contrast, your Scala code was easy to test, and it’s easy to understand how to use at a glance.
 
 ```scala
 import breeze.linalg.Matrix
@@ -176,7 +177,7 @@ class MyAlgorithm {
 
 The rendered documentation would show that `matrixA` and `matrixB` are both `breeze.linalg.Matrix`.
 Upon seeing the method signature, a user could read up about how Breeze matrices works.
-Alternatively, they could skip that --
+Alternatively, they could skip that —
 because you, as the library author, are certifying that your code works with Breeze matrices.
 If they’re using matrices of another library, they can write an adapter.
 
@@ -275,6 +276,6 @@ As Alex Martelli (the author of Python in a Nutshell) wrote in an email thread:
 !!! quote
 
     Amen, hallelujah.
-    You don’t really care for IS-A – you really only care for BEHAVES-LIKE-A- […],
+    You don’t really care for IS-A — you really only care for BEHAVES-LIKE-A- \[…],
     so, if you do test, this behaviour is what you should be testing for
     **— [Alex Martelli](https://groups.google.com/g/comp.lang.python/c/CCs2oJdyuzc/m/NYjla5HKMOIJ)**

@@ -113,7 +113,7 @@ The following instructions will
     [ssh config docs](https://manpages.debian.org/bookworm/openssh-client/ssh_config.5.en.html)
     ([man7 link](https://man7.org/linux/man-pages/man5/ssh_config.5.html))
     neglect to state this explicitly:
-    **Options declared at the top of the file** – specifically, before any `Host` specification –
+    **Options declared at the top of the file** — specifically, before any `Host` specification –
     **are global and non-overridable**.
     This is distinct from putting them under `Host *`.
 
@@ -280,7 +280,7 @@ You will need to install and configure the SSH server.
 
 ## Enabling commit signatures
 
-### Sign with SSH – **NOT recommended**
+### Sign with SSH — **NOT recommended**
 
 !!! warning
 

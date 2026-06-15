@@ -44,7 +44,7 @@ git gc --prune=1.day
 git fetch --prune
 ```
 
-### Editing – commit, rebase, etc.
+### Editing — commit, rebase, etc.
 
 #### Unstage a file
 

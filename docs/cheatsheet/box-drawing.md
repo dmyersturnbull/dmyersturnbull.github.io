@@ -149,12 +149,10 @@ This table uses 🗸, **✔**, and 🗸🗸 to indicate the styles of joints.
 <b>Unicode box-drawing characters.</b>
 ///
 
-### Legend for joint columns
-
 <small>
-
-- **✔** (heavy check mark) ― heavy, single-stroke joint
-- 🗸 (light check mark) ― light, single-stroke joint
-- 🗸🗸 (two light check marks) ― double-stroke light joint
-
+**✔** (heavy check mark) ― heavy, single-stroke joint
+<br />
+🗸 (light check mark) ― light, single-stroke joint
+<br />
+🗸🗸 (two light check marks) ― double-stroke light joint
 - </small>

@@ -64,6 +64,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 | … `outputs.<output_id>.value`          | +        |         |            |          |       |          |       | +      |           |         | +        | +      |     |
 
 <small>
-<b>†</b> `always`, `cancelled`, `success`, `failure`\
+<b>†</b> `always`, `cancelled`, `success`, `failure`
+<br />
 <b>‡</b> `hashFiles`
 </small>

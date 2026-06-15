@@ -78,7 +78,7 @@ For Java and Kotlin, the
 can handle some formatting conventions for those languages.
 
 These auto-formatters are meant to be run via
-[pre-commit](https://pre-commit.com/)
+[prek](https://prek.j178.dev/)
 or before each merge.
 This document lists non-formatting guidelines (e.g. accessibility)
 and formatting conventions that auto-formatters do not handle.

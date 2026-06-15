@@ -234,7 +234,7 @@ Follow those headers with a plain-language statement that you have modified the 
 
     **Review:**
 
-    - The [supplemental table of labels](/ref/issue-labels.md#table)
+    - The [supplemental table of labels](issue-labels.md#table)
     - The [commit message specificiation](../spec/commit-messages.md)
     - The [scopes section](#scopes) below
 
@@ -266,7 +266,7 @@ Use it only to acknowledge unusually important `style` contributions.
 
 #### Including dependent changes in one commit
 
-It is completely acceptable – and encouraged –
+It is completely acceptable — and encouraged –
 to add tests and documentation for a new feature inside a `feat:` commit,
 to remove them inside a `drop:` commit,
 and to update them inside a `fix:` or `security:` commit.

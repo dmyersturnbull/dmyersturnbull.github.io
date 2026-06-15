@@ -26,7 +26,7 @@ property names may follow other conventions if needed to accommodate other needs
 Don’t try to anticipate lookup needs or pretend your JSON is an index.
 Let consumers build indices for fast lookup if they need to.
 
-=== "❌ Incorrect – using arbitrary names as keys"
+=== "❌ Incorrect — using arbitrary names as keys"
 
     ```json
     {
@@ -36,7 +36,7 @@ Let consumers build indices for fast lookup if they need to.
       }
     ```
 
-=== "✅ Correct – leaving the names as values"
+=== "✅ Correct — leaving the names as values"
 
     ```json
     {
@@ -60,11 +60,11 @@ Let consumers build indices for fast lookup if they need to.
 
 Restrict keys to one of these patterns:
 
-- `^[a-z0-9][a-z0-9+-]*$` – kebab-case; general, and allowing `+` to mean _and_
-- `^[a-z][a-z0-9-]*$` – kebab-case; trivial interoperability with Python
-- `^[a-z][A-Za-z0-9]*$` – camelCase; JavaScript/Java-compatible
+- `^[a-z0-9][a-z0-9+-]*$` — kebab-case; general, and allowing `+` to mean _and_
+- `^[a-z][a-z0-9-]*$` — kebab-case; trivial interoperability with Python
+- `^[a-z][A-Za-z0-9]*$` — camelCase; JavaScript/Java-compatible
   (in practice, avoid consecutive `[A-Z]`; i.e. prefer `^[a-z]([A-Z]?[a-z0-9]+)*[A-Z]?$`.)
-- `^[a-z][a-z_]*$` – snake_case; Python-compatible
+- `^[a-z][a-z_]*$` — snake_case; Python-compatible
 - another pattern that disallows **at least** `` ./:|{}*?#/"'`<>`` and non-printable characters
 
 Doing this simplifies using
@@ -128,7 +128,7 @@ $R(I_t) = \left. I_t \middle/ \text{Avg}_{i=1}^{t-1} I_i \right.$,
 where $I_t$ is the current for trial $t$.
 Compare these two representations:
 
-=== "❌ Incorrect – using `null`"
+=== "❌ Incorrect — using `null`"
 
     **This is a bad design.**
     Did the measurement fail? For example, was there a hardware connection issue?
@@ -141,7 +141,7 @@ Compare these two representations:
     ]
     ```
 
-=== "✅ Correct – modeling explicitly"
+=== "✅ Correct — modeling explicitly"
 
     **This is a good design.**
     Specify the status values with a JSON Schema `enum`.
@@ -269,11 +269,9 @@ servers must not use status codes, methods, responses, or conditions not listed 
 ///
 
 <small>
-
 <b>†</b> See [the 202 Created section](#202-accepted).
-
+<br />
 <b>‡</b> See the [problem details section](#problem-details).
-
 </small>
 
 #### Specialized status codes
@@ -496,8 +494,8 @@ or [`See` headers](../spec/http-see-header.md).
 
 #### Content types
 
-Provide `Accept:` on non-`HEAD` requests – for example, `Accept: text/json`.
-Similarly, provide `Content-Type:` on `POST` – for example, `Content-Type: text/json`.
+Provide `Accept:` on non-`HEAD` requests — for example, `Accept: text/json`.
+Similarly, provide `Content-Type:` on `POST` — for example, `Content-Type: text/json`.
 
 #### Rate-limiting
 

@@ -56,7 +56,7 @@ See the [btrfs documentation](https://btrfs.readthedocs.io/en/latest).
 
 ### Use a swap partition the same size as your RAM.
 
-There’s an adage that it’s important for emergency memory – in case your main memory runs out.
+There’s an adage that it’s important for emergency memory — in case your main memory runs out.
 Meanwhile, mavericks insist on skipping it altogether,
 pointing out that using it for emergency memory would render a system excessively slow.
 Linux uses swap space as a **complement** to memory by swapping out infrequently used pages.
@@ -180,7 +180,7 @@ Here are my recommendations:
 
 ### Edit `fstab`
 
-Following these rules, the `fstab` for “Example scheme 1 – single-user workstation” might look like this:
+Following these rules, the `fstab` for “Example scheme 1 — single-user workstation” might look like this:
 
 ```fstab
 # filesystem     mount      type   options                            d p

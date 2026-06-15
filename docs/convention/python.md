@@ -41,13 +41,13 @@ For example:
     ).my_other_long_named_function_being_chained(1)
     ```
 
-=== "✅ Correct – shorten function names"
+=== "✅ Correct — shorten function names"
 
     ```python
     data = my_shorter_function(data).my_other_shorter_function(1)
     ```
 
-=== "✅ Also Correct – split up statements"
+=== "✅ Also Correct — split up statements"
 
     ```python
     data = my_long_named_function_that_makes_the_line_too_long(data)

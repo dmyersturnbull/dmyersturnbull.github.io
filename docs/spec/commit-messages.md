@@ -310,11 +310,9 @@ Note that PyData defers to a
 ///
 
 <small>
-
 <b>†</b> _GH-recognized_ means any phrase that GitHub sees as
 [PR-to-issue links](https://docs.github.com/en/issues/tracking-your-work-with-issues/using-issues/linking-a-pull-request-to-an-issue#linking-a-pull-request-to-an-issue-using-a-keyword).
-
+<br />
 <b>‡</b> Whether `BREAKING CHANGES` and (if defined) `DEPRECATED`
 are footers or special body paragraphs.
-
 </small>

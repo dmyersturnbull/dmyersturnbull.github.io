@@ -15,7 +15,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 This article is a plea for scientists who write code to test their software.
 
-**Let’s get this out of the way – you must write tests.**
+**Let’s get this out of the way — you must write tests.**
 
 Tests are just as required in scientific software as in all other software.
 _If you’re already convinced, skip this section._
@@ -36,7 +36,7 @@ A lack of deceptive intent doesn’t lessen the damage, and not testing is reckl
 **Not testing your software is as egregious a fault in scientific integrity as p‐hacking.**
 
 On a software development team, you can’t push new code to a main branch without accompanying
-tests – which must pass.
+tests — which must pass.
 In fact, many good coders [write tests first](https://en.wikipedia.org/wiki/Test-driven_development),
 before any other code.
 

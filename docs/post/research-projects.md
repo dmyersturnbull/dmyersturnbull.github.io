@@ -88,7 +88,7 @@ The script writes to `data/temp-output/` (**not** `data/frozen`).
 
 ### JSON metadata
 
-What's in `20220615T164555.confocal3.json`?
+What’s in `20220615T164555.confocal3.json`?
 
 ```json
 {

@@ -19,6 +19,16 @@ A collection of ChatGPT responses that are useful, strange, strange, or utter no
 ![Meaningless diagram meant to illustrate the mixing of two spectral colors
 in a subtractive color space](files/subtractive-color-model.webp "Subtractive color model diagram").
 
+<figure>
+  <img
+    src="files/subtractive-color-model.webp"
+    alt="Vibrant diagram of two blobs of paint (one red and one blue mixed with yellow) dripping onto a color scale bar. There are incomplete arrows and labels, meaningless phrases, spelling errors (e.g. &ldquo;seabective color mode&rdquo; and &ldquo;percepttes of chilonlons&rdquo;, and distorted letters."
+/>
+  <figcaption>
+    Diagram by <a href="https://en.wikipedia.org/wiki/DALL-E">DALL-E</a> 3 to illustrate the mixing of two spectral colors in a subtractive color space.
+  </figcaption>
+</figure>
+
 ## Apple math
 
 Asking a question with a stealthily provided answer immediately tricks ChatGPT 3.5.
@@ -46,7 +56,7 @@ ChatGPT 4 saw through my scheme.
 > You still have 4 apples today.
 > Eating the apples yesterday doesn't change the number of apples you have today.
 
-<b>Bonus – following up with 3.5:</b>
+<b>Bonus — following up with 3.5:</b>
 
 > > Am I an apple?
 

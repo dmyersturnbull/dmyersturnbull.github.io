@@ -37,10 +37,10 @@ this guide’s rules take precedence.
 
 Additionally, refer to:
 
-1. [_CLI conventions – arguments_](cli.md#arguments)
-2. [_CLI conventions – exit codes_](cli.md#exit-codes)
-3. [_CLI conventions – standard streams_](cli.md#standard-streams)
-4. [_CLI conventions – standard paths_](cli.md#standard-paths)
+1. [_CLI conventions — arguments_](cli.md#arguments)
+2. [_CLI conventions — exit codes_](cli.md#exit-codes)
+3. [_CLI conventions — standard streams_](cli.md#standard-streams)
+4. [_CLI conventions — standard paths_](cli.md#standard-paths)
 
 ## Banned Bash features
 
@@ -102,7 +102,7 @@ Use the levels `DEBUG`, `INFO`, `WARN`, and `ERROR`, with `INFO` as the default 
 Other structured data may be included (e.g. date-time, time elapsed, % progress, thread id).
 
 If desired, you can distinguish logging levels with ANSI color and/or style codes.
-Refer to [_CLI conventions – color_](cli.md#color) for details.
+Refer to [_CLI conventions — color_](cli.md#color) for details.
 See [`todos.sh`](../scripts/todos.sh) for an example.
 
 ??? example "Example log file"
@@ -185,7 +185,7 @@ Always use `$HOME` inside scripts instead.
        whose final component starts with `-`.
 
     _Note:_
-    This even works with paths that contain `[*?]`, [|&<>]`, `['"]`,
+    This even works with paths that contain `[*?]`, `[|&<>]`, `['"]`,
     and even `\\` and possibly control chars.
     However, please, please
     [don’t use such characters in filenames](https://dwheeler.com/essays/fixing-unix-linux-filenames.html).
@@ -423,5 +423,3 @@ main || exit 1 # (3)!
 2. `exit 2` for usage errors.
 3. If `main` errored, exit 1.
 4. You can use `|| exit $?` to forward `main`’s return code.
-
-*[TTY]: [TeleTYpe device](https://en.wikipedia.org/wiki/Tty_(Unix))

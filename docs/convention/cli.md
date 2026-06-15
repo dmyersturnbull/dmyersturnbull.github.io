@@ -98,7 +98,7 @@ including on macOS.
 CLI apps may want to use
 [ANSI escape codes](https://en.wikipedia.org/wiki/ANSI_escape_code).
 Codes other than color and style, such as those that scroll or move the cursor,
-should only be used when and as expected (necessarily requiring that the terminal is a [TTY]).
+should only be used when and as expected (necessarily requiring that the terminal is a TTY).
 
 ### Color and style
 
@@ -112,7 +112,7 @@ to enhance readability.
 If your app supports color and/or style, it should be enabled IF AND ONLY IF _EITHER_:
 
 - [`NO_COLOR`](https://no-color.org/) is **defined and non-empty** _AND EITHER_
-  `--color` (or similar CLI flag or option) was passed _OR_ the output stream is a [TTY]
+  `--color` (or similar CLI flag or option) was passed _OR_ the output stream is a TTY
   (e.g. as detected by `[[-t 2]]).
 - _OR_ [`FORCE_COLOR`](https://force-color.org/) is **defined and non-empty**.
 
@@ -144,5 +144,3 @@ Most other codes are rarely supported and should be avoided.
 Never rely exclusively on color or style;
 all essential information must be parsable from visible characters (for humans and machines).
 Also, don’t go overboard: 4 colors is nice, 8 is confusing, and 16 sends users to ophthalmologists.
-
-*[TTY]: [TeleTYpe device](<https://en.wikipedia.org/wiki/Tty_(Unix)>)

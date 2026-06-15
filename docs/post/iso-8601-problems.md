@@ -67,7 +67,7 @@ It could have required that either 6, 9, or 27 digits are used.
 
 It also allows `24:00:00`, where `2024-12-16T24:00` is `2024-12-17T00:00`.
 Interestingly, `00:60:00` is not allowed.
-However, `00:00:60` is – apparently this was to simplify working with leap-seconds.
+However, `00:00:60` is — apparently this was to simplify working with leap-seconds.
 
 For UTC offsets, it allows:
 
@@ -82,7 +82,7 @@ For UTC offsets, it allows:
 I know we’re all used to it by now, but UTC offsets are clearly backward: They should be negated.
 `2020-01-01T18:00-08:00` **should** mean $16 - 8 = 10$ UTC.
 Instead, the actual hour is $16 + 8 = 24 \equiv 0$.
-The syntax should be declarative – by specifying what the value **is**,
+The syntax should be declarative — by specifying what the value **is**,
 not what operation was already performed.
 
 #### The date and time aren’t visually seperated
@@ -147,7 +147,8 @@ P(?:(?<hours>\d+(?:[.,]\d++)?+)S)??
 )?+
 ```
 
-But, it allows some non-compliant and weird strings like ``(empty),`P0DT0H`, `P1Y13M`and`PT0.5H30M`.
+But, it allows some non-compliant and weird strings like
+the empty string, `P0DT0H`, `P1Y13M`, and `PT0.5H30M`.
 This following regex is a little better:
 
 ```regexp
@@ -231,7 +232,7 @@ If you need both lexicographical sorting and the original offsets, see the next 
     ```python
     assert "+01:00" < "-01:00"  # (recall: subtract offset to get the UTC instant)
     assert "-02:00" < "-01:00"  #
-    assert "+02:00" < "+01:00"  # error – inverted
+    assert "+02:00" < "+01:00"  # error — inverted
     assert "+01:00" < "Z"       #
     assert "Z"      < "-01:00"  # error
     ```

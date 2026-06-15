@@ -19,7 +19,7 @@ SPDX-License-Identifier: CC-BY-SA-4.0
 
 I had a few jobs doing web development circa 12–15 years ago.
 HTML 4, CSS 2, pre‐ECMAScript 4 JavaScript, and PHP, Python, or ASP.
-These languages – especially PHP and ASP – were terrible.
+These languages — especially PHP and ASP — were terrible.
 On the side, I tried out Java EE tools like [Spring](https://spring.io) and gave
 [Django](https://www.djangoproject.com/) a try.
 [MVC](https://en.wikipedia.org/wiki/Model%E2%80%93view%E2%80%93controller) was standard practice,

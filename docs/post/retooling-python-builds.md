@@ -81,7 +81,7 @@ regarding this.
 _**Update**: Fast-forward to 2025:_ Check out [uv](https://docs.astral.sh/uv/), too.
 
 _Fast-forward to 2023:_
-Pip now performs some dependency resolution – although it’s slow and somewhat unreliable.
+Pip now performs some dependency resolution — although it’s slow and somewhat unreliable.
 Hatch, Poetry, and pipx fully resolve dependency DAGs.
 These are way faster than Conda, are more clear about dependencies,
 don’t fail on resolvable graphs, and are more reliable and easier to use.

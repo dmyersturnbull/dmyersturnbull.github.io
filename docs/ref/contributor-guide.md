@@ -73,7 +73,7 @@ Then follow the remaining instructions in the repo’s `CONTRIBUTING.md`.
 
 ### Make the changes
 
-Don’t worry about code style: both pre-commit and a GitHub workflow will handle that.
+Don’t worry about code style: both prek and a GitHub workflow will handle that.
 If you want, you can refer to the
 [coding conventions guide](https://dmyersturnbull.github.io/convention/)
 for conventions beyond simple formatting.

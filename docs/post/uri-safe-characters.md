@@ -124,62 +124,60 @@ The following tables show the components in which a reserved delimiter
 can be used for its literal meaning without percent-encoding.
 Note that `%` must also be encoded.
 
-| component | `:` | `/` | `?` | `#` | `[` | `]` | `@` |
-|-----------|-----|-----|-----|-----|-----|-----|-----|
-| scheme    |     |     |     |     |     |     |     |
-| authority | ¹   |     |     |     |     |     |     |
-| path      | y²  |     |     |     |     |     | y   |
-| query     | y   | y   | y   |     |     |     | y   |
-| fragment  | y   | y   | y   | ³   |     |     | y   |
+| component | `:`           | `/` | `?` | `#`          | `[` | `]` | `@` |
+|-----------|---------------|-----|-----|--------------|-----|-----|-----|
+| scheme    |               |     |     |              |     |     |     |
+| authority | <sup>†</sup>  |     |     |              |     |     |     |
+| path      | y<sup>‡</sup> |     |     |              |     |     | y   |
+| query     | y             | y   | y   |              |     |     | y   |
+| fragment  | y             | y   | y   | <sup>§</sup> |     |     | y   |
 
 /// table-caption
 <b>General delimiters.</b>
 y ― valid.
 ///
 
-??? info "Footnotes"
+<small>
+<b>†</b>
+Technically, `:` is allowed in _userinfo_ and carries no reserved meaning.
+However, this is only for compatibility with a `username:password` syntax,
+which is deprecated.
+<br />
+<b>‡</b>
+Literal `:` is valid in _path_, except as the first character in a
+[URI Reference](https://datatracker.ietf.org/doc/html/rfc3986#section-4.1) without _scheme_
+(e.g. `https://google.com/:` is fine but `google.com/:` is not).
+<br />
+<b>§</b>
+Surprisingly, _fragment_ components cannot contain `#`.
+This is in contrast to `?`, which can occur in _query_ components.
+</small>
 
-    - <b>¹</b> Technically, `:` is allowed in _userinfo_ and carries no reserved meaning.
-      However, this is only for compatibility with a `username:password` syntax,
-      which is deprecated.
-
-    - <b>²</b>
-      Literal `:` is valid in _path_, except as the first character in a
-      [URI Reference](https://datatracker.ietf.org/doc/html/rfc3986#section-4.1) without _scheme_
-      (e.g. `https://google.com/:` but `google.com/:` is not).
-
-    - <b>³</b> Perhaps surprisingly, fragments cannot contain `#`.
-      This is in contrast to `?`, which can occur in _query_ components.
-
-| component | `!` | `$` | `'` | `(` | `)` | `*` | `&` | `=` | `,` | `;` | `+` |
-|-----------|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|-----|
-| authority | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
-| path      | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
-| query     | y   | y   | y   | y   | y   | y   | y¹  | y¹  | y³  | y³  | y²  |
-| fragment  | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   | y   |
+| component | `!` | `$` | `'` | `(` | `)` | `*` | `&`           | `=`           | `,`           | `;`           | `+`           |
+|-----------|-----|-----|-----|-----|-----|-----|---------------|---------------|---------------|---------------|---------------|
+| authority | y   | y   | y   | y   | y   | y   | y             | y             | y             | y             | y             |
+| path      | y   | y   | y   | y   | y   | y   | y             | y             | y             | y             | y             |
+| query     | y   | y   | y   | y   | y   | y   | y<sup>†</sup> | y<sup>†</sup> | y<sup>‡</sup> | y<sup>‡</sup> | y<sup>§</sup> |
+| fragment  | y   | y   | y   | y   | y   | y   | y             | y             | y             | y             | y             |
 
 /// table-caption
 <b>Sub-delimiters.</b>
 y ― valid.
 ///
 
-??? info "Footnotes"
-
-    - <b>¹</b> `&` and `=` are typically used for key–value parameters.
-
-    - <b>²</b> `,` and `;` are delimiters for some
-      [OpenAPI query parameter _styles_](https://spec.openapis.org/oas/v3.2.0.html#style-values):
-
-      - _`simple` and `form` use `,`
-      - `matrix` and `cookie` use `,` and `;`
-
-      (Note that `cookie` actually uses `; `.
-      `label` uses `.`, which is unreserved;
-      and `spaceDelimited`, and `pipeDelimited` use ` ` and `|`, which must be percent-encoded.)
-
-    - <b>³</b> `+` is used in place of a space in
-      [`x-www-form-urlencoded`](https://url.spec.whatwg.org/#application/x-www-form-urlencoded),
-      as used in HTML forms.
+<small>
+<b>†</b>
+`&` and `=` are typically used for key–value parameters.
+<br />>
+<b>‡</b>
+`,` and `;` are delimiters for some
+[OpenAPI query parameter _styles_](https://spec.openapis.org/oas/v3.2.0.html#style-values):
+`simple` and `form` use `,`, and `matrix` and `cookie` use `,` and `;`.
+<br />
+<b>§</b>
+`+` is used in place of a space in
+[`x-www-form-urlencoded`](https://url.spec.whatwg.org/#application/x-www-form-urlencoded).
+</small>
 
 ## The _query_ component
 

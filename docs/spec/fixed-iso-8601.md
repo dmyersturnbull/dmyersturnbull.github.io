@@ -145,19 +145,19 @@ The result is `PT<h>H[<m>M[<s>S]]`, which is trivial parse and convert to `hh:mm
 
     **✅ ok** `23:45:55.800200` (800 milliseconds and 200 microseconds)
 
-    **❌ not ok** `23:45:55.2` – unclear: is `0.8` 8 or 800 milliseconds?
+    **❌ not ok** `23:45:55.2` — unclear: is `0.8` 8 or 800 milliseconds?
 
-    **❌ not ok** `23:45:55.800` – use exactly 0 or 6 decimal digits
+    **❌ not ok** `23:45:55.800` — use exactly 0 or 6 decimal digits
 
-    **❌ not ok** `P6M2WT45M55S` – ambiguous because months have indeterminate durations
+    **❌ not ok** `P6M2WT45M55S` — ambiguous because months have indeterminate durations
 
-    **❌ not ok** `P1D12H` – unambiguous but not limited to hours, minutes, and seconds
+    **❌ not ok** `P1D12H` — unambiguous but not limited to hours, minutes, and seconds
 
-    **❌ not ok** `P2S` – does not start with `PT`; rewrite as `PT2S`
+    **❌ not ok** `P2S` — does not start with `PT`; rewrite as `PT2S`
 
-    **❌ not ok** `05:22` – is this `min:sec` or `hour:min`?
+    **❌ not ok** `05:22` — is this `min:sec` or `hour:min`?
 
-    **🟨 not in spec** `35.2 s` – unambiguous; not in spec but good in documentation
+    **🟨 not in spec** `35.2 s` — unambiguous; not in spec but good in documentation
 
 ## JSON Schema
 

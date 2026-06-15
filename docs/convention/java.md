@@ -434,7 +434,7 @@ public class Claz {
 ## Naming
 
 Follow [Google’s Java naming conventions](https://google.github.io/styleguide/javaguide.html#s5-naming).
-Notably, treat acronyms as words – for example, `CobolError`, **not** `COBOLError`.
+Notably, treat acronyms as words — for example, `CobolError`, **not** `COBOLError`.
 You may alter this practice if needed to maintain consistency with an extant convention;
 in particular, for `IO` (e.g. in `IOException`).
 Name asynchronous methods (those that return a `CompletableFuture`) with the suffix `Async`;

@@ -68,14 +68,12 @@ You should now have a colorful shell, complete with a plugin for Git.
     ///
 
     <small>
-
     <b>†</b>
     `.profile` is the original Bourne shell config file,
     but Bash will also read it if `.bash_profile` doesn’t exist.
-
+    <br />
     <b>‡</b>
     The default `.zprofile` sources `.bash_profile` if it exists.
-
     </small>
 
     <b>Further reading:</b>
