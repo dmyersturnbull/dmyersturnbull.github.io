@@ -5,12 +5,14 @@
 
 set -o errexit -o nounset -o pipefail # "strict mode"
 
-script_path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
+script_path="$(realpath -- "${BASH_SOURCE[0]}")" || exit $?
 declare -r script_name="${script_path##*/}"
 declare -r script_vr=v0.1.0
 
 # Declare options with their defaults.
-declare backup_dir=/bak/mariadb/
+dt=$(date +%Y-%m-%dT%H%M%S%z)
+declare use_timestamp=false
+declare backup_root=/bak/mariadb/
 declare -i port=3306
 declare socket_path=
 # 2 is a little faster than the default of 3 (range 1 to 19)
@@ -42,7 +44,8 @@ Arguments:
 Options:
   -h, --help          Show this message and exit.
       --version       Show the version string and exit.
-  -d, --dir           Backup directory <dir> in <dir>/<db-name>/<table-name>.sql.zst (default: $backup_dir).
+  -d, --dir           Backup directory <dir> in <dir>/<db-name>/<table-name>.sql.zst (default: $backup_root).
+  -t, --timestamp     Use <dir>/<db-name>/<timestamp>/<table-name>.sql.zst instead.
   -s, --socket        Path to a Unix socket file for connection.
   -p, --port          TCP port for connection (default: $port).
       --zstd-level    ZSTD compression level; higher is slower (default: $zstd_level).
@@ -98,11 +101,27 @@ while (($# > 0)); do
       exit 0
       ;;
     --dir=*)
-      backup_dir="${1#--dir=}"
+      backup_root="${1#--dir=}"
       ;;
     -d | --dir)
-      backup_dir="$2"
+      backup_root="$2"
       shift
+      ;;
+    --timestamp=*)
+      _ut="${1#--timestamp=}"
+      if [[ "$_ut" =~ ^(0|false|no|n)$ ]]; then
+        use_timestamp=false
+      elif [[ "$_ut" =~ ^(1|true|yes|y)$ ]]; then
+        use_timestamp=true
+      else
+        usage_error "Invalid value in $1; must be 0|false|no|n or 1|true|yes|y"
+      fi
+      ;;
+    -t | --timestamp)
+      use_timestamp=true
+      ;;
+    --no-timestamp)
+      use_timestamp=false
       ;;
     --socket=*)
       socket_path="${1#--socket=}"
@@ -119,7 +138,7 @@ while (($# > 0)); do
       shift
       ;;
     --zstd-level=*)
-      zstd_threads=$(("${1#--zstd-level=}"))
+      zstd_level=$(("${1#--zstd-level=}"))
       ;;
     --zstd-level)
       zstd_level=$(("$2"))
@@ -136,7 +155,8 @@ while (($# > 0)); do
       log_level="${1#--log-level=}"
       ;;
     --log-level)
-      log_level="$1"
+      log_level="$2"
+      shift
       ;;
     -v | --verbose)
       log_level=$((log_level - 1))
@@ -167,41 +187,31 @@ while (($# > 0)); do
   shift
 done
 
-if [[ -v db ]]; then
+if [[ ! -v db ]]; then
   usage_error "Missing required positional argument 'db'."
 fi
 if [[ -v opt_apprise ]]; then
   apprise::config "$log_level" "$use_color" || exit $?
 fi
 
-protocol_arg=
-socket_arg=
-host_arg=
-port_arg=
-user_arg=
-password_arg=
+connection_args=()
 if [[ -n "$socket_path" ]]; then
-  protocol_arg=--protocol=socket
-  socket_arg=--socket=$socket_path
+  connection_args+=(
+    --protocol=socket
+    "--socket=$socket_path"
+  )
 else
-  host_arg=--host=127.0.0.1
-  port_arg=--port=$port
-  if [[ -v DB_USER ]]; then
-    user_arg=--user="$DB_USER"
-  fi
-  if [[ -v DB_PASSWORD ]]; then
-    password_arg=--password="$DB_PASSWORD"
-  fi
+  connection_args+=(
+    --host=127.0.0.1
+    "--port=$port"
+  )
 fi
+[[ -v DB_USER ]] && connection_args+=("--user=$DB_USER")
+[[ -v DB_PASSWORD ]] && connection_args+=("--password=$DB_PASSWORD")
 
-tables=$(
+mapfile -t tables < <(
   mysql \
-    "$protocol_arg" \
-    "$socket_arg" \
-    "$host_arg" \
-    "$port_arg" \
-    "$user_arg" \
-    "$password_arg" \
+    "${connection_args[@]}" \
     --skip-column-names \
     --batch \
     --disable-auto-rehash \
@@ -209,38 +219,48 @@ tables=$(
     --execute='show tables' \
 )
 
-n_tables=$(($(wc -w <<< "$tables")))
-apprise INFO "Backing up $n_tables tables to '$backup_dir'."
-apprise INFO "Tables: [ $tables ]."
+n_tables=${#tables[@]}
+if [[ "$use_timestamp" == true ]]; then
+  backup_dir="$backup_root/$db/$dt"
+else
+  backup_dir="$backup_root/$db"
+fi
 mkdir -p "$backup_dir"
-dt=$(date +%Y-%m-%dT%H%M%S%z)
+apprise INFO "Backing up $n_tables tables to '$backup_dir'."
+apprise INFO "Tables: [ ${tables[*]} ]."
 
-for table in $tables; do
-  table_path=$backup_dir/$db/$table.sql.zst
-  error_log=$db-bak-$dt-$table.log
+for table in "${tables[@]}"; do
+  table_path="$backup_dir/$table.sql.zst"
+  table_part_path="$table_path.part"
+  error_log="$db-bak-$dt-$table.log"
+  error_log_part="$db-bak-$dt-$table.log.part"
   apprise INFO "Writing table $table..."
   apprise DEBUG "Writing $table to '$table_path' with error log '$error_log'."
   mysqldump \
-    "$protocol_arg" \
-    "$socket_arg" \
-    "$host_arg" \
-    "$port_arg" \
-    "$user_arg" \
-    "$password_arg" \
+    "${connection_args[@]}" \
     --single-transaction \
     --hex-blob \
-    --log-error "$error_log"
-  "$db" \
+    --log-error="$error_log_part" \
+    -- \
+    "$db" \
     "$table" \
-    | zstd -z "-$zstd_level" "--threads=$zstd_threads" > "$table_path" \
-    || exit $?
+  | zstd -z "-$zstd_level" "--threads=$zstd_threads" \
+  > "$table_part_path" \
+  || exit $?
+  mv -- "$table_part_path" "$table_path"
   apprise INFO "Wrote table $table."
-  n_lines=$(wc -l <<< "$error_log")
-  if ((n_lines > 0)); then
-    apprise WARN "$n_lines errors were written to '$error_log'."
-    while IFS= read -r line; do
-      apprise WARN "$line"
-    done < "$error_log"
+  if [[ -f "$error_log_part" ]]; then
+    n_lines=$(wc -l < "$error_log_part")
+    if ((n_lines > 0)); then
+      apprise WARN "$n_lines errors were written to '$error_log_part'."
+      while IFS= read -r line; do
+        apprise WARN "$line"
+      done < "$error_log_part"
+    fi
+    zstd -z "-$zstd_level" "--threads=$zstd_threads" "$error_log_part" -o "$error_log" \
+    && rm -- "$error_log_part"
+  else
+    apprise INFO "No error log file was written."
   fi
 done
 

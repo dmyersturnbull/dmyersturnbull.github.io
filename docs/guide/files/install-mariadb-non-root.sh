@@ -10,7 +10,7 @@ if [[ "$(uname)" != Linux ]]; then
   exit 3
 fi
 
-script_path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
+script_path="$(realpath -- "${BASH_SOURCE[0]}")" || exit $?
 declare -r script_name="${script_path##*/}"
 
 # usage, help description, etc.

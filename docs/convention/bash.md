@@ -371,7 +371,7 @@ and `FIXME: short description` for things like unfinished or placeholder code.
 # SPDX-License-Identifier: Apache-2.0
 set -o errexit -o nounset -o pipefail # "strict mode"
 
-script_path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
+script_path="$(realpath -- "${BASH_SOURCE[0]}")" || exit $?
 declare -r script_name="${script_path##*/}"
 declare -r -i default_retries=2
 declare -r description="Checks network access by pinging google."

@@ -5,7 +5,7 @@
 
 set -o errexit -o nounset -o pipefail # "strict mode"
 
-script_path="$(realpath -- "${BASH_SOURCE[0]}" || exit $?)"
+script_path="$(realpath -- "${BASH_SOURCE[0]}")" || exit $?
 declare -r script_name="${script_path##*/}"
 
 # Define usage, help info, etc.
