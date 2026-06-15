@@ -67,19 +67,19 @@ dev = [
 ]
 
 docs = [
-  "zensical>=0.0.37", # https://zensical.org/
+  "zensical>=0.0.45", # https://zensical.org/
 ]
 
 # Python-ecosystem lint tools that can be called directly
 lint = [
-  "ruff>=0.15.12",
-  "ty>=0.0.33", # Astral's fledgling type checker.
+  "ruff>=0.15.17",
+  "ty>=0.0.49", # Astral's fledgling type checker.
 ]
 
-# pre-commit and any dependencies for local hooks
+# Prek and any dependencies for local hooks
 git-hooks = [
-  "pathvalidate>=3.3", # Needed for local pre-commit hook.
-  "pre-commit>=4.5",
+  "pathvalidate>=3.3", # Needed for local prek hook.
+  "prek>=0.4.5",
 ]
 
 #

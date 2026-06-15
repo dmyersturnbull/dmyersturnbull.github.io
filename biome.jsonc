@@ -15,26 +15,26 @@
   "linter": {
     "rules": {
       "a11y": {
-        "noNoninteractiveElementInteractions": "warning"
+        "noNoninteractiveElementInteractions": "warn"
       },
       "complexity": {
-        "useSimplifiedLogicExpression": "warning",
-        "useWhile": "warning"
+        "useSimplifiedLogicExpression": "warn",
+        "useWhile": "warn"
       },
       "correctness": {
-        "noGlobalDirnameFilename": "warning"
+        "noGlobalDirnameFilename": "warn"
       },
       "suspicious": {
-        "noConstantBinaryExpressions": "warning",
-        "noDeprecatedImports": "warning",
-        "noEmptyBlockStatements": "warning",
-        "noEvolvingTypes": "warning",
-        "noImportCycles": "warning",
-        "noMisplacedAssertion": "warning"
+        "noConstantBinaryExpressions": "warn",
+        "noDeprecatedImports": "warn",
+        "noEmptyBlockStatements": "warn",
+        "noEvolvingTypes": "warn",
+        "noImportCycles": "warn",
+        "noMisplacedAssertion": "warn"
       },
       "style": {
-        "noValueAtRule": "error",
-        "useGraphqlNamingConvention": "error"
+        "noValueAtRule": "warn",
+        "useGraphqlNamingConvention": "warn"
       }
     }
   },

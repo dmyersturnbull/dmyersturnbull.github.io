@@ -110,6 +110,10 @@ YAML = "YAML"
 # https://zensical.org/docs/setup/extensions/python-markdown/#markdown-in-html
 [project.markdown_extensions.md_in_html]
 
+# [project.markdown_extensions.pymdownx.caret]
+# [project.markdown_extensions.pymdownx.mark]
+# [project.markdown_extensions.pymdownx.tilde]
+
 # https://facelessuser.github.io/pymdown-extensions/extensions/arithmatex/
 [project.markdown_extensions.pymdownx.arithmatex]
 inline_syntax = ["dollar"]
@@ -145,6 +149,9 @@ repo_url_shorthand = true
 
 # https://zensical.org/docs/setup/extensions/python-markdown-extensions/#superfences
 [project.markdown_extensions.pymdownx.superfences]
+custom_fences = [
+  { name = "mermaid", class = "mermaid", format = "pymdownx.superfences.fence_code_format" }
+]
 
 # https://zensical.org/docs/setup/extensions/python-markdown-extensions/#tabbed
 [project.markdown_extensions.pymdownx.tabbed]
@@ -154,6 +161,8 @@ combine_header_slug = true
 # https://zensical.org/docs/setup/extensions/python-markdown/#tables
 [project.markdown_extensions.tables]
 
+[project.markdown_extensions.pymdownx.snippets]
+
 [project.theme]
 features = [
   "navigation.expand",            # https://zensical.org/docs/setup/navigation/#navigation-expansion
@@ -161,7 +170,7 @@ features = [
   "navigation.indexes",           # https://zensical.org/docs/setup/navigation/#section-index-pages
   "navigation.instant",           # https://zensical.org/docs/setup/navigation/#instant-navigation
   "navigation.instant.progress",  # https://zensical.org/docs/setup/navigation/#progress-indicator
-  "content.footnote.tooltips",     # https://zensical.org/docs/authoring/footnotes/#footnote-tooltips
+  "content.footnote.tooltips",    # https://zensical.org/docs/authoring/footnotes/#footnote-tooltips
   "navigation.path",              # https://zensical.org/docs/setup/navigation/#navigation-path
   "navigation.sections",          # https://zensical.org/docs/setup/navigation/#navigation-sections_1
   "navigation.tracking",          # https://zensical.org/docs/setup/navigation/#anchor-tracking

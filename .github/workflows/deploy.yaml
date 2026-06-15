@@ -31,7 +31,7 @@ jobs:
       - shell: bash
         run: |
           uv sync --locked --only-group docs
-          uv run --no-sync zensical build
+          uv run --no-sync zensical build --strict
       - uses: actions/upload-pages-artifact@v5
         with:
           path: site
