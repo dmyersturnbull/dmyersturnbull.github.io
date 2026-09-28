@@ -711,7 +711,7 @@ Always use `/` as a path separator in documentation, and denote directories with
 For filesystem trees, use
 [these Unicode box-drawing characters](../cheatsheet/box-drawing.md).
 Refer to the
-[research projects guide](../post/research-projects.md/#example)
+[research projects guide](../post/research-projects.md#example)
 for an example.
 
 ### Accessibility
