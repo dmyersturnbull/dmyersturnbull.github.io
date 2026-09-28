@@ -353,7 +353,7 @@ winget install --exact --id MSYS2.MSYS2
     scoop install main/uv
     ```
 
-See the [toolkits guide](toolkits.md).
+**Follow: _[toolkits guide :fontawesome-solid-toolbox:](toolkits.md)_.**
 
 ### JavaScript
 

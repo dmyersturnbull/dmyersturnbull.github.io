@@ -287,7 +287,7 @@ brew install autoconf cmake
 
 ### Java, Rust, and Python
 
-See the [toolkits guide](toolkits.md).
+**Follow: _[toolkits guide :fontawesome-solid-toolbox:](toolkits.md)_.**
 
 ## Tweaks
 

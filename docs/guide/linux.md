@@ -353,7 +353,7 @@ This may not work through some company and university firewalls.
 
 ### Java, Rust, and Python
 
-See the [toolkits guide](toolkits.md).
+**Follow: _[toolkits guide :fontawesome-solid-toolbox:](toolkits.md)_.**
 
 ## Cosmetics and UI
 
