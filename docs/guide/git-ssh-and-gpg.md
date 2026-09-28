@@ -60,6 +60,13 @@ git config --global gc.auto 1000
 git config --global diff.algorithm histogram
 ```
 
+And optionally:
+
+```bash
+gh config set pager cat # Stops pagination (use `| less` if wanted)
+gh config set editor "$(which vim)"
+```
+
 ## Configure SSH and set up keys
 
 ??? background

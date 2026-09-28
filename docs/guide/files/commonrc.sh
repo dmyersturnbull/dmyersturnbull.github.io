@@ -7,9 +7,8 @@
 # ------------------------------------------------------------------------------- #
 # ::: Set environment variables :::
 
-export JAVA_HOME
-JAVA_HOME=/opt/jdk24
-# JAVA_HOME=/opt/homebrew/opt/openjdk24 # macOS
+export JAVA_HOME=/opt/jdk27
+# export JAVA_HOME=/opt/homebrew/opt/openjdk27 # macOS
 export PATH
 PATH="$PATH:/usr/sbin:/usr/local/sbin:$HOME/bin"
 PATH="$PATH:$JAVA_HOME/bin"
