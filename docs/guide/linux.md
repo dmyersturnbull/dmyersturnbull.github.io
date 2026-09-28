@@ -335,11 +335,11 @@ The line will probably look like this:
 
 ### Configure your shell
 
-**Follow: _[Shell setup :fontawesome-solid-terminal:](nix-shells.md)_.**
+**Follow: _[Nix shell guide :fontawesome-solid-terminal:](nix-shells.md)_.**
 
 ### Configure Git, SSH, and GPG
 
-**Follow: _[Shell setup :fontawesome-solid-shield-halved:](git-ssh-and-gpg.md)_.**
+**Follow: _[Git, SSH, and GPG guide :fontawesome-solid-shield-halved:](git-ssh-and-gpg.md)_.**
 
 ### Generate a certificate (if needed)
 
