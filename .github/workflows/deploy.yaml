@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
-# SPDX-PackageHomePage: https://dmyersturnbull.github.io
-# SPDX-License-Identifier: CC-BY-SA-4.0
-
 # See:
 # https://docs.github.com/en/pages/getting-started-with-github-pages/configuring-a-publishing-source-for-your-github-pages-site#creating-a-custom-github-actions-workflow-to-publish-your-site
 # https://github.com/actions/upload-pages-artifact
@@ -26,8 +22,8 @@ jobs:
       id-token: write
       pages: write
     steps:
-      - uses: actions/checkout@v6
-      - uses: astral-sh/setup-uv@v8.1.0
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v10.2.0
       - shell: bash
         run: |
           uv sync --locked --only-group docs

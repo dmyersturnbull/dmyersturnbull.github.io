@@ -1,7 +1,3 @@
-# SPDX-FileCopyrightText: Copyright 2017-2026, Douglas Myers-Turnbull
-# SPDX-PackageHomePage: https://github.com/dmyersturnbull/dmyersturnbull.github.io
-# SPDX-License-Identifier: CC-BY-SA-4.0
-
 #
 ####################################################################################################
 #                                      [build-system]
@@ -10,7 +6,7 @@
 [build-system]
 
 build-backend = "uv_build"
-requires = ["uv-build>=0.11, <1.0"]
+requires = ["uv-build>=0.12, <1.0"]
 
 #
 ####################################################################################################
@@ -67,19 +63,19 @@ dev = [
 ]
 
 docs = [
-  "zensical>=0.0.45", # https://zensical.org/
+  "zensical>=0.0.66", # https://zensical.org/
 ]
 
 # Python-ecosystem lint tools that can be called directly
 lint = [
-  "ruff>=0.15.17",
-  "ty>=0.0.49", # Astral's fledgling type checker.
+  "ruff>=0.16.9",
+  "ty>=0.0.84", # Astral's fledgling type checker.
 ]
 
 # Prek and any dependencies for local hooks
 git-hooks = [
   "pathvalidate>=3.3", # Needed for local prek hook.
-  "prek>=0.4.5",
+  "prek>=0.5.4",
 ]
 
 #
