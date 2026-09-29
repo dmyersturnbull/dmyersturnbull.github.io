@@ -111,7 +111,6 @@ class See:
 
 
 class SeeEncoding:
-
     def encode(self, see_links: Iterable[See]) -> str:
         return ", ".join(self._encode_single(see) for see in see_links)
 
@@ -130,9 +129,6 @@ class SeeEncoding:
         return "; ".join([f"<{urlencode(see.uri)}>", *data])
 
     def _decode_single(self, uri: str, params: str) -> See:
-        data = {
-            m.group("key"): unquote(m.group("value"))
-            for m in _PARAMS_PATTERN.finditer(params)
-        }
+        data = {m.group("key"): unquote(m.group("value")) for m in _PARAMS_PATTERN.finditer(params)}
         return See(uri, **data)
 ```

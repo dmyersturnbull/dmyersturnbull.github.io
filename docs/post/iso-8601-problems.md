@@ -233,8 +233,8 @@ If you need both lexicographical sorting and the original offsets, see the next 
     assert "+01:00" < "-01:00"  # (recall: subtract offset to get the UTC instant)
     assert "-02:00" < "-01:00"  #
     assert "+02:00" < "+01:00"  # error — inverted
-    assert "+01:00" < "Z"       #
-    assert "Z"      < "-01:00"  # error
+    assert "+01:00" < "Z"  #
+    assert "Z" < "-01:00"  # error
     ```
 
 ### Affixing timezone names

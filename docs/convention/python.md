@@ -131,7 +131,6 @@ from typing import Literal
 
 @dataclass(slots=True, frozen=True)
 class AxisTicks(Sequence[int]):
-
     orientation: Literal["x"] | Literal["y"]
     items: Sequence[int]
 
@@ -168,16 +167,16 @@ use valid OOP instead.
     ```python
     class Utils:
         @abstractmethod
-        def method(cls):
-            ...
+        def method(cls): ...
     ```
 
 === "✅ Fixed design"
 
     ```python
     class Utils:
-        def method(self):
-            ...
+        def method(self): ...
+
+
     utils = Utils()  # wherever it's needed
     ```
 

@@ -340,7 +340,8 @@ tags:
     # For any nonzero input vector p, p×Mₜ ∝ M₀ (for iteration t) is approximately our initial M.
     # That is, formally: ∀p≠0 ∈ ℝ³, ∃λ s.t. λp×Mₜ ≈ M₀
     # So, we first confirm that p is not the zero vector, then determine the scalar λ/lambda_.
-    if np.isclose(vector, np.zeros(3), rtol=1E-7): ...
+    if np.isclose(vector, np.zeros(3), rtol=1e-7):
+        ...
     ```
 
 #### Common

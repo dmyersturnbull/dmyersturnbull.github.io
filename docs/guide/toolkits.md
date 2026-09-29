@@ -46,4 +46,3 @@ After installing uv, use it to install the latest Python version:
 ```powershell
 uv python install --default
 ```
-
